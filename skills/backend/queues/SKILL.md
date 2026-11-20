@@ -50,8 +50,11 @@ independently of producers.
 
 ## Prerequisites
 
-- A queue system chosen for the project (BullMQ on Redis, RabbitMQ,
-  Amazon SQS, Cloudflare Queues, or Kafka for log-based streams).
+- A queue system chosen for the project (BullMQ 6.x on Redis,
+  RabbitMQ, Amazon SQS, Cloudflare Queues, or Kafka for log-based
+  streams). BullMQ 6 is current (6.7.8, November 2026): legacy
+  repeatable jobs were removed in v6 in favor of Job Schedulers, and
+  `ioredis` is an optional peer dependency.
 - Agreement on the message format (JSON with a schema and a version
   field is the default in this library).
 - Observability: queue depth, consumer lag, and dead-letter metrics.
@@ -59,7 +62,8 @@ independently of producers.
 ## Official Documentation
 
 - [BullMQ documentation](https://docs.bullmq.io/) — Redis-based queues
-  for Node.js.
+  for Node.js. BullMQ 6.x is current; v6 also supports pluggable
+  queue backends beyond Redis.
 - [RabbitMQ documentation](https://www.rabbitmq.com/docs) — a widely
   used message broker.
 - [Amazon SQS documentation](https://docs.aws.amazon.com/sqs/) —
@@ -229,7 +233,7 @@ async function handleOrderPlaced(message: OrderPlacedMessage) {
 
 ## References
 
-- [BullMQ documentation](https://docs.bullmq.io/)
+- [BullMQ documentation](https://docs.bullmq.io/) (BullMQ 6.x current)
 - [RabbitMQ documentation](https://www.rabbitmq.com/docs)
 - [Amazon SQS documentation](https://docs.aws.amazon.com/sqs/)
 - [Cloudflare Queues](https://developers.cloudflare.com/queues/)

@@ -44,6 +44,7 @@ This skill covers practical MongoDB use for application developers: modeling dat
 - A driver for the project's language (or an ODM such as Mongoose) and a client such as `mongosh` for inspection.
 - The connection string stored as an environment variable such as `$DATABASE_URL`, never committed to the repository.
 - Basic familiarity with JSON documents and JavaScript-style query operators.
+- Supported versions as of 2026-11-20: MongoDB 9.0 (current, supported to 31 October 2031), 8.3 and 8.0 (supported to 31 October 2029), and 7.0 (supported to 31 August 2027). MongoDB 8.2 reached end of life on 31 July 2026 and 6.0 on 31 July 2025; earlier lines are likewise unsupported. Check the server version with `db.version()` in `mongosh`.
 
 ## Official Documentation
 

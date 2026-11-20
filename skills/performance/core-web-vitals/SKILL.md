@@ -54,7 +54,8 @@ data rather than a single lab run.
 
 - The URL(s) to measure, and access to the site's source code.
 - A Chromium-based browser with DevTools, or Node.js 24 LTS for
-  command-line tooling.
+  command-line tooling. Node.js 24 LTS is supported through April
+  2028; Node.js 26 became the newer LTS in October 2026.
 - For field data: the site must have real traffic; Chrome UX Report
   (CrUX) data only exists for URLs and origins with enough visitors.
 - A baseline measurement taken before changes, so improvements can be
@@ -62,11 +63,17 @@ data rather than a single lab run.
 
 ## Official Documentation
 
-- [web.dev — Core Web Vitals](https://web.dev/) — Google's canonical
-  guidance on LCP, INP, and CLS, including thresholds and debugging
-  guides. Start here for any metric definition.
-- [web.dev — CrUX](https://web.dev/) — how Chrome UX Report field data
-  is collected and what the 75th-percentile (p75) values mean.
+- [web.dev — Web Vitals](https://web.dev/articles/vitals) — Google's
+  canonical guidance on LCP, INP, and CLS, including thresholds and
+  debugging guides. Start here for any metric definition.
+- [PageSpeed Insights — About](https://developers.google.com/speed/docs/insights/v5/about)
+  — how Chrome UX Report field data is collected, the 28-day
+  collection period, and what the 75th-percentile (p75) values mean.
+- [web-vitals on GitHub](https://github.com/GoogleChrome/web-vitals)
+  — the RUM library for measuring the metrics in JavaScript;
+  version 6.x is current. `onFID()` was removed in v5 (May 2025):
+  do not measure FID — INP replaced it as the responsiveness
+  metric on 12 March 2024.
 - [MDN — Web performance](https://developer.mozilla.org/en-US/docs/Web/Performance)
   — browser-neutral reference for the underlying APIs and concepts.
 
@@ -101,6 +108,9 @@ data rather than a single lab run.
   LCP 2.5 seconds or less, INP 200 milliseconds or less, CLS 0.1 or
   less, measured at p75. Re-check these thresholds against web.dev
   before quoting them in a report.
+- Do not measure or report First Input Delay (FID): it stopped
+  being a Core Web Vital on 12 March 2024, when INP replaced it,
+  and the `web-vitals` library removed `onFID()` in v5.
 - LCP fixes, in order of typical impact: speed up the server response,
   preload the LCP resource (hero image or web font), remove render-
   blocking resources from the critical path, and avoid lazy-loading
@@ -228,8 +238,8 @@ Reserve space for an image so it cannot cause layout shift:
 
 ## References
 
-- [web.dev](https://web.dev/) — Core Web Vitals guides, thresholds,
-  and debugging walkthroughs.
+- [web.dev — Web Vitals](https://web.dev/articles/vitals) — Core Web
+  Vitals guides, thresholds, and debugging walkthroughs.
 - [PageSpeed Insights](https://pagespeed.web.dev/) — field and lab
   data for any public URL.
 - [MDN — Web performance](https://developer.mozilla.org/en-US/docs/Web/Performance)

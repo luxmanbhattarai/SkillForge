@@ -20,7 +20,7 @@ metadata:
 
 ## Purpose
 
-This skill covers general Prisma ORM usage in TypeScript and JavaScript applications: modeling data in the Prisma schema, writing type-safe queries with Prisma Client, managing relations and transactions, and keeping migrations and the generated client in sync. It complements the upstream `prisma-orm-setup` skill in this repository (under `skills/upstream/prisma/`), which covers setup; this skill covers day-to-day usage.
+This skill covers Prisma ORM 7 usage in TypeScript and JavaScript applications: modeling data in the Prisma schema, writing type-safe queries with Prisma Client, managing relations and transactions, and keeping migrations and the generated client in sync. Prisma ORM 7 is the current stable line (7.10.1). Prisma ORM 8 is a release candidate with a rewritten API — see Prerequisites — so this skill's commands and code apply to Prisma ORM 7 projects only. It complements the upstream `prisma-orm-setup` skill in this repository (under `skills/upstream/prisma/`), which covers setup; this skill covers day-to-day usage.
 
 ## When to Use
 
@@ -42,14 +42,19 @@ This skill covers general Prisma ORM usage in TypeScript and JavaScript applicat
 ## Prerequisites
 
 - Node.js 24 LTS and TypeScript 5.x (or JavaScript with the same runtime), per the project's verified stack.
-- A supported database reachable from the project (PostgreSQL, MySQL, SQLite, MongoDB, or another Prisma-supported provider).
+- This skill describes Prisma ORM 7, the current stable line (7.10.1 as of 2026-11-20). Prisma ORM 7 receives bug fixes and security updates for 18 months after Prisma ORM 8 reaches general availability.
+- Prisma ORM 8 is a release candidate, not a stable release: as of 16 November 2026 the `latest` npm tag installs `prisma@8.0.0-rc.34` (CLI) with `@prisma/orm-postgres@8.0.0-rc.24` (library). It replaces `schema.prisma` with a contract, `prisma generate` with `prisma contract emit`, and `@prisma/client` with per-database libraries such as `@prisma/orm-postgres`, and it has no `generate`, `migrate dev`, or `db push` commands. It supports PostgreSQL and MongoDB (early access) only, so far. Do not follow this skill's commands on a Prisma ORM 8 project.
+- Pin the major version in `package.json` (`prisma@7` and `@prisma/client@7`): an unpinned `npm install prisma` now installs the Prisma ORM 8 release candidate. In CI or one-off commands use `npx prisma@7`.
+- Prisma ORM 6 reached end of life on 19 November 2026 and receives no more updates; upgrade to Prisma ORM 7 (or to Prisma ORM 8 on PostgreSQL or MongoDB).
+- A supported database reachable from the project. Prisma ORM 7 supports PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, and CockroachDB; it has no MongoDB support (MongoDB is available in Prisma ORM 8 only).
 - The connection string stored as an environment variable such as `$DATABASE_URL`, never committed to the repository.
-- Prisma ORM 8 is the current default for new applications (Prisma 6/7 remain supported); confirm the installed major version before following version-specific guidance.
+- Prisma ORM 7 does not load `.env` files by default: load them with `dotenv`, or define the connection in `prisma.config.ts`.
 
 ## Official Documentation
 
 - [Prisma documentation](https://www.prisma.io/docs) — the authoritative reference for the schema, Prisma Client, and Prisma Migrate.
 - [Prisma ORM reference](https://www.prisma.io/docs/orm) — ORM concepts, Client API, and Migrate guides.
+- [Prisma ORM release status](https://www.prisma.io/docs/orm/release-status) — which major version is stable, which is a release candidate, and how long each is supported. Prisma ORM 7 documentation lives at `/orm/v7`.
 
 ## Required Workflow
 
@@ -82,7 +87,7 @@ This skill covers general Prisma ORM usage in TypeScript and JavaScript applicat
 - Fetch with `select` and shape the response in the query, not by fetching whole models and deleting fields afterwards.
 - Watch for N+1 queries: a loop that queries inside it is almost always a missing `include` or a missing `findMany` with `where: { id: { in: [...] } }`.
 - Use `prisma.$transaction` with the array form for independent writes and the callback form when later writes depend on earlier results.
-- Use middleware or extensions for cross-cutting concerns (soft delete, audit fields) rather than repeating logic in every query.
+- Use Client Extensions (`$extends`) for cross-cutting concerns (soft delete, audit fields) rather than repeating logic in every query. The `$use` middleware API was removed in Prisma ORM 7; do not use it.
 - Use Prisma's query log in development to see the SQL being generated; an ORM that hides SQL still runs SQL.
 - Seed the database with a repeatable seed script that can run against a fresh database.
 - Keep migrations small and reviewable: one logical change per migration, with a descriptive name.
@@ -142,9 +147,15 @@ model Book {
 
 ```ts
 // Example: one query with select and include, plus a singleton client.
+// Prisma ORM 7 needs a driver adapter: the client has no built-in driver.
 import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
-export const prisma = new PrismaClient();
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
+
+export const prisma = new PrismaClient({ adapter });
 
 const books = await prisma.book.findMany({
   where: { authorId },
@@ -185,4 +196,5 @@ await prisma.$transaction(async (tx) => {
 
 - [Prisma documentation](https://www.prisma.io/docs) — schema, Client, and Migrate.
 - [Prisma ORM reference](https://www.prisma.io/docs/orm) — ORM concepts and API.
+- [Prisma ORM release status](https://www.prisma.io/docs/orm/release-status) — stable vs release-candidate versions and support windows.
 - Related skills in this repository: `database-design`, `postgresql`, `mysql`, `sqlite`, `mongodb`, `migrations`, `transactions`, `drizzle`.

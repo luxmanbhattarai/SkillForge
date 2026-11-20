@@ -40,6 +40,13 @@ vulnerabilities, and removing what is no longer needed.
 ## Prerequisites
 
 - The package manager and lockfile are in place (pnpm with `pnpm-lock.yaml` is the recommended default).
+- Supported versions (verified 2026-11-20): pnpm 12.x is current
+  (stable August 2026; a Rust rewrite that keeps pnpm 11's commands,
+  flags, settings, and lockfile format). pnpm 11 is supported until
+  2027-04-30; pnpm 10 and earlier are unsupported. The npm CLI's
+  current major is npm 12 (July 2026); note that the npm bundled with
+  Node.js is still 11.x (Node.js 26 ships npm 11.20.0), so npm 12 must
+  be installed explicitly (`npm install -g npm@12`).
 - CI runs installs from the lockfile (`--frozen-lockfile` for pnpm).
 - The team has a way to receive security advisories (GitHub Dependabot alerts, Renovate, or `pnpm audit` in CI).
 
@@ -48,7 +55,7 @@ vulnerabilities, and removing what is no longer needed.
 - [pnpm documentation](https://pnpm.io/) — install, update, audit, and outdated commands.
 - [Renovate documentation](https://docs.renovatebot.com/) — automated dependency updates.
 - [Dependabot documentation](https://docs.github.com/en/code-security/dependabot) — GitHub's automated updates and alerts.
-- [npm audit documentation](https://docs.npmjs.com/cli/v11/commands/npm-audit) — the npm audit command reference.
+- [npm audit documentation](https://docs.npmjs.com/cli/v12/commands/npm-audit) — the npm audit command reference.
 
 ## Required Workflow
 
@@ -86,6 +93,17 @@ vulnerabilities, and removing what is no longer needed.
 ## Security Considerations
 
 - Supply-chain attacks target dependencies: a compromised package update can inject code. Prefer packages with a track record, and review major updates.
+- On pnpm 11 and later, installs are safer by default: newly published
+  releases are held for 24 hours (`minimumReleaseAge: 1440`), exotic
+  (non-registry) subdependencies are blocked, and dependency build
+  scripts need explicit approval (`allowBuilds`, `pnpm approve-builds`).
+  Do not disable these defaults to silence an install failure. Use
+  `pnpm audit signatures` (11.1+) to verify package signatures and
+  `pnpm sbom` (11.0+) to generate a software bill of materials.
+- On npm 12, dependency install scripts are blocked by default unless
+  allowed by the root package's `allowScripts` policy; on the npm 11
+  bundled with Node.js they still run (with a warning), so upgrade to
+  npm 12 or set `strict-allow-scripts` for equivalent protection.
 - Audit on a schedule and on every advisory; a known vulnerability with a fix available should not linger.
 - Lockfiles pin exact versions and hashes; never install without one, and never let CI rewrite it.
 - Avoid installing packages from untrusted sources or arbitrary URLs; use the configured registry.

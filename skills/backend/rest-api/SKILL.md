@@ -12,7 +12,7 @@ metadata:
   maintainer: skills-library
   source: original
   last_verified: "2026-11-20"
-compatibility: Requires a Node.js HTTP framework such as Hono or Express and TypeScript 5.x.
+compatibility: Requires a Node.js HTTP framework such as Hono or Express and TypeScript 7.x.
 ---
 
 # REST API
@@ -55,10 +55,15 @@ errors clients can handle programmatically.
   — methods, status codes, and headers.
 - [RFC 9457 — Problem Details for HTTP APIs](https://www.rfc-editor.org/rfc/rfc9457.html)
   — the standard error response format.
-- [OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0) —
-  machine-readable API documentation.
+- [OpenAPI Specification](https://spec.openapis.org/oas/v3.2.0.html) —
+  machine-readable API documentation. OpenAPI 3.2 is current (3.2.1
+  is the latest patch, September 2026, editorial only); new contracts
+  should target 3.2.
 - [Hono documentation](https://hono.dev/docs) — the recommended HTTP
-  framework for new REST APIs in this library.
+  framework for new REST APIs in this library (Hono 4.13.x current).
+  Validate with Zod 4.x (`zod@4`, latest 4.6.7, October 2026); the
+  `zod/v3` subpath is a frozen copy of the old API for migration
+  only.
 
 ## Required Workflow
 
@@ -236,7 +241,7 @@ export default app;
 
 - [RFC 9110 — HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html)
 - [RFC 9457 — Problem Details](https://www.rfc-editor.org/rfc/rfc9457.html)
-- [OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0)
+- [OpenAPI Specification](https://spec.openapis.org/oas/v3.2.0.html)
 - [Hono documentation](https://hono.dev/docs)
 - Related skills in this repository: `api-design`, `hono`, `nodejs`,
   `rate-limiting`, `caching`, `authentication`.

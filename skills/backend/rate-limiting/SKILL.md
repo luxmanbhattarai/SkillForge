@@ -61,8 +61,14 @@ clients, and that tells legitimate clients exactly when they can retry.
 
 - [RFC 6585 — Additional HTTP Status Codes](https://www.rfc-editor.org/rfc/rfc6585.html)
   — defines status code 429.
-- [RateLimit header fields (IETF draft)](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/)
-  — the standard `RateLimit-*` response headers.
+- [RateLimit header fields (IETF draft, rev. 11, May 2026)](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/)
+  — the current draft defines two fields, `RateLimit-Policy` and
+  `RateLimit`. It is still an Internet-Draft, not an RFC, and its
+  syntax has changed before: the older `RateLimit-Limit`,
+  `RateLimit-Remaining`, and `RateLimit-Reset` names were the draft's
+  syntax up to rev. 06 and were superseded in rev. 08. `Retry-After`
+  (RFC 9110) remains the stable, standardized mechanism for telling
+  a client when to retry.
 - [Redis documentation](https://redis.io/docs/) — the reference for
   the store most limiters use.
 - [Cloudflare Rate Limiting](https://developers.cloudflare.com/waf/rate-limiting-rules/)
@@ -84,7 +90,8 @@ clients, and that tells legitimate clients exactly when they can retry.
 5. Implement the check before expensive work: the limiter runs before
    authentication-heavy or database-heavy processing where possible.
 6. Return `429 Too Many Requests` with a `Retry-After` header and the
-   `RateLimit-*` headers so clients know the limit and when to retry.
+   draft `RateLimit-Policy` and `RateLimit` headers so clients know
+   the limit and when to retry.
 7. Add monitoring and alerts for limit hits: a sudden spike may be an
    attack or a misconfigured client.
 8. Document the limits publicly for third-party clients, including how
@@ -100,8 +107,12 @@ clients, and that tells legitimate clients exactly when they can retry.
 - Use atomic operations (a Lua script or a single increment with an
   expiry) so concurrent requests cannot race past the limit.
 - Return `429` with `Retry-After` (seconds until the client may retry)
-  and the standard headers: `RateLimit-Limit`, `RateLimit-Remaining`,
-  and `RateLimit-Reset`.
+  and the current draft headers: `RateLimit-Policy:
+  "name";q=<quota>;w=<window-seconds>` for the policy and `RateLimit:
+  "name";r=<remaining>;t=<seconds>` for the current state. Do not use
+  the superseded `RateLimit-Limit` / `RateLimit-Remaining` /
+  `RateLimit-Reset` names for new APIs — but note they are still
+  common in the wild, so a client may need to accept both forms.
 - Apply stricter limits to expensive or sensitive endpoints (login,
   password reset, payment) than to cheap reads.
 - Fail open or closed deliberately: if the limiter store is down,
@@ -195,23 +206,28 @@ async function isAllowed(key: string, limit: number, windowSeconds: number) {
 }
 ```
 
-A `429` response with standard headers:
+A `429` response with the current draft headers (rev. 11):
 
 ```http
 HTTP/1.1 429 Too Many Requests
 Retry-After: 12
-RateLimit-Limit: 100
-RateLimit-Remaining: 0
-RateLimit-Reset: 30
+RateLimit-Policy: "default";q=100;w=60
+RateLimit: "default";r=0;t=12
 Content-Type: application/problem+json
 
 {
-  "type": "https://api.example.com/problems/rate-limited",
+  "type": "https://iana.org/assignments/http-problem-types#quota-exceeded",
   "title": "Too many requests",
   "status": 429,
-  "detail": "Rate limit of 100 requests per minute exceeded. Retry after 12 seconds."
+  "detail": "Rate limit of 100 requests per minute exceeded. Retry after 12 seconds.",
+  "violated-policies": ["default"]
 }
 ```
+
+The `quota-exceeded` problem type and the `violated-policies`
+extension are defined by the same draft. The `type` URI above is the
+draft's registered problem type; a custom problem type URI is also
+acceptable if the API documents it.
 
 ## Validation Checklist
 
@@ -220,7 +236,8 @@ Content-Type: application/problem+json
       resource.
 - [ ] The check is atomic; concurrent requests cannot race past the
       limit.
-- [ ] `429` responses include `Retry-After` and `RateLimit-*` headers.
+- [ ] `429` responses include `Retry-After` and the `RateLimit-Policy`
+      and `RateLimit` headers.
 - [ ] Authentication endpoints have stricter limits than reads.
 - [ ] Fail-open or fail-closed behavior is documented and tested.
 - [ ] Limit-hit spikes trigger an alert.
@@ -239,7 +256,7 @@ Content-Type: application/problem+json
 ## References
 
 - [RFC 6585 — Additional HTTP Status Codes](https://www.rfc-editor.org/rfc/rfc6585.html)
-- [RateLimit header fields (IETF draft)](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/)
+- [RateLimit header fields (IETF draft, rev. 11)](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/)
 - [Redis documentation](https://redis.io/docs/)
 - [Cloudflare Rate Limiting](https://developers.cloudflare.com/waf/rate-limiting-rules/)
 - Related skills in this repository: `rest-api`, `api-design`,

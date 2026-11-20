@@ -69,7 +69,7 @@ revocation, sensible expiry, and clean logout.
 - Cookies are `HttpOnly`, `Secure`, and `SameSite=Lax` at minimum in production.
 - Session IDs are never in URLs: no query parameters, no URL rewriting.
 - Regenerate the session ID on privilege changes: sign-in, sign-out, password change, and role elevation.
-- Idle timeout and absolute lifetime are both enforced; a session that is only idle-checked can live forever under continuous use.
+- Idle timeout and absolute lifetime are both enforced; a session that is only idle-checked can live forever under continuous use. NIST SP 800-63B-4 recommends an overall reauthentication timeout of no more than 30 days at AAL1; shorter is better for sensitive apps.
 - The store lookup is indexed on the session ID; expired sessions are cleaned up by a background job.
 - "Remember me" uses a separate long-lived token with its own rotation and revocation, never a long-lived session cookie.
 - Concurrent sessions are allowed by default; limit them only when the product requires it, and tell the user which devices are signed in.
@@ -77,6 +77,7 @@ revocation, sensible expiry, and clean logout.
 ## Best Practices
 
 - Keep session payloads minimal: user ID and a few flags; fetch profile data from the database when needed.
+- Consider the `__Host-` cookie prefix for the session cookie: it binds the cookie to the host (no `Domain` attribute, `Path=/`, `Secure` required), so a subdomain cannot set or overwrite it. Use it when the session cookie is only needed on one host.
 - Show the user their active sessions (device, last active) and let them revoke individual sessions.
 - Log session lifecycle events (created, expired, revoked) without logging session IDs.
 - Prefer the auth library's session handling over custom cookie code; the library already handles rotation and expiry.

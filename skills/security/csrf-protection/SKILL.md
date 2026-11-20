@@ -59,7 +59,7 @@ origin checks, applied to every state-changing request.
   the canonical defensive guidance.
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/) — context
   for request forgery risks.
-- [MDN Set-Cookie SameSite](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) —
+- [MDN Set-Cookie SameSite](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie) —
   cookie attributes including SameSite.
 
 ## Required Workflow
@@ -224,7 +224,7 @@ Manual CSRF test (test environment only):
 
 - [OWASP CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html) —
   canonical guidance.
-- [MDN Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie) —
+- [MDN Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie) —
   cookie attributes.
 - Related skills in this repository: `owasp`, `xss-prevention`,
   `secure-headers`, `security-auditing`.

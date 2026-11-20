@@ -40,7 +40,8 @@ and database migrations applied.
 
 ## Prerequisites
 
-- A TypeScript project on a supported runtime (Node.js 24 LTS is the current line).
+- A TypeScript project on a supported runtime (Node.js 26 LTS is the current LTS line as of November 2026; Node.js 24 LTS is also supported). The Better Auth CLI (`npx auth`) requires Node.js 22.12 or newer.
+- Better Auth 1.7.x is the current stable line (1.7.27 as of November 2026). Current releases are ESM-only. Do not use the retired `npx @better-auth/cli` command — the CLI is now `npx auth@latest`.
 - A database supported by a Better Auth adapter (PostgreSQL, MySQL, or SQLite via Drizzle or Prisma, or the built-in Kysely adapter).
 - Environment variables available at runtime for the auth secret and base URL.
 - The app's framework routing in place so auth handlers can be mounted.
@@ -56,7 +57,7 @@ and database migrations applied.
 2. Install `better-auth` and the adapter package the project already uses (Drizzle or Prisma); do not introduce a second ORM just for auth.
 3. Create the server auth instance in a single module (for example `src/lib/auth.ts`) with the database adapter, a secret from the environment, and the app's base URL.
 4. Enable only the auth methods the product needs (email/password, chosen social providers, or magic link) — do not enable everything by default.
-5. Generate and apply the database migration for the auth tables; verify the tables exist before starting the app.
+5. Generate and apply the database migration for the auth tables with the Better Auth CLI (`npx auth@latest generate` for an ORM schema, `npx auth@latest migrate` for the built-in Kysely adapter); verify the tables exist before starting the app.
 6. Mount the auth handler on the framework's API route (`/api/auth/*`) following the framework guide.
 7. Create the typed client (`createAuthClient`) in one shared module and use it for all client-side auth calls.
 8. Add route protection: check the session on the server for every protected route or loader, never only in client components.
@@ -66,7 +67,7 @@ and database migrations applied.
 ## Implementation Standards
 
 - Keep the auth instance in exactly one server module; never create a second instance with different options.
-- Read the secret and base URL from environment variables; never hard-code them.
+- Read the secret and base URL from environment variables; never hard-code them. `BETTER_AUTH_SECRET` must be at least 32 characters of high entropy (generate with `openssl rand -base64 32`); rotate it with `BETTER_AUTH_SECRETS` so existing sessions survive the rollover.
 - Use the current stable `better-auth` release and record the installed version in the project lockfile only, not in prose.
 - Configure cookie behavior explicitly for production: secure cookies, `httpOnly`, `sameSite: "lax"` at minimum, and a scoped path.
 - Prefer database sessions for apps that need instant revocation; prefer stateless (JWT) sessions only when the app is read-heavy and revocation delay is acceptable.
@@ -91,6 +92,7 @@ and database migrations applied.
 - Rate-limit sign-in and password-reset endpoints to slow credential stuffing; see `auth-security`.
 - Validate the `origin`/`referer` on auth endpoints where the framework supports it, and keep CSRF protection enabled.
 - Review the plugin list: each enabled plugin widens the auth surface, so disable unused plugins.
+- Version-specific behavior (1.7.x): Better Auth ignores `x-forwarded-host` and `x-forwarded-proto` unless `advanced.trustedProxyHeaders` is set, so apps behind a proxy must configure trusted proxy headers explicitly or callbacks and cookies will use the wrong host and scheme.
 
 ## Performance Considerations
 

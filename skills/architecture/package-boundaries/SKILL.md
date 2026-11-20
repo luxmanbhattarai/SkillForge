@@ -44,6 +44,14 @@ acyclic and understandable.
 
 - The packages or modules exist (or are being created) and their responsibilities are roughly known.
 - A lint or build tool is available to enforce rules (ESLint for JavaScript/TypeScript, or a small script).
+- Supported versions (verified 2026-11-20): ESLint 10.x is current
+  (released February 2026). Boundary rules are written as ESLint flat
+  config (`eslint.config.js`); the eslintrc system (`.eslintrc.*`,
+  `.eslintignore`, `ESLINT_USE_FLAT_CONFIG`) was removed entirely in
+  ESLint 10 — do not write new eslintrc rules. ESLint 9 reached
+  end-of-life in August 2026. ESLint 10 looks up `eslint.config.*`
+  from the directory of each linted file, so multiple configs can
+  coexist in one monorepo run.
 - The team agrees on the dependency direction before enforcement starts; rules encode decisions, not guesses.
 
 ## Official Documentation
@@ -96,7 +104,10 @@ acyclic and understandable.
 
 - Boundary checks run in lint and CI; they add seconds, not minutes, and save far more in avoided rework.
 - Small public interfaces encourage small bundles: an app imports what it needs, not a package's internals.
-- Deep imports that bypass the entry point can defeat tree-shaking; importing through the entry point keeps bundlers effective.
+- Deep imports bypass the package's public contract and can pull in
+  internal modules (including unbundled source) that the package never
+  intended to expose; importing through the entry point keeps the
+  contract — and the bundle — clean.
 - The dependency graph drives task ordering in Turborepo; a clean graph means more parallel work.
 
 ## Common Mistakes
@@ -126,6 +137,8 @@ A small import check script (Node.js, no dependencies) run in CI:
 
 ```js
 // scripts/check-boundaries.mjs — fails if any package deep-imports another.
+// Requires Node.js 24 or later (fs.globSync was added in Node.js 22.0.0
+// and marked stable in 22.17.0 / 24.0.0).
 import { readFileSync } from "node:fs";
 import { globSync } from "node:fs";
 

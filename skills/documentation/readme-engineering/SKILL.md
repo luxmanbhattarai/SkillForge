@@ -104,6 +104,10 @@ understand what the project does — without asking anyone.
   them in.
 - The license must be stated in the README and present as a LICENSE
   file in the repository.
+- GitHub renders a README from `.github/`, the repository root, or
+  `docs/`, in that order when more than one exists; keep the
+  canonical README at the root. GitHub truncates rendered README
+  content beyond 500 KiB, so keep it well under that size.
 - Every link in the README must work. Check them before publishing.
 - Do not include credentials, tokens, internal URLs, or personal
   data in the README.

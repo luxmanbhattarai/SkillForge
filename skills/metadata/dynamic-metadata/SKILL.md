@@ -68,8 +68,13 @@ degrades gracefully when a field is empty.
   properties to generate.
 - [Next.js — Metadata](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)
   — the `generateMetadata` pattern for Next.js 16 App Router.
+  App Router only (`generateMetadata`, Next.js 13.2+); the Pages
+  Router sets metadata with `next/head` instead. Next.js 16.4.x
+  is current as of November 2026.
 - [Astro — Docs](https://docs.astro.build/) — Astro 7 documentation,
-  including head and layout patterns.
+  including head and layout patterns. Astro 7.4.x is current as of
+  November 2026; metadata is set with plain tags in a layout's
+  `<head>`.
 
 ## Required Workflow
 

@@ -44,6 +44,7 @@ This skill covers practical PostgreSQL use for application developers: writing c
 - `psql` or an equivalent client for inspecting the database directly.
 - The connection string stored as an environment variable such as `$DATABASE_URL`, never committed to the repository.
 - Basic SQL knowledge: `SELECT`, `JOIN`, `GROUP BY`, and transactions.
+- Supported versions as of 2026-11-20: PostgreSQL 15, 16, 17, 18, and 19 (19.0 released 19 November 2026). PostgreSQL 14 reached end of life on 12 November 2026 and receives no more fixes; 13 and older are likewise unsupported. Do not rely on a feature without checking it exists in the version actually running.
 
 ## Official Documentation
 
@@ -59,7 +60,7 @@ This skill covers practical PostgreSQL use for application developers: writing c
 5. Check any query that touches a large table with `EXPLAIN (ANALYZE, BUFFERS)` on representative data before shipping it.
 6. Wrap multi-statement writes that must succeed or fail together in a transaction (`BEGIN` / `COMMIT` / `ROLLBACK`).
 7. Add indexes deliberately: one index per proven access pattern, named clearly, and verified with `EXPLAIN`.
-8. For JSON data, use `JSONB` (not `JSON`) when the data is queried or indexed, and add a GIN index on the queried paths.
+8. For JSON data, use `JSONB` (not `JSON`) when the data is queried or indexed: add a GIN index for containment (`@>`) and key-existence (`?`) queries, or a B-tree expression index on `(data ->> 'key')` for equality on one key — a GIN index does not serve `->>` text equality.
 9. Run schema changes as versioned migrations, never as ad-hoc `ALTER TABLE` commands against a shared database.
 10. Before a deploy, re-check the slow-query log or `pg_stat_statements` output for regressions on the changed queries.
 
@@ -81,7 +82,7 @@ This skill covers practical PostgreSQL use for application developers: writing c
 - Enable `pg_stat_statements` on any non-trivial database so slow queries are visible instead of guessed at.
 - Use `EXPLAIN (ANALYZE, BUFFERS)` rather than plain `EXPLAIN` when a query is actually slow; the plan alone does not show real row counts or I/O.
 - Prefer `EXISTS` over `IN (SELECT ...)` when testing for the presence of related rows.
-- Use common table expressions for readability on complex queries, but check the plan: a CTE can act as an optimization fence on older versions.
+- Use common table expressions for readability on complex queries, but check the plan: a CTE acts as an optimization fence on PostgreSQL 11 and older; PostgreSQL 12 and later inline CTEs unless they are marked `MATERIALIZED`.
 - Use `VACUUM` and `ANALYZE` awareness: long-running transactions block vacuuming and bloat tables, so keep transactions short.
 - Use advisory locks or `SELECT ... FOR UPDATE` for explicit concurrency control instead of hoping two writers will not collide.
 - Test migrations against a copy of production-like data, not only against an empty database.
@@ -126,13 +127,24 @@ RETURNING id;
 ```
 
 ```sql
--- Example: JSONB query with a GIN index on the queried key.
+-- Example: JSONB equality on one key, served by a B-tree expression index.
+-- A GIN index serves containment (@>) and key-existence (?) queries, not
+-- ->> text equality, so it would not help this query.
 CREATE INDEX idx_orders_metadata_customer
-  ON orders USING GIN ((metadata -> 'customer_id'));
+  ON orders ((metadata ->> 'customer_id'));
 
 SELECT id, total
 FROM orders
 WHERE metadata ->> 'customer_id' = $1;
+```
+
+```sql
+-- Example: the same data queried by containment, which a GIN index serves.
+CREATE INDEX idx_orders_metadata_gin ON orders USING GIN (metadata);
+
+SELECT id, total
+FROM orders
+WHERE metadata @> '{"customer_id": "cust_42"}';
 ```
 
 ```sql

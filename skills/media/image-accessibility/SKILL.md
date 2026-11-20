@@ -66,6 +66,14 @@ that do not rely on sight alone.
   contrast requirements.
 - [MDN: the img element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img)
   — the `alt` attribute and responsive images.
+- Compatibility: WCAG 2.2 (W3C Recommendation, 5 October 2023; current
+  edition 12 December 2024) is the current version. The contrast numbers
+  that matter for images are unchanged since WCAG 2.0: Level AA requires
+  4.5:1 for normal text and 3:1 for large text (1.4.3 Contrast (Minimum)),
+  3:1 for the parts of graphics needed to understand them (1.4.11
+  Non-text Contrast), and 1.1.1 Non-text Content is the criterion that
+  requires text alternatives for images. WCAG 3.0 is still a Working
+  Draft — do not cite it as a requirement.
 
 ## Required Workflow
 
@@ -116,6 +124,10 @@ that do not rely on sight alone.
   same data, not just a one-line summary.
 - Color is never the only way information is conveyed. Use labels,
   patterns, shapes, or text alongside color.
+- Text inside images must meet WCAG 2.2 AA contrast ratios where it
+  carries information: 4.5:1 for normal text, 3:1 for large text
+  (1.4.3). Text that is part of a logo is exempt from 1.4.3, but
+  readable contrast is still good practice.
 
 ## Best Practices
 

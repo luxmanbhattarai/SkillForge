@@ -224,16 +224,16 @@
     "Requires a GitHub repository with Actions enabled and network access to GitHub.": [
       "github-actions"
     ],
-    "Requires Node.js 24 LTS and a GraphQL server library such as GraphQL Yoga or Apollo Server.": [
+    "Requires Node.js 24 LTS or later and a GraphQL server library: GraphQL Yoga 6.x or Apollo Server 5.x.": [
       "graphql"
     ],
-    "Requires Node.js 24 LTS or a supported edge runtime; TypeScript 5.x recommended.": [
+    "Requires Node.js 24 LTS or later or a supported edge runtime; TypeScript 7.x recommended.": [
       "hono"
     ],
-    "Requires the Hugo binary (extended edition for Sass/SCSS support) installed on the machine building the site.": [
+    "Requires the Hugo binary installed on the machine building the site; Sass/SCSS support needs a separate Dart Sass install (see Prerequisites).": [
       "hugo"
     ],
-    "Requires Node.js 24 LTS, TypeScript 5.x, and the MCP TypeScript SDK; network access for remote servers.": [
+    "Requires Node.js 24 LTS or later, TypeScript 7.x, and the MCP TypeScript SDK v2 (`@modelcontextprotocol/server`); network access for remote servers.": [
       "mcp-development"
     ],
     "Requires Node.js 24 LTS and a Next.js 16 project; deployment targets may need a hosting account.": [
@@ -242,7 +242,7 @@
     "Requires Node.js 24 LTS or later and npm; network access for installing dependencies.": [
       "nodejs"
     ],
-    "Requires Node.js 24 LTS, npm, and an npm account for publishing.": [
+    "Requires Node.js 24 LTS or later, npm, and an npm account for publishing.": [
       "package-development"
     ],
     "Requires Node.js and downloads browser binaries on install.": [
@@ -257,10 +257,10 @@
     "Requires Node.js 24 LTS and a React 19 project set up with a bundler or framework such as Vite or Next.js.": [
       "react"
     ],
-    "Requires a Node.js HTTP framework such as Hono or Express and TypeScript 5.x.": [
+    "Requires a Node.js HTTP framework such as Hono or Express and TypeScript 7.x.": [
       "rest-api"
     ],
-    "Requires Node.js 24 LTS and TypeScript 5.x; the target API must be documented.": [
+    "Requires Node.js 24 LTS or later and TypeScript 7.x; the target API must be documented.": [
       "sdk-development"
     ],
     "Requires Node.js 24 LTS, a React project with Tailwind CSS v4, and the shadcn/ui CLI (npx shadcn@latest).": [
@@ -269,7 +269,7 @@
     "Requires Node.js 24 LTS and a Tailwind CSS v4 project with the Tailwind CLI, PostCSS plugin, or Vite plugin.": [
       "tailwind-css"
     ],
-    "Requires Node.js 24 LTS, TypeScript 5.x, and a TypeScript client; works best in a monorepo.": [
+    "Requires Node.js 24 LTS or later, TypeScript 7.x, and a TypeScript client; works best in a monorepo.": [
       "trpc"
     ],
     "Requires Node.js 24 LTS and the TypeScript compiler (tsc) for type checking and builds.": [

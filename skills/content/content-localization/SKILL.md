@@ -53,7 +53,8 @@ which audience.
 
 - [W3C Internationalization](https://www.w3.org/International/) — guidance on language tags, text direction, and locale-aware web content.
 - [Managing multi-regional and multilingual sites](https://developers.google.com/search/docs/specialty/international/localized-versions) — Google's guidance on hreflang and localized versions.
-- [ISO 639-2 language codes](https://www.loc.gov/standards/iso639-2/) — the standard language code list used in hreflang and lang attributes.
+- [IANA Language Subtag Registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry) — the authoritative registry of language subtags used in BCP 47 language tags (`lang` attributes and hreflang values).
+- Compatibility: hreflang language codes use ISO 639-1 (two-letter, e.g. `en`, `es`), and region codes use ISO 3166-1 Alpha 2 (e.g. `US`, `MX`) — Google supports only codes from those two standards, so three-letter ISO 639-2 codes (e.g. `eng`) are not valid hreflang values. Do not use region-only codes such as `es-419`; Google does not support them.
 
 ## Required Workflow
 
@@ -75,6 +76,8 @@ which audience.
 - Units, dates, numbers, and currency use the target locale's conventions throughout, including in examples and tables.
 - Product names, trademarks, and brand terms follow the glossary: translated or kept as-is consistently.
 - Every localized page has a correct `lang` attribute and hreflang tags pointing to every language version, including itself.
+- Hreflang links must be bidirectional: if two pages do not both point to each other, Google ignores the tags. Each page's hreflang set is identical across all versions of the page.
+- Google does not use hreflang or the HTML `lang` attribute to detect a page's language; it determines language algorithmically. The tags exist to point users to the right version, not to declare the language.
 - URL slugs are localized (translated) when the site's structure allows it; they are never left as untranslated source-language slugs without a reason.
 - Legal and regulatory content (privacy, terms, health, finance) is reviewed by someone qualified in the target jurisdiction, not just translated.
 - The localized version records which source version it was translated from, so drift can be detected.
@@ -148,5 +151,5 @@ starter" localized as "masa madre" per glossary.
 
 - [W3C Internationalization](https://www.w3.org/International/) — language tags and locale-aware content.
 - [Managing multi-regional and multilingual sites](https://developers.google.com/search/docs/specialty/international/localized-versions) — hreflang and localized versions.
-- [ISO 639-2 language codes](https://www.loc.gov/standards/iso639-2/) — language code list.
+- [IANA Language Subtag Registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry) — authoritative language subtag list (BCP 47); hreflang uses ISO 639-1 language codes and ISO 3166-1 Alpha 2 region codes.
 - Related skills in this repository: `article-writing`, `editorial-review`, `content-refresh`.

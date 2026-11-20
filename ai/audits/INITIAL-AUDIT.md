@@ -144,7 +144,7 @@ there is nothing to lock). All scripts ran clean on Node v24.22.1.
 - **Recommended solution:** Verify against current official Next.js
   documentation in Phase 3 and correct the skill, including the
   version boundary (14 vs 15+) and the correct opt-in mechanism.
-- **Implementation status:** Open — assigned to Phase 3.
+- **Implementation status:** Fixed in Phase 3 (2026-11-20). `skills/frontend/nextjs/SKILL.md` now states fetch is NOT cached by default since Next.js 15, with the 14-vs-15 boundary, the opt-ins (`force-cache`, `next: { revalidate }`, `fetchCache`), and a Common Mistakes entry. Verified against current official Next.js docs. See ai/audits/TECHNICAL-ACCURACY-AUDIT.md.
 
 ### H-05 — Agents and workflows have no validation at all
 
@@ -178,7 +178,7 @@ there is nothing to lock). All scripts ran clean on Node v24.22.1.
 - **Recommended solution:** Derive status from real verification state
   (Phase 3 audit outcomes); upstream imports should carry a distinct
   status until reviewed.
-- **Implementation status:** Open — Phases 3, 9.
+- **Implementation status:** Partially resolved in Phase 3 (2026-11-20). The Phase 3 audit now provides real per-skill verification state (204 Verified, 16 with limitations, 6 Needs correction — see ai/audits/TECHNICAL-ACCURACY-AUDIT.md), so the evidence M-01 lacked now exists. The registry still hardcodes `status: "verified"`; deriving registry status from the audit outcomes is deferred to Phase 9.
 
 ### M-02 — Security scanner is regex-only (7 patterns)
 
@@ -308,7 +308,7 @@ there is nothing to lock). All scripts ran clean on Node v24.22.1.
   marketingskills import to include `tools/` (Phase 4/7 decision) or
   record the warnings as accepted with reasons. Do not silence them
   without a decision record.
-- **Implementation status:** Open — triage in Phase 3/4.
+- **Implementation status:** Triaged in Phase 3 (2026-11-20) — partially resolved. The 11 warnings: 3 false positives (legitimate prose), 1 borderline (ai-seo 500 vs 501 lines, trailing-newline count), 6 genuine (link-building `tools/` links — the marketingskills `tools/` directory was not imported), 1 trivial (site-architecture illustrative anchor). The 6 genuine warnings disappear only if `tools/` is imported (Phase 4/7 decision). See ai/audits/TECHNICAL-ACCURACY-AUDIT.md §M-08 triage outcome.
 
 ### M-09 — `npx skills add` install path is advertised but untested
 

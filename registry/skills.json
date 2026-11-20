@@ -444,7 +444,7 @@
     },
     {
       "name": "cloudflare",
-      "description": "Use this skill when working with the Cloudflare platform: setting up a Cloudflare account, configuring DNS and custom domains, managing zones, configuring SSL/TLS, page rules, caching, WAF and security settings, and choosing between Cloudflare products such as Workers, Pages, D1, R2, KV, Queues, and Durable Objects. Trigger keywords: Cloudflare, DNS, zone, custom domain, SSL, TLS, WAF, cache, CDN, Cloudflare account, nameserver.",
+      "description": "Use this skill when working with the Cloudflare platform: setting up a Cloudflare account, configuring DNS and custom domains, managing zones, configuring SSL/TLS, redirect, cache, and configuration rules, caching, WAF and security settings, and choosing between Cloudflare products such as Workers, Pages, D1, R2, KV, Queues, and Durable Objects. Trigger keywords: Cloudflare, DNS, zone, custom domain, SSL, TLS, WAF, cache, CDN, Cloudflare account, nameserver.",
       "path": "skills/infrastructure/cloudflare",
       "category": "infrastructure",
       "vendor": null,
@@ -1249,7 +1249,7 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires Node.js 24 LTS and a GraphQL server library such as GraphQL Yoga or Apollo Server.",
+      "compatibility": "Requires Node.js 24 LTS or later and a GraphQL server library: GraphQL Yoga 6.x or Apollo Server 5.x.",
       "last_verified": "2026-11-20"
     },
     {
@@ -1264,7 +1264,7 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires Node.js 24 LTS or a supported edge runtime; TypeScript 5.x recommended.",
+      "compatibility": "Requires Node.js 24 LTS or later or a supported edge runtime; TypeScript 7.x recommended.",
       "last_verified": "2026-11-20"
     },
     {
@@ -1309,7 +1309,7 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires the Hugo binary (extended edition for Sass/SCSS support) installed on the machine building the site.",
+      "compatibility": "Requires the Hugo binary installed on the machine building the site; Sass/SCSS support needs a separate Dart Sass install (see Prerequisites).",
       "last_verified": "2026-11-20"
     },
     {
@@ -1684,7 +1684,7 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires Node.js 24 LTS, TypeScript 5.x, and the MCP TypeScript SDK; network access for remote servers.",
+      "compatibility": "Requires Node.js 24 LTS or later, TypeScript 7.x, and the MCP TypeScript SDK v2 (`@modelcontextprotocol/server`); network access for remote servers.",
       "last_verified": "2026-11-20"
     },
     {
@@ -1999,7 +1999,7 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires Node.js 24 LTS, npm, and an npm account for publishing.",
+      "compatibility": "Requires Node.js 24 LTS or later, npm, and an npm account for publishing.",
       "last_verified": "2026-11-20"
     },
     {
@@ -2449,7 +2449,7 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires a Node.js HTTP framework such as Hono or Express and TypeScript 5.x.",
+      "compatibility": "Requires a Node.js HTTP framework such as Hono or Express and TypeScript 7.x.",
       "last_verified": "2026-11-20"
     },
     {
@@ -2469,7 +2469,7 @@
     },
     {
       "name": "schema-jsonld",
-      "description": "Add JSON-LD structured data to pages so search engines can understand entities, articles, products, FAQs, and breadcrumbs and show rich results. Use when implementing schema markup, fixing rich result errors, or adding Article, FAQ, Product, or BreadcrumbList markup.",
+      "description": "Add JSON-LD structured data to pages so search engines can understand entities, articles, products, and breadcrumbs and show rich results. Use when implementing schema markup, fixing rich result errors, or adding Article, Product, or BreadcrumbList markup.",
       "path": "skills/seo/schema-jsonld",
       "category": "seo",
       "vendor": null,
@@ -2494,7 +2494,7 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires Node.js 24 LTS and TypeScript 5.x; the target API must be documented.",
+      "compatibility": "Requires Node.js 24 LTS or later and TypeScript 7.x; the target API must be documented.",
       "last_verified": "2026-11-20"
     },
     {
@@ -2664,7 +2664,7 @@
     },
     {
       "name": "seo-migration",
-      "description": "Plans and executes SEO-safe website migrations: domain changes, URL restructuring, platform moves, HTTPS changes, and redesigns, without losing rankings or traffic. Use when changing domains, restructuring URLs, moving platforms or CMSs, redesigning a site, or merging sites, and when auditing a migration that already happened. Trigger keywords: SEO migration, site migration, domain change, URL redirect, 301 redirect map, platform migration, redesign SEO, site move, redirect chains.",
+      "description": "Plans and executes SEO-safe website migrations: domain changes, URL restructuring, platform moves, HTTPS changes, and redesigns, aiming to preserve as much search visibility as possible. Use when changing domains, restructuring URLs, moving platforms or CMSs, redesigning a site, or merging sites, and when auditing a migration that already happened. Trigger keywords: SEO migration, site migration, domain change, URL redirect, 301 redirect map, platform migration, redesign SEO, site move, redirect chains.",
       "path": "skills/seo/seo-migration",
       "category": "seo",
       "vendor": null,
@@ -3034,7 +3034,7 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires Node.js 24 LTS, TypeScript 5.x, and a TypeScript client; works best in a monorepo.",
+      "compatibility": "Requires Node.js 24 LTS or later, TypeScript 7.x, and a TypeScript client; works best in a monorepo.",
       "last_verified": "2026-11-20"
     },
     {
@@ -3054,7 +3054,7 @@
     },
     {
       "name": "twitter-card-images",
-      "description": "Create X (Twitter) card images and tags so shared links show a correct large-image preview on X. Use when a task asks for a Twitter card, X card, summary_large_image card, twitter:image tag, or a 1200x675 social image for sharing a page on X.",
+      "description": "Create X (Twitter) card images and tags so shared links show a correct large-image preview on X. Use when a task asks for a Twitter card, X card, summary_large_image card, twitter:image tag, or a 1200x600 social image for sharing a page on X.",
       "path": "skills/media/twitter-card-images",
       "category": "media",
       "vendor": null,
@@ -3069,7 +3069,7 @@
     },
     {
       "name": "twitter-cards",
-      "description": "Add Twitter (X) Card meta tags so links shared on X render rich previews with the right image, title, and description. Use when a link's preview on X is missing, wrong, or cropped; when choosing between summary and summary_large_image cards; or when setting up sharing for a new site. Covers twitter:card, twitter:image, and the X card validator.",
+      "description": "Add Twitter (X) Card meta tags so links shared on X render rich previews with the right image, title, and description. Use when a link's preview on X is missing, wrong, or cropped; when choosing between summary and summary_large_image cards; or when setting up sharing for a new site. Covers twitter:card, twitter:image, and testing cards with the post composer.",
       "path": "skills/metadata/twitter-cards",
       "category": "metadata",
       "vendor": null,
@@ -3399,7 +3399,7 @@
     },
     {
       "name": "youtube-thumbnails",
-      "description": "Design YouTube video thumbnails that are readable at small sizes and honest about the video's content. Use when a task asks for a YouTube thumbnail, video thumbnail, or custom thumbnail for a video, at the standard 1280x720 size.",
+      "description": "Design YouTube video thumbnails that are readable at small sizes and honest about the video's content. Use when a task asks for a YouTube thumbnail, video thumbnail, or custom thumbnail for a video, at YouTube's recommended 3840x2160 size (1280x720 still accepted).",
       "path": "skills/media/youtube-thumbnails",
       "category": "media",
       "vendor": null,

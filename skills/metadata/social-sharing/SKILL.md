@@ -101,6 +101,9 @@ that represents the page well wherever it lands.
    ("Share on X", "Copy link"), not divs with click handlers.
 - The Web Share API must be feature-detected (`if (navigator.share)`)
    and must fall back to intent links where it is not supported.
+   It only works in secure contexts (HTTPS) and must be called
+   from a user gesture, such as a button click; use
+   `navigator.canShare()` to check data before sharing it.
 - UTM parameters must follow the site's existing convention. If
    there is no convention, use `utm_source=<platform>`,
    `utm_medium=social`, and `utm_campaign=share`.
@@ -159,11 +162,15 @@ that represents the page well wherever it lands.
 
 ## Examples
 
-Plain share-intent links for X, Facebook, LinkedIn, and email:
+Plain share-intent links for X, Facebook, LinkedIn, WhatsApp, and
+email. The X intent endpoint is now `x.com/intent/post`; the old
+`twitter.com/intent/tweet` URL still redirects to it. The WhatsApp
+link uses the official `wa.me` format with a pre-filled message
+and no phone number, so the reader picks the recipient.
 
 ```html
 <!-- Share intents are plain links: no third-party scripts needed. -->
-<a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fexample.com%2Fblog%2Fsourdough&text=How%20to%20Fix%20Dense%20Sourdough%20Crumb"
+<a href="https://x.com/intent/post?url=https%3A%2F%2Fexample.com%2Fblog%2Fsourdough&text=How%20to%20Fix%20Dense%20Sourdough%20Crumb"
    target="_blank" rel="noopener">Share on X</a>
 
 <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fexample.com%2Fblog%2Fsourdough"
@@ -171,6 +178,9 @@ Plain share-intent links for X, Facebook, LinkedIn, and email:
 
 <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fexample.com%2Fblog%2Fsourdough"
    target="_blank" rel="noopener">Share on LinkedIn</a>
+
+<a href="https://wa.me/?text=How%20to%20Fix%20Dense%20Sourdough%20Crumb%20https%3A%2F%2Fexample.com%2Fblog%2Fsourdough"
+   target="_blank" rel="noopener">Share on WhatsApp</a>
 
 <a href="mailto:?subject=How%20to%20Fix%20Dense%20Sourdough%20Crumb&body=https%3A%2F%2Fexample.com%2Fblog%2Fsourdough">
   Share by email</a>

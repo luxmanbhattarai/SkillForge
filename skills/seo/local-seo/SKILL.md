@@ -72,6 +72,8 @@ business, verified with the owner.
 - [Schema.org](https://schema.org/) — the LocalBusiness structured data vocabulary.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — baseline quality requirements for local pages.
 
+Guidance current as of 2026-11-20.
+
 ## Required Workflow
 
 1. Verify the facts. Confirm the business name, address, phone,

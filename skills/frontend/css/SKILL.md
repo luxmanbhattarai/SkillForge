@@ -59,6 +59,11 @@ frontend styling skill builds on.
 - [Can I Use](https://caniuse.com/) — browser support data for CSS
   features before relying on them.
 
+CSS has no version numbers: it is a set of modules (Selectors, Flexbox,
+Grid, and so on) that advance independently. A feature's readiness is a
+browser-support question, not a "CSS version" question — check Can I Use
+or MDN before relying on anything newer than the fundamentals here.
+
 ## Required Workflow
 
 1. Read the HTML structure and the design, and identify the layout model

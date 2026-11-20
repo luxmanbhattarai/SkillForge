@@ -66,6 +66,10 @@ aggressively and safely, and HTML is fresh when it needs to be.
   — the full reference for cache headers and validation.
 - [MDN — Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)
   — every directive and what it means.
+- Cache-Control semantics are defined by RFC 9111 (which obsoletes
+  the older RFC 7234 — do not cite that); `immutable` is defined
+  by RFC 8246, and `stale-while-revalidate` and `stale-if-error`
+  by RFC 5861.
 
 ## Required Workflow
 
@@ -109,6 +113,10 @@ aggressively and safely, and HTML is fresh when it needs to be.
 - Use `stale-while-revalidate` for resources where slightly stale
   content is acceptable, so the cache serves instantly while
   refreshing in the background.
+- Consider `stale-if-error` for resources where serving a stale
+  copy beats an error page when the origin fails; do not combine
+  it with `must-revalidate`, which forbids serving stale content
+  once it has expired.
 - Set `Vary` correctly when the response depends on request headers
   (for example, `Vary: Accept-Encoding`), or caches may serve the
   wrong variant.
@@ -177,7 +185,11 @@ aggressively and safely, and HTML is fresh when it needs to be.
 
 ## Examples
 
-Cache headers for a content-hashed static asset (Node.js/Express):
+Cache headers for a content-hashed static asset (Node.js/Express).
+The `express.static` options shown work in Express 4 and in
+Express 5 (the current major, which requires Node.js 18+). In
+Express, the `immutable` option only takes effect when `maxAge`
+is greater than zero.
 
 ```js
 // Hashed filenames are immutable: a changed file gets a new URL.

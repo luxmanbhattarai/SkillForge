@@ -48,10 +48,18 @@ them reliably in CI. It is the recommended tool behind the
 
 ## Prerequisites
 
-- Node.js installed (Node.js 24 is the current LTS line as of
-  2026-11-20).
+- Node.js installed: use Node.js 22, 24, or 26. Playwright 1.65
+  (current as of 2026-11-20; 1.65.1 released 2026-11-13) no longer
+  tests on Node.js 20, which reached end-of-life in March 2026.
 - Playwright installed, plus its browser binaries (installed with the
   Playwright install command).
+- Version-specific differences to know: since 1.57 the bundled
+  browser is Chrome for Testing rather than raw Chromium, and
+  `Page#accessibility` was removed. In 1.65, TypeScript class fields
+  follow `useDefineForClassFields` from `tsconfig.json` (page-object
+  field initializers that read constructor parameters can break),
+  actions wait for elements to stop being inert, and cookie matching
+  follows RFC 6265; review those areas when upgrading.
 - A runnable build of the application under test, or a development
   server Playwright can start via `webServer` config.
 - A test environment with disposable data and test accounts.

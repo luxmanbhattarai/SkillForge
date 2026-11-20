@@ -12,7 +12,7 @@ metadata:
   maintainer: skills-library
   source: original
   last_verified: "2026-11-20"
-compatibility: Requires Node.js 24 LTS, npm, and an npm account for publishing.
+compatibility: Requires Node.js 24 LTS or later, npm, and an npm account for publishing.
 ---
 
 # Package Development
@@ -47,7 +47,8 @@ consumers.
 
 ## Prerequisites
 
-- Node.js 24 LTS and npm installed.
+- Node.js 24 LTS or later (26 is the current LTS line) and npm
+  installed.
 - An npm account and, for a scoped package, a registered organization
   or user scope.
 - A clear decision on the package's public API: what it exports and
@@ -64,6 +65,13 @@ consumers.
   format.
 - [Node.js packages guide](https://nodejs.org/api/packages.html) —
   how Node.js resolves packages, exports, and dual modules.
+- [TypeScript documentation](https://www.typescriptlang.org/docs/) —
+  TypeScript 7.x is current (7.0.2, August 2026); 6.0 was the last
+  JavaScript-based release and 5.x is superseded. Note that 7.0
+  ships no stable programmatic API until 7.1, so build tooling that
+  drives the compiler API may still need 6.0 (via the
+  `@typescript/typescript6` compatibility package); the `tsc` CLI
+  itself works normally on 7.x.
 
 ## Required Workflow
 
@@ -72,7 +80,7 @@ consumers.
    detail.
 2. Scaffold `package.json` with the fields in Implementation Standards:
    name, version, license, exports, types, files, and engines.
-3. Write the source in TypeScript 5.x with strict mode, and keep the
+3. Write the source in TypeScript 7.x with strict mode, and keep the
    entry point small: it re-exports the public API and nothing else.
 4. Configure the build to emit ESM (and CommonJS if dual-module
    support is required) plus TypeScript declaration files.
@@ -251,5 +259,7 @@ node -e "import('@example/greeter').then((m) => console.log(Object.keys(m)))"
 - [Semantic Versioning](https://semver.org/)
 - [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - [Node.js packages guide](https://nodejs.org/api/packages.html)
+- [TypeScript documentation](https://www.typescriptlang.org/docs/)
+  (TypeScript 7.x current; 6.0 last JavaScript-based release)
 - Related skills in this repository: `sdk-development`, `nodejs`,
   `changelog-management`.

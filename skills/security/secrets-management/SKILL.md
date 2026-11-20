@@ -61,8 +61,8 @@ rotating them, and responding when one leaks.
   storing secrets for CI workflows.
 - [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/) —
   secrets and key management guidance.
-- [OWASP Top 10](https://owasp.org/www-project-top-ten/) — sensitive
-  data exposure context.
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/) — Cryptographic
+  Failures (A04 in the current 2025 edition) context.
 
 ## Required Workflow
 

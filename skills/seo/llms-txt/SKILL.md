@@ -27,7 +27,16 @@ efficiently. An optional `llms-full.txt` contains the full text of those
 pages in one file. llms.txt is an optional, emerging convention proposed
 for LLM tooling; it is NOT a Google ranking requirement, NOT a search
 engine standard, and having one does not guarantee AI citation, AI
-search visibility, or any ranking outcome.
+search visibility, or any ranking outcome. Google has stated explicitly
+(June 2026) that llms.txt files "aren't needed for Google Search (and
+won't negatively or positively impact your visibility or rankings)".
+
+This skill follows llms.txt v2 of the proposal (current as of
+2026-11-20): the file may sit at the site root or at any subpath (for
+example `/docs/llms.txt`), covering the pages under that path, and the
+proposal now also covers markdown versions of pages and link relations
+for discovering them. `llms-full.txt` is a v1-era convention not in the
+v2 spec; it is still used by some sites, but treat it as legacy.
 
 ## When to Use
 
@@ -67,6 +76,11 @@ search visibility, or any ranking outcome.
 
 - [llms.txt](https://llmstxt.org/) — the proposal: file format, placement, and the optional llms-full.txt variant.
 - [Google Search Central](https://developers.google.com/search) — for the search-engine standards llms.txt does not replace.
+- [Google's guide to optimizing for generative AI features](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) —
+  Google's official guidance, including its June 2026 clarification
+  that llms.txt files are not needed for Google Search.
+
+Guidance current as of 2026-11-20 (llms.txt v2 of the proposal).
 
 ## Required Workflow
 
@@ -81,13 +95,16 @@ search visibility, or any ranking outcome.
    than twenty. Every entry must earn its place.
 4. Write the file. Follow the format in Implementation Standards:
    an H1 with the site name, a short description, then sections with
-   markdown links and one-line descriptions.
+   markdown links and one-line descriptions. Use an `Optional`
+   section for secondary links an agent can skip when context is short.
 5. Decide on llms-full.txt. Create it only for documentation sets
    where full-text inclusion is genuinely useful; keep it generated,
-   not hand-written.
-6. Publish at the root. Serve `/llms.txt` (and `/llms-full.txt` if
-   used) as static files with the correct content type, and confirm
-   they return HTTP 200.
+   not hand-written. Note it is a v1-era convention, not part of the
+   v2 spec.
+6. Publish at the root or at a subpath. Serve `/llms.txt` (or
+   `/docs/llms.txt` for a documentation section) as a static file
+   with the correct content type, and confirm it returns HTTP 200.
+   A file at a subpath covers only the pages under that path.
 7. Verify every link. Check that each linked URL returns HTTP 200 and
    points at the intended page.
 8. Schedule maintenance. Re-generate or review the file whenever key
@@ -95,21 +112,28 @@ search visibility, or any ranking outcome.
 
 ## Implementation Standards
 
-- Location: the file lives at the site root, `/llms.txt`, served over
-  HTTPS with a `text/markdown` content type where the server supports
-  it. Do not place it in a subdirectory.
-- Format: standard markdown. H1 is the site or project name. A
-  blockquote briefly describes the site. H2 sections group links
-  (for example "Docs", "Guides", "Reference"). Links use the form
+- Location: the file lives at the site root, `/llms.txt`, or at any
+  subpath (for example `/docs/llms.txt`) where it covers only the
+  pages under that path, served over HTTPS with a `text/markdown`
+  content type where the server supports it. Where more than one
+  file applies, agents should use the most specific one.
+- Format: standard markdown. H1 is the site or project name — the
+  only required section. A blockquote briefly describes the site.
+  H2 sections group links (for example "Docs", "Guides",
+  "Reference"). Links use the form
   `- [Title](https://example.com/page): one-line description.`
-- Links are absolute HTTPS URLs. Relative links are not useful to a
-  model reading the file out of context.
+  An `Optional` section, by convention, holds secondary links an
+  agent can skip when a shorter context is needed.
+- Links are absolute HTTPS URLs, and should point to LLM-friendly
+  content — ideally markdown versions of the pages. Under v2 of the
+  proposal, pages can offer a clean markdown version at the same URL
+  with `.md` appended or the extension replaced (for example
+  `page.md`), discoverable via `rel="alternate" type="text/markdown"`
+  and `rel="describedby"` link relations (as HTML `<link>` elements
+  or HTTP `Link:` headers). Relative links are not useful to a model
+  reading the file out of context.
 - Descriptions are one line, factual, and specific about what the
   linked page contains. No marketing language.
-- Optional sections from the llms.txt proposal may be used where they
-  fit: a section for pages AI tools may skip is not part of the core
-  format, so keep the file to the documented structure unless the
-  proposal adds one.
 - llms-full.txt, when used, contains the full markdown content of the
   listed pages, in the same order, and is generated from the source
   pages by a build step — never maintained by hand.
@@ -200,7 +224,8 @@ curl -I https://example.com/llms.txt
 
 ## Validation Checklist
 
-- [ ] The file is served at the site root as `/llms.txt` with HTTP 200.
+- [ ] The file is served at the site root as `/llms.txt` (or at a
+      subpath such as `/docs/llms.txt` for a section) with HTTP 200.
 - [ ] Every link is an absolute HTTPS URL that returns HTTP 200.
 - [ ] The file lists only public, production pages; no staging,
       admin, or private URLs.
@@ -223,5 +248,7 @@ curl -I https://example.com/llms.txt
 ## References
 
 - [llms.txt](https://llmstxt.org/) — the file format proposal and examples.
+- [Google's guide to optimizing for generative AI features](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) —
+  Google's clarification that llms.txt is not needed for Google Search.
 - [Google Search Central](https://developers.google.com/search) — search-engine standards that llms.txt does not replace.
 - Related skills in this repository: `llm-seo`, `sitemap-robots`, `technical-seo`.

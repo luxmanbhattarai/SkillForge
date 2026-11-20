@@ -66,6 +66,10 @@ violate Google's spam policies.
 - [Google Search Console](https://search.google.com/search-console/about) —
   the Links report shows the links Google knows about.
 
+Guidance current as of 2026-11-20. Third-party authority scores are
+estimates from private indexes, not Google's measure of a site; judge
+links by relevance and the linking page's quality, not by a score.
+
 ## Required Workflow
 
 1. Audit the current profile: referring domains, top linked pages, anchor

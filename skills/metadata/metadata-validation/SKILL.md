@@ -63,9 +63,11 @@ fixes can be targeted instead of guessed.
 - [The Open Graph protocol](https://ogp.me/) — the Open Graph
   properties to check.
 - [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/)
-  — test and refresh how Facebook scrapes a URL.
+  — test and refresh how Facebook scrapes a URL. Requires a
+  Facebook login.
 - [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/)
-  — test how LinkedIn renders a shared URL.
+  — test how LinkedIn renders a shared URL. Requires a LinkedIn
+  sign-in to run an inspection.
 
 ## Required Workflow
 
@@ -87,7 +89,9 @@ fixes can be targeted instead of guessed.
 5. Check for duplicates across the site: identical titles,
    descriptions, or canonical URLs on different pages.
 6. Test previews with a sharing debugger on at least one page per
-   template, and record what each platform shows.
+   template, and record what each platform shows. For X, use the
+   post composer: X has no working card validator (see
+   `twitter-cards`).
 7. Write the report: issues grouped by type, with the affected
    pages, the severity, and the fix (which skill or template change
    applies).

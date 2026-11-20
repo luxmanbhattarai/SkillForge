@@ -119,8 +119,9 @@ is accessible.
 - Motion: honor `prefers-reduced-motion` for animation, parallax, and
   auto-playing motion; provide a way to pause, stop, or hide any moving
   content that lasts more than five seconds.
-- Touch targets: at least 24 by 24 CSS pixels (WCAG 2.2 AA minimum),
-  with 44 by 44 CSS pixels as the practical target.
+- Touch targets: at least 24 by 24 CSS pixels (WCAG 2.2 AA minimum,
+  success criterion 2.5.8, with a spacing exception for smaller
+  targets), with 44 by 44 CSS pixels as the practical target.
 - Text: users can resize text to 200% without loss of content or
   function; do not disable zoom with `user-scalable=no` or
   `maximum-scale=1`.

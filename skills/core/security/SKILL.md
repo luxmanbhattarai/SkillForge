@@ -53,13 +53,21 @@ ship does not expose users, data, or infrastructure to preventable harm.
 ## Official Documentation
 
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/) — the ten
-  most critical web application security risks.
+  most critical web application security risks. The current edition is
+  OWASP Top 10:2025 (announced November 2025, finalised January 2026;
+  replaces the 2021 edition). It adds two categories — A03 Software
+  Supply Chain Failures and A10 Mishandling of Exceptional Conditions —
+  folds Server-Side Request Forgery into A01 Broken Access Control, and
+  moves Security Misconfiguration up to A02. Do not cite the 2021
+  ranking or category numbers.
 - [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/) —
   concise, actionable guidance per topic.
 - [OWASP ASVS](https://owasp.org/www-project-application-security-verification-standard/) —
-  the standard for verifying application security controls.
+  the standard for verifying application security controls. The current
+  stable release is ASVS 5.0.0 (published 30 May 2025); ASVS 4.0.3 is
+  superseded, and requirement numbers changed between 4.x and 5.0.
 - [CWE Top 25](https://cwe.mitre.org/top25/) — the most dangerous
-  software weaknesses.
+  software weaknesses. The current list is the 2025 edition.
 
 ## Required Workflow
 

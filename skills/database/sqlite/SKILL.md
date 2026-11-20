@@ -44,6 +44,7 @@ This skill covers practical SQLite use: getting the most from a single-file embe
 - A decision about where the database file lives (a writable directory, backed up with the application data).
 - Basic SQL knowledge: `SELECT`, `JOIN`, `GROUP BY`, and transactions.
 - Awareness of the deployment model: one process, one file, one writer at a time.
+- Current release as of 2026-11-20: SQLite 3.51.3 (13 March 2026), which fixes a WAL-reset corruption bug — use 3.51.3 or later. Check the version actually in use with `SELECT sqlite_version();`, because the version bundled with a language runtime or operating system is often older than the latest release. `STRICT` tables need SQLite 3.37.0 or later.
 
 ## Official Documentation
 
@@ -70,7 +71,7 @@ This skill covers practical SQLite use: getting the most from a single-file embe
 - Remember SQLite type affinity: a column's declared type is a preference, not a strict rule. Enforce real constraints with `CHECK`, and validate types in the application where strictness matters.
 - Store dates as ISO-8601 text (`TEXT`), Unix epoch integers, or Julian day numbers — pick one convention per project and document it.
 - Store booleans as `INTEGER` with a `CHECK (value IN (0, 1))` constraint.
-- Use `STRICT` tables (where the SQLite version supports them) when strict typing is wanted.
+- Use `STRICT` tables (SQLite 3.37.0 or later) when strict typing is wanted.
 - Use `WITHOUT ROWID` tables only for tables with a composite primary key that is always used for lookups; the default rowid table is right for most tables.
 - Name constraints explicitly so error messages and migrations are readable.
 - Use `INSERT ... ON CONFLICT` (upsert) for idempotent inserts instead of a read-then-write race.

@@ -54,6 +54,12 @@ every push and behaves the same in preview and production.
   most projects work with zero configuration.
 - For CLI work: the Vercel CLI installed and authenticated with
   `vercel login`.
+- Runtime versions: Node.js 26.x is the default for new projects
+  (generally available 2026-10-29); 24.x and 22.x are also available.
+  Node.js 20 was deprecated on 2026-10-01 and new deployments
+  targeting it fail. Pin the version with `engines.node` in
+  `package.json`, which overrides the dashboard setting. The Edge
+  runtime is deprecated; use the default Node.js runtime.
 
 ## Official Documentation
 

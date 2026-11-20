@@ -48,8 +48,13 @@ run more than once.
 
 ## Prerequisites
 
-- A job runner or queue chosen for the project (BullMQ on Redis,
-  Inngest, Trigger.dev, or a Postgres-backed runner).
+- A job runner or queue chosen for the project (BullMQ 6.x on Redis,
+  Inngest, Trigger.dev, or a Postgres-backed runner). BullMQ 6 is
+  current (6.7.8, November 2026): legacy repeatable jobs were removed
+  in v6, so scheduled work must use Job Schedulers
+  (`queue.upsertJobScheduler`); `ioredis` is now an optional peer
+  dependency you install separately; and `Job#discard()` was removed
+  — throw `UnrecoverableError` to stop retries.
 - A backing store for job state (Redis, Postgres, or the runner's
   managed store).
 - A way to observe jobs: logs, metrics, and alerts for failures.
@@ -57,7 +62,8 @@ run more than once.
 ## Official Documentation
 
 - [BullMQ documentation](https://docs.bullmq.io/) — a Redis-based job
-  queue for Node.js.
+  queue for Node.js. BullMQ 6.x is current; see the v5-to-v6
+  migration guide before upgrading an existing installation.
 - [Inngest documentation](https://docs.inngest.com/) — a managed
   background job platform with durable functions.
 - [Trigger.dev documentation](https://trigger.dev/docs) — a managed
@@ -104,7 +110,9 @@ run more than once.
 - Jobs must be safe to run concurrently unless explicitly serialized:
   use a lock or a unique constraint when two instances must not overlap.
 - Scheduled jobs (cron) must tolerate a missed run and a duplicate run;
-  check for work already done before acting.
+  check for work already done before acting. In BullMQ 6, scheduled
+  jobs use Job Schedulers; the old `repeat` option on `Queue.add`
+  was removed in v6.
 - Timeouts: every job has a maximum runtime, and long jobs checkpoint
   their progress so a retry resumes instead of restarting.
 - Never enqueue a job inside a database transaction that has not
@@ -227,7 +235,7 @@ await jobs.enqueue("send-welcome-email", { userId: user.id });
 
 ## References
 
-- [BullMQ documentation](https://docs.bullmq.io/)
+- [BullMQ documentation](https://docs.bullmq.io/) (BullMQ 6.x current)
 - [Inngest documentation](https://docs.inngest.com/)
 - [Trigger.dev documentation](https://trigger.dev/docs)
 - [Cloudflare Workflows](https://developers.cloudflare.com/workflows/)
