@@ -1,0 +1,35 @@
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Check frontmatter
+        run: node scripts/check-frontmatter.mjs
+
+      - name: Check links
+        run: node scripts/check-links.mjs
+
+      - name: Check trailing whitespace in Markdown
+        # Upstream skills are imported verbatim and never edited, so
+        # they are excluded from this check.
+        run: |
+          if find . -name '*.md' -not -path './skills/upstream/*' -print0 \
+            | xargs -0 grep -n ' $'; then
+            echo "Trailing whitespace found in Markdown files."
+            exit 1
+          fi
