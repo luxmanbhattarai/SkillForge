@@ -15,7 +15,7 @@ Rule: local commits only on this branch. Do NOT push, merge, or open a PR.
 | 1. Full repository audit | Verified | 27 findings (0 Critical, 5 High, 10 Medium, 12 Low). All baseline checks re-run and passing; online link check clean. -> ai/audits/INITIAL-AUDIT.md |
 | 2. Installation system overhaul | Verified | Full safe CLI (install/update/list/doctor/validate/uninstall/restore, manifest, backups, atomic installs); 62 tests pass; Codex/Antigravity paths corrected per current vendor docs. Limitation: Windows --link EPERM path untested (no Windows runner). Findings H-01, M-05, M-06, M-09 fixed. |
 | 3. Technical accuracy audit | Verified | All 226 skills audited: 204 Verified, 16 Verified with limitations, 6 Needs correction (upstream), 0 Unverified, 0 Blocked. 145 original skill files corrected (+1715/−507). Full validation suite passing; online link check clean (347 URLs). Limitations: X/Twitter docs unavailable (3 skills); Prisma 8 still RC (3 skills); upstream errors need upstream fixes. Findings H-04 fixed, M-08 triaged (partially resolved). -> ai/audits/TECHNICAL-ACCURACY-AUDIT.md |
-| 4. Skills expansion | Not Started | |
+| 4. Skills expansion | In Progress | 12 batches fanned out, 51 new skills + 2 extensions planned (see ai/phase4/plan.md). Open decisions resolved: marketingskills tools/ selective import (11 files), upstream sibling skills documented-not-imported. |
 | 5. Skill quality standards | Not Started | |
 | 6. Behavioral evaluation system | Not Started | |
 | 7. Security verification upgrade | Not Started | |
