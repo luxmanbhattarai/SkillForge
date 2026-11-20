@@ -13,8 +13,8 @@ Rule: local commits only on this branch. Do NOT push, merge, or open a PR.
 | Phase | Status | Notes |
 | --- | --- | --- |
 | 1. Full repository audit | Verified | 27 findings (0 Critical, 5 High, 10 Medium, 12 Low). All baseline checks re-run and passing; online link check clean. -> ai/audits/INITIAL-AUDIT.md |
-| 2. Installation system overhaul | In Progress | Delegated to implementation subagent; audit findings H-01, M-05, M-06, M-09 in scope. |
-| 3. Technical accuracy audit | Not Started | -> ai/audits/TECHNICAL-ACCURACY-AUDIT.md |
+| 2. Installation system overhaul | Verified | Full safe CLI (install/update/list/doctor/validate/uninstall/restore, manifest, backups, atomic installs); 62 tests pass; Codex/Antigravity paths corrected per current vendor docs. Limitation: Windows --link EPERM path untested (no Windows runner). Findings H-01, M-05, M-06, M-09 fixed. |
+| 3. Technical accuracy audit | In Progress | 10 batches fanned out, all 226 skills. -> ai/audits/TECHNICAL-ACCURACY-AUDIT.md |
 | 4. Skills expansion | Not Started | |
 | 5. Skill quality standards | Not Started | |
 | 6. Behavioral evaluation system | Not Started | |
@@ -33,3 +33,5 @@ results are recorded, and limitations are documented.
 - 2026-11-20: Branch created from main @ bc304a2; ai/ workspace scaffolded.
 - 2026-11-20: Phase 1 complete — full audit written (27 findings), all baseline validations re-run and passing, online link check clean (311 URLs, 0 errors).
 - 2026-11-20: H-02 fixed in Wave 1 — registry/report generation is now deterministic (`generated` derives from newest `last_verified`); see ai/decisions/2026-11-20-registry-determinism.md.
+- 2026-11-20: Phase 2 complete — installer overhauled (safe, reversible, manifest-based CLI; 62 tests pass). Codex/Antigravity install paths corrected per current vendor docs (coordinator re-verified). Findings H-01, M-05, M-06, M-09 fixed.
+- 2026-11-20: Phase 3 fanned out — 10 batches auditing all 226 skills (see ai/phase3/plan.md).

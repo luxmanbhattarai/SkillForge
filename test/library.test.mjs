@@ -1,0 +1,87 @@
+// library.test.mjs — unit tests for library loading, selection
+// resolution, and the agent/workflow format transforms.
+
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { loadLibrary, resolveSelection, deriveDescription, toMarkdownAgent, toTomlAgent, splitList, installedFileName } from '../scripts/install/library.mjs';
+import { TARGETS } from '../scripts/install/targets.mjs';
+import { REPO_ROOT } from './helpers.mjs';
+
+test('loadLibrary reads the real registry and scans agents/workflows', async () => {
+  const lib = await loadLibrary(REPO_ROOT);
+  assert.equal(lib.skills.size, 226);
+  assert.equal(lib.agents.size, 20);
+  assert.equal(lib.workflows.size, 9);
+  assert.equal(lib.skills.get('nextjs').category, 'frontend');
+  assert.equal(lib.skills.get('nextjs').source, 'skills/frontend/nextjs');
+  assert.equal(lib.agents.get('frontend-specialist').source, 'agents/frontend-specialist.md');
+  assert.equal(lib.workflows.get('seo-audit').source, 'workflows/seo-audit.md');
+  assert.equal(lib.categories.has('frontend'), true);
+  assert.equal(lib.categories.has('upstream'), true);
+});
+
+test('splitList handles repeats, commas, and whitespace', () => {
+  assert.deepEqual(splitList(['a,b', ' c ', 'd']), ['a', 'b', 'c', 'd']);
+  assert.deepEqual(splitList(['', ' , ']), []);
+  assert.deepEqual(splitList(undefined), []);
+});
+
+test('resolveSelection: all, categories, dedup, unknown names', async () => {
+  const lib = await loadLibrary(REPO_ROOT);
+  const all = resolveSelection(lib, { skills: ['all'] });
+  assert.equal(all.items.length, 226);
+  assert.deepEqual(all.errors, []);
+  const cat = resolveSelection(lib, { categories: ['metadata'] });
+  assert.equal(cat.items.length, 6);
+  assert.ok(cat.items.every((i) => i.category === 'metadata'));
+  const mixed = resolveSelection(lib, { skills: ['nextjs', 'nextjs'], categories: ['metadata'], agents: ['all'] });
+  const names = mixed.items.map((i) => `${i.kind}:${i.name}`);
+  assert.equal(new Set(names).size, names.length); // no duplicates
+  assert.equal(mixed.items.filter((i) => i.kind === 'agent').length, 20);
+  const bad = resolveSelection(lib, { skills: ['nope'], categories: ['nope'], agents: ['nope'], workflows: ['nope'] });
+  assert.equal(bad.errors.length, 4);
+  assert.match(bad.errors[0], /unknown skill 'nope'/);
+  assert.match(bad.errors[1], /unknown category 'nope'/);
+});
+
+test('deriveDescription folds the opening paragraph and truncates long ones', () => {
+  const md = '# Title\n\nFirst line of the intro\nsecond line here.\n\n## Role\n\nMore text.\n';
+  assert.equal(deriveDescription(md, 'x'), 'First line of the intro second line here.');
+  const long = `# T\n\n${'word '.repeat(100)}\n`;
+  const desc = deriveDescription(long, 'x');
+  assert.ok(desc.length <= 245);
+  assert.ok(desc.endsWith('…'));
+  assert.equal(deriveDescription('# Only a title\n', 'fallback-name'), 'SkillForge fallback-name agent.');
+});
+
+test('toMarkdownAgent prepends frontmatter, escapes quotes, leaves frontmatter alone', () => {
+  const md = "# Fixture\n\nDoes a thing, and it's quick.\n";
+  const out = toMarkdownAgent('fixture', md);
+  assert.ok(out.startsWith("---\nname: fixture\ndescription: 'Does a thing, and it''s quick.'\n---\n\n"));
+  assert.ok(out.endsWith(md));
+  const withFm = '---\nname: custom\ndescription: kept\n---\n\n# Body\n';
+  assert.equal(toMarkdownAgent('custom', withFm), withFm);
+});
+
+test('toTomlAgent renders a Codex agent file and rejects triple quotes', () => {
+  const md = '# Agent\n\nDoes things.\n\n## Role\n\nRole text.\n';
+  const toml = toTomlAgent('my-agent', md);
+  assert.match(toml, /^name = "my-agent"$/m);
+  assert.match(toml, /^description = "Does things\."$/m);
+  assert.match(toml, /^developer_instructions = """\n# Agent\n\nDoes things\./m);
+  assert.ok(toml.endsWith('"""\n'));
+  assert.throws(() => toTomlAgent('bad', '# T\n\nHas """ in it.\n'), /cannot be converted to Codex TOML/);
+  // Backslashes are escaped so the TOML stays valid.
+  const withSlash = toTomlAgent('s', '# T\n\nPath C:\\temp\\x.\n');
+  assert.match(withSlash, /C:\\\\temp\\\\x/);
+});
+
+test('installedFileName follows the target format', () => {
+  const agent = { kind: 'agent', name: 'a' };
+  const workflow = { kind: 'workflow', name: 'w' };
+  assert.equal(installedFileName(agent, TARGETS['claude-code']), 'a.md');
+  assert.equal(installedFileName(agent, TARGETS.codex), 'a.toml');
+  assert.equal(installedFileName(agent, TARGETS.antigravity), 'a.md');
+  assert.equal(installedFileName(workflow, TARGETS.antigravity), 'w.md');
+  assert.equal(installedFileName(workflow, TARGETS['claude-code']), null);
+});

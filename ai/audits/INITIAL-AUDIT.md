@@ -72,7 +72,11 @@ there is nothing to lock). All scripts ran clean on Node v24.22.1.
 - **Recommended solution:** Implement conflict detection, existing-file
   comparison, backup-before-replacement, and overwrite confirmation;
   make destructive replacement opt-in via `--force` only.
-- **Implementation status:** Open — assigned to Phase 2.
+- **Implementation status:** Fixed in Phase 2 (2026-11-20). The
+  installer now detects conflicts by hash comparison, refuses to
+  overwrite user modifications without `--force`/`--backup`, backs up
+  before every replacement, and installs via atomic rename with
+  rollback. Verified by 62 tests and a coordinator smoke test.
 
 ### H-02 — Registry generation is non-deterministic; CI will fail from 2026-11-21
 
@@ -239,7 +243,10 @@ there is nothing to lock). All scripts ran clean on Node v24.22.1.
 - **Evidence:** `install-skills.mjs` (69 lines; one code path) and the
   options list in `docs/INSTALLATION.md`.
 - **Recommended solution:** Overhaul per the Phase 2 specification.
-- **Implementation status:** Open — assigned to Phase 2.
+- **Implementation status:** Fixed in Phase 2 (2026-11-20). Full CLI
+  implemented: install (all/category/skill/agent/workflow), update,
+  list, doctor, validate, uninstall, restore, dry-run, force, backup,
+  manifest, idempotency, atomic installs. See `docs/INSTALLATION.md`.
 
 ### M-06 — Install target paths asserted without vendor-doc references
 
@@ -256,7 +263,13 @@ there is nothing to lock). All scripts ran clean on Node v24.22.1.
   notes per agent defer to vendor docs without linking them.
 - **Recommended solution:** Verify each target path against current
   official agent documentation in Phase 2; record sources and dates.
-- **Implementation status:** Open — assigned to Phase 2.
+- **Implementation status:** Fixed in Phase 2 (2026-11-20). All four
+  targets verified against current official docs; Codex moved to
+  `.agents/skills` and Antigravity to `.agents/skills` /
+  `~/.gemini/config/skills` (coordinator independently re-verified
+  both moves from the vendor docs). Sources in
+  `scripts/install/targets.mjs` and
+  `ai/decisions/2026-11-20-installer-target-paths.md`.
 
 ### M-07 — Agents/workflows reference skills by names that do not exist
 
@@ -311,7 +324,11 @@ there is nothing to lock). All scripts ran clean on Node v24.22.1.
 - **Recommended solution:** Verify in a sandbox in Phase 2 (without
   touching real agent directories); keep the docs only if it works,
   otherwise remove the claim.
-- **Implementation status:** Open — assigned to Phase 2.
+- **Implementation status:** Fixed in Phase 2 (2026-11-20). Verified
+  in a sandbox: `npx skills add` discovers all 226 skills and installs
+  with byte-identical content; documented honestly (bare command is
+  interactive). See
+  `ai/decisions/2026-11-20-npx-skills-verification.md`.
 
 ### M-10 — No registries for agents/workflows; no registry schema validation
 
