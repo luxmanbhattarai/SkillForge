@@ -1,0 +1,128 @@
+{
+  "$id": "https://github.com/luxmanbhattarai/SkillForge/schemas/skills.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "categories": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "generated": {
+      "type": "string"
+    },
+    "name": {
+      "enum": [
+        "skillforge"
+      ],
+      "type": "string"
+    },
+    "skills": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "compatibility": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "last_verified": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "license": {
+            "type": "string"
+          },
+          "maintainer": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "related": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "source": {
+            "type": "string"
+          },
+          "source_type": {
+            "enum": [
+              "original",
+              "upstream"
+            ],
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "verified",
+              "verified-with-limitations",
+              "needs-correction",
+              "unverified"
+            ],
+            "type": "string"
+          },
+          "vendor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "path",
+          "category",
+          "vendor",
+          "source_type",
+          "source",
+          "status",
+          "version",
+          "license",
+          "maintainer",
+          "compatibility",
+          "last_verified",
+          "related"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "total_skills": {
+      "type": "integer"
+    },
+    "version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "version",
+    "generated",
+    "categories",
+    "total_skills",
+    "skills"
+  ],
+  "type": "object"
+}

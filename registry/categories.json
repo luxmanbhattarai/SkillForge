@@ -3,7 +3,7 @@
   "categories": [
     {
       "name": "ai-engineering",
-      "description": "",
+      "description": "LLM integration, RAG, AI agents, MCP security, agent evaluation.",
       "count": 5,
       "skills": [
         "agent-evaluation",
@@ -152,7 +152,7 @@
     },
     {
       "name": "desktop",
-      "description": "",
+      "description": "Desktop apps: Tauri 2, Electron, Rust, native APIs, packaging.",
       "count": 3,
       "skills": [
         "electron",

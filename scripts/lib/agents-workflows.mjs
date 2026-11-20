@@ -50,7 +50,9 @@ export function classifyToken(token, index, fileExists) {
   return { kind: 'unknown', reason: 'no such skill, agent, or workflow' };
 }
 
-function sectionBody(text, name) {
+// Extract the body of a ## section (text up to the next ## heading).
+// Exported for the registry generator (agents.json / workflows.json).
+export function extractSection(text, name) {
   const m = text.match(new RegExp(`^## ${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'm'));
   if (!m) return null;
   const start = m.index + m[0].length;
@@ -59,9 +61,44 @@ function sectionBody(text, name) {
   return next === -1 ? rest : rest.slice(0, next);
 }
 
-function skillTokens(section) {
+// Lowercase backticked tokens in a section — the skill-name references.
+// Exported for the registry generator.
+export function extractSkillTokens(section) {
   if (!section) return new Set();
   return new Set([...section.matchAll(/`([a-z0-9][a-z0-9-]*)`/g)].map((m) => m[1]));
+}
+
+// The H1 title (first line), without the '# '. '' when absent.
+export function extractTitle(text) {
+  const first = (text.split('\n')[0] || '');
+  const m = first.match(/^#\s+(.+)$/);
+  return m ? m[1].trim() : '';
+}
+
+// The first paragraph after the H1: the agent/workflow description.
+// '' when absent.
+export function extractDescription(text) {
+  const lines = text.split('\n').slice(1);
+  const para = [];
+  let started = false;
+  for (const line of lines) {
+    if (/^##\s/.test(line)) break;
+    if (line.trim() === '') {
+      if (started) break;
+      continue;
+    }
+    started = true;
+    para.push(line.trim());
+  }
+  return para.join(' ');
+}
+
+function sectionBody(text, name) {
+  return extractSection(text, name);
+}
+
+function skillTokens(section) {
+  return extractSkillTokens(section);
 }
 
 // Check one file's content. kind is 'agent' or 'workflow'.

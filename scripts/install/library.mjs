@@ -1,9 +1,11 @@
 // library.mjs — reading the SkillForge library (registry, agents,
 // workflows) and resolving install selections against it.
 //
-// Skills are authoritative in registry/skills.json. Agents and
-// workflows have no registry yet (see M-10 in ai/audits), so they are
-// discovered by scanning agents/ and workflows/ for *.md files.
+// Skills are authoritative in registry/skills.json; agents and
+// workflows in registry/agents.json and registry/workflows.json
+// (Phase 9, finding M-10). When an agents/workflows registry file
+// is absent (e.g. a fixture library), loadLibrary falls back to
+// scanning agents/ and workflows/ for *.md files.
 //
 // This module also owns the format transforms applied when an agent
 // or workflow is installed for a target whose native format differs
@@ -45,29 +47,44 @@ export async function loadLibrary(root) {
   }
   const categories = new Set([...skills.values()].map((s) => s.category).filter(Boolean));
 
-  const agents = new Map();
-  for (const name of await listMarkdownNames(path.join(root, 'agents'))) {
-    agents.set(name, {
-      kind: 'agent',
-      name,
-      category: null,
-      version: pkg.version || '0.0.0',
-      source: `agents/${name}.md`,
-      description: '',
-    });
-  }
-  const workflows = new Map();
-  for (const name of await listMarkdownNames(path.join(root, 'workflows'))) {
-    workflows.set(name, {
-      kind: 'workflow',
-      name,
-      category: null,
-      version: pkg.version || '0.0.0',
-      source: `workflows/${name}.md`,
-      description: '',
-    });
-  }
+  const agents = await loadKind(root, 'agents', 'agent', pkg.version);
+  const workflows = await loadKind(root, 'workflows', 'workflow', pkg.version);
   return { root, version: pkg.version || '0.0.0', skills, categories, agents, workflows };
+}
+
+// Load one kind (agents or workflows) from its registry file, falling
+// back to a directory scan when the registry file is absent.
+async function loadKind(root, dir, kind, pkgVersion) {
+  const out = new Map();
+  const registryFile = path.join(root, 'registry', `${dir}.json`);
+  try {
+    const doc = JSON.parse(await readFile(registryFile, 'utf8'));
+    for (const entry of doc[dir] || []) {
+      out.set(entry.name, {
+        kind,
+        name: entry.name,
+        category: null,
+        version: pkgVersion || '0.0.0',
+        source: entry.path || `${dir}/${entry.name}.md`,
+        description: entry.description || '',
+      });
+    }
+    return out;
+  } catch (err) {
+    if (err.code !== 'ENOENT') throw err;
+    // No registry file: fall back to scanning the directory.
+  }
+  for (const name of await listMarkdownNames(path.join(root, dir))) {
+    out.set(name, {
+      kind,
+      name,
+      category: null,
+      version: pkgVersion || '0.0.0',
+      source: `${dir}/${name}.md`,
+      description: '',
+    });
+  }
+  return out;
 }
 
 async function listMarkdownNames(dir) {

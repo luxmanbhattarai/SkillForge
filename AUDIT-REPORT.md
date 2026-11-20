@@ -6,7 +6,7 @@ Generated: 2026-11-20 · Registry version: 1.0.0
 
 - **Skills:** 277 (228 original, 49 upstream)
 - **Categories:** 18
-- **Target coverage:** 177/177 planned original skills (100%)
+- **Target coverage:** 228/228 planned original skills (100%)
 - **Validation:** PASS with 5 warning(s).
 
 ## Skills by source
@@ -23,21 +23,23 @@ Generated: 2026-11-20 · Registry version: 1.0.0
 
 | Category | Done | Planned |
 | --- | --- | --- |
+| ai-engineering | 5 | 5 |
+| architecture | 12 | 12 |
+| auth | 14 | 14 |
+| backend | 21 | 21 |
+| content | 19 | 19 |
 | core | 11 | 11 |
-| frontend | 16 | 16 |
-| backend | 13 | 13 |
-| database | 14 | 14 |
-| auth | 10 | 10 |
-| architecture | 9 | 9 |
-| infrastructure | 13 | 13 |
-| testing | 8 | 8 |
-| security | 8 | 8 |
-| seo | 27 | 27 |
-| performance | 8 | 8 |
-| content | 17 | 17 |
-| media | 12 | 12 |
-| metadata | 6 | 6 |
+| database | 18 | 18 |
+| desktop | 3 | 3 |
 | documentation | 5 | 5 |
+| frontend | 21 | 21 |
+| infrastructure | 22 | 22 |
+| media | 16 | 16 |
+| metadata | 6 | 6 |
+| performance | 8 | 8 |
+| security | 8 | 8 |
+| seo | 31 | 31 |
+| testing | 8 | 8 |
 
 ## Remaining planned skills (0)
 

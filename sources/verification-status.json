@@ -1,0 +1,1188 @@
+{
+  "version": "1.0.0",
+  "audit": "ai/audits/TECHNICAL-ACCURACY-AUDIT.md",
+  "derived": "2026-11-20",
+  "statuses": {
+    "accessibility": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "accessibility-testing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "advanced-api-architecture": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "aeo-optimization": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "agent-evaluation": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "ai-agents": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "ai-image-generation": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "ai-seo": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "No flat errors. Limitations: (1) Brave Search is on Anthropic's subprocessor list as \"Web Search\" since 2025-03-19 (confirmed), but the pipeline is composite..."
+    },
+    "analytics": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "api-client-generation": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "api-design": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "api-documentation": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "article-writing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "astro": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "auth-security": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "authentication": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "authjs": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "authorization": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "aws": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "background-jobs": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "backup-recovery": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "better-auth": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "blog-featured-images": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "blog-writing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "brainstorming": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "brand-guidelines": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "brand-visual-consistency": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "bundle-optimization": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "caching": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "caching-strategy": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "canonical-management": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "changelog-management": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "changesets": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "ci-cd": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "clean-code": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "clerk": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "clickhouse": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "cloudflare": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "cloudflare-d1": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "cloudflare-kv": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "cloudflare-queues": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "cloudflare-r2": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "cloudflare-workers": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "code-review": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "competitor-analysis": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "competitor-profiling": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "No content errors. Limitation (import-scope gap): Related Skills sections reference unimported marketingskills siblings (e.g. competitors, content-strategy)...."
+    },
+    "connection-pooling": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "content-brief": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "content-decay": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "content-gap-analysis": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "content-localization": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "content-refresh": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "content-repurposing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "content-research": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "content-strategy": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "copy-editing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "copywriting": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "core-web-vitals": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "cro": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "No content errors. Limitation (import-scope gap): Related Skills reference unimported siblings (ab-testing, conversion-tracking, attribution, etc.)."
+    },
+    "csrf-protection": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "css": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "database-design": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "database-security": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "debugging": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "dependency-management": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "dependency-security": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "deploy-to-vercel": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "deployment": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "design-patterns": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "developer-experience": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "diagnosing-superpowers": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "dispatching-parallel-agents": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "doc-coauthoring": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "docker": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "domain-driven-design": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "drizzle": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "durable-objects": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "dynamic-metadata": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "e2e-testing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "editorial-review": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "editorial-workflow": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "eeat": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "eeat-writing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "elasticsearch": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "electron": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "engineering-standards": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "entity-seo": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "executing-plans": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "No content errors. Limitation (import-scope gap): names `superpowers:test-driven-development` as a REQUIRED sub-skill/background and references `superpowers:..."
+    },
+    "expo": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "express": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "fact-checking": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "faq-generation": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "fastify": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "finishing-a-development-branch": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "fly-io": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "frontend-design": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "frontend-performance": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "gcp": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "geo-optimization": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "github-actions": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "graphql": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "hono": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "hreflang": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "html": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "hugo": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "human-editing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "image-accessibility": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "image-compression": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "image-format-conversion": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "image-optimization": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "image-prompt-engineering": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "image-seo": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "indexing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "infographic-generation": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "integration-testing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "internal-linking": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "international-seo": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "javascript": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "javascript-optimization": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "jwt": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "keyword-clustering": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "keyword-research": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "keyword-to-content": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "kubernetes": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "lighthouse": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "link-building": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "No content errors. Limitation (import-scope gap, real): 6 broken relative links to `../../tools/integrations/{ahrefs,semrush,dataforseo,exa,firecrawl,hunter}..."
+    },
+    "llm-integration": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "llm-seo": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "llms-txt": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "local-seo": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "mcp-builder": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "mcp-development": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "mcp-security": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "metadata-validation": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "mfa": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "microservices": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "migrations": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "modern-css": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "modular-monolith": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "mongodb": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "monorepo": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "multi-tenancy": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "mysql": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "nestjs": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "nextjs": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "nodejs": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "nuxt": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "nx": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "oauth": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "observability": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "off-page-seo": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "og-image-generation": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "on-page-seo": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "open-graph": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "openapi": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "opensearch": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "owasp": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "package-boundaries": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "package-development": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "pagespeed-insights": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "passkeys": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "performance": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "performance-testing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "platform-social-images": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "playwright": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "pnpm-workspaces": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "postgresql": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "prisma": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "prisma-cli": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "prisma-client-api": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "prisma-compute": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "No errors. Limitation: verified against Prisma 8 RC pins (rc.21/rc.23, Composer 0.30.0); official page now lists newer RCs (prisma 8.0.0-rc.34). Skill frames..."
+    },
+    "prisma-database-setup": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "prisma-driver-adapter-implementation": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "prisma-mongodb-upgrade": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "No errors. Limitation: verified against `@prisma/orm-mongo` 8.0.0-rc.13; official page now lists rc.24. Prisma 8 is still an RC (GA was \"expected in October ..."
+    },
+    "prisma-orm-setup": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "prisma-postgres": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "prisma-postgres-setup": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "prisma-postgres-upgrade": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "No errors. Limitations: pins `prisma 8.0.0-rc.27` / `@prisma/orm-postgres 8.0.0-rc.20` \"today\"; current RCs are rc.34 / rc.24. The claim that \"the latest pai..."
+    },
+    "prisma-upgrade-v7": {
+      "status": "needs-correction",
+      "date": "2026-11-20",
+      "note": "Stale version claim: \"Latest stable Prisma ORM version: 7.6.0\" is wrong \u2014 the official release-status page lists `@prisma/client` latest at 7.10.1 (checked 2..."
+    },
+    "programmatic-seo": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "pulumi": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "python-sdk": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "queues": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "rag": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "railway": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "rate-limiting": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "rbac": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "react": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "react-native": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "readme-engineering": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "receiving-code-review": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "redis": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "refactoring": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "regression-testing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "release-management": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "render": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "requesting-code-review": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "responsive-design": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "rest-api": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "resvg": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "rust": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "satori": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "schema": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "schema-jsonld": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "sdk-development": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "search-console": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "search-intent": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "secrets-management": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "secure-headers": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "security": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "security-auditing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "self-hosted-vps": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "semantic-html": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "seo": {
+      "status": "needs-correction",
+      "date": "2026-11-20",
+      "note": "Multiple errors: (1) Outdated FAQ rule (Critical Rule 2 + `resources/references/schema-types.md:50-52`): \"FAQPage schema is limited to government and healthc..."
+    },
+    "seo-audit": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "seo-content-writing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "seo-metadata": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "seo-migration": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "serp-analysis": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "serp-monitoring": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "session-management": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "shadcn-ui": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "sharp": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "site-architecture": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "No content errors. Limitation: broken link `/features/analytics` (validator warning 10) \u2014 an illustrative example anchor in the Internal Linking Strategy tab..."
+    },
+    "sitemap-robots": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "skill-creator": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "social-preview": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "Named official debuggers (Meta Sharing Debugger link, LinkedIn Post Inspector); added X Card Validator retirement note and post-composer preview method; adde..."
+    },
+    "social-sharing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "software-architecture": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "source-verification": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "sql-injection-prevention": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "sql-optimization": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "sqlite": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "structured-data": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "subagent-driven-development": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "supabase-auth": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "sveltekit": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "system-design": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "tailwind-css": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "tauri": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "tdd": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "technical-decision-records": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "technical-documentation": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "technical-seo": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "technical-writing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "terraform": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "theme-factory": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "topical-authority": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "transactions": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "trpc": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "turborepo": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "twitter-card-images": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "Corrected 1200x675 (16:9) \u2192 1200x600 (2:1) throughout incl. frontmatter description; fixed OG-reuse claim (1200x630 loses only ~15 px); added limits (min 300..."
+    },
+    "twitter-cards": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "Major corrections \u2014 the skill's testing workflow was outdated: (1) X removed the Card Validator preview on 2 August 2022; the URL now redirects to a login sc..."
+    },
+    "typescript": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "typescript-sdk": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "ui-design": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "unit-testing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "using-git-worktrees": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "using-superpowers": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "No content errors. Limitation (import-scope gap): references `superpowers:systematic-debugging`, which was not imported."
+    },
+    "vercel": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "vercel-cli-with-tokens": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "No errors. Limitation / documented discrepancy: the skill's Pro-plan 10M CDN/Edge-requests figure matches Vercel's pricing page, but Vercel's Flat Rate CDN d..."
+    },
+    "vercel-composition-patterns": {
+      "status": "needs-correction",
+      "date": "2026-11-20",
+      "note": "Bad code example in AGENTS.md \u00a72.3: the \"Correct\" example calls `use(Composer.Context)` but the `Composer` object defined in the examples (line 224) exports ..."
+    },
+    "vercel-optimize": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "No errors. Limitations: (1) `vercel usage` is now grouped under `vercel billing usage` (Vercel changelog, ~2026-11-19); the old name still works as an alias,..."
+    },
+    "vercel-react-best-practices": {
+      "status": "needs-correction",
+      "date": "2026-11-20",
+      "note": "3 broken links in AGENTS.md: `./async-defer-await.md`, `./async-cheap-condition-before-await.md`, `./server-hoist-static-io.md` \u2014 the files live in `rules/`,..."
+    },
+    "vercel-react-view-transitions": {
+      "status": "needs-correction",
+      "date": "2026-11-20",
+      "note": "~29 broken links in AGENTS.md to bare `css-recipes.md`, `patterns.md`, `troubleshooting.md`, `nextjs.md`, `implementation.md`, `../SKILL.md` \u2014 the files live..."
+    },
+    "verification-before-completion": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "vitest": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "vue": {
+      "status": "unverified",
+      "date": null,
+      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+    },
+    "web-artifacts-builder": {
+      "status": "needs-correction",
+      "date": "2026-11-20",
+      "note": "Stale React version: SKILL.md:16 says \"Stack: React 18 + \u2026\" but the init script runs unpinned `pnpm create vite --template react-ts`, which installs React 19..."
+    },
+    "web-design-guidelines": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "web-performance-audit": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "webapp-testing": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "writing-guidelines": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "writing-plans": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "writing-skills": {
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "No errors in SKILL.md. Limitations: (1) names `superpowers:test-driven-development` as REQUIRED background; not imported. (2) `references/anthropic-best-prac..."
+    },
+    "xss-prevention": {
+      "status": "verified",
+      "date": "2026-11-20"
+    },
+    "youtube-thumbnails": {
+      "status": "verified",
+      "date": "2026-11-20"
+    }
+  }
+}

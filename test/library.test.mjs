@@ -7,7 +7,7 @@ import { readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { loadLibrary, resolveSelection, deriveDescription, toMarkdownAgent, toTomlAgent, splitList, installedFileName } from '../scripts/install/library.mjs';
 import { TARGETS } from '../scripts/install/targets.mjs';
-import { REPO_ROOT } from './helpers.mjs';
+import { REPO_ROOT, makeFixtureLibrary, makeSandbox } from './helpers.mjs';
 
 // Expected counts are derived from disk, not hardcoded: the registry must
 // match the skills/agents/workflows actually present, and hardcoded counts
@@ -28,7 +28,7 @@ async function diskCounts() {
   return { skills, agents, workflows };
 }
 
-test('loadLibrary reads the real registry and scans agents/workflows', async () => {
+test('loadLibrary reads the real registries (skills, agents, workflows)', async () => {
   const lib = await loadLibrary(REPO_ROOT);
   const expected = await diskCounts();
   assert.equal(lib.skills.size, expected.skills);
@@ -38,8 +38,21 @@ test('loadLibrary reads the real registry and scans agents/workflows', async () 
   assert.equal(lib.skills.get('nextjs').source, 'skills/frontend/nextjs');
   assert.equal(lib.agents.get('frontend-specialist').source, 'agents/frontend-specialist.md');
   assert.equal(lib.workflows.get('seo-audit').source, 'workflows/seo-audit.md');
+  // Descriptions come from the agents/workflows registries (M-10), not ''.
+  assert.ok(lib.agents.get('frontend-specialist').description.length > 0);
+  assert.ok(lib.workflows.get('seo-audit').description.length > 0);
   assert.equal(lib.categories.has('frontend'), true);
   assert.equal(lib.categories.has('upstream'), true);
+});
+
+test('loadLibrary falls back to scanning when agents/workflows registries are absent', async () => {
+  const { base } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base); // no agents.json/workflows.json
+  const lib = await loadLibrary(fixture.root);
+  assert.equal(lib.agents.size, 1);
+  assert.equal(lib.agents.get('fixture-agent').source, 'agents/fixture-agent.md');
+  assert.equal(lib.workflows.size, 1);
+  assert.equal(lib.workflows.get('fixture-workflow').source, 'workflows/fixture-workflow.md');
 });
 
 test('splitList handles repeats, commas, and whitespace', () => {
