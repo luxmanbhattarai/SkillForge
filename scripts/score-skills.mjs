@@ -36,6 +36,10 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { splitFrontmatter, parseFrontmatter } from './lib/frontmatter.mjs';
+// Security patterns come from the shared library (score scope: secrets
+// + injection only — command/code patterns need context triage and live
+// in the scanner, not in a score cap).
+import { scanLine } from './lib/security-patterns.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SKILLS_DIR = path.join(ROOT, 'skills');
@@ -51,16 +55,8 @@ const REQUIRED_SECTIONS = [
 // Categories where accessibility content is applicable (Phase 5 standard).
 const A11Y_CATEGORIES = new Set(['frontend', 'media', 'content', 'metadata']);
 
-// Security patterns — keep in sync with scripts/security-scan.mjs.
-const SECURITY_PATTERNS = [
-  [/-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----/, 'private key material'],
-  [/(?:sk-|ghp_|gho_|github_pat_|xox[baprs]-)[A-Za-z0-9]{10,}/, 'possible API/token secret'],
-  [/(?:api[_-]?key|secret|password)\s*[:=]\s*['"][^'"]{8,}['"]/i, 'possible hardcoded credential'],
-  [/curl\s+[^|]*\|\s*(?:sudo\s+)?(?:sh|bash)\b/, 'curl-piped-to-shell command'],
-  [/rm\s+-rf\s+(\/|\$HOME|~)/, 'destructive rm -rf'],
-  [/ignore (all )?previous instructions/i, 'prompt-injection marker'],
-  [/disregard (all )?(prior|previous|above) instructions/i, 'prompt-injection marker'],
-];
+// (Security patterns live in scripts/lib/security-patterns.mjs;
+// the security dimension uses its 'score' scope via scanLine.)
 
 // Placeholder markers — same split as scripts/validate-skills.mjs.
 const PLACEHOLDER_ACRONYM_RE = /\b(TODO|FIXME|XXX|TBD)\b/;
@@ -146,12 +142,12 @@ function scoreSkill(relPath, text) {
 
   // --- security (section substance + no pattern hits) ---
   const secLines = nonEmptyLines(secs.get('Security Considerations') || '');
-  const secHits = [];
-  for (const [re, label] of SECURITY_PATTERNS) {
-    if (re.test(text)) secHits.push(label);
+  const secHits = new Set();
+  for (const line of text.split('\n')) {
+    for (const { pattern } of scanLine(line, 'score')) secHits.add(`${pattern.id} ${pattern.label}`);
   }
-  dims.security = secHits.length > 0 ? 0 : Math.round(Math.min(secLines, 6) / 6 * 100);
-  if (secHits.length > 0) flags.push('CRITICAL: security pattern hit: ' + secHits.join(', '));
+  dims.security = secHits.size > 0 ? 0 : Math.round(Math.min(secLines, 6) / 6 * 100);
+  if (secHits.size > 0) flags.push('CRITICAL: security pattern hit: ' + [...secHits].join(', '));
 
   // --- testing (testing-strategy signals) ---
   const impl = secs.get('Implementation Standards') || '';

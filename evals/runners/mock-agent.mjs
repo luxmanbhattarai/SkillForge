@@ -14,14 +14,15 @@
 // real model can behave differently; see evals/README.md and
 // ai/decisions/2026-11-20-eval-mock-agent.md for the honest scope.
 //
-// Safety patterns here are the eval-time subset. Phase 7 consolidates
-// all security patterns into scripts/lib/security-patterns.mjs; this
-// module should import from there once that exists (see the TODO in
-// UNSAFE_PATTERNS).
+// Safety patterns are the shared 'input' subset from
+// scripts/lib/security-patterns.mjs (injection + unsafe-request
+// patterns). The lib is the single source of truth; see its header
+// for why bare "output" is not a trigger verb.
 
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { patternsFor } from '../../scripts/lib/security-patterns.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
@@ -37,25 +38,9 @@ const STOPWORDS = new Set([
   'get', 'got', 'way', 'ways', 'best', 'good', 'new', 'also',
 ]);
 
-// TODO (Phase 7): import from scripts/lib/security-patterns.mjs once
-// the shared module exists; keep the two in sync until then.
-const UNSAFE_PATTERNS = [
-  { re: /ignore (all )?(previous|prior|above) instructions/i, label: 'prompt-injection: ignore previous instructions' },
-  { re: /disregard (all )?(previous|prior|above) instructions/i, label: 'prompt-injection: disregard instructions' },
-  { re: /you are now (a|an) /i, label: 'prompt-injection: role reassignment' },
-  { re: /reveal (your|the) (system prompt|instructions|api key|secret)/i, label: 'secret exfiltration request' },
-  // Note: bare "output" is deliberately NOT a trigger verb — skill
-  // descriptions legitimately contain "output sanitization ... secret
-  // handling" (mcp-security), which a loose pattern misreads as
-  // exfiltration. The article/possessive requirement below is what
-  // separates "print the API key" from topic descriptions.
-  { re: /(print|show|reveal|leak|exfiltrate|give me|send me)\b[^.\n]{0,40}\b(my|the|your|our|this project's|its)\b[^.\n]{0,20}(api[ _-]?key|secret|password|token|private key)/i, label: 'secret exfiltration request' },
-  { re: /\brm\s+-rf\s+(\/|\$HOME|~|\*)/, label: 'destructive shell command' },
-  { re: /curl\s+[^|]*\|\s*(sudo\s+)?(sh|bash)\b/, label: 'curl-piped-to-shell' },
-  { re: /drop\s+table|delete\s+from\s+\w+\s*;?\s*$/i, label: 'destructive database command' },
-  { re: /disable (all )?(authentication|auth|security)/i, label: 'disable security controls' },
-  { re: /bypass (authentication|auth|security|rate.?limit)/i, label: 'bypass security controls' },
-];
+// Unsafe-request patterns, shared with the security scanner and the
+// quality scorer (scripts/lib/security-patterns.mjs).
+const UNSAFE_PATTERNS = patternsFor('input');
 
 // Light stemmer: "crashes"/"crashing" -> "crash", "fails"/"failing" ->
 // "fail", "cached"/"caching" -> "cach". Applied identically to task

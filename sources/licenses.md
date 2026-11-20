@@ -14,7 +14,7 @@ Verified 2026-11-20.
 
 | Vendor | License | Evidence | Skills |
 | --- | --- | --- | --- |
-| Anthropic | Apache-2.0 | Per-skill `LICENSE.txt` preserved in each imported skill directory | 8 |
+| Anthropic | Apache-2.0 | Per-skill `LICENSE.txt` preserved in 7 of 8 imported skill directories (see note) | 8 |
 | Vercel | MIT | Upstream README "License: MIT" (no LICENSE file upstream); recorded in `skills/upstream/vercel/ATTRIBUTION.md` | 8 |
 | Superpowers | MIT | Upstream LICENSE file (Copyright (c) 2025 Jesse Vincent) | 13 |
 | Prisma | MIT | Upstream LICENSE file (Copyright (c) 2025 Prisma) | 11 |
@@ -25,7 +25,11 @@ Verified 2026-11-20.
 
 - **Apache-2.0 (Anthropic):** redistribution requires preserving the
   license and any notices. Each imported Anthropic skill keeps its
-  `LICENSE.txt`; do not delete it.
+  `LICENSE.txt`; do not delete it. Exception: `doc-coauthoring` ships
+  no `LICENSE.txt` upstream (verified against commit `e4bb5d96` on
+  2026-11-20 — the upstream directory contains only `SKILL.md`), so
+  there is no per-skill notice to preserve for it; the Apache-2.0
+  license still applies via the other skills' notices.
 - **MIT (all others):** redistribution requires preserving the copyright
   notice. Copyright holders are recorded in each vendor's
   `ATTRIBUTION.md` and above.
