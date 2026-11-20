@@ -68,6 +68,39 @@ Guidance from the spec, enforced by the validator:
 - The description is loaded for every skill at startup (~100 tokens); the
   body loads only when the skill activates. Keep descriptions sharp.
 
+## Quality standard — the 22 elements
+
+Every original skill includes these elements, where applicable. The
+15 template sections carry them; elements that are not sections live
+as required content inside a section (see
+`ai/decisions/2026-11-20-quality-standard-mapping.md` for why no new
+required sections were added).
+
+| # | Element | Where it lives |
+| --- | --- | --- |
+| 1 | Name | Frontmatter `name` (must match the directory) |
+| 2 | Description | Frontmatter `description` (≤1024 chars, trigger keywords) |
+| 3 | Purpose | `Purpose` |
+| 4 | When to use | `When to Use` |
+| 5 | When not to use | `When Not to Use` (name the alternative) |
+| 6 | Prerequisites | `Prerequisites` |
+| 7 | Supported versions | Required content in `Prerequisites`: version range, or "current stable as of DATE" + release-notes link |
+| 8 | Official documentation | `Official Documentation` (real official URLs only) |
+| 9 | Required workflow | `Required Workflow` (numbered, in order) |
+| 10 | Architecture guidance | `Implementation Standards` (subsection where applicable) |
+| 11 | Implementation standards | `Implementation Standards` |
+| 12 | Security requirements | `Security Considerations` |
+| 13 | Performance requirements | `Performance Considerations` |
+| 14 | Accessibility requirements | `Implementation Standards` subsection where applicable (frontend, media, content, metadata skills); other skills state N/A with a reason |
+| 15 | Testing strategy | `Implementation Standards` subsection (how the work is tested) |
+| 16 | Common mistakes | `Common Mistakes` (mistake → correction pairs) |
+| 17 | Correct examples | `Examples` |
+| 18 | Incorrect examples | `Examples` (counter-examples) and/or `Common Mistakes` |
+| 19 | Validation checklist | `Validation Checklist` (checkable outcomes) |
+| 20 | Expected deliverables | `Expected Deliverables` |
+| 21 | References | `References` (official sources + related skills) |
+| 22 | Last verified date | Frontmatter `metadata.last_verified` (the real verification date) |
+
 ## Quality rules (all original skills)
 
 1. **Accurate.** Prioritize official current documentation, then official
@@ -88,6 +121,55 @@ Guidance from the spec, enforced by the validator:
    skills by backticked name, not by file path.
 7. **No placeholders.** No TODO / "coming soon" / lorem ipsum. A skill is
    published only when complete.
+8. **Focused and composable.** One skill, one job. Reference sibling
+   skills instead of repeating their content; never copy a section
+   wholesale into another skill.
+9. **Progressive disclosure.** Keep `SKILL.md` under 500 lines. Detailed
+   reference material goes in `references/` files, loaded on demand.
+10. **Mandatory vs recommended.** Use "must" only for requirements the
+    Validation Checklist can check; use "should" / "consider" for
+    recommendations. An agent must be able to tell them apart.
+11. **Testable examples.** Examples are minimal and runnable where the
+    medium allows; a claimed command, API call, or config snippet must
+    be real. Counter-examples show the wrong way next to the right way.
+12. **Anti-patterns and failure cases.** Every skill names the mistakes
+    its users actually make and what happens when the workflow is
+    skipped — not just the happy path.
+13. **No filler.** No content added to meet a length target. A short
+    skill that covers its topic is better than a long one padded with
+    generic advice.
+
+## Quality scoring
+
+`scripts/score-skills.mjs` scores every original skill on eight
+dimensions (0–100 each, plus an overall score):
+
+technical accuracy (checkable proxies only — see below),
+completeness, actionability, security, testing, documentation,
+version awareness, maintainability.
+
+```bash
+npm run score                  # score all original skills
+node scripts/score-skills.mjs --filter skills/backend/nestjs
+node scripts/score-skills.mjs --json > scores.json
+```
+
+A high score must not hide a critical failure. Hard caps apply:
+
+- Any security-scan pattern hit (hardcoded credential, private key,
+  curl-piped-to-shell, destructive `rm -rf`, prompt-injection marker)
+  caps the overall score at 40 and flags the skill CRITICAL.
+- A missing required section caps the overall score at 50.
+- A placeholder marker (TODO/FIXME/TBD/lorem ipsum/coming soon)
+  caps the overall score at 60.
+
+**What the scorer cannot do:** it cannot verify technical accuracy —
+that requires reading official documentation, which only the Phase 3
+style audit does. The accuracy dimension scores checkable proxies
+(no placeholders, no broken relative links, real `https` doc links,
+no obviously invented version claims it can detect) and is labeled
+as a proxy in the output. Never present a scorer result as proof that
+a skill's technical content is correct.
 
 ## Upstream skills
 
