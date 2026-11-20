@@ -3,7 +3,7 @@
 - **Date:** 2026-11-20
 - **Branch:** `feat/skillforge-production-upgrade` (from `main` @ `bc304a2`, v1.0.0)
 - **Rule throughout:** local commits only on this branch; nothing pushed, merged, or PR'd.
-- **Head at report time:** Phase 11 commit `6b0a79e`; this report ships with the Phase 12 commit plus one fix-up commit correcting two numbers in this report (35 commits on the branch in total; see git log for the head hash).
+- **Head at report time:** Phase 11 commit `6b0a79e`; this report ships with the Phase 12 commit (plus small fix-ups correcting numbers in this report itself — a commit count cited here would go stale with every fix-up, so see git log for the head hash and count).
 - **Machine-readable results:** `ai/test-results/phase12-final-results.json`
 - **Status tracker:** `ai/PROJECT-STATUS.md` (all 12 phases Verified)
 
@@ -140,8 +140,8 @@ on `feat/skillforge-production-upgrade`:
 Phase commits (Wave 4): Phase 9 `e6a6b01`, Phase 10 `75ef701`,
 Phase 11 `6b0a79e`, Phase 12 (this commit). Earlier phase work is
 recorded in `ai/PROJECT-STATUS.md` and `ai/test-results/`.
-Total: 34 commits on the branch, 429 files changed vs `main`
-(+70,237/−1,165 lines).
+Total: 429 files changed vs `main`
+(+70,236/−1,165 lines).
 
 ## 4. New skills added
 
@@ -728,7 +728,7 @@ none hidden:
 ## 20. Recommended next steps
 
 1. **Review and merge** `feat/skillforge-production-upgrade`
-   (34 commits, +70,237/−1,165 lines vs `main`). Suggested: open the
+   (429 files changed, +70,236/−1,165 lines vs `main`). Suggested: open the
    PR from the branch, let CI run (first real workflow runs),
    then merge.
 2. **Enable the manual repo settings** immediately after merge:
