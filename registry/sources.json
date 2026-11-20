@@ -1,0 +1,108 @@
+{
+  "version": "1.0.0",
+  "sources": [
+    {
+      "id": "marketingskills",
+      "type": "upstream",
+      "name": "Marketing Skills",
+      "url": "https://github.com/coreyhaines31/marketingskills",
+      "license": "MIT",
+      "skills": [
+        "ai-seo",
+        "analytics",
+        "competitor-profiling",
+        "copy-editing",
+        "cro",
+        "link-building",
+        "schema",
+        "site-architecture"
+      ]
+    },
+    {
+      "id": "superpowers",
+      "type": "upstream",
+      "name": "Superpowers",
+      "url": "https://github.com/obra/superpowers",
+      "license": "MIT",
+      "skills": [
+        "brainstorming",
+        "diagnosing-superpowers",
+        "dispatching-parallel-agents",
+        "executing-plans",
+        "finishing-a-development-branch",
+        "receiving-code-review",
+        "requesting-code-review",
+        "subagent-driven-development",
+        "using-git-worktrees",
+        "using-superpowers",
+        "verification-before-completion",
+        "writing-plans",
+        "writing-skills"
+      ]
+    },
+    {
+      "id": "anthropic",
+      "type": "upstream",
+      "name": "Anthropic Skills",
+      "url": "https://github.com/anthropics/skills",
+      "license": "Apache-2.0",
+      "skills": [
+        "brand-guidelines",
+        "doc-coauthoring",
+        "frontend-design",
+        "mcp-builder",
+        "skill-creator",
+        "theme-factory",
+        "web-artifacts-builder",
+        "webapp-testing"
+      ]
+    },
+    {
+      "id": "vercel",
+      "type": "upstream",
+      "name": "Vercel Agent Skills",
+      "url": "https://github.com/vercel-labs/agent-skills",
+      "license": "MIT",
+      "skills": [
+        "deploy-to-vercel",
+        "vercel-cli-with-tokens",
+        "vercel-composition-patterns",
+        "vercel-optimize",
+        "vercel-react-best-practices",
+        "vercel-react-view-transitions",
+        "web-design-guidelines",
+        "writing-guidelines"
+      ]
+    },
+    {
+      "id": "prisma",
+      "type": "upstream",
+      "name": "Prisma Skills",
+      "url": "https://github.com/prisma/skills",
+      "license": "MIT",
+      "skills": [
+        "prisma-cli",
+        "prisma-client-api",
+        "prisma-compute",
+        "prisma-database-setup",
+        "prisma-driver-adapter-implementation",
+        "prisma-mongodb-upgrade",
+        "prisma-orm-setup",
+        "prisma-postgres",
+        "prisma-postgres-setup",
+        "prisma-postgres-upgrade",
+        "prisma-upgrade-v7"
+      ]
+    },
+    {
+      "id": "agentic-seo",
+      "type": "upstream",
+      "name": "Agentic SEO Skill",
+      "url": "https://github.com/pwg-projects/agentic-seo-skill",
+      "license": "MIT",
+      "skills": [
+        "seo"
+      ]
+    }
+  ]
+}

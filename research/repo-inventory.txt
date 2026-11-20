@@ -1,0 +1,25 @@
+anthropics/skills | Public repository for Agent Skills | license=none | stars=197981 | updated=2026-11-20 | pushed=2026-11-16 | branch=main | archived=False
+vercel-labs/agent-skills | Vercel's official collection of agent skills | license=none | stars=34597 | updated=2026-11-20 | pushed=2026-11-12 | branch=main | archived=False
+vercel-labs/skills | The open agent skills tool - npx skills | license=MIT | stars=40196 | updated=2026-11-20 | pushed=2026-11-17 | branch=main | archived=False
+obra/superpowers | An agentic skills framework & software development methodology that works. | license=MIT | stars=322690 | updated=2026-11-20 | pushed=2026-11-03 | branch=main | archived=False
+github/awesome-copilot | Community-contributed instructions, agents, skills, and configurations to help y | license=MIT | stars=41391 | updated=2026-11-20 | pushed=2026-11-20 | branch=main | archived=False
+prisma/skills | PARSE ERROR
+pwg-projects/agentic-seo-skill | An LLM-first SEO analysis skill for Antigravity, Codex, Claude with 12 specializ | license=MIT | stars=0 | updated=2026-03-06 | pushed=2026-03-03 | branch=main | archived=False
+coreyhaines31/marketingskills | Marketing skills for Claude Code and AI agents. CRO, copywriting, SEO, analytics | license=MIT | stars=61681 | updated=2026-11-20 | pushed=2026-11-20 | branch=main | archived=False
+withastro/astro | The web framework for content-driven websites. | license=NOASSERTION | stars=64092 | updated=2026-11-20 | pushed=2026-11-20 | branch=main | archived=False
+vercel/next.js | The React Framework | license=MIT | stars=143630 | updated=2026-11-20 | pushed=2026-11-20 | branch=canary | archived=False
+gohugoio/hugo | The world’s fastest framework for building websites. | license=Apache-2.0 | stars=90531 | updated=2026-11-20 | pushed=2026-11-19 | branch=master | archived=False
+tailwindlabs/tailwindcss | A utility-first CSS framework for rapid UI development. | license=MIT | stars=98712 | updated=2026-11-20 | pushed=2026-11-20 | branch=main | archived=False
+shadcn-ui/ui | Composable, accessible components with thoughtful defaults. Build your own compo | license=MIT | stars=128638 | updated=2026-11-20 | pushed=2026-11-20 | branch=main | archived=False
+honojs/hono | Web framework built on Web Standards | license=MIT | stars=32999 | updated=2026-11-20 | pushed=2026-11-20 | branch=main | archived=False
+fastify/fastify | Fast and low overhead web framework, for Node.js | license=MIT | stars=37449 | updated=2026-11-20 | pushed=2026-11-19 | branch=main | archived=False
+nestjs/nest | A progressive TypeScript framework for Node.js backends: from a small API in one | license=MIT | stars=77115 | updated=2026-11-20 | pushed=2026-11-20 | branch=master | archived=False
+trpc/trpc | 🧙‍♀️  Move Fast and Break Nothing. End-to-end typesafe APIs made easy.  | license=MIT | stars=40843 | updated=2026-11-20 | pushed=2026-11-19 | branch=main | archived=False
+drizzle-team/drizzle-orm | ORM | license=Apache-2.0 | stars=36324 | updated=2026-11-20 | pushed=2026-11-20 | branch=main | archived=False
+better-auth/better-auth | The most comprehensive authentication framework | license=MIT | stars=30798 | updated=2026-11-20 | pushed=2026-11-20 | branch=main | archived=False
+nextauthjs/next-auth | Authentication for the Web. | license=ISC | stars=28389 | updated=2026-11-19 | pushed=2026-07-22 | branch=main | archived=False
+vercel/turborepo | The build system for coding agents. | license=MIT | stars=31380 | updated=2026-11-20 | pushed=2026-11-20 | branch=main | archived=False
+nodejs/node | Node.js JavaScript runtime ✨🐢🚀✨ | license=NOASSERTION | stars=123811 | updated=2026-11-20 | pushed=2026-11-20 | branch=main | archived=False
+microsoft/TypeScript | TypeScript is a superset of JavaScript that compiles to clean JavaScript output. | license=Apache-2.0 | stars=111867 | updated=2026-11-20 | pushed=2026-11-20 | branch=main | archived=False
+supabase/supabase | The Postgres development platform. Supabase gives you a dedicated Postgres datab | license=Apache-2.0 | stars=115201 | updated=2026-11-20 | pushed=2026-11-20 | branch=master | archived=False
+cloudflare/workers-sdk | ⛅️ Home to Wrangler, the CLI for Cloudflare Workers® | license=Apache-2.0 | stars=4736 | updated=2026-11-20 | pushed=2026-11-20 | branch=main | archived=False
