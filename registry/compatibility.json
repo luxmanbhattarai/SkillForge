@@ -287,7 +287,7 @@
     "Requires Node.js 24 LTS or later, TypeScript 7.x, and the MCP TypeScript SDK v2 (`@modelcontextprotocol/server`); network access for remote servers.": [
       "mcp-development"
     ],
-    "Requires Node.js v20.19+ or v22.12+ (NestJS 12); TypeScript 5.x recommended.": [
+    "Requires Node.js v20.19+ or v22.12+ (NestJS 12); TypeScript 6.x (TypeScript 7 not yet supported by nest build).": [
       "nestjs"
     ],
     "Requires Node.js 24 LTS and a Next.js 16 project; deployment targets may need a hosting account.": [
