@@ -81,6 +81,62 @@ vulnerabilities, and removing what is no longer needed.
 - Overrides (forced resolutions) are a last resort, documented with a comment explaining why, and revisited on each update cycle.
 - No dependency is added without a lockfile update in the same commit.
 
+## Workspace Dependency Governance
+
+In a monorepo, dependency decisions are repository-wide: one package's
+choice becomes every package's problem. This section governs
+dependencies across workspace packages. The workspace layout itself is
+covered by `pnpm-workspaces` and `monorepo`; import direction and
+boundaries by `package-boundaries`; the task graph that consumes the
+dependency graph by `turborepo` and `nx`.
+
+- **Workspace protocol.** Internal dependencies always use
+  `workspace:*` (or a `workspace:` range when a package genuinely
+  needs a published version). Never depend on a sibling by a published
+  version number: changes stop being atomic and the lockfile can
+  resolve the sibling to a stale release. `workspace:*` also keeps
+  `changeset version` and the release tooling able to rewrite internal
+  ranges at publish time.
+- **Dependency constraints.** Declare which dependencies a package may
+  use, not just which it does use: a shared UI package must not depend
+  on a server-only database client, and a published library must not
+  depend on an internal-only package. Enforce with boundary rules (see
+  `package-boundaries`) and, where the tooling supports it, with
+  workspace-level allowlists reviewed in code review.
+- **Hoisting vs isolated node_modules.** pnpm's default layout is
+  isolated: a package can only import what it declares, and there is
+  no hoisted flat `node_modules` to paper over a missing declaration.
+  Do not weaken this with hoisting settings (`node-linker=hoisted`,
+  `public-hoist-pattern`) to fix a phantom dependency — declare the
+  dependency instead. Hoisting is a compatibility escape hatch for a
+  tool that genuinely requires it, not a default; document each use
+  with the reason.
+- **Deduplication.** One version of each shared dependency across the
+  repository. Use the catalog (`pnpm-workspace.yaml`) for versions
+  shared by more than one package so a bump is one change. Diagnose
+  duplicates with `pnpm why <dep>` and `pnpm list`; resolve duplicate
+  majors deliberately (upgrade the straggler, or record a time-boxed
+  exception with a reason). Duplicates bloat bundles, double memory,
+  and — for singleton libraries such as React — break at runtime.
+- **Version alignment across packages.** Shared peer dependencies
+  (React, TypeScript, ESLint) must resolve to one version range in
+  every package; misaligned peers produce duplicate installs and
+  confusing build errors. The catalog is the alignment mechanism; a
+  scheduled check (`pnpm outdated` across the workspace, or a CI job
+  that fails on catalog drift) keeps it honest.
+- **Lockfile discipline.** One lockfile at the root, committed, and
+  the source of truth. CI installs with `--frozen-lockfile` so a
+  drifted lockfile fails loudly. Never commit a per-package lockfile,
+  never let a `package.json` change land without its lockfile update,
+  and regenerate the lockfile only with the pinned package-manager
+  version so the format does not churn.
+- **Governance automation.** Automate what humans forget: Renovate or
+  Dependabot grouped updates for shared dependencies, a CI check that
+  fails on a new duplicate major version, `pnpm audit` in CI on a
+  schedule, and a dependency dashboard (or a monthly review) for
+  packages that fall behind. Automation proposes; a human still
+  reviews major updates and security exceptions.
+
 ## Best Practices
 
 - Prefer the standard library and small, focused packages over large frameworks for narrow needs.
@@ -172,4 +228,4 @@ pnpm install --frozen-lockfile  # CI install: verifies the lockfile
 - [pnpm documentation](https://pnpm.io/)
 - [Renovate documentation](https://docs.renovatebot.com/)
 - [Dependabot documentation](https://docs.github.com/en/code-security/dependabot)
-- Related skills in this repository: `pnpm-workspaces`, `monorepo`, `package-boundaries`.
+- Related skills in this repository: `pnpm-workspaces`, `monorepo`, `package-boundaries`, `turborepo`, `nx`.
