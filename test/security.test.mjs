@@ -26,7 +26,17 @@ test('pattern library is well-formed', () => {
     assert.ok(!ids.has(p.id), `${p.id} is unique`);
     ids.add(p.id);
   }
-  assert.ok(PATTERNS.length >= 25, 'pattern library is non-trivial');
+  assert.equal(PATTERNS.length, 34, 'pattern library has exactly 34 patterns (finding A-20: count drift must fail tests)');
+});
+
+test('scope counts are pinned exactly (finding A-20)', () => {
+  // Total 34 = 29 scan + 5 input-only REQ patterns. Score is the
+  // secrets + injection subset (7 SEC + 4 INJ); input is injection +
+  // unsafe-request (4 INJ + 5 REQ). If a pattern is added or removed,
+  // update these numbers deliberately — do not loosen the assertions.
+  assert.equal(patternsFor('scan').length, 29, 'scan scope has exactly 29 patterns');
+  assert.equal(patternsFor('score').length, 11, 'score scope has exactly 11 patterns');
+  assert.equal(patternsFor('input').length, 9, 'input scope has exactly 9 patterns');
 });
 
 test('scopes partition the patterns as designed', () => {

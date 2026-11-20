@@ -11,7 +11,8 @@ and how to handle a finding.
 | Pattern scan | 29 regex patterns over every text file + byte-level secret scan over binaries | `npm run check:security` |
 | Quality scorer | Secrets + injection subset; a hit caps the skill at 40 and flags it CRITICAL | `npm run score` |
 | Behavioral evals | Refusal cases: does the library lead an agent to refuse unsafe requests? | `npm run evals` |
-| Security unit tests | 22 tests pinning pattern behavior (matches, guards, non-matches) | `node --test test/security.test.mjs` |
+| Security unit tests | 23 tests pinning pattern behavior (matches, guards, non-matches, exact scope counts) | `node --test test/security.test.mjs` |
+| Scanner integration tests | 10 tests spawning the real scanner against temp trees, proving exceptions are narrow (see below) | `node --test test/scanner.test.mjs` |
 | Manual review | Imported executable code is read, not just scanned | see `ai/audits/SECURITY-AUDIT.md` |
 | Supply-chain check | Upstream commits + licenses re-verified via the public GitHub API | manual, recorded in the audit |
 
@@ -40,6 +41,73 @@ The scanner reads every text file (`.md .mjs .js .ts .sh .py .json
 .gz .tar .zip`) for secret patterns. It also detects multi-line
 curl-pipe commands (`curl … | \` followed by `bash` on the next line),
 which a line-based pattern misses.
+
+For tests only, the scan root can be overridden with the
+`SECURITY_SCAN_ROOT` environment variable or a `--root <dir>` flag
+(`--root` wins). The default is the repository root. The override
+exists so `test/scanner.test.mjs` can run the real scanner against
+temp trees; it is not a way to scan a subset of the repo in CI.
+
+## How narrow the exceptions are
+
+An exception is `[path prefix, pattern id, reason]` — per-file (or
+per-directory) **and** per-pattern. The matcher is deliberately
+strict:
+
+- A prefix ending in `/` is a directory: it matches everything under
+  it (e.g. `skills/upstream/agentic-seo/` for the `CMD-04` unpinned
+  pip installs that span that whole tree, audit S-07).
+- Any other prefix is a file path and must match **exactly**. A file
+  that merely shares a prefix with an excepted file — e.g.
+  `ai/audits/SECURITY-AUDIT.md.bak` next to the excepted
+  `ai/audits/SECURITY-AUDIT.md` — is **not** excepted. (A bare
+  `startsWith` matcher would have excepted it; this was fixed in
+  Stage B, finding S-11.)
+- An excepted file still reports every *other* pattern. Excepting
+  `CODE-14` in a file does not except `SEC-05` in the same file.
+
+`test/scanner.test.mjs` proves all of this by spawning the real
+scanner against temp trees: genuine TLS-disable, curl-pipe, and
+Python shell-execution constructs in ordinary files are still reported (exit
+1); the same constructs in excepted paths are suppressed; and
+prefix-sharing files, same-directory siblings of excepted files, and
+non-excepted patterns in excepted files are all still reported.
+
+Pattern counts are pinned by `test/security.test.mjs` (finding
+A-20): 34 patterns total, 29 in the `scan` scope, 11 in `score`,
+9 in `input`. If a pattern is added or removed, update those
+numbers deliberately — do not loosen the assertions.
+
+## Upstream risks with local guidance
+
+Two open upstream findings have dedicated safe-install guidance in
+`docs/AGENTIC-SEO-SAFE-INSTALL.md` — neither is fixed upstream, and
+the guide says so:
+
+- **S-08 (High):** upstream documents a curl-pipe install from the
+  `main` branch with no verification. The guide documents the
+  verified install path (SkillForge's installer, from the vendored
+  copy pinned to `67775741…`) and the safe standalone path
+  (download from the pinned commit, verify the SHA-256, inspect,
+  run locally).
+- **S-09 (Medium):** upstream `broken_links.py` disables TLS
+  verification on its per-link requests (lines 71 and 76). The guide warns
+  users and explains the inconsistency with the sibling
+  `fetch_page.py`, which keeps verification on.
+
+## Supply-chain monitoring
+
+`scripts/check-upstream.mjs` (weekly CI) compares each vendor repo's
+default-branch head against the pin in `sources/imported-skills.md`.
+One gap to know about (finding S-14): it monitors the **recorded
+pin source**, which for agentic-seo is the dormant fork
+`pwg-projects/agentic-seo-skill` — so the weekly check reports
+agentic-seo UP-TO-DATE while the author's live repository
+(`Bhanunamikaze/Agentic-SEO-Skill`) is 50 commits ahead of the pin
+(re-verified 2026-11-20). At the next re-import, re-verify the
+source and re-point the pin to the author's repository if it is
+confirmed as the live upstream; do not re-import from the dormant
+copy without checking.
 
 ## Handling a finding
 
@@ -109,6 +177,8 @@ they have.
 
 - `scripts/security-scan.mjs` — the scanner (exceptions live here)
 - `scripts/lib/security-patterns.mjs` — the shared patterns
-- `test/security.test.mjs` — pattern unit tests
+- `test/security.test.mjs` — pattern unit tests (counts pinned)
+- `test/scanner.test.mjs` — scanner integration tests (exception narrowness)
+- `docs/AGENTIC-SEO-SAFE-INSTALL.md` — safe install guidance for the open upstream findings S-08/S-09
 - `ai/audits/SECURITY-AUDIT.md` — the triaged findings
 - `docs/THREAT-MODEL.md` — what is and is not defended against

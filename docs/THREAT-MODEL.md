@@ -69,7 +69,11 @@ imported script (e.g. unsanitized input to a shell).
   `scheduled-maintenance.yml`), but a vulnerability found upstream
   can still only be fixed upstream, per the verbatim-import policy.
   Known accepted upstream risks are listed in
-  `ai/audits/SECURITY-AUDIT.md` (S-08, S-09, S-10, S-11).
+  `ai/audits/SECURITY-AUDIT.md` (S-08, S-09, S-10, S-11). For the two
+  open findings that affect installation and use, safe paths are
+  documented in `docs/AGENTIC-SEO-SAFE-INSTALL.md` — the upstream
+  curl-pipe install (S-08) and the TLS-disabled link checker (S-09)
+  remain unfixed upstream, and the guide says so.
 
 ### 4. A skill teaching an insecure practice
 
@@ -100,7 +104,10 @@ or a license changes under an import.
   would not be caught until the next verification cycle. The
   agentic-seo import source is dormant while the author's personal
   repo stays active (audit finding S-14) — the next update must
-  re-verify the source before re-importing.
+  re-verify the source before re-importing. Note the weekly drift
+  check monitors the recorded pin source (the dormant fork), so it
+  reports agentic-seo UP-TO-DATE while the author's repo moves
+  ahead; see `docs/SECURITY-SCANNING.md` (supply-chain monitoring).
 
 ### 6. Installer misuse or compromise
 

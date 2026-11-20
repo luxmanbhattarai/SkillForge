@@ -23,23 +23,39 @@
 // Usage: node scripts/security-scan.mjs [--json]
 //   npm run check:security
 // Exit code 1 if any finding remains after exceptions/ignores.
+//
+// Root override (for tests only): SECURITY_SCAN_ROOT=<dir> or
+// --root <dir> scans a different tree instead of the repo root
+// (--root wins over the env var). Paths in findings and in the
+// EXCEPTIONS / SKIP_FILES / SKIP_PREFIXES tables are always relative
+// to the scanned root, so a temp tree can mirror repo paths to test
+// exception behavior. See test/scanner.test.mjs.
 
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { patternsFor } from './lib/security-patterns.mjs';
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const rootFlagIdx = process.argv.indexOf('--root');
+const ROOT = path.resolve(
+  rootFlagIdx !== -1 && process.argv[rootFlagIdx + 1]
+    ? process.argv[rootFlagIdx + 1]
+    : (process.env.SECURITY_SCAN_ROOT || DEFAULT_ROOT),
+);
 const SKIP_DIRS = new Set(['.git', 'node_modules']);
 const TEXT_EXT = /\.(md|mjs|js|ts|sh|py|json|yml|yaml|toml)$/;
 const BINARY_EXT = /\.(png|jpg|jpeg|gif|pdf|gz|tar|zip)$/;
 // The pattern library matches its own definitions; reviewed separately.
 // The security tests are excepted the same way: their fixtures ARE the
 // patterns under test, fake by construction. The tests themselves are
-// the coverage for that file.
+// the coverage for that file. (test/scanner.test.mjs writes real
+// scanner fixtures into temp dirs; its own literal fixture strings are
+// excepted on the same grounds.)
 const SKIP_FILES = new Set([
   'scripts/lib/security-patterns.mjs',
   'test/security.test.mjs',
+  'test/scanner.test.mjs',
 ]);
 // Generated run outputs: they embed eval case inputs verbatim (the
 // cases themselves are the source of truth and are excepted above).
@@ -80,7 +96,7 @@ const EXCEPTIONS = [
   ['skills/upstream/agentic-seo/seo/scripts/duplicate_content.py', 'CODE-11', 'MD5 as non-cryptographic MinHash for duplicate detection, not a password/token hash'],
   // Upstream anthropic (verbatim).
   ['skills/upstream/anthropic/mcp-builder/reference/evaluation.md', 'CMD-04', 'upstream doc; unpinned pip install'],
-  ['skills/upstream/anthropic/webapp-testing/scripts/with_server.py', 'CODE-08', 'shell execution enabled for user-provided local server config; documented design, trust boundary is the local config file (audit S-10)'],
+  ['skills/upstream/anthropic/webapp-testing/scripts/with_server.py', 'CODE-08', 'shell execution for --server commands typed by the invoking user on the command line; trust boundary is the invoking user, not untrusted input (audit S-10; corrected 2026-11-20 — commands come from CLI args, not a config file)'],
   // Upstream marketingskills (verbatim).
   ['skills/upstream/marketingskills/schema/references/schema-examples.md', 'CODE-06', 'safe pattern: JSON-LD with < escaped to \\u003c'],
   // Upstream prisma (verbatim).
@@ -102,6 +118,26 @@ const EXCEPTIONS = [
   // The final implementation report quotes the flagged construct as
   // evidence for audit finding S-11 (upstream Prisma guidance).
   ['ai/reports/FINAL-IMPLEMENTATION-REPORT.md', 'CODE-14', 'final report quotes the flagged construct as evidence for audit S-11'],
+  // --- Triaged 2026-11-20 (Stage B, finding A-01). Stage A remediation
+  // docs quote flagged constructs as evidence, same treatment as the
+  // audit report above. Each line was read in context; none is a live
+  // vulnerability. Per-file, per-pattern — never a directory exclusion. ---
+  // PROJECT-STATUS.md:49 quotes the TLS-disable construct (S-11 evidence).
+  ['ai/PROJECT-STATUS.md', 'CODE-14', 'status log quotes the flagged construct as evidence for audit S-11 (finding A-01)'],
+  // ISSUE-REGISTER.md quotes: S-08 curl-pipe (:430), S-09 TLS-disable
+  // (:441), S-11 TLS-disable (:447), S-10 Python shell execution
+  // (:478), and the A-01 evidence quote itself (:47).
+  ['ai/remediation/ISSUE-REGISTER.md', 'CODE-14', 'issue register quotes the flagged construct as evidence for audit S-09/S-11 (finding A-01)'],
+  ['ai/remediation/ISSUE-REGISTER.md', 'CMD-01', 'issue register quotes the flagged construct as evidence for audit S-08 (finding A-01)'],
+  ['ai/remediation/ISSUE-REGISTER.md', 'CODE-08', 'issue register quotes the flagged construct as evidence for audit S-10 (finding A-01)'],
+  // VERIFICATION-MATRIX.md:82,380 quote the TLS-disable construct as
+  // evidence for S-11 / the A-01 root-cause analysis.
+  ['ai/remediation/VERIFICATION-MATRIX.md', 'CODE-14', 'verification matrix quotes the flagged construct as evidence for audit S-11 (finding A-01)'],
+  // The agentic-seo safe-install guide quotes the upstream curl-pipe
+  // command (so users recognize and avoid it) and the TLS-disable
+  // flaw (so users understand S-09). The quotes ARE the warning.
+  ['docs/AGENTIC-SEO-SAFE-INSTALL.md', 'CMD-01', 'safe-install guide quotes the upstream curl-pipe command as the thing to avoid (audit S-08)'],
+  ['docs/AGENTIC-SEO-SAFE-INSTALL.md', 'CODE-14', 'safe-install guide quotes the upstream TLS-disable flaw it warns about (audit S-09)'],
 ];
 
 const JSON_OUT = process.argv.includes('--json');
@@ -110,8 +146,19 @@ const SECRET_PATTERNS = PATTERNS.filter((p) => p.id.startsWith('SEC-'));
 // Multi-line curl-pipe: `curl ... | \` + newline + shell on next line.
 const MULTILINE_CURL_RE = /curl[^\n]*\|\s*\\\n\s*(sudo\s+)?(sh|bash)\b/g;
 
+// Path-prefix matching for exceptions and skips. A prefix ending in
+// '/' is a directory: it matches anything under it. Any other prefix
+// is a file path and must match exactly. A bare startsWith would
+// except `ai/audits/SECURITY-AUDIT.md.bak` along with the excepted
+// `ai/audits/SECURITY-AUDIT.md` — a file that merely shares a prefix
+// with an excepted file must NOT be excepted (see
+// test/scanner.test.mjs, finding S-11).
+function matchesPrefix(relPath, prefix) {
+  return prefix.endsWith('/') ? relPath.startsWith(prefix) : relPath === prefix;
+}
+
 function isExcepted(relPath, patternId) {
-  return EXCEPTIONS.some(([prefix, id]) => relPath.startsWith(prefix) && id === patternId);
+  return EXCEPTIONS.some(([prefix, id]) => matchesPrefix(relPath, prefix) && id === patternId);
 }
 
 // Line-level ignore: `security-scan:ignore` skips all patterns on the
@@ -142,7 +189,7 @@ let binaryFiles = 0;
 for (const file of files) {
   const rel = path.relative(ROOT, file);
   if (SKIP_FILES.has(rel)) continue;
-  if (SKIP_PREFIXES.some((p) => rel.startsWith(p))) continue;
+  if (SKIP_PREFIXES.some((p) => matchesPrefix(rel, p))) continue;
   if (TEXT_EXT.test(file)) {
     textFiles++;
     const text = await readFile(file, 'utf8');

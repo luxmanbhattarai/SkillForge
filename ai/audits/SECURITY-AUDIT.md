@@ -147,6 +147,13 @@ commands come from a file the user wrote, not from untrusted input.
 Accepted as a deliberate design choice; the risk would materialize
 only if the config file itself were attacker-controlled. Scanner
 exception documents the boundary.
+**Stage B correction (2026-11-20):** re-reading `with_server.py`
+shows the commands come from the invoking user's `--server` CLI
+arguments (argparse, `--server` is required) — no config file is read
+anywhere in the script. The trust boundary is the invoking user, not
+untrusted input; the ACCEPTED decision stands (an attacker would need
+to control the invoking user's command line, i.e. already have code
+execution). The scanner exception reason was corrected to match.
 
 **S-11 — Medium, UNRESOLVED (upstream).** Prisma's upgrade guide
 (`prisma-upgrade-v7`) recommends `rejectUnauthorized: false` to
