@@ -7,7 +7,7 @@ Generated: 2026-11-20 · Registry version: 1.0.0
 - **Skills:** 277 (228 original, 49 upstream)
 - **Categories:** 18
 - **Target coverage:** 228/228 planned original skills (100%)
-- **Validation:** PASS with 5 warning(s).
+- **Validation:** PASS with 4 warning(s) (4 upstream, informational).
 
 ## Skills by source
 

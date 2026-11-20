@@ -94,20 +94,24 @@ function sections(body) {
 const nonEmptyLines = (text) => text.split('\n').filter((l) => l.trim() !== '').length;
 
 function scoreSkill(relPath, text) {
+  // Line count that agrees with `wc -l`: split() counts a trailing
+  // newline as an extra empty line (audit finding L-01; the same
+  // fix as scripts/validate-skills.mjs).
+  const lineCount = text.split('\n').length - (text.endsWith('\n') ? 1 : 0);
   const { raw, body, error } = splitFrontmatter(text);
   const flags = [];
   const dims = {};
   if (error) {
-    return { path: relPath, overall: 0, dimensions: dims, flags: ['CRITICAL: ' + error], lines: text.split('\n').length };
+    return { path: relPath, overall: 0, dimensions: dims, flags: ['CRITICAL: ' + error], lines: lineCount };
   }
   const { data, error: parseErr } = parseFrontmatter(raw);
   if (parseErr) {
-    return { path: relPath, overall: 0, dimensions: dims, flags: ['CRITICAL: ' + parseErr], lines: text.split('\n').length };
+    return { path: relPath, overall: 0, dimensions: dims, flags: ['CRITICAL: ' + parseErr], lines: lineCount };
   }
   const name = data.name || path.basename(path.dirname(relPath));
   const category = (data.metadata && data.metadata.category) || relPath.split('/')[1] || '';
   const secs = sections(body);
-  const lines = text.split('\n').length;
+  const lines = lineCount;
   const missing = REQUIRED_SECTIONS.filter((s) => !secs.has(s));
 
   // --- completeness (sections present + non-empty + description) ---

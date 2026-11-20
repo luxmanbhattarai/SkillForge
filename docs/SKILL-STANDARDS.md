@@ -63,7 +63,12 @@ finding L-05; see `ai/decisions/2026-11-20-frontmatter-parser-subset.md`.)
   line. CRLF line endings are tolerated.
 - **Top-level scalar keys.** One `key: value` per line. Keys match
   `[A-Za-z0-9_-]+`. Values are plain scalars; a value may contain
-  colons after the first `key: ` separator.
+  colons after the first `key: ` separator, but **not** a colon
+  followed by a space (`: `) — strict YAML reads that as a nested
+  mapping, so spec-compliant tools reject the whole frontmatter.
+  Quote any value that contains `: ` (found in Phase 12: the
+  `graphql` skill was invisible to `npx skills add --list` for
+  exactly this reason).
 - **Quoted values.** Single- or double-quoted values have the quotes
   stripped. There is no escape processing: a backslash inside a quoted
   value stays a backslash, and a quote character cannot be escaped.

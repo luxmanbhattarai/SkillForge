@@ -287,12 +287,15 @@ deleted) and writes a fresh one.
 ## Option 2 — Skills CLI
 
 The `skills` CLI (vercel-labs/skills) also installs from this
-repository. Verified working against this repo's layout on
-2026-11-20 in a sandbox, when the library held 226 skills: it
-discovered all of them and installed them with content identical to
-the library. The current tree holds 277 skills; re-verification
-against the expanded library is an open item (see
-`ai/phase11/NOTES.md`).
+repository. Verified working against this repo's layout in a
+sandbox on 2026-11-20, twice: at 226 skills (Phase 2) and again
+at 277 skills (Phase 12, against a local path, since the upgrade
+branch is not pushed yet). In the Phase 12 run `--list`
+discovered all 277 skills and installing `graphql` produced
+content identical to the library. That run also caught a real
+defect: the `graphql` skill's frontmatter contained an unquoted
+`: `, which strict YAML rejects, so the CLI skipped it until the
+value was quoted (see `ai/decisions/2026-11-20-frontmatter-strict-yaml-colons.md`).
 
 ```bash
 # Interactive: prompts for agents and skills

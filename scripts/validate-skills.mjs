@@ -8,7 +8,10 @@
 //
 // Usage:
 //   node scripts/validate-skills.mjs [--filter <path-prefix>] [--strict]
-// Exit code 1 if any error is found. --strict also fails on warnings.
+// Exit code 1 if any error is found. --strict also fails on warnings
+// on original skills. Upstream warnings never fail, even in strict
+// mode: upstream files are never edited, so an upstream warning is
+// informational by policy (see ai/decisions/2026-11-20-validate-strict-upstream-warnings.md).
 
 import { readdir, readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
@@ -61,7 +64,8 @@ function headings(body) {
 
 async function main() {
   const errors = [];
-  const warnings = [];
+  const warnings = []; // non-upstream warnings (fail --strict)
+  const upstreamWarnings = []; // upstream warnings (informational, never fail)
   const names = new Map(); // name -> [paths]
   let checked = 0, original = 0, upstream = 0;
 
@@ -75,9 +79,11 @@ async function main() {
     if (isUpstream) upstream++; else original++;
     const dirName = parts[parts.length - 2];
     const text = await readFile(file, 'utf8');
-    const lineCount = text.split('\n').length;
+    // Line count that agrees with `wc -l`: split() counts a trailing
+    // newline as an extra empty line (audit finding L-01).
+    const lineCount = text.split('\n').length - (text.endsWith('\n') ? 1 : 0);
     const err = (msg) => errors.push(`${rel}: ${msg}`);
-    const warn = (msg) => warnings.push(`${rel}: ${msg}`);
+    const warn = (msg) => (isUpstream ? upstreamWarnings : warnings).push(`${rel}: ${msg}`);
 
     if (lineCount > 800) err(`SKILL.md is ${lineCount} lines (hard limit 800; keep under 500)`);
     else if (lineCount > 500) warn(`SKILL.md is ${lineCount} lines (recommended max 500)`);
@@ -167,13 +173,20 @@ async function main() {
     }
   }
 
+  const totalWarnings = warnings.length + upstreamWarnings.length;
+  // The summary line must agree with the exit code: a strict-mode
+  // failure on warnings is a FAIL, not a PASS.
+  const failed = errors.length > 0 || (STRICT && warnings.length > 0);
   console.log(`Checked ${checked} skills (${original} original, ${upstream} upstream).`);
   for (const w of warnings) console.log(`  WARN  ${w}`);
+  for (const w of upstreamWarnings) console.log(`  WARN (upstream)  ${w}`);
   for (const e of errors) console.log(`  ERROR ${e}`);
-  console.log(errors.length === 0
-    ? (warnings.length ? `PASS with ${warnings.length} warning(s).` : 'PASS: all skills valid.')
-    : `FAIL: ${errors.length} error(s), ${warnings.length} warning(s).`);
-  process.exit(errors.length > 0 || (STRICT && warnings.length > 0) ? 1 : 0);
+  console.log(!failed
+    ? (totalWarnings
+      ? `PASS with ${totalWarnings} warning(s)${upstreamWarnings.length ? ` (${upstreamWarnings.length} upstream, informational)` : ''}.`
+      : 'PASS: all skills valid.')
+    : `FAIL: ${errors.length} error(s), ${totalWarnings} warning(s).`);
+  process.exit(failed ? 1 : 0);
 }
 
 main();

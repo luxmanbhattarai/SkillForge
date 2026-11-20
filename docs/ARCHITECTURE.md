@@ -20,7 +20,7 @@ scripts/              # validation, registry generation, install tooling
 ├── lib/              # shared libraries (frontmatter, security patterns, schemas)
 └── schemas/          # JSON Schemas for registry/ and verification status
 evals/                # behavioral evaluation suite (mock agent, 449 cases)
-test/                 # unit tests, node:test (124 tests)
+test/                 # unit tests, node:test (129 tests)
 templates/            # SKILL-TEMPLATE.md for new skills
 sources/              # research log, licenses, attribution, verification status
 docs/                 # this documentation
@@ -145,7 +145,7 @@ the same commands (see [Validation and CI](#validation-and-ci)).
 | Check | Command | What it verifies |
 | --- | --- | --- |
 | Full validation | `npm run validate` | Frontmatter, required sections, relative links, duplicate names, registry consistency (two profiles: original = full standard, upstream = spec compliance only, warnings not errors) |
-| Strict validation | `npm run validate:strict` | Same as `validate`, but warnings also fail |
+| Strict validation | `npm run validate:strict` | Same as `validate`, but warnings on original skills also fail (upstream warnings stay informational — upstream files are never edited) |
 | Frontmatter | `npm run check:frontmatter` | Name/description rules, required metadata |
 | Duplicates | `npm run check:duplicates` | No duplicate skill names |
 | Sources | `npm run check:sources` | Provenance and verification-date freshness |
@@ -155,7 +155,7 @@ the same commands (see [Validation and CI](#validation-and-ci)).
 | Security | `npm run check:security` | Credential / prompt-injection / dangerous-code scan |
 | Upstream drift | `npm run check:upstream` | Vendor repos vs pinned commits (monitoring, exits 0 on drift) |
 | Quality score | `npm run score` | 22-element standard, 8 dimensions, hard caps (see `docs/SKILL-STANDARDS.md`) |
-| Unit tests | `npm test` | 124 tests (`node:test`), temp directories only |
+| Unit tests | `npm test` | 129 tests (`node:test`), temp directories only |
 | Behavioral evals | `npm run evals` | 449 cases against the mock agent |
 | Report | `npm run report` | Coverage and audit report (`report.json`) |
 

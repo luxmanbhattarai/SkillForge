@@ -50,7 +50,8 @@ installer messages (`manifest is corrupt`, `stale`, `orphan`).
   `SKILL.md` under 500 lines.
 - **Upstream-only warnings:** `validate` reports upstream issues as
   warnings, not errors. `npm run validate:strict` fails on warnings
-  too — use it for releases, not for everyday work.
+  on original skills too (upstream warnings stay informational) —
+  use it for releases, not for everyday work.
 
 ## `npm run check:registry` fails
 

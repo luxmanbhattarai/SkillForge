@@ -50,3 +50,25 @@ instead of presenting the bare command with no context.
 - The two install tools are independent; `doctor` reports
   Skills-CLI installs as orphans, which is expected when mixing
   them. This is documented.
+
+## Phase 12 re-verification (2026-11-20)
+
+Re-run against the expanded library (277 skills) from a local
+path, since the upgrade branch is not pushed yet:
+
+1. `npx skills add /home/hatch/workspace/SkillForge-upgrade
+   --list -y` — first run discovered only **276** skills and
+   printed `[SKILLS_SKILL_SKIPPED]` for `skills/backend/graphql`:
+   its `compatibility` frontmatter line contained an unquoted
+   `: `, which strict YAML rejects as a nested mapping. The value
+   was quoted and the frontmatter parser now rejects unquoted
+   `: ` in plain scalars (see
+   `ai/decisions/2026-11-20-frontmatter-strict-yaml-colons.md`).
+   Re-run after the fix: **277/277 discovered, 0 skipped**.
+2. `npx skills add <local path> -a claude-code -s graphql -y
+   --json` — installed `graphql` to `./.claude/skills/graphql`
+   (project scope, copy mode); `diff -r` against the library
+   skill: **content identical**.
+
+Note: `--json` cannot be combined with `--list` in the current
+CLI version, and `--json` requires `--yes`.

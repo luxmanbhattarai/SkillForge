@@ -5,7 +5,8 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { appendFile, lstat, mkdir, readFile, readlink, rm, writeFile } from 'node:fs/promises';
+import { execFile } from 'node:child_process';
+import { access, appendFile, chmod, cp, lstat, mkdir, readFile, readlink, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import {
   INSTALLER,
@@ -541,6 +542,64 @@ test('interrupted install (unit): a staging failure cleans up after itself', asy
   assert.deepEqual(await listNames(path.join(src, 'nested')), []);
   // The source tree is untouched.
   assert.equal(await readFile(path.join(src, 'SKILL.md'), 'utf8'), '# test\n');
+});
+
+test('permission error: install into a read-only skills dir fails cleanly, no partial install', async () => {
+  // The skills directory is read-only (mode 555), so staging/copying
+  // fails with EACCES. The install must fail with a clear error and
+  // leave no half-installed skill behind.
+  //
+  // Root bypasses permission checks, so when the suite runs as root
+  // the CLI runs as `nobody` via su. The repo scripts are not
+  // readable by nobody, so a byte-identical copy of scripts/ is
+  // placed inside the fixture library (whose root the copied CLI
+  // then uses as its library root) and the sandbox is chowned to
+  // nobody. Skips on Windows (chmod does not produce EACCES there)
+  // and when su is unavailable.
+  if (process.platform === 'win32') {
+    test.skip('chmod-based permission errors do not apply on Windows');
+    return;
+  }
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const skillsDir = path.join(proj, '.claude', 'skills');
+  await mkdir(skillsDir, { recursive: true });
+  const isRoot = typeof process.getuid === 'function' && process.getuid() === 0;
+  let r;
+  try {
+    if (isRoot) {
+      try {
+        await access('/usr/bin/su');
+      } catch {
+        test.skip('su not available');
+        return;
+      }
+      await cp(path.join(REPO_ROOT, 'scripts'), path.join(fixture.root, 'scripts'), { recursive: true });
+      await new Promise((resolve, reject) => {
+        execFile('chown', ['-R', 'nobody:nogroup', base], (err) => (err ? reject(err) : resolve()));
+      });
+      await chmod(skillsDir, 0o555);
+      const cmd = `HOME='${home}' ${process.execPath} '${path.join(fixture.root, 'scripts', 'install-skills.mjs')}' install --target claude-code --scope project --skill fixture-one`;
+      r = await new Promise((resolve) => {
+        execFile('/usr/bin/su', ['-s', '/bin/sh', 'nobody', '-c', cmd], { cwd: proj, timeout: 60000 }, (err, stdout, stderr) => {
+          resolve({ code: err ? err.code : 0, stdout: stdout || '', stderr: stderr || '' });
+        });
+      });
+    } else {
+      await chmod(skillsDir, 0o555);
+      r = await runCli(['install', ...CLAUDE, '--skill', 'fixture-one'], {
+        home,
+        proj,
+        env: { SKILLFORGE_ROOT: fixture.root },
+      });
+    }
+    assert.notEqual(r.code, 0, r.stdout + r.stderr);
+    assert.match(r.stderr, /failed: fixture-one/, r.stderr);
+    assert.match(r.stderr, /EACCES|permission denied/i, r.stderr);
+    assert.equal(await exists(path.join(skillsDir, 'fixture-one')), false);
+  } finally {
+    await chmod(skillsDir, 0o755).catch(() => {});
+  }
 });
 
 test('interactive conflict prompt: overwrite answers yes, skip answers no', async () => {
