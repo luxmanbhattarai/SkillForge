@@ -10,6 +10,7 @@
   "name": "skillforge",
   "private": true,
   "scripts": {
+    "check:agents": "node scripts/check-agents-workflows.mjs",
     "check:duplicates": "node scripts/check-duplicates.mjs",
     "check:frontmatter": "node scripts/check-frontmatter.mjs",
     "check:links": "node scripts/check-links.mjs",

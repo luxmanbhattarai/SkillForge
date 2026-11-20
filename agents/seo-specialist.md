@@ -36,6 +36,10 @@ through Search Console. It never promises rankings or traffic numbers.
 | `site-architecture` (upstream) | Site structure and internal linking. |
 | `analytics` (upstream) | Measuring search and traffic outcomes. |
 | `link-building` (upstream) | When the strategy includes link acquisition. |
+| `content-decay` | Pages are losing traffic over time. |
+| `entity-seo` | The work involves entities and the knowledge graph. |
+| `serp-monitoring` | Rankings or SERP features need monitoring. |
+| `topical-authority` | The site is building topical authority. |
 
 ## Skills it should use
 

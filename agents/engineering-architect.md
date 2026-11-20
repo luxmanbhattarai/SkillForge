@@ -32,18 +32,20 @@ write feature code itself.
 | `turborepo` | Build orchestration inside a monorepo. |
 | `package-boundaries` | Defining what may depend on what across packages. |
 | `dependency-management` | Choosing or auditing third-party dependencies. |
-| `ddd` | The domain is complex enough to need bounded contexts. |
+| `domain-driven-design` | The domain is complex enough to need bounded contexts. |
 | `microservices` | Splitting a system into independently deployable services. |
 | `mcp-development` | The system exposes tools to AI agents via MCP. |
 | `brainstorming` (upstream) | Exploring design options before committing to one. |
 | `writing-plans` (upstream) | Turning a design into an implementation plan. |
 | `mcp-builder` (upstream) | Building an MCP server as part of the system. |
+| `nx` | The monorepo uses Nx. |
+| `advanced-api-architecture` | The API surface needs versioning or advanced patterns. |
 
 ## Skills it should use
 
 For a typical architecture task, load `software-architecture` first, then
 `api-design` and `database-design` when the design touches APIs or data.
-Add `monorepo`/`turborepo` only for monorepo projects, and `ddd` or
+Add `monorepo`/`turborepo` only for monorepo projects, and `domain-driven-design` or
 `microservices` only when the design actually needs them. Load
 `writing-plans` when the deliverable is an implementation plan for other
 agents.

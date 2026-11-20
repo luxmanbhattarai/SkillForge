@@ -39,6 +39,11 @@ documented patterns.
 | `web-design-guidelines` (upstream) | Design-system and layout guidance. |
 | `web-artifacts-builder` (upstream) | Building standalone web artifacts. |
 | `theme-factory` (upstream) | Theming and visual identity work. |
+| `vue` | The UI is built with Vue. |
+| `nuxt` | The app is built with Nuxt. |
+| `sveltekit` | The app is built with SvelteKit. |
+| `expo` | The mobile app is built with Expo. |
+| `react-native` | The mobile app is built with React Native. |
 
 ## Skills it should use
 
