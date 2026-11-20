@@ -87,6 +87,24 @@ function nameTokens(name) {
   return parts;
 }
 
+// Extract fenced code blocks of the given language from Markdown
+// text. The fence tag is captured whole (possibly empty for unlabeled
+// blocks) and filtered afterwards. An earlier version made the
+// language group optional, which let a closing fence start a phantom
+// match: the prose between two blocks was captured as a "js block"
+// (empty tag), and the match consumed the next block's opening fence,
+// swallowing the real block entirely.
+export function extractFencedBlocks(text, language = 'js') {
+  const blocks = [];
+  for (const m of text.matchAll(/```([^\n`]*)\n([\s\S]*?)```/g)) {
+    const lang = (m[1] || '').trim().split(/\s+/)[0].toLowerCase();
+    if (language === 'js' && (lang === '' || lang === 'js' || lang === 'javascript')) blocks.push(m[2]);
+    else if (language === 'ts' && (lang === 'ts' || lang === 'typescript')) blocks.push(m[2]);
+    else if (lang === language) blocks.push(m[2]);
+  }
+  return blocks;
+}
+
 export class MockAgent {
   constructor(registry) {
     this.skills = registry.skills;
@@ -224,15 +242,7 @@ export class MockAgent {
     const text = await this.loadSkill(name);
     if (!text) return [];
     const examples = this.section(text, 'Examples') || text;
-    const blocks = [];
-    const re = new RegExp('```(' + language + '|javascript|typescript|ts|js)?\\n([\\s\\S]*?)```', 'g');
-    for (const m of examples.matchAll(re)) {
-      const lang = (m[1] || '').toLowerCase();
-      if (language === 'js' && (lang === '' || lang === 'js' || lang === 'javascript')) blocks.push(m[2]);
-      else if (language === 'ts' && (lang === 'ts' || lang === 'typescript')) blocks.push(m[2]);
-      else if (lang === language) blocks.push(m[2]);
-    }
-    return blocks;
+    return extractFencedBlocks(examples, language);
   }
 
   safetyCheck(input) {

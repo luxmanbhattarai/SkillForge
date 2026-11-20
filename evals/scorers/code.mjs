@@ -42,13 +42,22 @@ async function jsCompiles(code) {
 // Structural check for TypeScript blocks (compile check unavailable —
 // see header). Balanced delimiters, ignoring strings/comments loosely:
 // good enough to catch truncation, not a syntax proof.
-function tsStructure(code) {
+//
+// Strip order matters: strings FIRST, then comments. Stripping line
+// comments first eats `//` inside string literals ("https://..."),
+// deleting the rest of the line and breaking delimiter counting.
+// Single/double-quoted strings are matched single-line so a stray
+// quote in a comment cannot eat across lines; template literals may
+// span lines. Residual limit: an unmatched backtick in a comment can
+// still confuse the template strip — rare in skill examples, and a
+// false UNBALANCED either way, never a false pass.
+export function tsStructure(code) {
   const stripped = code
-    .replace(/\/\/.*$/gm, '')
+    .replace(/`(?:\\.|[^`\\])*`/g, '``')
+    .replace(/"(?:\\.|[^"\\\n])*"/g, '""')
+    .replace(/'(?:\\.|[^'\\\n])*'/g, "''")
     .replace(/\/\*[\s\S]*?\*\//g, '')
-    .replace(/'(?:\\.|[^'\\])*'/g, "''")
-    .replace(/"(?:\\.|[^"\\])*"/g, '""')
-    .replace(/`(?:\\.|[^`\\])*`/g, '``');
+    .replace(/\/\/.*$/gm, '');
   const pairs = { '(': ')', '[': ']', '{': '}' };
   const stack = [];
   for (const ch of stripped) {

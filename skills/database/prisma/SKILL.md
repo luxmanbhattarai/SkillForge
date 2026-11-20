@@ -41,7 +41,7 @@ This skill covers Prisma ORM 7 usage in TypeScript and JavaScript applications: 
 
 ## Prerequisites
 
-- Node.js 24 LTS and TypeScript 5.x (or JavaScript with the same runtime), per the project's verified stack.
+- Node.js 26 LTS (24 and 22 remain supported LTS lines) and TypeScript 7.x (or JavaScript with the same runtime).
 - This skill describes Prisma ORM 7, the current stable line (7.10.1 as of 2026-11-20). Prisma ORM 7 receives bug fixes and security updates for 18 months after Prisma ORM 8 reaches general availability.
 - Prisma ORM 8 is a release candidate, not a stable release: as of 16 November 2026 the `latest` npm tag installs `prisma@8.0.0-rc.34` (CLI) with `@prisma/orm-postgres@8.0.0-rc.24` (library). It replaces `schema.prisma` with a contract, `prisma generate` with `prisma contract emit`, and `@prisma/client` with per-database libraries such as `@prisma/orm-postgres`, and it has no `generate`, `migrate dev`, or `db push` commands. It supports PostgreSQL and MongoDB (early access) only, so far. Do not follow this skill's commands on a Prisma ORM 8 project.
 - Pin the major version in `package.json` (`prisma@7` and `@prisma/client@7`): an unpinned `npm install prisma` now installs the Prisma ORM 8 release candidate. In CI or one-off commands use `npx prisma@7`.

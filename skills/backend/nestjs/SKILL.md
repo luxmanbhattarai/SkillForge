@@ -14,7 +14,7 @@ metadata:
   maintainer: skills-library
   source: original
   last_verified: "2026-11-20"
-compatibility: Requires Node.js v20.19+ or v22.12+ (NestJS 12); TypeScript 5.x recommended.
+compatibility: Requires Node.js v20.19+ or v22.12+ (NestJS 12); TypeScript 6.x (TypeScript 7 not yet supported by nest build).
 ---
 
 # NestJS

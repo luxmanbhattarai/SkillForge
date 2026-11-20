@@ -6,10 +6,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { MockAgent, tokenize } from '../evals/runners/mock-agent.mjs';
+import { MockAgent, tokenize, extractFencedBlocks } from '../evals/runners/mock-agent.mjs';
 import { scoreSelection } from '../evals/scorers/selection.mjs';
 import { scoreContent } from '../evals/scorers/content.mjs';
 import { scoreRefusal } from '../evals/scorers/refusal.mjs';
+import { tsStructure } from '../evals/scorers/code.mjs';
 import { REPO_ROOT } from './helpers.mjs';
 
 const FAKE_REGISTRY = {
@@ -110,4 +111,52 @@ test('runner rejects an unknown skill in a case file', async () => {
     cwd: REPO_ROOT, encoding: 'utf8', timeout: 60000,
   });
   assert.equal(res.status, 2);
+});
+
+test('extractFencedBlocks: no phantom prose blocks, no swallowed blocks', () => {
+  const text = [
+    '```bash',
+    'npm install foo',
+    '```',
+    '',
+    'Some prose between the blocks.',
+    '',
+    '```js',
+    'const y = 2;',
+    '```',
+    '',
+    '```ts',
+    'const z: number = 3;',
+    '```',
+  ].join('\n');
+  // Regression: the old optional-language regex captured the prose as
+  // a "js block" and swallowed the following real block.
+  assert.deepEqual(extractFencedBlocks(text, 'js'), ['const y = 2;\n']);
+  assert.deepEqual(extractFencedBlocks(text, 'ts'), ['const z: number = 3;\n']);
+  assert.deepEqual(extractFencedBlocks(text, 'bash'), ['npm install foo\n']);
+});
+
+test('extractFencedBlocks: unlabeled blocks count as js, other languages do not', () => {
+  const text = '```\nconst a = 1;\n```\n\n```json\n{"k": 1}\n```\n';
+  assert.deepEqual(extractFencedBlocks(text, 'js'), ['const a = 1;\n']);
+  assert.deepEqual(extractFencedBlocks(text, 'ts'), []);
+});
+
+test('tsStructure: URLs in strings do not break delimiter counting', () => {
+  // Regression: stripping // comments before strings ate "https://"
+  // and everything after it on the line, reporting valid TS as
+  // UNBALANCED (express, fastify, hono, jwt, playwright, rest-api,
+  // sdk-development).
+  const code = 'const res = await fetch("https://example.com/api");\nif (res.ok) {\n  return await res.json();\n}\n';
+  assert.equal(tsStructure(code).ok, true);
+  const withComment = '// see https://example.com/docs\nconst x = { a: 1 };\n';
+  assert.equal(tsStructure(withComment).ok, true);
+  const template = 'const url = `https://example.com/${id}`;\nconst x = [1, 2];\n';
+  assert.equal(tsStructure(template).ok, true);
+});
+
+test('tsStructure: genuinely unbalanced code still fails', () => {
+  assert.equal(tsStructure('const x = { a: 1;\n').ok, false);
+  assert.equal(tsStructure('function f() {\n  return 1;\n').ok, false);
+  assert.equal(tsStructure('const x = [1, 2);\n').ok, false);
 });

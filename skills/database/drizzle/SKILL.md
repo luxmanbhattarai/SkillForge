@@ -41,7 +41,7 @@ This skill covers general Drizzle ORM usage in TypeScript and JavaScript applica
 
 ## Prerequisites
 
-- Node.js 24 LTS and TypeScript 5.x, per the project's verified stack.
+- Node.js 26 LTS (24 and 22 remain supported LTS lines) and TypeScript 7.x.
 - This skill describes the stable Drizzle ORM 0.45 line (0.45.4 as of 2026-11-20). Drizzle ORM 1.0 is a release candidate on the `@rc` npm tag (1.0.0-rc.5) with a new relations API and migration engine; its API differs from the stable line, so check the installed version before following 1.0 documentation, and keep `drizzle-orm` and `drizzle-kit` on matching lines.
 - A supported database reachable from the project (PostgreSQL, MySQL, or SQLite).
 - The connection string stored as an environment variable such as `$DATABASE_URL`, never committed to the repository.
