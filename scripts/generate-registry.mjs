@@ -15,8 +15,12 @@ const VERSION = '1.0.0';
 
 // Known sources. 'original' covers skills authored in this repository.
 // Upstream vendors are keyed by their skills/upstream/<vendor>/ directory.
+// Date the upstream imports were verified (see sources/research-log.md).
+// Used as last_verified for upstream skills, whose frontmatter carries none.
+const UPSTREAM_VERIFIED_DATE = '2026-11-20';
+
 const KNOWN_SOURCES = {
-  original: { id: 'original', type: 'original', name: 'SkillForge (original)', url: '', license: 'MIT' },
+  original: { id: 'original', type: 'original', name: 'SkillForge (original)', url: 'https://github.com/luxmanbhattarai/SkillForge', license: 'MIT' },
   anthropic: { id: 'anthropic', type: 'upstream', name: 'Anthropic Skills', url: 'https://github.com/anthropics/skills', license: 'Apache-2.0' },
   vercel: { id: 'vercel', type: 'upstream', name: 'Vercel Agent Skills', url: 'https://github.com/vercel-labs/agent-skills', license: 'MIT' },
   superpowers: { id: 'superpowers', type: 'upstream', name: 'Superpowers', url: 'https://github.com/obra/superpowers', license: 'MIT' },
@@ -78,7 +82,7 @@ for (const file of (await findSkillFiles(path.join(ROOT, 'skills'))).sort()) {
     license: data.license || (KNOWN_SOURCES[vendor]?.license ?? 'MIT'),
     maintainer: md.maintainer || md.author || (isUpstream ? vendor : 'skills-library'),
     compatibility: data.compatibility || null,
-    last_verified: md.last_verified || null,
+    last_verified: md.last_verified || (isUpstream ? UPSTREAM_VERIFIED_DATE : null),
   });
 }
 

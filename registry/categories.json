@@ -2,6 +2,288 @@
   "version": "1.0.0",
   "categories": [
     {
+      "name": "architecture",
+      "description": "Monorepos, Turborepo, modular monoliths, microservices, DDD.",
+      "count": 9,
+      "skills": [
+        "dependency-management",
+        "domain-driven-design",
+        "microservices",
+        "modular-monolith",
+        "monorepo",
+        "package-boundaries",
+        "pnpm-workspaces",
+        "system-design",
+        "turborepo"
+      ]
+    },
+    {
+      "name": "auth",
+      "description": "Authentication, authorization, OAuth, sessions, JWT, RBAC, MFA.",
+      "count": 10,
+      "skills": [
+        "auth-security",
+        "authentication",
+        "authorization",
+        "better-auth",
+        "jwt",
+        "mfa",
+        "multi-tenancy",
+        "oauth",
+        "rbac",
+        "session-management"
+      ]
+    },
+    {
+      "name": "backend",
+      "description": "Node.js, APIs, queues, caching, SDK and package development, MCP.",
+      "count": 13,
+      "skills": [
+        "api-design",
+        "background-jobs",
+        "caching",
+        "graphql",
+        "hono",
+        "mcp-development",
+        "nodejs",
+        "package-development",
+        "queues",
+        "rate-limiting",
+        "rest-api",
+        "sdk-development",
+        "trpc"
+      ]
+    },
+    {
+      "name": "content",
+      "description": "Content strategy, article writing, editorial review, localization.",
+      "count": 17,
+      "skills": [
+        "article-writing",
+        "blog-writing",
+        "content-brief",
+        "content-localization",
+        "content-refresh",
+        "content-repurposing",
+        "content-research",
+        "content-strategy",
+        "copywriting",
+        "editorial-review",
+        "eeat-writing",
+        "fact-checking",
+        "faq-generation",
+        "human-editing",
+        "keyword-to-content",
+        "seo-content-writing",
+        "technical-writing"
+      ]
+    },
+    {
+      "name": "core",
+      "description": "Software engineering fundamentals: architecture, code quality, debugging, review.",
+      "count": 11,
+      "skills": [
+        "clean-code",
+        "code-review",
+        "debugging",
+        "design-patterns",
+        "engineering-standards",
+        "performance",
+        "refactoring",
+        "security",
+        "software-architecture",
+        "tdd",
+        "technical-decision-records"
+      ]
+    },
+    {
+      "name": "database",
+      "description": "Database design, SQL, PostgreSQL/MySQL/SQLite/MongoDB, Prisma, Drizzle.",
+      "count": 14,
+      "skills": [
+        "backup-recovery",
+        "connection-pooling",
+        "database-design",
+        "database-security",
+        "drizzle",
+        "indexing",
+        "migrations",
+        "mongodb",
+        "mysql",
+        "postgresql",
+        "prisma",
+        "sql-optimization",
+        "sqlite",
+        "transactions"
+      ]
+    },
+    {
+      "name": "documentation",
+      "description": "Technical docs, API docs, changelogs, READMEs, DX.",
+      "count": 5,
+      "skills": [
+        "api-documentation",
+        "changelog-management",
+        "developer-experience",
+        "readme-engineering",
+        "technical-documentation"
+      ]
+    },
+    {
+      "name": "frontend",
+      "description": "HTML, CSS, JavaScript, TypeScript, React, Next.js, Astro, Hugo, UI.",
+      "count": 16,
+      "skills": [
+        "accessibility",
+        "astro",
+        "css",
+        "frontend-performance",
+        "html",
+        "hugo",
+        "javascript",
+        "modern-css",
+        "nextjs",
+        "react",
+        "responsive-design",
+        "semantic-html",
+        "shadcn-ui",
+        "tailwind-css",
+        "typescript",
+        "ui-design"
+      ]
+    },
+    {
+      "name": "infrastructure",
+      "description": "Cloudflare, Vercel, Docker, CI/CD, deployment, observability.",
+      "count": 13,
+      "skills": [
+        "ci-cd",
+        "cloudflare",
+        "cloudflare-d1",
+        "cloudflare-kv",
+        "cloudflare-queues",
+        "cloudflare-r2",
+        "cloudflare-workers",
+        "deployment",
+        "docker",
+        "durable-objects",
+        "github-actions",
+        "observability",
+        "vercel"
+      ]
+    },
+    {
+      "name": "media",
+      "description": "AI image generation, OG images, thumbnails, image optimization.",
+      "count": 12,
+      "skills": [
+        "ai-image-generation",
+        "blog-featured-images",
+        "brand-visual-consistency",
+        "image-accessibility",
+        "image-compression",
+        "image-format-conversion",
+        "image-prompt-engineering",
+        "infographic-generation",
+        "og-image-generation",
+        "social-preview",
+        "twitter-card-images",
+        "youtube-thumbnails"
+      ]
+    },
+    {
+      "name": "metadata",
+      "description": "SEO metadata, Open Graph, Twitter Cards, social sharing.",
+      "count": 6,
+      "skills": [
+        "dynamic-metadata",
+        "metadata-validation",
+        "open-graph",
+        "seo-metadata",
+        "social-sharing",
+        "twitter-cards"
+      ]
+    },
+    {
+      "name": "performance",
+      "description": "Core Web Vitals, Lighthouse, image/JS optimization, caching.",
+      "count": 8,
+      "skills": [
+        "bundle-optimization",
+        "caching-strategy",
+        "core-web-vitals",
+        "image-optimization",
+        "javascript-optimization",
+        "lighthouse",
+        "pagespeed-insights",
+        "web-performance-audit"
+      ]
+    },
+    {
+      "name": "security",
+      "description": "OWASP, XSS/CSRF/SQLi prevention, secrets, headers, auditing.",
+      "count": 8,
+      "skills": [
+        "csrf-protection",
+        "dependency-security",
+        "owasp",
+        "secrets-management",
+        "secure-headers",
+        "security-auditing",
+        "sql-injection-prevention",
+        "xss-prevention"
+      ]
+    },
+    {
+      "name": "seo",
+      "description": "Technical SEO, on-page SEO, schema, GEO/AEO, keyword research.",
+      "count": 27,
+      "skills": [
+        "aeo-optimization",
+        "canonical-management",
+        "competitor-analysis",
+        "content-gap-analysis",
+        "eeat",
+        "geo-optimization",
+        "hreflang",
+        "image-seo",
+        "internal-linking",
+        "international-seo",
+        "keyword-clustering",
+        "keyword-research",
+        "llm-seo",
+        "llms-txt",
+        "local-seo",
+        "off-page-seo",
+        "on-page-seo",
+        "programmatic-seo",
+        "schema-jsonld",
+        "search-console",
+        "search-intent",
+        "seo-audit",
+        "seo-migration",
+        "serp-analysis",
+        "sitemap-robots",
+        "structured-data",
+        "technical-seo"
+      ]
+    },
+    {
+      "name": "testing",
+      "description": "Unit, integration, E2E, accessibility and performance testing.",
+      "count": 8,
+      "skills": [
+        "accessibility-testing",
+        "e2e-testing",
+        "integration-testing",
+        "performance-testing",
+        "playwright",
+        "regression-testing",
+        "unit-testing",
+        "vitest"
+      ]
+    },
+    {
       "name": "upstream",
       "description": "Imported upstream skills, organized by vendor.",
       "count": 49,

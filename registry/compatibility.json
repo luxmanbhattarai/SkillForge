@@ -2,22 +2,125 @@
   "version": "1.0.0",
   "compatibility": {
     "any agent implementing the Agent Skills standard": [
+      "accessibility",
+      "accessibility-testing",
+      "aeo-optimization",
+      "ai-image-generation",
       "ai-seo",
       "analytics",
+      "api-design",
+      "api-documentation",
+      "article-writing",
+      "auth-security",
+      "authentication",
+      "authorization",
+      "backup-recovery",
+      "better-auth",
+      "blog-featured-images",
+      "blog-writing",
       "brainstorming",
       "brand-guidelines",
+      "brand-visual-consistency",
+      "bundle-optimization",
+      "caching-strategy",
+      "canonical-management",
+      "changelog-management",
+      "ci-cd",
+      "clean-code",
+      "code-review",
+      "competitor-analysis",
       "competitor-profiling",
+      "connection-pooling",
+      "content-brief",
+      "content-gap-analysis",
+      "content-localization",
+      "content-refresh",
+      "content-repurposing",
+      "content-research",
+      "content-strategy",
       "copy-editing",
+      "copywriting",
+      "core-web-vitals",
       "cro",
+      "csrf-protection",
+      "css",
+      "database-design",
+      "database-security",
+      "debugging",
+      "dependency-management",
+      "dependency-security",
       "deploy-to-vercel",
+      "deployment",
+      "design-patterns",
+      "developer-experience",
       "diagnosing-superpowers",
       "dispatching-parallel-agents",
       "doc-coauthoring",
+      "domain-driven-design",
+      "drizzle",
+      "dynamic-metadata",
+      "e2e-testing",
+      "editorial-review",
+      "eeat",
+      "eeat-writing",
+      "engineering-standards",
       "executing-plans",
+      "fact-checking",
+      "faq-generation",
       "finishing-a-development-branch",
       "frontend-design",
+      "frontend-performance",
+      "geo-optimization",
+      "hreflang",
+      "html",
+      "human-editing",
+      "image-accessibility",
+      "image-compression",
+      "image-format-conversion",
+      "image-optimization",
+      "image-prompt-engineering",
+      "image-seo",
+      "indexing",
+      "infographic-generation",
+      "integration-testing",
+      "internal-linking",
+      "international-seo",
+      "javascript",
+      "javascript-optimization",
+      "jwt",
+      "keyword-clustering",
+      "keyword-research",
+      "keyword-to-content",
+      "lighthouse",
       "link-building",
+      "llm-seo",
+      "llms-txt",
+      "local-seo",
       "mcp-builder",
+      "metadata-validation",
+      "mfa",
+      "microservices",
+      "migrations",
+      "modern-css",
+      "modular-monolith",
+      "mongodb",
+      "monorepo",
+      "multi-tenancy",
+      "mysql",
+      "oauth",
+      "observability",
+      "off-page-seo",
+      "og-image-generation",
+      "on-page-seo",
+      "open-graph",
+      "owasp",
+      "package-boundaries",
+      "pagespeed-insights",
+      "performance",
+      "performance-testing",
+      "pnpm-workspaces",
+      "postgresql",
+      "prisma",
       "prisma-cli",
       "prisma-client-api",
       "prisma-compute",
@@ -29,14 +132,54 @@
       "prisma-postgres-setup",
       "prisma-postgres-upgrade",
       "prisma-upgrade-v7",
+      "programmatic-seo",
+      "rbac",
+      "readme-engineering",
       "receiving-code-review",
+      "refactoring",
+      "regression-testing",
       "requesting-code-review",
+      "responsive-design",
       "schema",
+      "schema-jsonld",
+      "search-console",
+      "search-intent",
+      "secrets-management",
+      "secure-headers",
+      "security",
+      "security-auditing",
+      "semantic-html",
       "seo",
+      "seo-audit",
+      "seo-content-writing",
+      "seo-metadata",
+      "seo-migration",
+      "serp-analysis",
+      "session-management",
       "site-architecture",
+      "sitemap-robots",
       "skill-creator",
+      "social-preview",
+      "social-sharing",
+      "software-architecture",
+      "sql-injection-prevention",
+      "sql-optimization",
+      "sqlite",
+      "structured-data",
       "subagent-driven-development",
+      "system-design",
+      "tdd",
+      "technical-decision-records",
+      "technical-documentation",
+      "technical-seo",
+      "technical-writing",
       "theme-factory",
+      "transactions",
+      "turborepo",
+      "twitter-card-images",
+      "twitter-cards",
+      "ui-design",
+      "unit-testing",
       "using-git-worktrees",
       "using-superpowers",
       "vercel-cli-with-tokens",
@@ -47,10 +190,96 @@
       "verification-before-completion",
       "web-artifacts-builder",
       "web-design-guidelines",
+      "web-performance-audit",
       "webapp-testing",
       "writing-guidelines",
       "writing-plans",
-      "writing-skills"
+      "writing-skills",
+      "xss-prevention",
+      "youtube-thumbnails"
+    ],
+    "Requires Node.js 24 LTS and an Astro 7 project; server adapters need a compatible hosting target.": [
+      "astro"
+    ],
+    "Requires a job runner or queue (such as BullMQ, Inngest, or Trigger.dev) and a backing store such as Redis or Postgres.": [
+      "background-jobs"
+    ],
+    "Requires a cache store such as Redis or the HTTP cache layer being used.": [
+      "caching"
+    ],
+    "Requires a Cloudflare account and network access to the Cloudflare dashboard and API.": [
+      "cloudflare"
+    ],
+    "Requires Node.js, the Wrangler CLI, a Cloudflare account, and network access to Cloudflare.": [
+      "cloudflare-d1",
+      "cloudflare-kv",
+      "cloudflare-queues",
+      "cloudflare-r2",
+      "cloudflare-workers",
+      "durable-objects"
+    ],
+    "Requires Docker installed and running on the machine, and network access to pull base images.": [
+      "docker"
+    ],
+    "Requires a GitHub repository with Actions enabled and network access to GitHub.": [
+      "github-actions"
+    ],
+    "Requires Node.js 24 LTS and a GraphQL server library such as GraphQL Yoga or Apollo Server.": [
+      "graphql"
+    ],
+    "Requires Node.js 24 LTS or a supported edge runtime; TypeScript 5.x recommended.": [
+      "hono"
+    ],
+    "Requires the Hugo binary (extended edition for Sass/SCSS support) installed on the machine building the site.": [
+      "hugo"
+    ],
+    "Requires Node.js 24 LTS, TypeScript 5.x, and the MCP TypeScript SDK; network access for remote servers.": [
+      "mcp-development"
+    ],
+    "Requires Node.js 24 LTS and a Next.js 16 project; deployment targets may need a hosting account.": [
+      "nextjs"
+    ],
+    "Requires Node.js 24 LTS or later and npm; network access for installing dependencies.": [
+      "nodejs"
+    ],
+    "Requires Node.js 24 LTS, npm, and an npm account for publishing.": [
+      "package-development"
+    ],
+    "Requires Node.js and downloads browser binaries on install.": [
+      "playwright"
+    ],
+    "Requires a queue system such as Redis with BullMQ, RabbitMQ, Amazon SQS, or Cloudflare Queues.": [
+      "queues"
+    ],
+    "Requires a shared store such as Redis for limits that work across multiple server instances.": [
+      "rate-limiting"
+    ],
+    "Requires Node.js 24 LTS and a React 19 project set up with a bundler or framework such as Vite or Next.js.": [
+      "react"
+    ],
+    "Requires a Node.js HTTP framework such as Hono or Express and TypeScript 5.x.": [
+      "rest-api"
+    ],
+    "Requires Node.js 24 LTS and TypeScript 5.x; the target API must be documented.": [
+      "sdk-development"
+    ],
+    "Requires Node.js 24 LTS, a React project with Tailwind CSS v4, and the shadcn/ui CLI (npx shadcn@latest).": [
+      "shadcn-ui"
+    ],
+    "Requires Node.js 24 LTS and a Tailwind CSS v4 project with the Tailwind CLI, PostCSS plugin, or Vite plugin.": [
+      "tailwind-css"
+    ],
+    "Requires Node.js 24 LTS, TypeScript 5.x, and a TypeScript client; works best in a monorepo.": [
+      "trpc"
+    ],
+    "Requires Node.js 24 LTS and the TypeScript compiler (tsc) for type checking and builds.": [
+      "typescript"
+    ],
+    "Requires a Vercel account, a Git repository, and network access to Vercel.": [
+      "vercel"
+    ],
+    "Requires Node.js and a Vite-based or ESM TypeScript project.": [
+      "vitest"
     ]
   }
 }

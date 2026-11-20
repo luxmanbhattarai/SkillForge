@@ -29,7 +29,9 @@ const REQUIRED_SECTIONS = [
 
 // Placeholder markers: acronyms match only in UPPERCASE (so ordinary prose
 // like "a todo list" does not trip the check); phrases match any case.
-const PLACEHOLDER_RE = /\b(TODO|FIXME|XXX|TBD)\b|lorem ipsum|coming soon|placeholder text/i;
+// Two regexes because a single /i flag would apply to the whole pattern.
+const PLACEHOLDER_ACRONYM_RE = /\b(TODO|FIXME|XXX|TBD)\b/;
+const PLACEHOLDER_PHRASE_RE = /lorem ipsum|coming soon|placeholder text/i;
 const REL_LINK_RE = /\[[^\]]*\]\((?!https?:|mailto:|#)([^)\s]+)\)/g;
 
 const args = process.argv.slice(2);
@@ -133,7 +135,7 @@ async function main() {
     }
 
     // --- placeholders (all) ---
-    const ph = body.match(PLACEHOLDER_RE);
+    const ph = body.match(PLACEHOLDER_ACRONYM_RE) || body.match(PLACEHOLDER_PHRASE_RE);
     if (ph) (isUpstream ? warn : err)(`placeholder marker found: '${ph[0]}'`);
 
     // --- relative file references resolve (all) ---

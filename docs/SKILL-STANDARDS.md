@@ -102,7 +102,7 @@ repository, license, imported commit, and import date. See
 
 ```bash
 npm run validate        # full validation (frontmatter, sections, links, duplicates, registry)
-npm run check:links     # internal link check across all Markdown
+npm run check:links     # internal link check (excludes skills/upstream/ by default; see scripts/check-links.mjs)
 npm run check:sources   # provenance + verification-date freshness
 npm run registry        # regenerate registry/ from the skills on disk
 npm run report          # coverage + audit report

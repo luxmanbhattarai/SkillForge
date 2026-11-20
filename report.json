@@ -1,0 +1,103 @@
+{
+  "generated": "2026-11-20",
+  "registry_version": "1.0.0",
+  "totals": {
+    "skills": 226,
+    "original": 177,
+    "upstream": 49,
+    "categories": 16
+  },
+  "by_source": {
+    "original": 177,
+    "marketingskills": 8,
+    "superpowers": 13,
+    "anthropic": 8,
+    "vercel": 8,
+    "prisma": 11,
+    "agentic-seo": 1
+  },
+  "target_coverage": {
+    "planned_original": 177,
+    "done": 177,
+    "percent": 100
+  },
+  "coverage": {
+    "core": {
+      "planned": 11,
+      "done": 11,
+      "missing": []
+    },
+    "frontend": {
+      "planned": 16,
+      "done": 16,
+      "missing": []
+    },
+    "backend": {
+      "planned": 13,
+      "done": 13,
+      "missing": []
+    },
+    "database": {
+      "planned": 14,
+      "done": 14,
+      "missing": []
+    },
+    "auth": {
+      "planned": 10,
+      "done": 10,
+      "missing": []
+    },
+    "architecture": {
+      "planned": 9,
+      "done": 9,
+      "missing": []
+    },
+    "infrastructure": {
+      "planned": 13,
+      "done": 13,
+      "missing": []
+    },
+    "testing": {
+      "planned": 8,
+      "done": 8,
+      "missing": []
+    },
+    "security": {
+      "planned": 8,
+      "done": 8,
+      "missing": []
+    },
+    "seo": {
+      "planned": 27,
+      "done": 27,
+      "missing": []
+    },
+    "performance": {
+      "planned": 8,
+      "done": 8,
+      "missing": []
+    },
+    "content": {
+      "planned": 17,
+      "done": 17,
+      "missing": []
+    },
+    "media": {
+      "planned": 12,
+      "done": 12,
+      "missing": []
+    },
+    "metadata": {
+      "planned": 6,
+      "done": 6,
+      "missing": []
+    },
+    "documentation": {
+      "planned": 5,
+      "done": 5,
+      "missing": []
+    }
+  },
+  "remaining": [],
+  "validation": "PASS with 11 warning(s)."
+}

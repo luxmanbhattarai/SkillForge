@@ -9,10 +9,10 @@ any agent implementing the Agent Skills standard) reusable, verified skills
 they can discover and apply across projects — instead of reinventing
 instructions in every repo.
 
-> **Status:** Foundation complete. **49 upstream skills** imported and
-> verified (Anthropic, Vercel, Superpowers, Prisma, Marketing Skills,
-> Agentic SEO). Original skills across 15 categories are being written now;
-> see `AUDIT-REPORT.md` for live coverage.
+> **Status:** v1.0.0 complete. **226 skills** on disk: **49 upstream skills**
+> imported and verified (Anthropic, Vercel, Superpowers, Prisma, Marketing Skills,
+> Agentic SEO) and **177 original skills** across 15 categories; see
+> `AUDIT-REPORT.md` for live coverage (generated with `npm run report`).
 
 ## What's inside
 
