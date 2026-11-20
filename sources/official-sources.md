@@ -30,7 +30,7 @@ All entries verified 2026-11-20. See `research-log.md` for the audit trail.
 
 - React — https://react.dev/
 - Next.js — https://nextjs.org/docs
-- Astro — https://docs.astro.new/
+- Astro — https://docs.astro.build/
 - Hugo — https://gohugo.io/documentation/
 - Tailwind CSS — https://tailwindcss.com/docs
 - shadcn/ui — https://ui.shadcn.com/docs
