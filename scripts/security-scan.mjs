@@ -99,6 +99,9 @@ const EXCEPTIONS = [
   ['ai/audits/SECURITY-AUDIT.md', 'CODE-08', 'audit report quotes the flagged construct as evidence'],
   ['ai/audits/SECURITY-AUDIT.md', 'CODE-14', 'audit report quotes the flagged construct as evidence'],
   ['ai/audits/SECURITY-AUDIT.md', 'CMD-01', 'audit report quotes the flagged construct as evidence'],
+  // The final implementation report quotes the flagged construct as
+  // evidence for audit finding S-11 (upstream Prisma guidance).
+  ['ai/reports/FINAL-IMPLEMENTATION-REPORT.md', 'CODE-14', 'final report quotes the flagged construct as evidence for audit S-11'],
 ];
 
 const JSON_OUT = process.argv.includes('--json');
