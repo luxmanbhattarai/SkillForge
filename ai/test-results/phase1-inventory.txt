@@ -1,0 +1,105 @@
+=== FILE COUNTS ===
+total files: 845
+skill dirs: 183
+original skills: 177
+upstream skills: 49
+agents: 20, workflows: 9
+=== SKILL SIZE STATS (SKILL.md lines) ===
+    372 skills/upstream/marketingskills/analytics/SKILL.md
+    375 skills/upstream/anthropic/doc-coauthoring/SKILL.md
+    399 skills/upstream/superpowers/writing-skills/SKILL.md
+    442 skills/upstream/marketingskills/competitor-profiling/SKILL.md
+    485 skills/upstream/anthropic/skill-creator/SKILL.md
+    491 skills/upstream/marketingskills/copy-editing/SKILL.md
+    500 skills/upstream/marketingskills/ai-seo/SKILL.md
+  48212 total
+--- smallest ---
+     14 skills/upstream/prisma/prisma-database-setup/SKILL.md
+     14 skills/upstream/prisma/prisma-postgres/SKILL.md
+     39 skills/upstream/vercel/web-design-guidelines/SKILL.md
+     39 skills/upstream/vercel/writing-guidelines/SKILL.md
+     47 skills/upstream/prisma/prisma-postgres-setup/SKILL.md
+     59 skills/upstream/anthropic/theme-factory/SKILL.md
+     65 skills/upstream/superpowers/using-superpowers/SKILL.md
+     71 skills/upstream/anthropic/frontend-design/SKILL.md
+--- over 500 lines ---
+  48212 total
+=== SKILLS WITHOUT references/ or examples/ ===
+skills/architecture/dependency-management/
+skills/architecture/domain-driven-design/
+skills/architecture/microservices/
+skills/architecture/modular-monolith/
+skills/architecture/monorepo/
+skills/architecture/package-boundaries/
+skills/architecture/pnpm-workspaces/
+skills/architecture/system-design/
+skills/architecture/turborepo/
+skills/auth/auth-security/
+skills/auth/authentication/
+skills/auth/authorization/
+skills/auth/better-auth/
+skills/auth/jwt/
+skills/auth/mfa/
+skills/auth/multi-tenancy/
+skills/auth/oauth/
+skills/auth/rbac/
+skills/auth/session-management/
+skills/backend/api-design/
+skills/backend/background-jobs/
+skills/backend/caching/
+skills/backend/graphql/
+skills/backend/hono/
+skills/backend/mcp-development/
+skills/backend/nodejs/
+skills/backend/package-development/
+skills/backend/queues/
+skills/backend/rate-limiting/
+skills/backend/rest-api/
+=== FRONTMATTER FIELDS SAMPLE ===
+---
+name: debugging
+description: >
+  Find and fix bugs systematically: reproduce, isolate, hypothesise,
+  verify, and prevent regression. Use when something is broken,
+  behaving unexpectedly, failing intermittently, or crashing in
+  production. Covers reproduction, bisection, logging, debugger use,
+  and writing regression tests so the bug stays fixed.
+license: MIT
+metadata:
+  version: "1.0.0"
+  category: core
+  maintainer: skills-library
+  source: original
+  last_verified: "2026-11-20"
+---
+
+# Debugging
+
+## Purpose
+=== REGISTRY ===
+skills in registry: 226
+keys: [
+  'name',
+  'version',
+  'generated',
+  'categories',
+  'total_skills',
+  'skills'
+]
+sample: {
+ "name": "accessibility",
+ "description": "Make web interfaces usable by everyone, including people using screen readers, keyboards, and other assistive technology, following WCAG 2.2. Use when auditing a page for accessibility, fixing keyboard navigation, adding ARIA correctly, improving color contrast, writing alt text, or making forms, dialogs, and custom widgets accessible.",
+ "path": "skills/frontend/accessibility",
+ "category": "frontend",
+ "vendor": null,
+ "source_type": "original",
+ "source": "original",
+ "status": "verified",
+ "version": "1.0.0",
+ "license": "MIT",
+ "maintainer": "s
+categories.json
+compatibility.json
+skills.json
+sources.json
+versions.json

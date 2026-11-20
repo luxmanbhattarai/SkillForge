@@ -1,0 +1,40 @@
+=== VALIDATE ===
+> node scripts/validate-skills.mjs
+
+Checked 226 skills (177 original, 49 upstream).
+  WARN  skills/upstream/agentic-seo/seo/SKILL.md: placeholder marker found: 'placeholder text'
+  WARN  skills/upstream/anthropic/doc-coauthoring/SKILL.md: placeholder marker found: 'placeholder text'
+  WARN  skills/upstream/marketingskills/ai-seo/SKILL.md: SKILL.md is 501 lines (recommended max 500)
+  WARN  skills/upstream/marketingskills/link-building/SKILL.md: broken relative link: ../../tools/integrations/ahrefs.md
+  WARN  skills/upstream/marketingskills/link-building/SKILL.md: broken relative link: ../../tools/integrations/semrush.md
+  WARN  skills/upstream/marketingskills/link-building/SKILL.md: broken relative link: ../../tools/integrations/dataforseo.md
+  WARN  skills/upstream/marketingskills/link-building/SKILL.md: broken relative link: ../../tools/integrations/exa.md
+  WARN  skills/upstream/marketingskills/link-building/SKILL.md: broken relative link: ../../tools/integrations/firecrawl.md
+  WARN  skills/upstream/marketingskills/link-building/SKILL.md: broken relative link: ../../tools/integrations/hunter.md
+  WARN  skills/upstream/marketingskills/site-architecture/SKILL.md: broken relative link: /features/analytics
+  WARN  skills/upstream/superpowers/writing-plans/SKILL.md: placeholder marker found: 'TBD'
+PASS with 11 warning(s).
+=== FRONTMATTER ===
+
+Checked frontmatter of 226 skills.
+PASS.
+=== LINKS (offline) ===
+
+Checked 14 internal links; 311 unique external URLs listed (use --online to verify).
+PASS.
+=== SOURCES ===
+
+Checked 226 skills against 7 sources.
+PASS with 0 warning(s).
+=== DUPLICATES ===
+
+Compared 226 skills (threshold 0.8).
+PASS.
+=== SECURITY ===
+
+Scanned repository for credential / injection patterns.
+PASS: no findings.
+=== REPORT ===
+> node scripts/generate-report.mjs
+
+Report written: 177/177 planned original skills (100%), 226 total skills. Validation: PASS with 11 warning(s).
