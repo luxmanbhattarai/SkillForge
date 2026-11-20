@@ -75,8 +75,8 @@ tests from a single source of truth.
 - [Spectral](https://github.com/stoplightio/spectral) — the
   OpenAPI linter from Stoplight. The `@stoplight/spectral-cli`
   package is at 6.17.1 (6 November 2026) and lints OpenAPI 2, 3.0,
-  3.1, and 3.2. Documentation:
-  [Spectral docs](https://meta.stoplight.io/docs/spectral/docs/getting-started/1-concepts.md).
+  3.1, and 3.2. (Stoplight's standalone Spectral docs site is
+  defunct; the repository README is the current documentation.)
 - [Redocly CLI](https://redocly.com/docs/cli) — linting, bundling,
   and docs generation. Redocly CLI 2.x is current, ESM-only, and
   requires Node.js 22.12 or newer.
@@ -424,7 +424,6 @@ oasdiff breaking old-openapi.yaml dist/openapi.yaml
 
 - [OpenAPI Specification](https://spec.openapis.org/oas/v3.2.0.html)
 - [Spectral](https://github.com/stoplightio/spectral)
-- [Spectral docs](https://meta.stoplight.io/docs/spectral/docs/getting-started/1-concepts.md)
 - [Redocly CLI](https://redocly.com/docs/cli)
 - [Prism](https://github.com/stoplightio/prism)
 - [Schemathesis](https://schemathesis.readthedocs.io)

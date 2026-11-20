@@ -59,7 +59,7 @@ serverless and edge functions where a headless browser cannot.
 ## Official Documentation
 
 - [Satori repository and README](https://github.com/vercel/satori) — the full documentation: supported HTML elements, the CSS property table, fonts, runtime support, and examples. The CSS table reflects the latest release; compare it against the version installed.
-- [Vercel OG Image Generation](https://examples.vercel.com/docs/og-image-generation) — Vercel's docs for `@vercel/og`, the `ImageResponse` wrapper around Satori.
+- [Vercel OG Image Generation](https://vercel.com/docs/og-image-generation) — Vercel's docs for `@vercel/og`, the `ImageResponse` wrapper around Satori.
 - [Next.js ImageResponse](https://NextJs.org/docs/15/app/api-reference/functions/image-response) — `ImageResponse` from `next/og`, the built-in Next.js route for OG images.
 - Compatibility: Satori uses the Taffy layout engine for Flexbox,
   Grid, and block layout; Grid and block support arrived with the
@@ -136,6 +136,22 @@ serverless and edge functions where a headless browser cannot.
 - **Output is SVG, not PNG.** Satori returns an SVG string. Use
   `resvg` or `sharp` for the PNG step, or serve the SVG where the
   consumer accepts it.
+
+### Testing Strategy
+
+- Snapshot-test the SVG output for representative designs with pinned
+  fonts: a layout or text change shows up as a snapshot diff for a
+  human to approve or reject.
+- Test the failure modes: unsupported CSS either throws or is dropped
+  per `onStyleError`, and a missing font renders nothing instead of
+  silently substituting.
+- Test emoji rendering with the project's grapheme mapping, and test
+  long text, overflow, and `lineClamp` at the real card size — text
+  that fits in the design tool can overflow the generated image.
+- Visually regression-test the rasterized output (via `resvg` or
+  `sharp`): the SVG is an intermediate, and the PNG is what users see.
+- Test images with explicit dimensions and embedded data so a render
+  never depends on a network fetch at generation time.
 
 ## Best Practices
 
@@ -283,7 +299,7 @@ export async function GET() {
 ## References
 
 - [Satori repository and README](https://github.com/vercel/satori) — supported elements, CSS table, fonts, runtime support.
-- [Vercel OG Image Generation](https://examples.vercel.com/docs/og-image-generation) — `@vercel/og` and `ImageResponse`.
+- [Vercel OG Image Generation](https://vercel.com/docs/og-image-generation) — `@vercel/og` and `ImageResponse`.
 - [Next.js ImageResponse](https://NextJs.org/docs/15/app/api-reference/functions/image-response) — `next/og` reference.
 - Related skills in this repository: `resvg`, `sharp`,
   `og-image-generation`, `platform-social-images`, `social-preview`,

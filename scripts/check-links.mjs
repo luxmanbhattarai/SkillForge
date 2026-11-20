@@ -37,6 +37,7 @@ const EXCEPTIONS = [
   ['https://vercel.com/dashboard', 'login-required dashboard'],
   ['https://www.ftc.gov/', 'host blocks automated checks; verified via browser fetch 2026-11-20'],
   ['https://socket.dev/', 'unreachable from this environment; verified via browser fetch 2026-11-20'],
+  ['https://raw.githubusercontent.com/redis/redis/8.10/00-RELEASENOTES', 'timed out from this environment; verified via browser fetch 2026-11-20 (Redis 8.10.3 release notes)'],
   ['https://pgbouncer.github.io/', 'unreachable from this environment; verified via browser fetch 2026-11-20'],
   ['https://www.pgbouncer.github.io/', 'unreachable from this environment; verified via browser fetch 2026-11-20'],
   ['https://www.w3.org/', 'host blocks automated checks (403); verified real'],

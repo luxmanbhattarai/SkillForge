@@ -85,7 +85,7 @@ API by construction, regenerated on every contract change.
   `@hey-api/openapi-ts`, a plugin-based TypeScript generator.
   Version 0.99.x is current; it is ESM-only, requires Node.js
   22.13 or newer, and is pre-1.0, so pin an exact version.
-- [openapi-typescript](https://openapi-ts.pages.dev) — generates
+- [openapi-typescript](https://openapi-ts.dev/) — generates
   TypeScript types only (no runtime client); pair it with the
   `openapi-fetch` runtime client. Version 7.13.x is current.
 - [OpenAPI Specification](https://spec.openapis.org/oas/v3.2.0.html) —
@@ -344,7 +344,7 @@ git diff --exit-code -- src/generated/
 - [OpenAPI Generator repository](https://github.com/OpenAPITools/openapi-generator)
 - [Orval](https://orval.dev)
 - [Hey API](https://heyapi.dev/docs/openapi/typescript/get-started)
-- [openapi-typescript](https://openapi-ts.pages.dev)
+- [openapi-typescript](https://openapi-ts.dev/)
 - [OpenAPI Specification](https://spec.openapis.org/oas/v3.2.0.html)
 - Related skills in this repository: `openapi`, `sdk-development`,
   `typescript-sdk`, `python-sdk`, `api-design`, `rest-api`,
