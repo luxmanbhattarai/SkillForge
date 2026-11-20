@@ -84,6 +84,14 @@ This skill guides the design, implementation, and operation of Elasticsearch for
 - Version upgrades follow the official upgrade guide: read the breaking changes, run the Upgrade Assistant checks, snapshot first, and upgrade one minor at a time across majors.
 - ES|QL (`POST /_query`) is the first-class query language for analytics and exploration in 9.x; Query DSL remains the primary language for search relevance work and for application queries. Use the one that fits the task, not both at once.
 
+### Testing Strategy
+
+- Test analyzers with the `_analyze` API before indexing: a query that tokenizes differently than expected is a relevance bug found in seconds, not after a reindex.
+- Test queries against production-sized data: relevance (top results for known queries), aggregation bounds on high-cardinality fields, and `search_after` pagination across deep result sets.
+- Test mappings in a disposable index: a mapping change is applied to a fresh index, documents are indexed, and queries run before the template is promoted to production.
+- Test the reindex path end to end: reindex into a new index, swap the alias, and confirm reads and writes follow the alias with no downtime and no lost documents.
+- Test failure modes on a staging cluster: a node loss with replicas in place, a snapshot restore, and an upgrade rehearsal following the official upgrade guide before the production upgrade.
+
 ## Best Practices
 
 - Design relevance deliberately: use `multi_match` across fields with boosts (`title^3`), `function_score` or the retriever API for business rules, and a labelled set of test queries to judge changes — never tune by gut feel.

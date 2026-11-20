@@ -86,6 +86,13 @@ This skill guides the design, implementation, and operation of ClickHouse for on
 - DDL for replicated tables goes through the cluster (ON CLUSTER) or a migration tool that applies the same DDL to every replica; never hand-edit a schema on one replica.
 - Configuration lives in files under version control (or in the operator/managed-service settings), never as ad-hoc `SET` statements that vanish on restart.
 
+### Testing Strategy
+
+- Test queries against a small representative dataset first, and use `EXPLAIN` to check granules read before running a new query pattern at full scale — a query that filters on a column outside the ordering key scans everything.
+- Test `ReplacingMergeTree` behavior explicitly: a plain `SELECT` can return duplicates until a merge runs, so verify that `FINAL` or `argMax` gives the exact result the feature needs.
+- Test inserts at production rate in staging: thousands of tiny parts cause merge storms, so verify batch sizes or `async_insert` keep part counts healthy.
+- Test TTLs and partition drops on staging data before relying on them for retention, and test distributed queries on a multi-shard test cluster so sharding-key skew shows up before production.
+
 ## Best Practices
 
 - Model wide, denormalized tables: joins are supported and improving (25.12 added the DPsize join-reordering algorithm for INNER JOINs; 26.10 adds JOINs with arbitrary `ON` conditions), but a single denormalized fact table is usually faster than joining at query time.

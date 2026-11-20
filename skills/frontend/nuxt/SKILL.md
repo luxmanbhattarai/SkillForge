@@ -163,6 +163,27 @@ from scaffolding with `npm create nuxt` to a production deployment.
   runtime config. Run the typecheck (`nuxt typecheck` or the
   project's typecheck script) in CI.
 
+### Testing Strategy
+
+- Test server routes with `@nuxt/test-utils`: each handler
+  under `server/api/` is exercised over HTTP, including its
+  method suffix (`.get.ts`, `.post.ts`) and its error
+  responses.
+- Test data fetching with mocked `$fetch`: `useFetch` and
+  `useAsyncData` handle loading, error, and empty states, and
+  the server result transfers to the client without a refetch
+  on hydration.
+- Test rendering per route: SSR pages render on the server,
+  prerendered routes are generated at build time, and
+  `routeRules` (prerender, swr, isr) apply to the routes they
+  name.
+- Test hydration explicitly: a page rendered on the server
+  hydrates without mismatch warnings, and no per-request state
+  leaks between requests through module scope.
+- Test journeys end to end with Playwright: navigation,
+  middleware guards, and form submissions across the routes
+  users actually take, plus the typecheck in CI.
+
 ## Best Practices
 
 - Fetch in `setup` with `useFetch`/`useAsyncData` so the server

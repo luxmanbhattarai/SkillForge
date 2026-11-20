@@ -141,6 +141,27 @@ safe to change in teams.
 - Destructive changes (deletes, replacements) are called out in the
   pull request and require explicit approval.
 
+### Testing Strategy
+
+- Test with `pulumi preview` on every change and review the plan
+  in the pull request: unexpected replacements or deletions block
+  the change before `pulumi up` runs.
+- Test programs in a disposable dev stack before staging or
+  production: create, update, and destroy the stack end to end
+  so a broken program fails where it is cheap.
+- Test stack configuration: required config is present, secrets
+  are encrypted with the stack's secrets provider, and a missing
+  or mistyped value fails fast instead of deploying with a
+  wrong default.
+- Test protected resources: a change that would delete or
+  replace a resource marked `protect: true` is refused, and
+  stack references resolve to the expected outputs of the
+  referenced stack.
+- Test recovery: destroy and recreate a stack from code and
+  configuration alone (state restored from the backend) to prove
+  the program — not manual console edits — defines the
+  infrastructure.
+
 ## Best Practices
 
 - Keep programs small and single-purpose; extract shared infrastructure

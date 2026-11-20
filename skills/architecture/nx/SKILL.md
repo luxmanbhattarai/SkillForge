@@ -95,6 +95,14 @@ monorepo tool.
 - Pin the `nx` version (and plugin versions) in the root `package.json` so local and CI behavior match; upgrade with `nx migrate`, never by hand-editing version numbers.
 - Keep `nx.json` free of secrets: tokens for Nx Cloud belong in environment variables or the CI secret store.
 
+### Testing Strategy
+
+- Test affected detection: change one project and confirm `nx affected` runs only the tasks that depend on it, so CI stays fast and a misconfigured project graph is caught early.
+- Test cache correctness: run a cacheable target twice and confirm the second run restores from cache, then change an unrelated file (for example a `*.md` file excluded from `inputs`) and confirm the cache still hits.
+- Test boundary rules: a project importing across a forbidden tag boundary fails the lint check, and a new project is tagged at creation time so the rule can apply to it.
+- Test task ordering: a target that needs its dependencies built first declares `dependsOn: ["^build"]`, and a run with the ordering removed (on a scratch branch) fails instead of silently using stale output.
+- Test upgrades with `nx migrate` on a branch: run the full affected test suite after migration before merging, since a hand-edited version bump can leave local and CI behavior out of sync.
+
 ## Best Practices
 
 - Start with the task runner and caching, then adopt plugins, generators, and boundaries incrementally — Nx is modular and the value arrives in that order.

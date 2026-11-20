@@ -57,6 +57,9 @@ claim true?" A true claim cited from a bad source is still a weak piece.
   topics need stricter sourcing than a baking guide.
 - Access to the web to check sources, authors, and publishers.
 - The publication date or "as of" date the sources must be current for.
+- Conceptual skill; current stable as of 2026-11-20 — applies to
+  current verification tools and standards; see the IFCN Code of
+  Principles and the C2PA standard linked in Official Documentation.
 
 ## Official Documentation
 
@@ -125,6 +128,35 @@ claim true?" A true claim cited from a bad source is still a weak piece.
   original, not a source.
 - The source log is dated and lists every source consulted,
   including rejected ones.
+
+### Testing Strategy
+
+- Have a second verifier independently re-check a random sample of
+  sources each month; disagreement between verifiers is a signal to
+  tighten the criteria, not a tie to break by seniority.
+- Link-check every citation before publish and on a schedule
+  afterward: a cited source must still be real and reachable, and a
+  dead link must be replaced or the claim re-sourced.
+- Spot-check the claim-to-source match: open the cited passage and
+  confirm it says what the draft claims, especially for numbers,
+  dates, and quotes.
+- Audit the rejected-source log periodically so a rejected source is
+  not quietly re-adopted by a later piece.
+
+### Accessibility
+
+- Prefer sources in accessible formats: an HTML article over a scanned
+  PDF, a page with real text over an image of text, and a video or
+  podcast with a transcript or captions over one without.
+- When the only source for a load-bearing claim is an inaccessible
+  format, note that in the source log and cite an accessible
+  corroborating source alongside it where one exists.
+- Check that cited charts and figures carry alt text or a data table a
+  reader using a screen reader can follow; a chart whose numbers exist
+  only as pixels is not a checkable source for every reader.
+- Link to the accessible version of a source when the publisher offers
+  one (HTML full text, accessible PDF), and record which version was
+  checked.
 
 ## Best Practices
 

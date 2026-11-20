@@ -151,6 +151,26 @@ the App Store and Google Play.
   `react-native-keychain`); configuration that is not secret lives in
   build config.
 
+### Testing Strategy
+
+- Test components with React Native Testing Library and Jest:
+  render each screen in loading, empty, error, and offline
+  states, and assert on what the user sees rather than on
+  implementation details.
+- Test navigation with the static configuration: deep links
+  resolve to the right screen with typed params, and a link to
+  a removed route fails loudly instead of landing nowhere.
+- Test the API layer with mocked responses: non-OK statuses,
+  network failure, and cancellation on unmount are all handled,
+  and invalid payloads are rejected before rendering.
+- Test lists with long data: `FlatList` renders only the
+  visible window, `keyExtractor` returns stable ids, and
+  scrolling does not remount rows or lose scroll position.
+- Test native modules on both platforms: each TurboModule is
+  exercised on iOS and Android, errors surface as typed
+  rejections rather than crashes, and platform differences go
+  through one `Platform.select` per component.
+
 ## Best Practices
 
 - Keep the JavaScript thread free: expensive work (parsing, crypto,

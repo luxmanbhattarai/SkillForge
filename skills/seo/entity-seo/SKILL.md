@@ -70,6 +70,10 @@ ranking, or an AI citation.
 - Access to Search Console to check rich result reports.
 - Optional: a Google Cloud API key for the Knowledge Graph Search
   API, for entity lookups.
+- Conceptual skill; current stable as of 2026-11-20 — applies to the
+  current Google structured-data guidance; see the Organization and
+  ProfilePage documentation linked in Official Documentation;
+  schema.org vocabulary versions are not pinned.
 
 ## Official Documentation
 
@@ -179,6 +183,21 @@ panel, a ranking, or a citation in an AI answer.
 - Never claim a knowledge panel, a ranking improvement, or an AI
   citation as the outcome of entity work. Google does not
   guarantee any of these.
+
+### Testing Strategy
+
+- Validate markup before publish with Google's Rich Results Test and
+  the Schema Markup Validator: invalid JSON-LD or a missing required
+  property must fail the pre-publish check.
+- Test that markup matches the visible page: every fact in the
+  structured data must appear on the page a visitor sees, and nothing
+  is marked up that the page does not show.
+- Test `sameAs` links by opening them: each must resolve to a page
+  that identifies the same entity, not a namesake or a different
+  organization.
+- Re-validate after any template change, and check Search Console's
+  rich-result reports after deployment for errors the validators did
+  not catch.
 
 ## Best Practices
 

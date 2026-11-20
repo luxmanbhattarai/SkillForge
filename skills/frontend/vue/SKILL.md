@@ -154,6 +154,24 @@ shared state. It covers the full loop from scaffolding with
   into the client bundle at build time; they must never hold
   secrets. Server-side values stay on the server.
 
+### Testing Strategy
+
+- Test components with Vue Test Utils and Vitest: mount with
+  props, assert rendered output and emitted events, and test
+  `v-model` bindings through `defineModel` in both directions.
+- Test composables in isolation: call each `use*` function
+  outside a component, drive its reactive state, and assert the
+  computed values and side effects it exposes.
+- Test Pinia stores directly: actions mutate state as expected,
+  getters derive correctly, and `storeToRefs()` keeps
+  destructured state reactive.
+- Test routing with Vue Router 5: lazy-loaded routes resolve,
+  navigation guards redirect unauthenticated users, and a link
+  to a removed route fails loudly instead of rendering nothing.
+- Test data fetching with mocked responses: non-OK statuses,
+  network failure, and cancellation are handled, and TanStack
+  Query retries and background refetch behave as configured.
+
 ## Best Practices
 
 - Keep components small and focused; a component over roughly 200

@@ -98,6 +98,14 @@ and prereleases, and CI release automation.
 - `changeset publish` publishes only packages whose version is not already on the registry; it never republishes an existing version.
 - Never edit a `CHANGELOG.md` by hand for a released version; the changelog is generated from changesets, and hand edits are overwritten or duplicated on the next release.
 
+### Testing Strategy
+
+- Test the release flow with a snapshot release before the first real release, so versioning, changelog generation, and publishing are proven end to end rather than assumed.
+- Test `changeset status` in CI on every pull request: a PR that changes a releasable package without a changeset fails, so releases never ship unrecorded changes.
+- Test bump behavior on a scratch branch: several changesets touching one package flatten to the highest bump type, and a major bump in a `fixed` or `linked` group moves the whole group as configured.
+- Test the Version Packages pull request before merging: check its version bumps, changelog entries, and automatically updated internal dependency ranges, because merging publishes.
+- Test that private packages stay private: an app or internal tool marked `"private": true` is never versioned or published, even when a changeset mentions it.
+
 ## Best Practices
 
 - Write the changeset summary for the changelog reader, not the reviewer: say what changed and what the user must do, in plain language.

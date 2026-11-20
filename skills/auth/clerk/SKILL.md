@@ -141,6 +141,27 @@ at each resource — see `authorization` and `rbac` for the concepts.
   `@clerk/backend/webhooks`) or the `svix` package, with the endpoint
   secret from the environment. Unverified webhook requests are rejected.
 
+### Testing Strategy
+
+- Test `auth.protect()` on every protected route: signed-out
+  requests redirect to sign-in, signed-in users without the
+  required role or permission get a 404, and authorized users
+  pass.
+- Test with real session tokens: custom claims configured in the
+  Dashboard appear in the token, and expired or tampered tokens
+  are rejected. Never skip `await` on `auth()` in tests — an
+  unawaited call returns a promise, not auth state.
+- Test metadata trust boundaries: roles read from
+  `publicMetadata` authorize correctly, and values a user sets
+  in `unsafeMetadata` never grant authorization.
+- Test webhook handlers with signed and unsigned payloads: a
+  valid Svix signature is accepted, and a missing or forged
+  signature is rejected before any handler logic runs.
+- Test sign-in flows end to end (Playwright against a
+  development instance): each enabled method works, and machine
+  access via `acceptsToken` accepts valid tokens and rejects
+  tokens with insufficient scope.
+
 ## Best Practices
 
 - Read authorization data from the session token claims where possible;

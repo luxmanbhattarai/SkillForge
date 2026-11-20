@@ -89,6 +89,13 @@ mechanics in `package-development`.
 - Hotfixes branch from the release tag, not from the default branch, and are released as a patch on the affected line; the fix is then merged forward.
 - Support windows are stated: which major versions receive fixes and for how long. An unstated support window becomes an implicit promise to support everything forever.
 
+### Testing Strategy
+
+- Test the release pipeline itself before relying on it: run a dry-run release (or publish a prerelease under the `next` dist-tag) and verify the version, tag, changelog entry, and published artifact all agree.
+- Test every release as a consumer would: install the published artifact into a clean project and run its smoke tests — never test only the repository checkout.
+- Test the rollback path before it is needed: a bad release must be deprecable and replaceable by a patch without republishing or mutating the bad version.
+- Test breaking-change detection in CI (an API diff or semver check) so a breaking change cannot slip into a minor or patch release unnoticed.
+
 ## Best Practices
 
 - Prefer small, frequent releases over rare big ones: a small release is easier to review, easier to verify, and easier to roll back.

@@ -65,6 +65,10 @@ waiting. It tracks; it never promises a position.
 - A named owner for the weekly review and the monthly report.
 - A baseline: the site's current clicks, impressions, and average
   position by page and query, recorded before monitoring starts.
+- Conceptual skill; current stable as of 2026-11-20 — applies to the
+  current Search Console API and reporting; see the Search Analytics
+  API reference linked in Official Documentation; rank trackers are
+  third-party tools with no pinned version.
 
 ## Official Documentation
 
@@ -200,6 +204,23 @@ source. Nothing here promises a ranking position or a time frame.
   reaching one.
 - Monitoring data about a client's keywords and traffic is
   confidential; reports stay inside the engagement.
+
+### Testing Strategy
+
+- Back-test alert thresholds on historical data: a known update date
+  should have triggered an alert, and a quiet week should not have —
+  thresholds that fire on everything or nothing are untested
+  thresholds.
+- Cross-check the tracker against Search Console for the same query,
+  page, and date range: when they disagree, Search Console is
+  authoritative for the site's own data.
+- Test the report pipeline with a fixed data snapshot so a broken
+  query or a changed API response fails loudly instead of silently
+  publishing wrong numbers.
+- Verify the branded and non-branded split on every report: a query in
+  the wrong group hides real movement in both.
+- Audit alerts monthly: every alert carries a recorded resolution, and
+  an alert nobody acted on is a threshold to fix, not noise to ignore.
 
 ## Best Practices
 

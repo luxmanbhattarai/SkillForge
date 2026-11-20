@@ -148,6 +148,20 @@ following Google Cloud's own architecture and security guidance.
 - Pin the provider and CLI versions used by pipelines so builds are
   reproducible.
 
+### Testing Strategy
+
+- Test infrastructure changes in a sandbox project first: review the
+  plan output and apply to a non-production project before production.
+- Test IAM bindings with the Policy Simulator before granting them,
+  and verify that a denied action actually fails.
+- Test Cloud Run revisions with traffic splitting: shift a small share
+  of traffic to the new revision and roll back on error before
+  promoting it fully.
+- Test backups by restoring them: a Cloud SQL point-in-time recovery
+  rehearsed in staging is the only proof the retention setting works.
+- Test budget alerts by confirming they fire at their thresholds in a
+  test project, not by discovering a missing alert on the real bill.
+
 ## Best Practices
 
 - Give every workload its own service account with only the roles it

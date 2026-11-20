@@ -60,7 +60,7 @@ behaves predictably, fails gracefully, and can be measured and improved.
   secret manager (see `secrets-management`). Never hardcode keys.
 - A defined use case with a known input shape, output shape, and
   quality bar — "call an LLM" is not a specification.
-- The provider's current API surface. As of 2026-11-20: OpenAI's
+- The provider's current API surface. Current stable as of 2026-11-20: OpenAI's
   current API is the Responses API (Chat Completions remains
   supported); Anthropic's is the Claude Messages API with tool use;
   Google offers the Gemini API. Check the official model pages for
@@ -168,6 +168,24 @@ behaves predictably, fails gracefully, and can be measured and improved.
   exception to crash on. Return a degraded response (cached answer,
   simpler model, clear error message) and log the failure with the
   request id.
+
+### Testing Strategy
+
+- Keep a golden set of representative prompts with graded expected
+  outcomes and run it on every prompt or model change; grade outputs
+  by rule or judge, never by exact string match.
+- Unit-test the provider adapter with a mocked provider: error mapping
+  (429 to RateLimited, 5xx to ProviderError), structured-output
+  validation, and tool-argument validation must all hold without a
+  network call.
+- Test retries with a fault-injecting stub: 429 and 5xx errors retry
+  with backoff and stop after 3 attempts; 400-class errors and
+  content-filter refusals never retry.
+- Test timeouts and fallbacks: a hung model call returns a degraded
+  response within the request timeout instead of hanging the handler.
+- Assert cost and latency budgets per request in tests, so a prompt or
+  model change that doubles token usage fails loudly instead of
+  silently doubling the bill.
 
 ## Best Practices
 

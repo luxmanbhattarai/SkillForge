@@ -96,6 +96,14 @@ OpenSearch began in 2021 as a fork of Elasticsearch 7.10.2 and Kibana 7.10.2, af
 - Version upgrades follow the official upgrade path: read the version history and breaking changes, snapshot first, and do not skip major versions.
 - For vector search, choose the k-NN engine explicitly (Faiss, Lucene, or JVector) per index and record why; the engines differ in supported methods, quantization, and memory behaviour.
 
+### Testing Strategy
+
+- Test the mapping and analyzer choices on a disposable index first: index representative documents, run the `_analyze` API on real query terms, and confirm the top results match expectations before the template is promoted.
+- Test ISM policies on a short-lived index: rollover, force merge, and deletion fire on schedule, so retention is proven instead of discovered months later when disk fills.
+- Test vector search per engine: the chosen k-NN engine (Faiss, Lucene, or JVector) returns the expected nearest neighbors for known vectors, and recall and latency are measured against the recorded reason for the choice.
+- Test the reindex path before a mapping change is needed: reindex into a new index, swap the alias, and confirm the application reads and writes through the alias without downtime.
+- Test failure modes on a staging cluster: a node loss with replicas in place, a snapshot restore, and an upgrade rehearsal that reads the version history and breaking changes before the production upgrade.
+
 ## Best Practices
 
 - Design relevance deliberately: use `multi_match` across fields with boosts (`title^3`), `function_score` for business rules, and hybrid search (lexical + vector, with score combination) where meaning matters as well as keywords. Judge changes against a labelled set of test queries.

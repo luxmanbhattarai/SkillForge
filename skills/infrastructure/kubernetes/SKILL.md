@@ -130,6 +130,24 @@ state lives in version control and the cluster converges to it.
 - Namespaces carry resource quotas and limit ranges so one team cannot
   starve the cluster.
 
+### Testing Strategy
+
+- Validate manifests before applying: `kubectl apply --dry-run=server`
+  and a schema check (for example kubeconform) catch typos and invalid
+  fields without touching the cluster.
+- Test workloads in a local cluster (kind or minikube) first,
+  including probes: readiness must gate traffic until the app is
+  ready, and liveness must restart a wedged process.
+- Test rolling updates in staging: `maxUnavailable` and the
+  PodDisruptionBudget must hold availability during the rollout and
+  during a node drain.
+- Test scaling under load: HPA must add replicas before latency
+  breaches the budget, and resource limits must bound a noisy
+  neighbor.
+- Test secret rotation and image updates without downtime, and
+  rehearse the node-drain and cluster-upgrade procedures before
+  running them in production.
+
 ## Best Practices
 
 - One Deployment per service, with a Service in front of it; expose

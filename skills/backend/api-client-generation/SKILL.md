@@ -165,6 +165,26 @@ API by construction, regenerated on every contract change.
   a maintenance liability; use them only as a last resort and
   document the fork.
 
+### Testing Strategy
+
+- Test generation in CI: regenerate from the pinned spec and
+  fail the build if the output differs from the committed code,
+  so generated code can never drift from the spec unnoticed.
+- Test the generated client against a mock server (Prism or
+  MSW): every operation the app uses returns the mocked shape,
+  and the client sends the expected method, path, and headers.
+- Test type safety: the generated types compile against the
+  app's usage with `tsc --noEmit`, and a spec change that
+  renames an operation or field breaks the build where the app
+  uses it.
+- Test for breaking changes before regenerating: run
+  `oasdiff breaking` between the old and new spec, and surface
+  any breaking change in the pull request before regenerating.
+- Test the hand-written wrapper, not the generated code: the
+  wrapper's auth, error mapping, and retry behavior are unit
+  tested, while generated files stay excluded from linting and
+  coverage.
+
 ## Best Practices
 
 - Commit generated code for libraries and applications that ship

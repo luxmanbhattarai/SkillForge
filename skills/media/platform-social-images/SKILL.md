@@ -57,6 +57,10 @@ and when a platform needs its own export.
 - The page URL, title, and description the preview should show.
 - Brand assets (logo, palette, fonts) for the image design.
 - Access to the page template or CMS where meta tags are set.
+- Conceptual skill; current stable as of 2026-11-20 — applies to the
+  current platform card specifications; platforms publish no versioned
+  spec, so re-check the official validator tools linked in Official
+  Documentation before relying on a dimension for an edge case.
 
 ## Official Documentation
 
@@ -151,6 +155,38 @@ platform publishes no size, the entry says so.
   70 bytes and the description past 350 bytes; WhatsApp shows about
   80 characters of description. Keep titles short and descriptions
   front-loaded.
+
+### Testing Strategy
+
+- Validate every new image with the platform debuggers (Meta Sharing
+  Debugger, LinkedIn Post Inspector) before publish: the debugger
+  shows what the crawler actually reads, which is what users see.
+- Test the file-size budget: the shared image must stay under
+  WhatsApp's 600 KB limit, and an automated check on dimensions and
+  file size in CI catches regressions.
+- Test the X 2:1 crop on the shared image: nothing essential sits in
+  the top or bottom 15 px that X trims.
+- Test a real share to a private or test account on each priority
+  platform before launch, and re-scrape after any image change —
+  platform caches serve the old image until forced to refresh.
+- Test the tags themselves: `og:image:width` and `og:image:height`
+  must match the actual file, and a missing or mistyped tag must fail
+  the pre-publish check.
+
+### Accessibility
+
+- Every social image carries an alt text equivalent: set
+  `og:image:alt` and `twitter:image:alt` to a short description of
+  what the image shows, not the page title repeated.
+- Keep essential information out of the image itself: card images are
+  decorative in most clients, and a reader who cannot see the image
+  must still get the point from the title and description.
+- Text baked into the image must meet contrast against its background
+  (aim for WCAG AA contrast, 4.5:1 for body text) so the card stays
+  readable for low-vision readers and in compressed previews.
+- Do not rely on color alone in the card design: labels and
+  distinctions the image conveys must also differ in shape, position,
+  or text.
 
 ## Best Practices
 

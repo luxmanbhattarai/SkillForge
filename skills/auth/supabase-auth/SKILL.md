@@ -59,6 +59,10 @@ user is not automatically an authorized user — the RLS policies decide.
 - HTTPS on every environment handling real credentials.
 - A custom SMTP provider configured before production: the built-in email
   service is rate-limited and not meant for production use.
+- Version note: current stable as of 2026-11-20 — the v2 client
+  (`@supabase/supabase-js`) is the current stable major line; check
+  the Supabase docs linked in Official Documentation for the newest
+  minor before starting.
 
 ## Official Documentation
 
@@ -151,6 +155,21 @@ user is not automatically an authorized user — the RLS policies decide.
   registration requires an existing, confirmed, non-anonymous user.
   Passkeys are bound to the Relying Party ID (the bare domain), so choose
   the production domain before users register credentials.
+
+### Testing Strategy
+
+- Test RLS policies as each role, with real queries: anonymous,
+  authenticated, and another user must each see exactly what the
+  policy allows — a policy of `true` for `authenticated` is an open
+  table.
+- Test the refresh flow under concurrency: two simultaneous requests
+  must not double-refresh and sign the user out, and refresh must
+  happen in exactly one place.
+- Test MFA enforcement at the policy level, not only in the UI: a
+  request with an `aal1` JWT must fail where `aal2` is required.
+- Test the OAuth callback and PKCE flow in staging, and test email
+  links (confirmation, recovery, magic link) against the production
+  SMTP provider before launch.
 
 ## Best Practices
 

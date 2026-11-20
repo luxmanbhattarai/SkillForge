@@ -146,6 +146,26 @@ service that is fast, well-structured, and easy to test.
 - Prefer `async/await` handlers; Fastify catches rejected promises
   and routes them to the error handler.
 
+### Testing Strategy
+
+- Test routes with `fastify.inject()` instead of starting a
+  real server: tests run faster, cannot collide on ports, and
+  cover success, validation-failure, 404, and error-handler
+  paths for every route.
+- Test schema validation explicitly: a request that fails the
+  JSON Schema gets a 400, and a response schema strips
+  undeclared properties from the output.
+- Test plugin encapsulation: a decorator or hook registered
+  inside a plugin is invisible outside it, and only the plugins
+  deliberately wrapped with `fastify-plugin` escape their
+  scope.
+- Test error handling: a rejected promise in an async handler
+  reaches the error handler instead of crashing the process,
+  and errors are serialized without leaking internals.
+- Test with `fastify.ready()` before asserting on plugins that
+  register asynchronously: assertions that run before the app
+  is ready test an incomplete server.
+
 ## Best Practices
 
 - Use `@fastify/autoload` to load route and plugin directories

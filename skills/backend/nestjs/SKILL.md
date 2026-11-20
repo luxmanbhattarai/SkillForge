@@ -152,6 +152,26 @@ and ready for production.
   `*.service.ts`, `*.module.ts`, `*.dto.ts`, `*.spec.ts`) so the
   project stays navigable as it grows.
 
+### Testing Strategy
+
+- Test at three levels: unit tests for services in isolation,
+  integration tests with `Test.createTestingModule` (real module
+  wiring, fakes substituted through the module system), and
+  end-to-end tests with supertest against `app.getHttpServer()`.
+- Test the global `ValidationPipe`: unknown properties are
+  stripped (`whitelist: true`), query and param types are
+  coerced (`transform: true`), and invalid DTOs get a 400.
+- Test guards separately from handlers: an unauthenticated
+  request is rejected, an authenticated request without the
+  required role is rejected, and an authorized request passes.
+- Test module wiring end to end: unit tests do not catch a
+  missing provider export or a circular dependency, so every
+  module is exercised through at least one HTTP test.
+- Test error mapping: domain errors surface as the intended
+  HTTP exceptions (`NotFoundException`, `ConflictException`),
+  and unexpected errors become a generic 500 with no stack
+  trace or internal detail.
+
 ## Best Practices
 
 - Generate code with the CLI (`nest g resource users`,

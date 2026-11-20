@@ -176,6 +176,24 @@ tests from a single source of truth.
 - Keep the spec free of secrets: no real tokens, keys, or internal
   hostnames in `servers`, examples, or descriptions.
 
+### Testing Strategy
+
+- Test the spec with a linter (Spectral or Redocly) in CI: every
+  operation has a unique `operationId`, every schema declares
+  `type`, and every operation documents its error responses.
+- Test that examples are real: each example validates against
+  its schema, so documentation and generated clients never
+  describe a shape the API cannot return.
+- Test breaking changes with `oasdiff breaking` between the
+  released spec and the new one: removals, renames, type
+  changes, and new required fields are flagged before release.
+- Test with a mock server (Prism): run generated clients and
+  contract tests against the mock, and treat any mock rejection
+  of a real API response as a spec that needs updating.
+- Test bundling: the split spec (paths and components in
+  separate files) bundles into one valid document before
+  publishing or generating, with no dangling `$ref`.
+
 ## Best Practices
 
 - Design first, then write: the spec is the contract review

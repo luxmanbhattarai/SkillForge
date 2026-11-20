@@ -122,6 +122,42 @@ into a PNG) and the renderer behind `@vercel/og` / `next/og`.
   `-z` sets a zoom factor (for example `resvg -z 2 in.svg out.png`
   renders at twice the size).
 
+### Testing Strategy
+
+- Keep a golden set of representative SVGs (text, gradients, masks,
+  nested groups) and pixel-diff the rendered PNGs against stored
+  references on every resvg or font change; a rendering regression
+  shows up as a diff, not a crash.
+- Test font handling explicitly: an SVG whose font is not loaded must
+  fail loudly or render visibly wrong in the test, never silently
+  substitute a different font in production.
+- Test scaling at the final size: render with `fitTo` at the target
+  dimensions and assert the output size, instead of rendering small
+  and resizing later.
+- Test background behavior: outputs that must be opaque carry the
+  `background` color, and outputs that must be transparent have no
+  background baked in.
+- Test the CLI paths used in production (`-` for stdin/stdout, `-z`
+  for zoom) and, for WASM, that `initWasm` runs before the first
+  render.
+
+### Accessibility
+
+- Keep `<title>` and `<desc>` in the source SVG: resvg renders pixels
+  and drops them from the PNG output, so the accessible name must live
+  in the source file for SVG consumers and in the page's `alt` text
+  for PNG consumers.
+- When the rendered PNG is published, the page or post that embeds it
+  must supply alt text describing the image's meaning; a PNG carries
+  no title or description of its own.
+- For SVGs served directly (not rasterized), the `<title>` is the
+  accessible name a screen reader announces — give every meaningful
+  SVG a short title and a longer `<desc>` when the graphic carries
+  information a title cannot hold.
+- Do not bake the only copy of essential text into a rasterized image:
+  text rendered to pixels cannot be read by a screen reader, resized,
+  or translated.
+
 ## Best Practices
 
 - Render at the final output size instead of rendering large and

@@ -162,6 +162,24 @@ production deployment.
   `adapter-vercel`, `adapter-netlify`, `adapter-cloudflare`, or
   `adapter-bun`. Only one adapter is active at a time.
 
+### Testing Strategy
+
+- Unit-test `load` functions and form actions with Vitest, mocking
+  `fetch`, `params`, and `url`; test the `fail()` validation path, not
+  only the success path.
+- Cover key user journeys end to end with Playwright, including form
+  submission, redirects, and error pages — a route that works in `dev`
+  can fail under the production adapter.
+- Test rendering per route: prerendered pages build as static output,
+  SSR pages render on the server, and a page with `ssr: false` still
+  works where it must.
+- Test hooks directly: unauthenticated requests to protected routes
+  redirect, and `handleError` returns a safe error page without
+  leaking internals.
+- Run the production build with the real adapter in CI; adapter-
+  specific failures (missing Node APIs on edge, static-export errors)
+  only appear in the built output.
+
 ## Best Practices
 
 - Put data fetching in `load`, not in components: it runs on the

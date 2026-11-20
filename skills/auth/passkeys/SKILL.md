@@ -170,6 +170,21 @@ codes, MFA policy), see `mfa`.
   httpOnly, secure, sameSite cookies, server-side sessions when
   revocation matters.
 
+### Testing Strategy
+
+- Test both ceremonies end to end with a virtual authenticator (the
+  WebDriver virtual authenticator or a browser automation harness) so
+  registration and authentication run in CI without real hardware.
+- Test rejection paths: a replayed challenge, a wrong origin, a
+  mismatched RP ID hash, and a credential ID already registered to
+  another user must all fail closed.
+- Test the counter behavior: a counter that goes backwards is flagged
+  for investigation, not treated as an automatic lockout, since synced
+  passkeys do not increment counters reliably.
+- Test the fallback: a device or browser without a platform
+  authenticator still reaches a working sign-in path instead of a dead
+  end.
+
 ## Best Practices
 
 - Offer passkeys alongside existing sign-in first, and let users add a

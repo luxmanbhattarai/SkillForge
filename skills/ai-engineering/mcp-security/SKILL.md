@@ -255,6 +255,29 @@ this one before the server (or client) touches production.
   to reach. No single control stops injection; defense in depth
   does.
 
+### Testing Strategy
+
+- Test authorization at call time: an unauthorized tool must be
+  absent from the tool list and rejected when invoked directly,
+  and a revoked permission must take effect without reconnecting.
+- Test prompt-injection defenses with adversarial tool results
+  and resource contents carrying embedded instructions: the agent
+  must treat them as data, never follow them, and never let them
+  expand permissions or trigger further tool calls.
+- Test tool-poisoning defenses: a description change after
+  approval (the rug pull) and a same-name tool from another
+  server (name shadowing) must not grant authority the user did
+  not approve.
+- Test input validation and output sanitization: malformed or
+  out-of-range tool arguments are rejected, tool results are
+  size-capped and free of secrets, and error messages leak no
+  internal paths or credentials.
+- Test confirmation and audit flows with the MCP Inspector
+  before connecting a real model: consequential actions are
+  blocked without explicit approval, a rejection ends the
+  action, and every invocation is logged with caller, tool, and
+  decision.
+
 ## Best Practices
 
 - Keep servers small and focused: one server per system or

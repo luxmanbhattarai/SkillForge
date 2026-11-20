@@ -66,6 +66,10 @@ before your users find out.
   measure, so the comparison is meaningful.
 - A budget: evals cost model calls. Know the cost per full run
   and who pays for it.
+- Conceptual skill; current stable as of 2026-11-20 — applies to the
+  current eval harnesses and provider APIs; see the release notes for
+  the tools linked in Official Documentation before adopting a hosted
+  eval platform.
 
 ## Official Documentation
 
@@ -192,6 +196,25 @@ before your users find out.
   the same rubric as the judges; disagreement between humans and
   judges is itself a signal to fix the rubric or the judge.
   Confirmed failures become new eval cases.
+
+### Testing Strategy
+
+- Test the harness itself: a golden set of cases with known
+  outcomes runs on every harness change, so a broken grader or
+  runner is caught before it grades a real change.
+- Test judge calibration: the judge's grades are compared
+  against human labels on a sample before the judge is trusted,
+  and re-checked whenever the judge model or rubric changes.
+- Test with adversarial cases: loaded questions, false premises,
+  and contradictory documents are in the suite, and cases where
+  the correct answer is "I don't know" verify the system
+  abstains instead of inventing.
+- Test regression behavior: a known-bad prompt or model change
+  is run through the suite to confirm the thresholds actually
+  block it — a suite that never fails is not guarding anything.
+- Test flakiness handling: the smoke subset is run repeatedly to
+  confirm it is stable, and a flaky eval is reported as flaky
+  rather than failing the build on noise.
 
 ## Best Practices
 

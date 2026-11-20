@@ -128,6 +128,23 @@ post-processing.
   files in servers; a single input stream can feed multiple output
   pipelines with `.clone()`.
 
+### Testing Strategy
+
+- Assert on the output file, not the pipeline: dimensions, format,
+  file size, and (for JPEG/WebP/AVIF) quality must match the target
+  for each output, and a wrong `fit` shows up as a wrong size.
+- Test EXIF orientation with a rotated input: the output must be
+  correctly oriented, which only holds when `.rotate()` runs before
+  resizing.
+- Test metadata handling: published images carry no location EXIF, and
+  an ICC profile is preserved only when `.withMetadata()` is wanted.
+- Test oversized inputs: an image over the pixel limit throws instead
+  of exhausting memory, and the limit is raised only for trusted
+  inputs.
+- Spot-check outputs visually at the target size on a sample of real
+  images; a pipeline that passes numeric assertions can still produce
+  a visibly bad crop.
+
 ## Best Practices
 
 - Generate all variants from the original, never from a variant:

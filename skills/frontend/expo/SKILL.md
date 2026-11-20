@@ -161,6 +161,26 @@ a store release.
   (per-request rendering with API routes) — and deploy the matching
   artifacts.
 
+### Testing Strategy
+
+- Test on a real device with a development build for anything
+  involving native behavior: Expo Go does not reproduce it
+  (remote push is unavailable in Expo Go on Android from SDK
+  53), and a simulator hides device-only failures.
+- Test config plugins with `npx expo prebuild` before
+  committing: a broken plugin fails the prebuild, and a
+  prebuild that succeeds proves the native projects regenerate
+  cleanly.
+- Test OTA updates on a preview build before publishing to the
+  production channel: the update applies, the app restarts into
+  the new bundle, and the channel matches the build's channel.
+- Test navigation with typed routes enabled: every `href` is
+  checked at build time, and a link to a removed route is a
+  compile error instead of a runtime dead end.
+- Test after each SDK upgrade: run `npx expo-doctor@latest` and
+  exercise the app's key flows on a development build before
+  starting the next SDK upgrade.
+
 ## Best Practices
 
 - Start every production app with a development build, not Expo Go:

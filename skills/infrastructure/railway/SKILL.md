@@ -140,6 +140,20 @@ reproducible, observable, and reversible.
   Railway bills for usage, so an idle service with generous resources
   still costs money.
 
+### Testing Strategy
+
+- Test every change in a PR or staging environment before production,
+  with its own variables and database — staging must never point at
+  the production database.
+- Test migrations as backward compatible: the new code must run
+  against the old schema, because a rollback restores the old image,
+  not the old schema.
+- Test the rollback path itself: restoring a previous deployment must
+  bring back the old image and variables and leave the service
+  healthy.
+- Test private-network connectivity between services in staging, and
+  test that data on an attached volume survives a redeploy.
+
 ## Best Practices
 
 - Use GitHub integration so every push deploys automatically and every

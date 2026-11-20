@@ -132,6 +132,24 @@ reviewable, repeatable, and safe to change in teams.
 - Destructive changes (`destroy`, replacements) are called out in the
   pull request and require explicit approval.
 
+### Testing Strategy
+
+- Test with `terraform plan` on every change and review the plan
+  in the pull request: unexpected replacements or deletions block
+  the change before `terraform apply` runs.
+- Test modules in isolation with `terraform test`: a module
+  creates, updates, and destroys cleanly, and its outputs match
+  what consuming modules expect.
+- Test state locking: a second apply against locked state is
+  refused, and a failed apply leaves state consistent rather
+  than half-written.
+- Test configuration hygiene in CI: `terraform validate` and
+  `terraform fmt -check` pass, and the lock file
+  (`.terraform.lock.hcl`) matches the pinned provider versions.
+- Test sensitive handling: variables marked `sensitive = true`
+  never appear in plan or apply output or logs, and no secret
+  reaches a `.tfvars` file in Git.
+
 ## Best Practices
 
 - Keep modules small and single-purpose: a module that provisions a

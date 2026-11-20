@@ -193,6 +193,27 @@ errors explicitly, and ships with its dependency tree audited.
   not declare one by accident by using a newer feature without
   checking.
 
+### Testing Strategy
+
+- Test every public function with non-trivial logic (unit
+  tests), public API behavior (integration tests under
+  `tests/`), and doc examples (`cargo test --doc`): the three
+  levels are the standard, not a menu to pick from.
+- Test error cases table-driven: each input-validation and
+  error-path case is a row in a table, so adding a case is one
+  line and no error branch is left unexercised.
+- Test async code under Tokio with `#[tokio::test]`: a test
+  that awaits the path with a timeout catches blocking calls
+  (sync file I/O, `std::thread::sleep`, CPU-heavy loops) inside
+  tasks before they stall the runtime.
+- Test `unsafe` contracts explicitly: every `unsafe` block's
+  `// SAFETY:` comment names a property, and a test exercises
+  the boundary (invalid FFI inputs, null pointers, bad lengths)
+  to confirm the safe wrapper holds it.
+- Test the MSRV in CI: the full suite runs on the declared
+  minimum Rust version, so a newer feature cannot slip in
+  unnoticed.
+
 ## Best Practices
 
 - Let the type system carry invariants: newtypes for IDs and units,

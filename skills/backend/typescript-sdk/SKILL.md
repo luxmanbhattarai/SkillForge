@@ -173,6 +173,26 @@ tooling and packaging depth.
   an optional parameter is a minor change. Deprecate with
   `@deprecated` JSDoc and a removal version before removing anything.
 
+### Testing Strategy
+
+- Test the published package, not just the source: install the
+  packed tarball in a scratch project and import it from both
+  ESM and CJS, so a broken `exports` map or missing declaration
+  file is caught before release.
+- Test types with `tsc --noEmit` in CI and with type-level
+  assertions where the public surface is generic: a green
+  bundler build proves nothing about types.
+- Test HTTP behavior with mocked fetch (Vitest plus a fetch
+  mock): success, each typed error, Retry-After handling on
+  429, and no retry on other 4xx responses.
+- Test cancellation and timeouts: a caller-provided
+  `AbortSignal` aborts the request, and the default 30-second
+  timeout fires instead of hanging forever.
+- Test pagination and streaming lazily: a paginated helper
+  fetches pages only as the async iterator is consumed, and a
+  streaming call yields parsed chunks without buffering the
+  whole response into memory.
+
 ## Best Practices
 
 - Design for the common case: the simplest call needs the fewest

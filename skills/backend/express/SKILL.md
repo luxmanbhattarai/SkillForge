@@ -144,6 +144,20 @@ service that is small, explicit, hardened, and ready for production.
 - Never use `app.get()` with a route string that comes from user
   input, and never interpolate user input into a route pattern.
 
+### Testing Strategy
+
+- Test routes with `supertest` against the app object (no live
+  server), covering success, validation-failure (`400` with issues),
+  404, and error-handler paths for every router.
+- Test middleware order explicitly: a request to an unknown route
+  reaches the 404 handler, and a thrown error reaches the four-
+  argument error handler — order bugs are silent until tested.
+- Test that rejected promises in async handlers forward to the error
+  handler (Express 5 behavior) instead of crashing the process.
+- Test migrated route patterns against the path-to-regexp v8 syntax,
+  especially wildcards and regex segments that were valid in Express
+  4.
+
 ## Best Practices
 
 - Separate app creation from server startup: export the `app` from

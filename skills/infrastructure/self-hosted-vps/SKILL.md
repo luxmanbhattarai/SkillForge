@@ -170,6 +170,27 @@ limits stated honestly.
   Compose file, hardening scripts) so the server can be rebuilt from
   scratch; the server itself is replaceable, the data is not.
 
+### Testing Strategy
+
+- Test the backup by restoring it: on a schedule, restore the
+  database volume backup to a scratch server and confirm the
+  application starts and serves real data — a backup never
+  restored is a backup never proven.
+- Test the rebuild from version control: a fresh server built
+  only from the committed Caddyfile, Compose file, and
+  hardening scripts reaches a working state with no manual
+  steps.
+- Test the rollback before needing it: redeploy the previous
+  image (tagged with its Git commit SHA) against the current
+  schema and confirm the old code runs, proving the migration
+  was backward compatible.
+- Test the firewall from outside: a port scan of the public
+  address shows only SSH, HTTP, and HTTPS, and database ports
+  and admin panels are unreachable.
+- Test deploys on a staging path first: the new image runs
+  behind the reverse proxy on a non-production host or port,
+  and the health check passes before traffic moves to it.
+
 ## Best Practices
 
 - Prefer Caddy for a new setup: a domain name in the Caddyfile is

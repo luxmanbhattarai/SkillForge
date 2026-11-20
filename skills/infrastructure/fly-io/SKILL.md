@@ -155,6 +155,22 @@ rolled back to a previous image.
   each other over `.internal` DNS and Flycast addresses, and Managed
   Postgres is reachable only over the private network.
 
+### Testing Strategy
+
+- Test every deploy against a staging app first, including the release
+  command: migrations run against a staging database before they run
+  against production.
+- Test health checks by deploying a deliberately broken release to
+  staging: the rollout must stop instead of replacing every Machine
+  with the broken version.
+- Test graceful shutdown: in-flight requests drain within
+  `kill_timeout` instead of being cut off mid-response.
+- Test the rollback path: redeploying the previous image restores
+  service, and the database still works with the old code because
+  migrations are backward compatible.
+- Test volume backups by restoring one: a volume lives on one host,
+  and a snapshot that has never been restored is unproven.
+
 ## Best Practices
 
 - Use `fly launch --no-deploy` on a first deploy so `fly.toml` can be

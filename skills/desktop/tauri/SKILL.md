@@ -190,6 +190,22 @@ APIs it was explicitly granted.
 - Pin the Rust toolchain for the team with a `rust-toolchain.toml`
   (see `rust`) so local builds and CI use the same compiler.
 
+### Testing Strategy
+
+- Unit-test commands in Rust (`cargo test`), including malformed
+  frontend input: a command must return a serializable error, never
+  `panic!` or `unwrap()` on untrusted data.
+- Test capability files directly: an API call without a granted
+  permission must fail with a clear "not allowed" error in
+  development, and a production build must not ship broad permissions.
+- Test the frontend with mocked `invoke` calls (Vitest or the
+  framework's runner) so UI logic is covered without a webview.
+- Test on every target OS in CI (macOS, Windows, Linux runners):
+  webview behavior, paths, and signing differ per platform and only
+  fail on the real OS.
+- Test the updater flow against a staging release before shipping it,
+  and test deep links and file associations on each platform.
+
 ## Best Practices
 
 - Start from the smallest capability set and add permissions one at a

@@ -69,6 +69,10 @@ reliably and fails safely when it cannot.
   (LangChain 1.x) or LlamaIndex agents, or a hand-rolled loop. A
   hand-rolled loop is fine for one agent with a few tools; a
   framework pays off for memory, middleware, and multi-agent work.
+- Version note: current stable as of 2026-11-20 — LangChain 1.x is the
+  current stable major line for the agent harness; check the LangChain
+  release notes linked in Official Documentation for the newest minor
+  before starting.
 
 ## Official Documentation
 
@@ -181,6 +185,24 @@ reliably and fails safely when it cannot.
 - Traces and replay: log the full run (messages, tool calls,
   results, timings) under a run id so any failure can be replayed
   and any eval can be reproduced.
+
+### Testing Strategy
+
+- Test every tool in isolation, with the model stubbed out, before the
+  agent ever calls it — an agent cannot fix a broken tool, and a tool
+  bug looks like a model failure.
+- Keep a fixed eval task set with success criteria and run it on every
+  prompt, tool, or model change; a change that improves one task must
+  not regress the set. See `agent-evaluation` for the eval method.
+- Test the guardrails, not just the happy path: prompt-injection
+  attempts in tool results, malformed tool arguments, and repeated
+  identical tool calls must end the run safely instead of looping.
+- Test the human-in-the-loop gate directly: a rejected action ends the
+  run or returns to planning, and never retries a different route
+  around the rejection.
+- Test budgets as behavior: a runaway agent must hit the step limit,
+  token budget, or timeout and stop, and every run must produce a
+  replayable trace under its run id.
 
 ## Best Practices
 

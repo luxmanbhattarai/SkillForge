@@ -160,6 +160,21 @@ setup that deploys with zero downtime and rolls back in one step.
   Blueprints, so every PR gets a realistic test environment that is
   cleaned up when the PR closes.
 
+### Testing Strategy
+
+- Test every pull request in its preview environment, with the
+  Blueprint applied: a `render.yaml` change that fails validation must
+  fail the PR, not the production deploy.
+- Validate the Blueprint with the Render CLI before merging, so a
+  malformed Blueprint never reaches the dashboard.
+- Test migrations as backward compatible: the new code must run
+  against the old schema, because a rollback reuses the target
+  deploy's artifact and variables but does not revert the database.
+- Test graceful shutdown: in-flight requests complete within the
+  shutdown delay instead of being cut off by `SIGKILL`.
+- Test the rollback path: rolling back to a previous deploy restores
+  service, and health checks pass on the restored version.
+
 ## Best Practices
 
 - Use auto-deploy on the production branch so every merge deploys, and

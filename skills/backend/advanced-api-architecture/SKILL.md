@@ -66,6 +66,11 @@ modes are designed, and whose evolution does not break clients.
   does not repeat them.
 - Agreement on the deployment topology: one service or many, behind
   a gateway or direct, single region or multi-region.
+- Conceptual skill; current stable as of 2026-11-20 — applies to
+  current API frameworks; the standards it builds on (RFC 9110, RFC
+  9111, RFC 9457, OpenAPI) are linked in Official Documentation; check
+  the OpenAPI Specification changelog for the newest version before
+  adopting a contract format.
 
 ## Official Documentation
 
@@ -188,6 +193,23 @@ modes are designed, and whose evolution does not break clients.
 - The API contract is the source of truth for clients: breaking
   changes require a new version, a changelog entry, and advance
   notice to consumers.
+
+### Testing Strategy
+
+- Contract-test every endpoint against the OpenAPI contract: response
+  shapes, status codes, and error bodies must match the spec, and a
+  breaking change must fail the test before it ships.
+- Test idempotency directly: replaying a request with the same
+  `Idempotency-Key` and body returns the stored response, and reusing
+  a key with a different body is rejected.
+- Test pagination for stability: a cursor page must not skip or repeat
+  items when rows are inserted between requests.
+- Test error handling as a contract: validation failures return
+  problem details with the failing fields and never a `500` or a stack
+  trace.
+- Test rate limits, webhook signatures, and retry behavior with a test
+  consumer, and load-test timeouts and circuit breakers so a slow
+  downstream fails fast instead of hanging callers.
 
 ## Best Practices
 

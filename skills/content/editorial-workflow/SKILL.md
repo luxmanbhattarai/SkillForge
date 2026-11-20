@@ -57,6 +57,10 @@ unreviewed, or gets published twice by accident.
 - A publishing destination (CMS, site, or docs repo) and the ability
   to schedule or publish there.
 - The team's quality bar: which checks are mandatory before publish.
+- Conceptual skill; current stable as of 2026-11-20 — applies to
+  current CMS and publishing tooling; the workflow is tool-agnostic
+  and pins no version; the Google guidance it enforces is linked in
+  Official Documentation.
 
 ## Official Documentation
 
@@ -121,6 +125,35 @@ unreviewed, or gets published twice by accident.
 - Deadlines are set at the brief stage and changed only by the owner,
   with the new date recorded. A missed deadline moves the publish
   date; it never skips a quality gate.
+
+### Testing Strategy
+
+- Pilot the pipeline with one real piece before rolling it out: every
+  stage, gate, and handoff must work in practice, not just on paper.
+- Audit a random sample of published pieces each month: re-check that
+  each passed every gate, that skipped stages carry the approver's
+  recorded agreement, and that the log is complete.
+- Test the gates, not just the flow: a draft that fails
+  `editorial-review` must not reach approval, and a piece without a
+  named approver must not publish.
+- Measure the log: stage times and stall points show where the
+  pipeline actually breaks, and a deadline change must move the
+  publish date rather than skip a gate.
+
+### Accessibility
+
+- Every image in a published piece carries alt text that conveys the
+  image's meaning, not its filename; decorative images are marked
+  decorative so screen readers skip them.
+- Heading structure is a real outline: one `h1`, headings in order
+  with no skipped levels, so screen-reader and keyboard navigation
+  follows the article's argument.
+- The edit stage applies plain language (see plainlanguage.gov, linked
+  in Official Documentation): short sentences, defined terms, and no
+  jargon without an explanation.
+- Links describe their destination ("the 2026 Search Console guide",
+  not "click here"), and color is never the only way information is
+  conveyed in charts or callouts.
 
 ## Best Practices
 

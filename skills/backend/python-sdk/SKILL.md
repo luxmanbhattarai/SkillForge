@@ -200,6 +200,28 @@ Python tooling and packaging depth.
   `warnings.warn(..., DeprecationWarning, stacklevel=2)` and a
   removal version before removing anything.
 
+### Testing Strategy
+
+- Test against the installed package, not the source tree: the
+  src layout means tests import what consumers install, and a
+  test run from the repository root must not accidentally import
+  local source.
+- Test HTTP behavior with mocked transports (respx or an
+  `httpx.MockTransport`): success, each typed error subclass,
+  Retry-After handling on 429, and no retry on other 4xx
+  responses.
+- Test both clients with the same cases: the sync and async
+  clients share method names and behavior, so a behavior tested
+  on one and not the other is a drift waiting to happen.
+- Test pagination and streaming lazily: a paginated helper
+  fetches pages only as the generator is consumed, and a
+  streaming call yields chunks without buffering the whole
+  response into memory.
+- Test the published package: install the built wheel and sdist
+  in a clean environment, import the package, and run the type
+  checker against it to confirm `py.typed` ships and the
+  annotations hold.
+
 ## Best Practices
 
 - Design for the common case: the simplest call needs the fewest

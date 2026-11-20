@@ -65,7 +65,7 @@ for macOS, Windows, and Linux.
   2026-11-20; see `nodejs`). npm or another Node package manager.
 - Electron follows an eight-week major release cycle matching
   Chromium Extended Stable, and the Electron team supports the
-  latest three stable major versions. The current stable line as of
+  latest three stable major versions. The current stable as of
   2026-11-20 is 45.x (released 2026-10-20); check the official
   release timeline for the newest stable before starting, and never
   start a new app on an end-of-life major.
@@ -204,6 +204,18 @@ for macOS, Windows, and Linux.
 - Pin the Electron version in `package.json` and upgrade majors
   deliberately: read the breaking-changes notes for each major
   crossed, and test the security defaults after every upgrade.
+
+### Testing Strategy
+
+- Test the preload bridge with Playwright: only the exposed API
+  is reachable from the renderer, and invalid IPC arguments are
+  rejected in the main process.
+- Test IPC security: renderer input with path traversal or shell
+  metacharacters is rejected, never executed.
+- Test packaged builds on each target OS, not just in
+  development, including the updater and `safeStorage`.
+- Test security defaults after every Electron upgrade:
+  `contextIsolation`, `nodeIntegration: false`, and `sandbox`.
 
 ## Best Practices
 

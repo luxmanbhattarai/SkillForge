@@ -87,6 +87,13 @@ This skill guides the design, implementation, and operation of Redis as an in-me
 - Set `maxmemory` to leave headroom for replication buffers, client output buffers, and AOF rewrite overhead — never size it to the full RAM of the host.
 - Use `volatile-lru` or `volatile-lfu` when only TTL'd keys may be evicted, `allkeys-lru` / `allkeys-lfu` for a pure cache, and `noeviction` when evicting any key would be a correctness bug (writes then fail with OOM instead). Redis 8.6 adds least-recently-modified eviction policies for workloads where recency of write matters more than recency of read.
 
+### Testing Strategy
+
+- Test against a real Redis instance (an ephemeral test instance or testcontainers), not a mock: Lua scripts, transactions, `WATCH` optimistic locking, and Cluster slot behavior only fail against the real server.
+- Test expiry and eviction under pressure: keys expire on schedule, and the chosen eviction policy evicts only what it is allowed to when `maxmemory` is reached.
+- Test failover: killing a primary promotes a replica (Sentinel or Cluster) and the client reconnects; test that `WAIT` holds where a write must reach a replica.
+- Test persistence by restarting: after a restart the data the application needs is restored from AOF or RDB, and the measured loss matches the chosen durability level.
+
 ## Best Practices
 
 - Cache-aside is the default pattern: read from the cache, fall back to the source of truth on a miss, and populate the cache. Invalidate or update the cache on writes to the source; never let the cache be the only copy of data you cannot rebuild.

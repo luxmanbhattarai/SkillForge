@@ -144,6 +144,21 @@ the app's own code, covered by `authorization` and `rbac`.
 - Set `session.maxAge` and `session.updateAge` explicitly for the product's
   requirements instead of relying on defaults; document the chosen values.
 
+### Testing Strategy
+
+- Test sign-in and sign-out for every provider the app enables,
+  including the Credentials provider's JWT-session behavior, with a
+  test OAuth provider or a mocked provider — never only in production.
+- Test the `session` callback for the strategy in use (JWT and
+  database inputs differ — see above); a callback written for the
+  other strategy fails silently.
+- Test that unknown users and wrong passwords produce the identical
+  generic failure, and that session expiry follows the configured
+  `maxAge` and `updateAge`.
+- Test route protection end to end: unauthenticated requests to
+  protected routes redirect to sign-in, and a revoked database session
+  stops working immediately.
+
 ## Best Practices
 
 - Prefer OAuth providers over Credentials: fewer passwords to protect, no

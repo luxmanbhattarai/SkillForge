@@ -62,6 +62,10 @@ can be measured for retrieval quality and answer faithfulness.
   `llm-integration`).
 - A small set of real example questions with known-good answers, to
   evaluate against from the start (see `agent-evaluation`).
+- Conceptual skill; current stable as of 2026-11-20 — applies to the
+  current vector stores, embedding APIs, and frameworks; check the
+  release notes for the store and framework you choose (linked in
+  Official Documentation) before pinning versions.
 
 ## Official Documentation
 
@@ -170,6 +174,23 @@ can be measured for retrieval quality and answer faithfulness.
   embedding-service outages are normal cases. Define the behavior
   for each (ask a clarifying question, fall back to keyword search,
   fail with a clear message) instead of generating from nothing.
+
+### Testing Strategy
+
+- Keep a fixed question set with known-good answers and measure recall
+  at k and answer correctness on every chunking, embedding-model, or
+  retrieval change; a re-index is a deployment and is evaluated before
+  reads switch to it.
+- Test hybrid search against dense-only on your own questions; do not
+  ship hybrid on the assumption that it is always better.
+- Test access scoping as a security property: a query from one user
+  must never retrieve another user's documents, even when the
+  embedding is a near-perfect match.
+- Test the failure cases: empty retrieval, low-score retrieval, and
+  embedding-service outage must each produce their defined behavior
+  instead of a confident answer from nothing.
+- Test citations mechanically: every factual claim in a test answer
+  maps to a chunk id present in the retrieved set.
 
 ## Best Practices
 

@@ -129,6 +129,13 @@ optimization, and sustainability.
 - Pin the AWS provider and CLI versions used by pipelines so builds are
   reproducible.
 
+### Testing Strategy
+
+- Test infrastructure changes in a sandbox account first: review the plan output (`terraform plan`, `cdk diff`) and apply to a non-production account before production.
+- Test IAM policies with the IAM Policy Simulator or Access Analyzer before attaching them, and verify that a denied action actually fails.
+- Test backups by restoring them to a sandbox account on a schedule; a backup that has never been restored is a hope, not a recovery plan.
+- Test Multi-AZ failover and billing alerts in staging so the first real failure is not the first test of either.
+
 ## Best Practices
 
 - Use IAM Identity Center for human access and IAM roles for workloads;

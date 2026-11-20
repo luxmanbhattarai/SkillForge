@@ -64,6 +64,10 @@ positions or traffic is guaranteed.
 - An honest assessment of the site's expertise: a site should
   build authority on topics it genuinely knows, not topics it
   merely wants traffic from.
+- Conceptual skill; current stable as of 2026-11-20 — applies to the
+  current Google Search guidance; Google publishes no
+  topical-authority score or versioned metric; the official sources
+  are linked in Official Documentation.
 
 ## Official Documentation
 
@@ -169,6 +173,28 @@ scores are estimates from private indexes, not Google data.
 - Never promise that building a cluster will produce rankings or
   traffic. Coverage is a precondition for being a useful source,
   not a guarantee of visibility.
+
+### Testing Strategy
+
+- Validate coverage from the site's own data: the coverage map
+  is re-measured on a schedule (pages published, subtopics
+  covered, queries with impressions), and a cluster is only
+  called complete when the map says so.
+- Audit for cannibalization: when two pages compete for the same
+  query, check which one Search Console shows for it, then
+  consolidate or differentiate — one page per subtopic is the
+  rule the audit enforces.
+- Audit internal links per cluster: every spoke links back to
+  its pillar, the pillar links out to every spoke, and no spoke
+  is orphaned from the cluster it belongs to.
+- Audit each new page against the quality bar before it counts
+  toward coverage: genuinely useful on its own, first-hand
+  expertise where the topic needs it, and no thin or derivative
+  filler written only to fill the map.
+- Re-measure after changes: a finished cluster is checked again
+  after publication (impressions and clicks per query), and a
+  cluster that underperforms is revised — coverage is a
+  precondition for visibility, not a guarantee of it.
 
 ## Best Practices
 

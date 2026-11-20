@@ -67,6 +67,10 @@ is `content-refresh`.
 - The page's target query and intent, or a way to determine them.
 - A change log for the site (redesigns, migrations, template
   changes) so decay is not confused with a site change.
+- Conceptual skill; current stable as of 2026-11-20 — applies to the
+  current Search Console reporting; Google publishes no versioned
+  decay metric; the thresholds in this skill are working rules, and
+  the official guidance is linked in Official Documentation.
 
 ## Official Documentation
 
@@ -204,6 +208,22 @@ diagnosis here promises a recovery in rankings or traffic.
   refresh the owner, and redirect or re-target the others.
 - Record every decision with its reason and date in the decay log;
   a decision without a recorded reason cannot be reviewed later.
+
+### Testing Strategy
+
+- Validate the diagnosis against known cases: re-run the decay check
+  on a page known to be healthy (it must not flag) and one known to be
+  decayed (it must flag) before trusting the method on a new site.
+- Cross-check the numbers: Search Console dashboard figures and any
+  API pull for the same page and date range must agree before a
+  decision is based on them.
+- Test every redirect target after a redirect decision: it resolves,
+  it is the closest matching page, and it creates no chain or loop.
+- Re-measure after the scheduled re-check date and compare against the
+  recorded baseline: a refresh is judged by the data, not by the
+  effort spent on it.
+- Audit the decay log: every decision carries its reason and date, and
+  a decision without a reason is a gap to close, not a detail to skip.
 
 ## Best Practices
 
