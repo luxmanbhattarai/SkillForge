@@ -69,7 +69,14 @@ Security here is layered; no single check is the whole story. See
 - **Supply-chain verification:** every upstream import records its
   source repository, commit, and license in `sources/`, and the
   commits and licenses were re-verified against the public GitHub API
-  on 2026-11-20 (see `ai/audits/SECURITY-AUDIT.md`).
+  on 2026-11-20 (see `ai/audits/SECURITY-AUDIT.md`). Drift against
+  the pinned commits is monitored weekly by CI
+  (`npm run check:upstream`).
+- **CI scanning:** CodeQL runs via a workflow
+  (`.github/workflows/codeql.yml`, advanced setup). GitHub secret
+  scanning, Dependabot alerts, and branch protection are manual repo
+  settings, still to be enabled — see `ai/phase10/NOTES.md`. No
+  workflow has run on GitHub yet.
 - **Manual review:** imported executable code (scripts, installers) is
   read before it is trusted; the audit report records what was
   reviewed, what was found, and what remains an accepted upstream risk.

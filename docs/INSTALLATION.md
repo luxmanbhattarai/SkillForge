@@ -16,7 +16,7 @@ cd SkillForge
 # Project-local, Claude Code: two skills
 node scripts/install-skills.mjs --target claude-code --scope project --skills nextjs,astro
 
-# User-level, everything (all 226 skills)
+# User-level, everything (all 277 skills)
 node scripts/install-skills.mjs install --target claude-code --scope user --skills all
 
 # A whole category, for Codex
@@ -288,8 +288,11 @@ deleted) and writes a fresh one.
 
 The `skills` CLI (vercel-labs/skills) also installs from this
 repository. Verified working against this repo's layout on
-2026-11-20 in a sandbox: it discovers all 226 skills and installs
-them with content identical to the library.
+2026-11-20 in a sandbox, when the library held 226 skills: it
+discovered all of them and installed them with content identical to
+the library. The current tree holds 277 skills; re-verification
+against the expanded library is an open item (see
+`ai/phase11/NOTES.md`).
 
 ```bash
 # Interactive: prompts for agents and skills
@@ -298,7 +301,7 @@ npx skills add luxmanbhattarai/SkillForge
 # Non-interactive: one skill, one agent, project scope
 npx skills add luxmanbhattarai/SkillForge -a claude-code -s nextjs -y
 
-# Non-interactive: everything, everywhere (all 226 skills, all detected agents)
+# Non-interactive: everything, everywhere (all 277 skills, all detected agents)
 npx skills add luxmanbhattarai/SkillForge -y
 ```
 
@@ -307,7 +310,7 @@ Notes:
 - The bare command is interactive: it prompts for which agents
   and which skills. Non-interactive use needs `-y`, and usually
   `-a <agent>` and `-s <skill>` to narrow it down — with `-y`
-  alone it installs all 226 skills to every agent it detects.
+  alone it installs all 277 skills to every agent it detects.
 - It installs as symlinks into a shared `.agents/skills/`
   directory by default (use `--copy` for copies) and records the
   install in `skills-lock.json`.
@@ -356,9 +359,8 @@ node scripts/install-skills.mjs validate --target claude-code --scope project
 If a skill does not appear in your agent, check that the
 directory name matches the skill's frontmatter `name` and that you
 installed into the path your agent version reads — see
-`docs/AGENT-COMPATIBILITY.md`. Note that `docs/AGENT-COMPATIBILITY.md`
-still lists the v1.0.0 Codex and Antigravity paths; this page is
-the authoritative reference as of the 2026-11-20 verification.
+`docs/AGENT-COMPATIBILITY.md`, which lists the same paths as this
+page (both verified against vendor docs on 2026-11-20).
 
 ## Troubleshooting
 

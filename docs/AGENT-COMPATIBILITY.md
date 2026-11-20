@@ -48,6 +48,17 @@ See `docs/INSTALLATION.md` for full usage.
 - **Antigravity** — skills install into the Antigravity skills
   directories. See the Antigravity docs for how skills are loaded.
 
+## Compatibility data
+
+Some skills declare environment requirements in their frontmatter
+`compatibility` field. The registry groups those in
+`registry/compatibility.json`; query them with the CLI:
+
+```bash
+npm run query -- compat            # all compatibility groups
+npm run query -- compat <skill>    # one skill's compatibility info
+```
+
 For anything beyond install paths — how an agent discovers skills,
 whether it supports skill `scripts/` or `references/`, and any
 agent-specific configuration — follow the vendor docs for that agent.

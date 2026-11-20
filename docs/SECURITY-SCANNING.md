@@ -95,10 +95,15 @@ The following were checked for on 2026-11-20 and are **not installed**
 in this environment: Semgrep, Gitleaks, TruffleHog, CodeQL. `npm audit`
 does not apply: the repository has zero dependencies and no lockfile,
 so there is nothing to audit. The scanner above plus manual review is
-the local story; adding GitHub secret scanning, Dependabot, and CodeQL
-to CI is recommended for Phase 10 (see
-`ai/audits/SECURITY-AUDIT.md`). Do not claim any of those tools ran
-until they have.
+the local story.
+
+On the GitHub side, CodeQL now runs via a workflow
+(`.github/workflows/codeql.yml`, advanced setup — do not also enable
+CodeQL default setup). GitHub secret scanning and Dependabot alerts
+are manual repo settings that still need enabling; branch protection
+is recommended too (see `ai/phase10/NOTES.md`). No workflow has run
+on GitHub yet, so do not claim any of those tools have run until
+they have.
 
 ## Files
 

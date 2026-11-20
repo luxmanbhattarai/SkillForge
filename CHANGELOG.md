@@ -5,7 +5,133 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Unreleased] (feat/skillforge-production-upgrade)
+
+Production upgrade of the v1.0.0 library, in progress on the
+`feat/skillforge-production-upgrade` branch. Work so far (Waves 1–4,
+Phases 1–11, all 2026-11-20):
+
+### Added
+
+- 51 new original skills (277 total: 228 original + 49 upstream) across
+  18 categories, including NestJS, SvelteKit, Tauri 2, Redis, Clerk,
+  AWS, Kubernetes, RAG, and MCP Security; two new categories
+  (`ai-engineering`, `desktop`). Two existing skills extended.
+- 4 new agents (ai-engineer, desktop-engineer, devops-engineer,
+  release-manager) and 7 new workflows (secure-api-development,
+  database-migration, authentication-implementation,
+  production-deployment, sdk-development, ai-rag-implementation,
+  security-review): 24 agents, 16 workflows. All 51 new skills are
+  covered by at least one agent or workflow.
+- Query CLI (`npm run query`): search, categories, show, deps,
+  related, compat, stale, status, agents, workflows.
+- Registry additions: `registry/agents.json` and
+  `registry/workflows.json`; 8 JSON Schemas in `scripts/schemas/` and
+  `npm run check:registry` (schema + semantic + verification-coverage
+  + audit cross-check). Skill `status` now derives from
+  `sources/verification-status.json` (Phase 3 audit outcomes); skills
+  with no audit entry are `unverified`, never silently `verified`.
+  `related` skills are derived from agent/workflow co-occurrence.
+- Behavioral evaluation system (`npm run evals`): deterministic mock
+  agent (no LLM APIs), 12 categories, 4 scorers, baseline + regression
+  comparison. 449 cases (172 hand-written + 277 generated discovery
+  cases, one per skill), 449/449 passing, 277/277 skills covered.
+  Model-based evaluation via an OpenAI-compatible provider interface
+  (optional; untested without credentials).
+- Quality scoring (`npm run score`): 22-element standard in
+  `docs/SKILL-STANDARDS.md`, eight scored dimensions with hard caps
+  (security hit → 40/CRITICAL, missing section → 50, placeholder →
+  60). All-skills mean 87/100, 0 CRITICAL.
+- Agents/workflows validator (`npm run check:agents`): required
+  sections, reference resolution, should-use ⊆ discover.
+- Upstream drift monitoring (`npm run check:upstream`): compares each
+  vendor's live default-branch head against the pinned commit.
+- CI/CD overhaul (6 workflows): validation on a Node 18/20/22 matrix
+  covering every local check, registry regeneration diff, evals job,
+  lint, security audit, CodeQL (advanced setup via workflow), weekly
+  scheduled maintenance (online links, stale verification, upstream
+  monitoring), and release validation on `v*.*.*` tags. All actions
+  pinned to SHAs; least-privilege permissions; Dependabot for
+  github-actions only.
+- Security documentation: `docs/SECURITY-SCANNING.md`,
+  `docs/THREAT-MODEL.md`, and the audit in
+  `ai/audits/SECURITY-AUDIT.md` (S-01–S-15).
+- Documentation overhaul: README, AGENTS.md, CONTRIBUTING.md, and
+  CHANGELOG rewritten for the upgraded library (277 skills, honest
+  verification-status wording); new `docs/UPGRADE.md`,
+  `docs/TROUBLESHOOTING.md`, `docs/EVALUATION.md`, and
+  `docs/README.md` (canonical-home index); `docs/ARCHITECTURE.md`
+  rewritten (categories, registry, validation layer, installer,
+  CI); frontmatter parser subset documented in
+  `docs/SKILL-STANDARDS.md`.
+
+### Changed
+
+- Installer rebuilt as a safe CLI (`node scripts/install-skills.mjs`):
+  install/update/list/doctor/validate/uninstall/restore, conflict
+  detection by hash, backups before replacement, atomic installs with
+  rollback, dry-run, manifest tracking. Agents and workflows install
+  where targets document a location (Codex agents as TOML; Antigravity
+  workflows deprecated by Google, warning on install).
+- Codex and Antigravity install paths corrected per current vendor
+  docs: both now use `.agents/skills` for project scope; Antigravity
+  user scope is `~/.gemini/config/skills`. The installer detects
+  installs left in the legacy locations.
+- Registry and report generation are deterministic: `generated`
+  derives from the newest `last_verified` across skills, not the
+  wall-clock date.
+- Security scanner expanded from 7 to 29 patterns, plus multi-line
+  curl-pipe detection and a binary byte-scan; patterns live in a
+  shared library (`scripts/lib/security-patterns.mjs`) used by the
+  scanner, the scorer, and the eval mock agent.
+- 145 original skills corrected after a technical-accuracy audit of
+  all 226 v1.0.0 skills against official docs (204 verified, 16
+  verified with limitations, 6 needs-correction — all upstream, fixes
+  belong upstream). Corrections include the Next.js fetch caching fix
+  and wrong defaults in rate limiting, Helmet, Prisma 7/8, MySQL,
+  Turborepo, and retired Google/X features.
+- Category descriptions, the report target tree, and registry source
+  data externalized from code into `scripts/lib/*.json`.
+
+### Fixed
+
+- Audit findings from `ai/audits/INITIAL-AUDIT.md`: H-01 (installer
+  silently deleted user-modified skills), H-02 (non-deterministic
+  registry generation), H-04 (outdated Next.js caching guidance),
+  H-05 (agents/workflows unvalidated), M-01 (registry status
+  semantics), M-02 (security scanner coverage), M-03/M-04 (CI
+  coverage and unpinned actions), M-05/M-06/M-09 (installer safety),
+  M-07 (shorthand skill references), M-10 (no agents/workflows
+  registries), L-06/L-07 (hardcoded target tree and sources),
+  L-10 (agentic-seo source: MONITOR, re-verify before next re-import),
+  L-11 (weekly online link check), L-12 (Node matrix).
+  L-05 (frontmatter parser subset documented), L-08 (empty
+  `.claude/settings.json` removed — it was a no-op), L-09
+  (stale category/skill counts corrected).
+- 3 library defects found while writing eval cases (changesets
+  actions v4 → v7; stale Node 24/TS 5.x prerequisites in
+  prisma/drizzle → Node 26 LTS/TS 7.x; nestjs frontmatter TS 5.x →
+  6.x — `nest build` lacks TS 7 support) and 2 eval framework defects
+  (extractCode phantom/swallowed blocks; tsStructure false
+  UNBALANCED on URLs in strings).
+
+### Known limitations
+
+- No CI workflow has run on GitHub yet; Node 18/22 matrix legs are
+  unexercised locally. Secret scanning, Dependabot alerts, and branch
+  protection are manual repo settings, still to be enabled (see
+  `ai/phase10/NOTES.md`). CodeQL uses the workflow (advanced setup) —
+  default setup must NOT also be enabled.
+- 51 Phase 4 skills are `unverified` (written against official docs,
+  no formal audit yet); 6 upstream skills are `needs-correction`
+  (fixes belong upstream).
+- Prisma 8 still RC (3 skills); X/Twitter docs unavailable (3 skills).
+- Windows `--link` EPERM path untested (no Windows runner).
+- Model-based eval provider untested without credentials.
+- NestJS pins TS 6.x (`nest build` lacks TS 7 support).
+- Upstream drift (live 2026-11-20): Vercel is 4 commits behind its
+  `main` head — informational; re-import per `docs/UPDATE-PROCESS.md`
+  when a new upstream commit is worth taking.
 
 ## [1.0.0] - 2026-11-20
 

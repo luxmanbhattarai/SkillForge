@@ -48,6 +48,61 @@ Upstream (imported) skills keep their original frontmatter untouched. Their
 provenance is recorded in `sources/imported-skills.md` and in the registry,
 not by editing the upstream files.
 
+### Frontmatter parser subset
+
+The frontmatter parser (`scripts/lib/frontmatter.mjs`) is hand-rolled:
+this repository has zero dependencies, so no YAML library is available.
+It supports only the subset below, and it is intentionally strict —
+anything outside it is a validation error, not a silent guess. (Audit
+finding L-05; see `ai/decisions/2026-11-20-frontmatter-parser-subset.md`.)
+
+**Supported:**
+
+- **File shape.** The file must start with `---` on its own line,
+  followed by the frontmatter block and a closing `---` on its own
+  line. CRLF line endings are tolerated.
+- **Top-level scalar keys.** One `key: value` per line. Keys match
+  `[A-Za-z0-9_-]+`. Values are plain scalars; a value may contain
+  colons after the first `key: ` separator.
+- **Quoted values.** Single- or double-quoted values have the quotes
+  stripped. There is no escape processing: a backslash inside a quoted
+  value stays a backslash, and a quote character cannot be escaped.
+- **Block scalars.** Folded (`>` / `>-`) and literal (`|` / `|-`)
+  block scalars, with continuation lines indented by exactly two
+  spaces. Folded blocks join lines with single spaces and collapse
+  runs of whitespace; literal blocks join lines with newlines.
+  Trailing blank lines are trimmed. The `-` (strip) variants behave
+  the same as the plain ones — chomping is not distinguished.
+- **Plain multi-line scalars.** A key with an empty value followed by
+  indented (two-space) continuation lines folds them with spaces,
+  like a folded block scalar without the `>` marker.
+- **One level of nested string maps.** A key with an empty value
+  followed by two-space-indented `key: value` lines parses as a map
+  of strings — this is how `metadata:` works. Nested values may be
+  quoted (quotes stripped, no escape processing).
+- **Blank lines and full-line comments.** Blank lines and lines whose
+  first non-space character is `#` are skipped.
+
+**Not supported (validation error or wrong result):**
+
+- **Lists.** `- item` lines are unparseable and fail validation.
+- **Deeper nesting.** A map inside a map (e.g. indented lines inside
+  `metadata:` values) is not parsed; an indented line where none is
+  expected is an error.
+- **Inline comments.** `#` after a value is kept as part of the value.
+- **Anchors, aliases, tags, multi-line quoted strings, flow style**
+  (`{a: b}`, `[1, 2]`). None of these are parsed.
+- **Duplicate keys.** The last occurrence silently wins; the parser
+  does not warn.
+- **A key with no value and no indented continuation** is an error
+  (`key 'x' has no value`).
+
+Practical consequences: write frontmatter exactly like
+`templates/SKILL-TEMPLATE.md` does — plain scalars, `>` for the long
+description, and a flat `metadata:` map. If validation reports
+"unparseable frontmatter line" or "unexpected indented line", the
+frontmatter almost certainly uses a YAML feature outside this subset.
+
 ## Body
 
 The body after the frontmatter holds the instructions. There are no format

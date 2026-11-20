@@ -32,8 +32,9 @@ public repos within minutes.
   binaries; quality scorer caps any skill with a secret-pattern hit.
 - **Residual risk:** the placeholder guard can miss a real credential
   containing a placeholder word; encoded or split secrets are not
-  detected. GitHub secret scanning (recommended for Phase 10 CI)
-  would add a second, independent detector.
+  detected. GitHub secret scanning would add a second, independent
+  detector — it is a manual repo setting, still to be enabled (see
+  `ai/phase10/NOTES.md`).
 
 ### 2. Prompt injection via skill content
 
@@ -64,9 +65,10 @@ imported script (e.g. unsanitized input to a shell).
   bypasses; AGENTS.md forbids executing an imported script without
   reading it first.
 - **Residual risk:** review is manual and point-in-time. Upstream
-  updates are not monitored continuously, and the verbatim-import
-  policy means a vulnerability found upstream can only be fixed
-  upstream. Known accepted upstream risks are listed in
+  drift is monitored weekly by CI (`npm run check:upstream` in
+  `scheduled-maintenance.yml`), but a vulnerability found upstream
+  can still only be fixed upstream, per the verbatim-import policy.
+  Known accepted upstream risks are listed in
   `ai/audits/SECURITY-AUDIT.md` (S-08, S-09, S-10, S-11).
 
 ### 4. A skill teaching an insecure practice
@@ -90,8 +92,9 @@ or a license changes under an import.
 
 - **Mitigations:** imports pin exact commits, verified against the
   public GitHub API (2026-11-20); licenses recorded per vendor in
-  `sources/licenses.md`; the repository has zero runtime dependencies,
-  so there is no dependency tree to poison.
+  `sources/licenses.md`; drift is monitored weekly by CI
+  (`npm run check:upstream`); the repository has zero runtime
+  dependencies, so there is no dependency tree to poison.
 - **Residual risk:** verification is point-in-time. A force-push
   rewriting the pinned commit, or a future import from a moved repo,
   would not be caught until the next verification cycle. The
