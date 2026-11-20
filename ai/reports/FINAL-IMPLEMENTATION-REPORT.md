@@ -3,7 +3,7 @@
 - **Date:** 2026-11-20
 - **Branch:** `feat/skillforge-production-upgrade` (from `main` @ `bc304a2`, v1.0.0)
 - **Rule throughout:** local commits only on this branch; nothing pushed, merged, or PR'd.
-- **Head at report time:** Phase 11 commit `6b0a79e`; this report ships with the Phase 12 commit (34 commits on the branch in total; see git log for the head hash).
+- **Head at report time:** Phase 11 commit `6b0a79e`; this report ships with the Phase 12 commit plus one fix-up commit correcting two numbers in this report (35 commits on the branch in total; see git log for the head hash).
 - **Machine-readable results:** `ai/test-results/phase12-final-results.json`
 - **Status tracker:** `ai/PROJECT-STATUS.md` (all 12 phases Verified)
 
