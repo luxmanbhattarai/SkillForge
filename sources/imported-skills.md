@@ -57,6 +57,12 @@ Commit `22f0b463e7a5e579904dd6211a520321035526f7` · Imported 2026-11-20
 `subagent-driven-development`, `using-git-worktrees`, `using-superpowers`,
 `verification-before-completion`, `writing-plans`, `writing-skills`
 
+Unimported siblings (deliberate, mapped to originals):
+`test-driven-development` → original `tdd`;
+`systematic-debugging` → original `debugging`. Importing the upstream
+versions would duplicate the originals. See
+`ai/decisions/2026-11-20-upstream-sibling-skills.md`.
+
 ### Prisma — 11 skills (MIT)
 
 Source: https://github.com/prisma/skills ·
@@ -74,6 +80,19 @@ Commit `5b2b400eec1e7e1cec76245a715d0b0d4fd2a9c1` · Imported 2026-11-20
 
 `ai-seo`, `analytics`, `competitor-profiling`, `copy-editing`, `cro`,
 `link-building`, `schema`, `site-architecture`
+
+Referenced tool files (selective import, 2026-11-20): the 11 files
+`link-building` links to are imported verbatim (same commit) at
+`skills/upstream/tools/` — `integrations/{ahrefs,semrush,dataforseo,
+exa,firecrawl,hunter}.md` and `clis/{semrush,dataforseo,exa,firecrawl,
+hunter}.js`. The rest of upstream `tools/` is not imported; see
+`ai/decisions/2026-11-20-marketingskills-tools-import.md`.
+
+Unimported siblings: Related Skills sections reference ~30 upstream
+skills that were not imported (`seo-audit`, `content-strategy`,
+`programmatic-seo`, `copywriting` excluded for name collisions with
+SkillForge originals; the rest accepted as an import-scope gap). See
+`ai/decisions/2026-11-20-upstream-sibling-skills.md`.
 
 ### Agentic SEO — 1 skill (MIT)
 
