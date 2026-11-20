@@ -32,3 +32,4 @@ results are recorded, and limitations are documented.
 ## Execution log
 - 2026-11-20: Branch created from main @ bc304a2; ai/ workspace scaffolded.
 - 2026-11-20: Phase 1 complete — full audit written (27 findings), all baseline validations re-run and passing, online link check clean (311 URLs, 0 errors).
+- 2026-11-20: H-02 fixed in Wave 1 — registry/report generation is now deterministic (`generated` derives from newest `last_verified`); see ai/decisions/2026-11-20-registry-determinism.md.

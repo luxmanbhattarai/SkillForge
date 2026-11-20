@@ -97,7 +97,12 @@ there is nothing to lock). All scripts ran clean on Node v24.22.1.
   across skills) or drop the field. Regenerate and commit. Fix in Wave 1
   (Phase 3 commit) or Phase 9 at the latest; workaround until then is to
   regenerate and commit the registry on the same day as any push.
-- **Implementation status:** Open — recommended for Wave 1.
+- **Implementation status:** Fixed in Wave 1 (2026-11-20).
+  `generate-registry.mjs` and `generate-report.mjs` now derive
+  `generated` from the newest `last_verified` on disk; verified by
+  double regeneration with zero diff and grep confirming no
+  wall-clock reads remain. See
+  `ai/decisions/2026-11-20-registry-determinism.md`.
 
 ### H-03 — No test suite exists anywhere in the repository
 

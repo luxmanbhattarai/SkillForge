@@ -63,7 +63,13 @@ try {
 }
 
 const report = {
-  generated: new Date().toISOString().slice(0, 10),
+  // Inherit the registry's deterministic generation date (newest
+  // last_verified on disk) so the report is reproducible too. The
+  // fallbacks derive the same value from the registry skills, so no
+  // wall-clock read remains anywhere in this generator.
+  generated: reg.generated
+    || reg.skills.map((s) => s.last_verified).filter(Boolean).sort().pop()
+    || '2026-11-20',
   registry_version: reg.version,
   totals: { skills: reg.skills.length, original, upstream, categories: reg.categories.length },
   by_source: bySource,
