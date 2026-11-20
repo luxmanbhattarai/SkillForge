@@ -11,6 +11,11 @@ switch branches, or modify `main`.
   is the upstream `theme-factory/theme-showcase.pdf`. Per the mission brief §13.5,
   Markdown remains the source of truth unless a documented PDF-generation process
   is found (none is known; Stage A to confirm).
+- **PDF supplied by the user as an upload** (`~/workspace/user/files/FINAL-IMPLEMENTATION-REPORT.pdf`,
+  574,349 bytes, 2026-11-20) — it is NOT in the repository. Stage A read it and
+  treats it as a second copy of the report under verification alongside the
+  Markdown; see `ai/remediation/VERIFICATION-MATRIX.md` for the comparison
+  (content-equivalent; Markdown remains the repo's source of truth).
 - **Diff-stat discrepancy reconciled:** `bc304a2..d58d6b4` = +70,236 (the number in
   the final report, correct at that commit); `bc304a2..2f1460b` = +70,240. The +4
   difference is commit `2f1460b` itself (3 lines in `scripts/security-scan.mjs`,
