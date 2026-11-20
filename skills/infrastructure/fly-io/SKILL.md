@@ -96,9 +96,11 @@ rolled back to a previous image.
 
 1. Confirm the application builds and runs locally from its Dockerfile,
    and listens on the intended internal port.
-2. Install and authenticate flyctl:
-   `curl -L https://fly.io/install.sh | sh` (or `brew install flyctl`),
-   then `fly auth login`.
+2. Install and authenticate flyctl: `brew install flyctl`
+   (macOS/Linux), or download the installer, read it, then run it
+   (`curl -L -o install.sh https://fly.io/install.sh`, review
+   `install.sh`, then `sh install.sh`). Never pipe a remote installer
+   straight into a shell. Then `fly auth login`.
 3. Launch the app from the project directory: `fly launch`. Accept or
    adjust the generated `fly.toml`; use `fly launch --no-deploy` to
    review the config before the first deploy, and `fly launch --db mpg`
@@ -245,7 +247,9 @@ rolled back to a previous image.
 Install flyctl, authenticate, and launch an app with Managed Postgres:
 
 ```bash
-curl -L https://fly.io/install.sh | sh
+curl -L -o install.sh https://fly.io/install.sh
+# Review install.sh before running it, then:
+sh install.sh
 fly auth login
 fly launch --db mpg
 fly deploy
@@ -291,7 +295,7 @@ kill_timeout = 10
 Secrets, volumes, and scaling:
 
 ```bash
-fly secrets set SESSION_SECRET="$(openssl rand -hex 32)"
+fly secrets set SESSION_SECRET=$(openssl rand -hex 32)
 fly secrets list
 
 fly volumes create app_data --size 1 --region iad

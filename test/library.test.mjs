@@ -3,15 +3,37 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readdir } from 'node:fs/promises';
+import path from 'node:path';
 import { loadLibrary, resolveSelection, deriveDescription, toMarkdownAgent, toTomlAgent, splitList, installedFileName } from '../scripts/install/library.mjs';
 import { TARGETS } from '../scripts/install/targets.mjs';
 import { REPO_ROOT } from './helpers.mjs';
 
+// Expected counts are derived from disk, not hardcoded: the registry must
+// match the skills/agents/workflows actually present, and hardcoded counts
+// break every time the library grows (Phase 4 grew skills 226 -> 277).
+async function countFiles(dir, name) {
+  let n = 0;
+  for (const e of await readdir(dir, { withFileTypes: true })) {
+    if (e.isDirectory()) n += await countFiles(path.join(dir, e.name), name);
+    else if (e.name === name) n++;
+  }
+  return n;
+}
+
+async function diskCounts() {
+  const skills = await countFiles(path.join(REPO_ROOT, 'skills'), 'SKILL.md');
+  const agents = (await readdir(path.join(REPO_ROOT, 'agents'))).filter((f) => f.endsWith('.md')).length;
+  const workflows = (await readdir(path.join(REPO_ROOT, 'workflows'))).filter((f) => f.endsWith('.md')).length;
+  return { skills, agents, workflows };
+}
+
 test('loadLibrary reads the real registry and scans agents/workflows', async () => {
   const lib = await loadLibrary(REPO_ROOT);
-  assert.equal(lib.skills.size, 226);
-  assert.equal(lib.agents.size, 20);
-  assert.equal(lib.workflows.size, 9);
+  const expected = await diskCounts();
+  assert.equal(lib.skills.size, expected.skills);
+  assert.equal(lib.agents.size, expected.agents);
+  assert.equal(lib.workflows.size, expected.workflows);
   assert.equal(lib.skills.get('nextjs').category, 'frontend');
   assert.equal(lib.skills.get('nextjs').source, 'skills/frontend/nextjs');
   assert.equal(lib.agents.get('frontend-specialist').source, 'agents/frontend-specialist.md');
@@ -28,8 +50,9 @@ test('splitList handles repeats, commas, and whitespace', () => {
 
 test('resolveSelection: all, categories, dedup, unknown names', async () => {
   const lib = await loadLibrary(REPO_ROOT);
+  const expected = await diskCounts();
   const all = resolveSelection(lib, { skills: ['all'] });
-  assert.equal(all.items.length, 226);
+  assert.equal(all.items.length, expected.skills);
   assert.deepEqual(all.errors, []);
   const cat = resolveSelection(lib, { categories: ['metadata'] });
   assert.equal(cat.items.length, 6);
@@ -37,7 +60,7 @@ test('resolveSelection: all, categories, dedup, unknown names', async () => {
   const mixed = resolveSelection(lib, { skills: ['nextjs', 'nextjs'], categories: ['metadata'], agents: ['all'] });
   const names = mixed.items.map((i) => `${i.kind}:${i.name}`);
   assert.equal(new Set(names).size, names.length); // no duplicates
-  assert.equal(mixed.items.filter((i) => i.kind === 'agent').length, 20);
+  assert.equal(mixed.items.filter((i) => i.kind === 'agent').length, expected.agents);
   const bad = resolveSelection(lib, { skills: ['nope'], categories: ['nope'], agents: ['nope'], workflows: ['nope'] });
   assert.equal(bad.errors.length, 4);
   assert.match(bad.errors[0], /unknown skill 'nope'/);

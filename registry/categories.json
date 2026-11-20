@@ -2,17 +2,32 @@
   "version": "1.0.0",
   "categories": [
     {
+      "name": "ai-engineering",
+      "description": "",
+      "count": 5,
+      "skills": [
+        "agent-evaluation",
+        "ai-agents",
+        "llm-integration",
+        "mcp-security",
+        "rag"
+      ]
+    },
+    {
       "name": "architecture",
       "description": "Monorepos, Turborepo, modular monoliths, microservices, DDD.",
-      "count": 9,
+      "count": 12,
       "skills": [
+        "changesets",
         "dependency-management",
         "domain-driven-design",
         "microservices",
         "modular-monolith",
         "monorepo",
+        "nx",
         "package-boundaries",
         "pnpm-workspaces",
+        "release-management",
         "system-design",
         "turborepo"
       ]
@@ -20,44 +35,56 @@
     {
       "name": "auth",
       "description": "Authentication, authorization, OAuth, sessions, JWT, RBAC, MFA.",
-      "count": 10,
+      "count": 14,
       "skills": [
         "auth-security",
         "authentication",
+        "authjs",
         "authorization",
         "better-auth",
+        "clerk",
         "jwt",
         "mfa",
         "multi-tenancy",
         "oauth",
+        "passkeys",
         "rbac",
-        "session-management"
+        "session-management",
+        "supabase-auth"
       ]
     },
     {
       "name": "backend",
       "description": "Node.js, APIs, queues, caching, SDK and package development, MCP.",
-      "count": 13,
+      "count": 21,
       "skills": [
+        "advanced-api-architecture",
+        "api-client-generation",
         "api-design",
         "background-jobs",
         "caching",
+        "express",
+        "fastify",
         "graphql",
         "hono",
         "mcp-development",
+        "nestjs",
         "nodejs",
+        "openapi",
         "package-development",
+        "python-sdk",
         "queues",
         "rate-limiting",
         "rest-api",
         "sdk-development",
-        "trpc"
+        "trpc",
+        "typescript-sdk"
       ]
     },
     {
       "name": "content",
       "description": "Content strategy, article writing, editorial review, localization.",
-      "count": 17,
+      "count": 19,
       "skills": [
         "article-writing",
         "blog-writing",
@@ -69,12 +96,14 @@
         "content-strategy",
         "copywriting",
         "editorial-review",
+        "editorial-workflow",
         "eeat-writing",
         "fact-checking",
         "faq-generation",
         "human-editing",
         "keyword-to-content",
         "seo-content-writing",
+        "source-verification",
         "technical-writing"
       ]
     },
@@ -99,22 +128,36 @@
     {
       "name": "database",
       "description": "Database design, SQL, PostgreSQL/MySQL/SQLite/MongoDB, Prisma, Drizzle.",
-      "count": 14,
+      "count": 18,
       "skills": [
         "backup-recovery",
+        "clickhouse",
         "connection-pooling",
         "database-design",
         "database-security",
         "drizzle",
+        "elasticsearch",
         "indexing",
         "migrations",
         "mongodb",
         "mysql",
+        "opensearch",
         "postgresql",
         "prisma",
+        "redis",
         "sql-optimization",
         "sqlite",
         "transactions"
+      ]
+    },
+    {
+      "name": "desktop",
+      "description": "",
+      "count": 3,
+      "skills": [
+        "electron",
+        "rust",
+        "tauri"
       ]
     },
     {
@@ -132,31 +175,37 @@
     {
       "name": "frontend",
       "description": "HTML, CSS, JavaScript, TypeScript, React, Next.js, Astro, Hugo, UI.",
-      "count": 16,
+      "count": 21,
       "skills": [
         "accessibility",
         "astro",
         "css",
+        "expo",
         "frontend-performance",
         "html",
         "hugo",
         "javascript",
         "modern-css",
         "nextjs",
+        "nuxt",
         "react",
+        "react-native",
         "responsive-design",
         "semantic-html",
         "shadcn-ui",
+        "sveltekit",
         "tailwind-css",
         "typescript",
-        "ui-design"
+        "ui-design",
+        "vue"
       ]
     },
     {
       "name": "infrastructure",
       "description": "Cloudflare, Vercel, Docker, CI/CD, deployment, observability.",
-      "count": 13,
+      "count": 22,
       "skills": [
+        "aws",
         "ci-cd",
         "cloudflare",
         "cloudflare-d1",
@@ -167,15 +216,23 @@
         "deployment",
         "docker",
         "durable-objects",
+        "fly-io",
+        "gcp",
         "github-actions",
+        "kubernetes",
         "observability",
+        "pulumi",
+        "railway",
+        "render",
+        "self-hosted-vps",
+        "terraform",
         "vercel"
       ]
     },
     {
       "name": "media",
       "description": "AI image generation, OG images, thumbnails, image optimization.",
-      "count": 12,
+      "count": 16,
       "skills": [
         "ai-image-generation",
         "blog-featured-images",
@@ -186,6 +243,10 @@
         "image-prompt-engineering",
         "infographic-generation",
         "og-image-generation",
+        "platform-social-images",
+        "resvg",
+        "satori",
+        "sharp",
         "social-preview",
         "twitter-card-images",
         "youtube-thumbnails"
@@ -237,13 +298,15 @@
     {
       "name": "seo",
       "description": "Technical SEO, on-page SEO, schema, GEO/AEO, keyword research.",
-      "count": 27,
+      "count": 31,
       "skills": [
         "aeo-optimization",
         "canonical-management",
         "competitor-analysis",
+        "content-decay",
         "content-gap-analysis",
         "eeat",
+        "entity-seo",
         "geo-optimization",
         "hreflang",
         "image-seo",
@@ -263,9 +326,11 @@
         "seo-audit",
         "seo-migration",
         "serp-analysis",
+        "serp-monitoring",
         "sitemap-robots",
         "structured-data",
-        "technical-seo"
+        "technical-seo",
+        "topical-authority"
       ]
     },
     {

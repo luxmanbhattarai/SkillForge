@@ -4,14 +4,14 @@ Generated: 2026-11-20 · Registry version: 1.0.0
 
 ## Totals
 
-- **Skills:** 226 (177 original, 49 upstream)
-- **Categories:** 16
+- **Skills:** 277 (228 original, 49 upstream)
+- **Categories:** 18
 - **Target coverage:** 177/177 planned original skills (100%)
-- **Validation:** PASS with 11 warning(s).
+- **Validation:** PASS with 5 warning(s).
 
 ## Skills by source
 
-- original: 177
+- original: 228
 - marketingskills: 8
 - superpowers: 13
 - anthropic: 8

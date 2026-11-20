@@ -2,13 +2,13 @@
   "generated": "2026-11-20",
   "registry_version": "1.0.0",
   "totals": {
-    "skills": 226,
-    "original": 177,
+    "skills": 277,
+    "original": 228,
     "upstream": 49,
-    "categories": 16
+    "categories": 18
   },
   "by_source": {
-    "original": 177,
+    "original": 228,
     "marketingskills": 8,
     "superpowers": 13,
     "anthropic": 8,
@@ -99,5 +99,5 @@
     }
   },
   "remaining": [],
-  "validation": "PASS with 11 warning(s)."
+  "validation": "PASS with 5 warning(s)."
 }
