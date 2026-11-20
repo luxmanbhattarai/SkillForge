@@ -15,6 +15,8 @@
     "check:links": "node scripts/check-links.mjs",
     "check:security": "node scripts/security-scan.mjs",
     "check:sources": "node scripts/check-sources.mjs",
+    "evals": "node evals/runners/run-evals.mjs",
+    "evals:generate": "node evals/datasets/generate-discovery-cases.mjs",
     "install-skills": "node scripts/install-skills.mjs",
     "registry": "node scripts/generate-registry.mjs",
     "report": "node scripts/generate-report.mjs",

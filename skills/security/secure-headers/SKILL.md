@@ -3,9 +3,10 @@ name: secure-headers
 description: >
   Configure HTTP security headers (CSP, HSTS, X-Content-Type-Options,
   Referrer-Policy, Permissions-Policy, and frame controls) for web
-  applications. Use when hardening response headers, setting a Content
-  Security Policy, fixing a header finding from a scan, or reviewing a
-  deployment's header configuration.
+  applications, including Helmet configuration for Express. Use when
+  hardening response headers, setting a Content Security Policy,
+  fixing a header finding from a scan, or reviewing a deployment's
+  header configuration.
 license: MIT
 metadata:
   version: "1.0.0"
