@@ -1,0 +1,86 @@
+name: Scheduled maintenance
+
+# Weekly maintenance jobs that need the network or report on drift
+# rather than gating a PR. Each job is independent so one failure does
+# not hide the others. All three are also runnable on demand via
+# workflow_dispatch.
+
+on:
+  schedule:
+    # Weekly, Monday 07:00 UTC — after the 06:00 security audit.
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+# Least privilege: these jobs only read the repository. No custom
+# secrets are used; the upstream job uses the default GITHUB_TOKEN
+# (read-only here) and works unauthenticated too.
+permissions:
+  contents: read
+
+jobs:
+  online-links:
+    # Online documentation link verification (audit finding L-11):
+    # re-verifies every external URL, including the documented
+    # exception entries, which are printed as SKIPPED lines in the log
+    # so a genuinely dead exception is visible on review.
+    name: Verify links online
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "20"
+          # No cache: this repo has zero dependencies and no lockfile,
+          # so there is nothing to cache.
+
+      - name: Verify external links online
+        run: node scripts/check-links.mjs --online
+
+  stale-verification:
+    # Stale-verification detection: lists skills whose last_verified
+    # date is older than 180 days. A failing run means skills are due
+    # for re-verification against current official docs.
+    name: Detect stale skill verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "20"
+          # No cache: this repo has zero dependencies and no lockfile,
+          # so there is nothing to cache.
+
+      - name: List skills not verified in the last 180 days
+        run: npm run query -- stale --days 180
+
+  upstream:
+    # Upstream source update monitoring: compares each upstream
+    # vendor repo's latest default-branch commit against the pin in
+    # sources/imported-skills.md and reports drift. Monitoring, not
+    # gating — the script exits 0 even when upstreams have moved.
+    name: Monitor upstream sources
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "20"
+          # No cache: this repo has zero dependencies and no lockfile,
+          # so there is nothing to cache.
+
+      - name: Check upstream repos for new commits
+        env:
+          # The default token only; the script also works without it
+          # (unauthenticated GitHub API, 60 requests/hour — this job
+          # makes ~18). It is passed here for the higher rate limit.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run check:upstream

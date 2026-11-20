@@ -1,28 +1,40 @@
 name: Lint
 
+# Markdown linting and offline link checks. The online link check runs
+# on a schedule instead (scheduled-maintenance.yml) because it hits the
+# network and is slow; see ai/phase10/NOTES.md.
+
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
 
+# Least privilege: these jobs only read the repository and run local
+# checks. No secrets are used anywhere in this workflow, so
+# pull_request runs from forks are safe.
+permissions:
+  contents: read
+
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
       - name: Set up Node.js 20
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "20"
+          # No cache: this repo has zero dependencies and no lockfile,
+          # so there is nothing to cache.
 
       - name: Check frontmatter
-        run: node scripts/check-frontmatter.mjs
+        run: npm run check:frontmatter
 
-      - name: Check links
-        run: node scripts/check-links.mjs
+      - name: Check links (offline)
+        run: npm run check:links
 
       - name: Check trailing whitespace in Markdown
         # Upstream skills are imported verbatim and never edited, so

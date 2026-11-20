@@ -1,0 +1,70 @@
+name: Release validation
+
+# Full strict validation for version tags (vX.Y.Z). This is validation
+# only: the package is private and there are no build or publish
+# artifacts, so this workflow creates no release and publishes
+# nothing. It exists so a bad tag can never look green.
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+# Least privilege: read-only validation. No secrets are used.
+permissions:
+  contents: read
+
+jobs:
+  release-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "20"
+          # No cache: this repo has zero dependencies and no lockfile,
+          # so there is nothing to cache.
+
+      - name: Validate skills (strict)
+        run: npm run validate:strict
+
+      - name: Check frontmatter
+        run: npm run check:frontmatter
+
+      - name: Check links (offline)
+        run: npm run check:links
+
+      - name: Check for duplicate skills
+        run: npm run check:duplicates
+
+      - name: Check sources and licenses
+        run: npm run check:sources
+
+      - name: Check agents and workflows
+        run: npm run check:agents
+
+      - name: Run security scan
+        run: npm run check:security
+
+      - name: Score skill quality
+        run: npm run score
+
+      - name: Run regression tests
+        run: npm test
+
+      - name: Validate registry schema and contents
+        run: npm run check:registry
+
+      - name: Regenerate registry
+        run: npm run registry
+
+      - name: Fail if registry differs from generated output
+        run: |
+          if ! git diff --exit-code --quiet registry/; then
+            echo "::error::The committed registry is out of date."
+            echo "Fix: run 'npm run registry' locally and commit the result."
+            git diff --stat registry/
+            exit 1
+          fi

@@ -1,28 +1,115 @@
 name: Validate skills
 
+# PR validation: every check in package.json that can run locally runs
+# here, so a green PR means the library is valid, de-duplicated,
+# source-checked, quality-scored, regression-tested, and in sync with
+# the registry. See ai/phase10/NOTES.md for the full CI map.
+
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
 
+# Least privilege: these jobs only read the repository and run local
+# checks. No secrets are used anywhere in this workflow, so
+# pull_request runs from forks are safe.
+permissions:
+  contents: read
+
 jobs:
   validate:
+    # The main validation job runs on Node 18, 20, and 22: package.json
+    # claims engines >= 18, so the floor (18) must be exercised, not
+    # just 20 (audit finding L-12).
+    name: Validate (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ["18", "20", "22"]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: ${{ matrix.node-version }}
+          # No cache: this repo has zero dependencies and no lockfile,
+          # so there is nothing to cache.
+
+      - name: Validate skill frontmatter and structure
+        run: npm run validate
+
+      - name: Check frontmatter completeness
+        run: npm run check:frontmatter
+
+      - name: Check for duplicate skills
+        run: npm run check:duplicates
+
+      - name: Check sources and licenses
+        run: npm run check:sources
+
+      - name: Check agents and workflows
+        run: npm run check:agents
+
+      - name: Score skill quality
+        run: npm run score
+
+      - name: Run regression tests
+        run: npm test
+
+  registry:
+    # Registry validation: the committed registry must match what the
+    # generator produces, and must pass schema validation. Runs on
+    # Node 20 only; generation is deterministic (see
+    # ai/decisions/2026-11-20-registry-determinism.md), so one version
+    # is enough.
+    name: Registry
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
       - name: Set up Node.js 20
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "20"
+          # No cache: this repo has zero dependencies and no lockfile,
+          # so there is nothing to cache.
 
-      - name: Validate skills
-        run: npm run validate
+      - name: Validate registry schema and contents
+        run: npm run check:registry
 
       - name: Regenerate registry
         run: npm run registry
 
-      - name: Fail if registry differs
-        run: git diff --exit-code registry/
+      - name: Fail if registry differs from generated output
+        run: |
+          if ! git diff --exit-code --quiet registry/; then
+            echo "::error::The committed registry is out of date."
+            echo "Fix: run 'npm run registry' locally and commit the result."
+            git diff --stat registry/
+            exit 1
+          fi
+
+  evals:
+    # Behavioral evaluation of the library with the deterministic mock
+    # provider (the default: no LLM APIs, no keys, no network). A
+    # model-provider run needs credentials and is not run in CI.
+    name: Behavioral evals
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "20"
+          # No cache: this repo has zero dependencies and no lockfile,
+          # so there is nothing to cache.
+
+      - name: Run behavioral evals (mock provider)
+        run: npm run evals
