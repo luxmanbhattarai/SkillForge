@@ -50,6 +50,9 @@ access.
 ## Prerequisites
 
 - A Cloudflare account and Wrangler installed and authenticated.
+  Wrangler 4.x is the current major version. In Wrangler 4, `wrangler
+  kv` commands default to local mode; add `--remote` to read or write
+  the live namespace (in Wrangler 3 they defaulted to remote).
 - A Worker project with a `wrangler.toml` that will declare the KV binding.
 - An understanding of eventual consistency: a write may not be visible
   to every edge location immediately.

@@ -57,7 +57,9 @@ is faster reads without stale-data bugs.
 ## Official Documentation
 
 - [RFC 9111 — HTTP Caching](https://www.rfc-editor.org/rfc/rfc9111.html)
-  — the authoritative HTTP caching specification.
+  — the authoritative HTTP caching specification (it obsoleted
+  RFC 7234; older tutorials citing RFC 7234 describe the same
+  behavior but are out of date as references).
 - [MDN: HTTP caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)
   — a practical guide to cache headers and validation.
 - [Redis documentation](https://redis.io/docs/) — the reference for

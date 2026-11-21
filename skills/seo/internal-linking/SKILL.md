@@ -62,12 +62,17 @@ content that already exists.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) —
   technical and content policies.
 
+Guidance current as of 2026-11-20. The three-click depth target in
+this skill is an industry heuristic, not a Google requirement.
+
 ## Required Workflow
 
 1. Audit the current structure: crawl the site and record click depth
    (clicks from the homepage) for every page, and identify orphan pages.
 2. List the priority pages: the pages that must rank or convert, and
    confirm each is reachable within three clicks of the homepage.
+   (Three clicks is an industry rule of thumb, not a Google-published
+   limit; shallow depth helps crawlers and users alike.)
 3. Design the hierarchy: homepage → sections → topic hubs → supporting
    pages, with navigation reflecting the main sections.
 4. Define hub-and-spoke links for each topic cluster: the pillar page
@@ -89,7 +94,9 @@ content that already exists.
 ## Implementation Standards
 
 - Every indexable page is reachable by links from the homepage within
-  three clicks, and no indexable page is an orphan.
+  three clicks, and no indexable page is an orphan. (Three clicks is
+  an industry rule of thumb, not a Google-published limit; Google
+  publishes no click-depth threshold.)
 - Links use real `<a href>` elements with absolute or root-relative URLs;
   links that depend on JavaScript to function are not reliable for
   crawlers.

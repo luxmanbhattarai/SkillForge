@@ -2,13 +2,13 @@
   "generated": "2026-11-20",
   "registry_version": "1.0.0",
   "totals": {
-    "skills": 226,
-    "original": 177,
+    "skills": 277,
+    "original": 228,
     "upstream": 49,
-    "categories": 16
+    "categories": 18
   },
   "by_source": {
-    "original": 177,
+    "original": 228,
     "marketingskills": 8,
     "superpowers": 13,
     "anthropic": 8,
@@ -17,47 +17,77 @@
     "agentic-seo": 1
   },
   "target_coverage": {
-    "planned_original": 177,
-    "done": 177,
+    "planned_original": 228,
+    "done": 228,
     "percent": 100
   },
   "coverage": {
+    "ai-engineering": {
+      "planned": 5,
+      "done": 5,
+      "missing": []
+    },
+    "architecture": {
+      "planned": 12,
+      "done": 12,
+      "missing": []
+    },
+    "auth": {
+      "planned": 14,
+      "done": 14,
+      "missing": []
+    },
+    "backend": {
+      "planned": 21,
+      "done": 21,
+      "missing": []
+    },
+    "content": {
+      "planned": 19,
+      "done": 19,
+      "missing": []
+    },
     "core": {
       "planned": 11,
       "done": 11,
       "missing": []
     },
+    "database": {
+      "planned": 18,
+      "done": 18,
+      "missing": []
+    },
+    "desktop": {
+      "planned": 3,
+      "done": 3,
+      "missing": []
+    },
+    "documentation": {
+      "planned": 5,
+      "done": 5,
+      "missing": []
+    },
     "frontend": {
+      "planned": 21,
+      "done": 21,
+      "missing": []
+    },
+    "infrastructure": {
+      "planned": 22,
+      "done": 22,
+      "missing": []
+    },
+    "media": {
       "planned": 16,
       "done": 16,
       "missing": []
     },
-    "backend": {
-      "planned": 13,
-      "done": 13,
+    "metadata": {
+      "planned": 6,
+      "done": 6,
       "missing": []
     },
-    "database": {
-      "planned": 14,
-      "done": 14,
-      "missing": []
-    },
-    "auth": {
-      "planned": 10,
-      "done": 10,
-      "missing": []
-    },
-    "architecture": {
-      "planned": 9,
-      "done": 9,
-      "missing": []
-    },
-    "infrastructure": {
-      "planned": 13,
-      "done": 13,
-      "missing": []
-    },
-    "testing": {
+    "performance": {
       "planned": 8,
       "done": 8,
       "missing": []
@@ -68,36 +98,16 @@
       "missing": []
     },
     "seo": {
-      "planned": 27,
-      "done": 27,
+      "planned": 31,
+      "done": 31,
       "missing": []
     },
-    "performance": {
+    "testing": {
       "planned": 8,
       "done": 8,
-      "missing": []
-    },
-    "content": {
-      "planned": 17,
-      "done": 17,
-      "missing": []
-    },
-    "media": {
-      "planned": 12,
-      "done": 12,
-      "missing": []
-    },
-    "metadata": {
-      "planned": 6,
-      "done": 6,
-      "missing": []
-    },
-    "documentation": {
-      "planned": 5,
-      "done": 5,
       "missing": []
     }
   },
   "remaining": [],
-  "validation": "PASS with 11 warning(s)."
+  "validation": "PASS with 4 warning(s) (4 upstream, informational)."
 }

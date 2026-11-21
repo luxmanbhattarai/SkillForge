@@ -43,7 +43,7 @@ This skill is a systematic method for making slow SQL fast: reproduce the slowne
 - Access to the database with permission to run `EXPLAIN` (and `ANALYZE` variants) on the slow query.
 - Representative data: a copy of production-like data, or at least the same order of magnitude of rows.
 - The exact slow query text and the conditions under which it is slow (parameters, time of day, concurrent load).
-- Knowledge of which database engine is in use, since plan output differs per engine.
+- Knowledge of which database engine is in use, since plan output differs per engine. Supported versions as of 2026-11-20: PostgreSQL 15–19, MySQL 8.4/9.7 LTS, SQLite 3.51 (see the engine skills for version detail).
 
 ## Official Documentation
 

@@ -3,9 +3,10 @@ name: secure-headers
 description: >
   Configure HTTP security headers (CSP, HSTS, X-Content-Type-Options,
   Referrer-Policy, Permissions-Policy, and frame controls) for web
-  applications. Use when hardening response headers, setting a Content
-  Security Policy, fixing a header finding from a scan, or reviewing a
-  deployment's header configuration.
+  applications, including Helmet configuration for Express. Use when
+  hardening response headers, setting a Content Security Policy,
+  fixing a header finding from a scan, or reviewing a deployment's
+  header configuration.
 license: MIT
 metadata:
   version: "1.0.0"
@@ -63,8 +64,11 @@ starting values, and how to verify them.
   recommended header guidance.
 - [securityheaders.com](https://securityheaders.com/) — header
   scanner for a live site.
-- [Helmet](https://helmetjs.github.io/) — header middleware for
-  Express and Node.js.
+- [Helmet](https://helmet.js.org/) — header middleware for
+  Express and Node.js. Helmet 8.x is the current line (8.3.0 as of
+  November 2026, Node.js 18+). The HSTS option is
+  `strictTransportSecurity` — the old `hsts` option name was
+  removed in Helmet 8 and is silently ignored if used.
 
 ## Required Workflow
 
@@ -187,6 +191,8 @@ X-Frame-Options: DENY
 
 ```ts
 // Express example using Helmet with a CSP tailored to the site.
+// Directives merge into Helmet's defaults; set `useDefaults: false`
+// inside contentSecurityPolicy to start from an empty policy instead.
 import helmet from "helmet";
 
 app.use(
@@ -202,7 +208,7 @@ app.use(
         frameAncestors: ["'none'"],
       },
     },
-    hsts: { maxAge: 31536000, includeSubDomains: true },
+    strictTransportSecurity: { maxAge: 31536000, includeSubDomains: true },
   }),
 );
 ```
@@ -243,6 +249,6 @@ curl -sI https://example.com | grep -i -E "content-security-policy|strict-transp
   CSP reference.
 - [OWASP Secure Headers Project](https://owasp.org/www-project-secure-headers/) —
   recommended guidance.
-- [Helmet](https://helmetjs.github.io/) — Node.js header middleware.
+- [Helmet](https://helmet.js.org/) — Node.js header middleware.
 - Related skills in this repository: `owasp`, `xss-prevention`,
   `csrf-protection`, `security-auditing`.

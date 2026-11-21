@@ -61,6 +61,10 @@ labeled as estimates.
 - [Google Search Console](https://search.google.com/search-console/about) —
   the site's own performance data for comparison.
 
+Guidance current as of 2026-11-20. All competitor traffic, keyword,
+and link figures are third-party estimates, not Google data; label
+them as estimates with a named source.
+
 ## Required Workflow
 
 1. Identify true search competitors: the domains that appear most often

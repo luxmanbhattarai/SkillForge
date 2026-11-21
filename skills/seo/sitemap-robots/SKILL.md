@@ -67,8 +67,16 @@ responsibilities separate.
 ## Official Documentation
 
 - [Sitemaps.org](https://www.sitemaps.org/) — the sitemap protocol: format, limits, and sitemap index files.
+- [Build and submit a sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap) —
+  Google's sitemap guide: formats, size limits, and how Google treats
+  each field.
+- [How Google interprets the robots.txt specification](https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt) —
+  Google's robots.txt interpretation, including the 500 KiB file size
+  limit and error handling.
 - [Google Search Central](https://developers.google.com/search) — Google's guidance on sitemaps and robots.txt.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — crawlability baseline.
+
+Guidance current as of 2026-11-20.
 
 ## Required Workflow
 
@@ -103,9 +111,13 @@ responsibilities separate.
   duplicates, no session or tracking parameters.
 - `<lastmod>` must reflect the real last modification date of the
   page, in `YYYY-MM-DD` or full ISO 8601 format. Do not set every
-  `<lastmod>` to the build date.
-- `<changefreq>` and `<priority>` are optional; Google ignores them
-  for ranking, so omit them unless another consumer needs them.
+  `<lastmod>` to the build date. Google uses `<lastmod>` only when it
+  is consistently and verifiably accurate, and may ignore values it
+  considers unreliable.
+- `<changefreq>` and `<priority>` are optional; Google ignores both
+  values entirely, so omit them unless another consumer needs them.
+- Sitemap files must be UTF-8 encoded. Google enforces a 500 KiB
+  size limit on robots.txt files; keep robots.txt well under it.
 - Sitemap URLs must use the site's canonical host and HTTPS scheme,
   matching the URLs the site actually serves.
 - robots.txt rules are specific, not broad. `Disallow: /` blocks the

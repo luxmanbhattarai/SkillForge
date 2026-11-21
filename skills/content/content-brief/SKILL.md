@@ -32,6 +32,8 @@ the wrong thing.
 - Handing off a topic from a strategist to a writer.
 - Defining the scope of a piece before drafting begins.
 - Aligning a team on what a piece should and should not cover.
+- Generating briefs at scale from keyword lists and SERP data — see
+  the brief-automation section below.
 
 ## When Not to Use
 
@@ -77,6 +79,39 @@ the wrong thing.
 - The brief must state what the piece should NOT cover, to prevent scope creep.
 - Never promise rankings or traffic in the brief.
 
+### Brief automation
+
+Briefs can be generated programmatically from keyword lists and SERP
+data, but a generated brief is a draft brief, not an approved one —
+it goes through the same human approval as a hand-written brief
+before any writer sees it.
+
+- **Schema first.** Define the brief as a structured record (JSON or
+  YAML) with the same required fields as a hand-written brief: goal,
+  audience, intent, outline, sources, tone, length, format, internal
+  links, acceptance criteria, deadline, owner, reviewer. A generator
+  that cannot fill a field leaves it empty and flags it; it never
+  invents a value.
+- **SERP-derived fields.** Derive the outline, the length range, and
+  the "must cover" points from the SERP for the target keyword (see
+  `serp-analysis`): the headings of the top-ranking pages, the
+  questions people ask, and the depth the ranking pages reach. Record
+  which SERP snapshot the brief was derived from and its date, so a
+  stale brief can be spotted.
+- **Programmatic pipelines.** A brief pipeline runs: keyword list in
+  (see `keyword-research`, `keyword-clustering`) → SERP fetch →
+  outline synthesis → schema validation (every required field
+  present, sources reachable) → human review and approval → brief
+  out. The pipeline stops at the human gate; it never commissions a
+  draft on its own.
+- **Source handling.** Generated briefs list sources the generator
+  actually fetched and checked. A source the generator could not
+  open is listed as unchecked, never as verified.
+- **Batch with care.** Generate briefs in small batches and review
+  the first batch closely before scaling: a systematic generator
+  error repeated across fifty briefs is worse than fifty slow
+  hand-written ones.
+
 ## Best Practices
 
 - Write the brief from the reader's perspective: what question brings them here, and what will they do after reading?
@@ -84,6 +119,12 @@ the wrong thing.
 - Keep the brief to one page where possible; a brief longer than the article is a sign the topic is too broad.
 - Share the brief with the reviewer before drafting starts, so acceptance criteria are agreed in advance.
 - Reuse a brief template across the team so writers always know where to find each element.
+- When automating, review the first batch of generated briefs
+  closely before scaling: fix the generator, not each brief, when a
+  pattern is wrong.
+- Keep generated briefs in version control alongside hand-written
+  ones, so a bad batch can be rolled back and the generator's output
+  can be audited.
 
 ## Security Considerations
 
@@ -133,6 +174,39 @@ Acceptance: all H2 points covered, every claim sourced, passes editorial-review.
 Deadline: 2026-12-14. Owner: A. Reyes. Reviewer: J. Park.
 ```
 
+Example brief as a structured record (for automation pipelines):
+
+```json
+{
+  "topic": "How to Feed a Sourdough Starter",
+  "goal": "Teach a first-time baker to keep a starter alive with five minutes a day.",
+  "audience": "Home bakers who just got or made their first starter.",
+  "intent": "informational",
+  "keyword": "how to feed a sourdough starter",
+  "format": "how-to guide",
+  "length": { "min": 1200, "max": 1800 },
+  "tone": "warm, practical, second person",
+  "outline": [
+    { "h2": "What you need", "points": ["flour", "water", "jar", "scale"] },
+    { "h2": "Feeding ratios explained", "points": ["1:1:1", "when to change it"] },
+    { "h2": "Step-by-step feeding", "points": ["discard", "add flour and water", "stir"] },
+    { "h2": "How often to feed", "points": ["counter", "fridge"] },
+    { "h2": "Troubleshooting", "points": ["smell", "hooch", "no rise"] }
+  ],
+  "sources": [
+    { "url": "https://www.kingarthurbaking.com/", "checked": true }
+  ],
+  "do_not_cover": ["baking with the starter"],
+  "internal_links": ["Sourdough starter guide (pillar)"],
+  "acceptance": ["all H2 points covered", "every claim sourced", "passes editorial-review"],
+  "serp_snapshot": "2026-11-20",
+  "deadline": "2026-12-14",
+  "owner": "A. Reyes",
+  "reviewer": "J. Park",
+  "status": "draft — awaiting human approval"
+}
+```
+
 ## Validation Checklist
 
 - [ ] The brief states the goal, audience, intent, and format.
@@ -142,6 +216,9 @@ Deadline: 2026-12-14. Owner: A. Reyes. Reviewer: J. Park.
 - [ ] Internal links and topics to avoid are listed.
 - [ ] Acceptance criteria are checkable.
 - [ ] Deadline, owner, and reviewer are named.
+- [ ] For generated briefs: every required field is filled or flagged
+      empty (never invented), the SERP snapshot date is recorded, and
+      a human approved the brief before handoff.
 
 ## Expected Deliverables
 
@@ -152,4 +229,4 @@ Deadline: 2026-12-14. Owner: A. Reyes. Reviewer: J. Park.
 
 - [Creating helpful, reliable, people-first content](https://developers.google.com/search/docs/fundamentals/creating-helpful-content) — Google's quality guidance.
 - [plainlanguage.gov](https://www.plainlanguage.gov/) — plain-language guidelines.
-- Related skills in this repository: `content-strategy`, `keyword-to-content`, `article-writing`, `editorial-review`.
+- Related skills in this repository: `content-strategy`, `keyword-to-content`, `article-writing`, `editorial-review`, `serp-analysis`, `keyword-research`, `keyword-clustering`, `programmatic-seo`.

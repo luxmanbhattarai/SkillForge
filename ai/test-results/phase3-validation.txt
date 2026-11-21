@@ -1,0 +1,52 @@
+Phase 3 close-out validation — run by the coordinator on 2026-11-20
+after all 10 batches completed (batch 1 was the last to report).
+Branch: feat/skillforge-production-upgrade.
+
+Scoped batch validations (each batch's directories):
+- validate-skills.mjs --filter skills/core: PASS
+- validate-skills.mjs --filter skills/architecture: PASS
+- (each batch also ran its own scoped validation; all PASS — see ai/phase3/batch-N-report.md)
+
+Full suite (after all batches, before commit):
+- npm test: 62 pass, 0 fail (duration 15002 ms)
+- npm run validate: PASS with 11 warning(s) — the same 11 pre-existing
+  upstream warnings, triaged in Phase 3 (see TECHNICAL-ACCURACY-AUDIT.md, M-08)
+- npm run check:frontmatter: PASS
+- npm run check:links (offline): PASS — 347 unique external URLs listed
+- npm run check:sources: PASS with 0 warning(s)
+- npm run check:duplicates: PASS
+- npm run check:security: PASS: no findings
+- npm run registry: regenerated (skills.json + compatibility.json changed:
+  frontmatter description updates from batches 2/7/9)
+- npm run report: 177/177 planned original skills (100%), 226 total skills.
+  Validation: PASS with 11 warning(s).
+
+Online link check (node scripts/check-links.mjs --online), 2026-11-20:
+- Checked 14 internal links; 347 unique external URLs verified
+  (48 skipped: example domains / documented exceptions).
+- PASS, 0 errors. Duration ~4m30s.
+- Skipped hosts include securityheaders.com, support.google.com,
+  webpagetest.org — all documented exceptions, verified real.
+- External URL count grew 311 (v1.0.0) -> 320 (Phase 2 vendor docs)
+  -> 347 (Phase 3 batches added 27 official-docs links).
+
+Regression found and fixed during close-out:
+- npm run check:links initially FAILED with 2 errors: ai/phase3/batch-10-report.md
+  quoted the upstream agentic-seo skill's literal placeholder links
+  ([Page title](url) style), which the checker parses as broken internal
+  links (it does not skip inline code spans). The report was reworded to
+  describe the placeholders instead of reproducing link syntax. No skill
+  files were affected. Re-run: PASS.
+
+Scope check:
+- 145 skill files modified, all under skills/ (originals only).
+- Zero files under skills/upstream/ modified (verified).
+- No files outside skills/ + ai/ + registry/ modified.
+- Final diff at commit: 149 files changed, +1720/-511 (145 skills,
+  2 registry files, ai/audits/INITIAL-AUDIT.md, ai/PROJECT-STATUS.md),
+  plus new files: ai/audits/TECHNICAL-ACCURACY-AUDIT.md,
+  ai/phase3/batch-1..10-report.md, ai/test-results/phase3-validation.txt.
+
+Final re-run after the audit doc + status updates (all PASS):
+- validate: PASS with 11 warning(s); frontmatter: PASS; links: PASS;
+  sources: PASS with 0 warning(s); duplicates: PASS; security: PASS.

@@ -12,7 +12,7 @@ metadata:
   maintainer: skills-library
   source: original
   last_verified: "2026-11-20"
-compatibility: Requires Node.js 24 LTS, TypeScript 5.x, and a TypeScript client; works best in a monorepo.
+compatibility: Requires Node.js 24 LTS or later, TypeScript 7.x, and a TypeScript client; works best in a monorepo.
 ---
 
 # tRPC
@@ -49,12 +49,18 @@ surprise.
 
 ## Prerequisites
 
-- A TypeScript 5.x project (a monorepo is ideal so the client can
+- A TypeScript 7.x project (a monorepo is ideal so the client can
   import the server's router type).
-- Node.js 24 LTS and a server framework that can host tRPC (for
-  example a standalone HTTP server, Next.js, or Hono).
-- Familiarity with Zod or another schema validator for input
+- Node.js 24 LTS or later (26 is the current LTS line) and a server
+  framework that can host tRPC (for example a standalone HTTP server,
+  Next.js, or Hono).
+- Familiarity with Zod 4.x or another schema validator for input
   validation.
+- tRPC 11.x (11.29.x as of November 2026). The React integration
+  package for v11 is `@trpc/tanstack-react-query`
+  (`createTRPCContext`, `useTRPC`); the v10-style
+  `@trpc/react-query` (`createTRPCReact`) still works in v11 but is
+  no longer the integration being developed.
 
 ## Official Documentation
 
@@ -62,7 +68,9 @@ surprise.
   reference, and examples.
 - [tRPC website](https://trpc.io/) — overview and quick start.
 - [TypeScript documentation](https://www.typescriptlang.org/docs/) —
-  TypeScript 5.x reference.
+  TypeScript 7.x reference. TypeScript 7.0 (July 2026) is the current
+  release; 6.0 was the last JavaScript-based release and 5.x is
+  superseded.
 
 ## Required Workflow
 

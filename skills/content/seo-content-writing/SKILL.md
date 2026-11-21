@@ -85,7 +85,7 @@ crawlers. It never sacrifices readability for optimization.
 
 - Satisfy the searcher first: a page that answers the query well is the foundation; optimization is the polish.
 - Cover the topic completely but concisely — length follows the topic, not a word-count target.
-- Use FAQ sections for related questions the page answers, and consider FAQ schema where it genuinely applies.
+- Use FAQ sections for related questions the page answers, and consider FAQ schema where it genuinely applies — but note FAQPage markup no longer produces a rich result in Google Search (removed May 7, 2026); add it only for other consumers, never as a visibility tactic.
 - Update the publish date only when the content actually changes; a false "updated" date misleads readers.
 - Keep URLs short, descriptive, and stable; changing a URL after publication requires a redirect.
 
@@ -114,7 +114,7 @@ crawlers. It never sacrifices readability for optimization.
 Example title and meta description:
 
 ```text
-Title: How to Feed a Sourdough Starter (Ratios, Schedule, Troubleshooting)
+Title: How to Feed a Sourdough Starter: Ratios & Schedule
 Meta: Learn how to feed a sourdough starter: exact ratios, a daily and
 weekly schedule, and how to fix a sluggish starter. Five minutes a day.
 ```

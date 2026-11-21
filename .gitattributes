@@ -1,0 +1,7 @@
+# Normalize line endings to LF on checkout, on every platform.
+# The frontmatter parser tolerates CRLF, but checking out LF removes
+# the whole class of line-ending divergence (notably for the Windows
+# CI leg, where Git for Windows otherwise defaults to CRLF).
+# text=auto leaves git to auto-detect binary files, so the four
+# upstream binary assets are untouched.
+* text=auto eol=lf

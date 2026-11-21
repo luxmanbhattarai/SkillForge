@@ -44,6 +44,7 @@ This skill covers safe database schema evolution: writing versioned, reviewable,
 - A copy of production-like data to test migrations against, or at least a staging database with realistic row counts.
 - Knowledge of which database engine is in use and which DDL operations lock or rewrite tables on that engine.
 - A deployment process that runs migrations in order, exactly once, before or alongside the application deploy.
+- Supported versions as of 2026-11-20: PostgreSQL 15–19, MySQL 8.4/9.7 LTS, SQLite 3.51, Prisma ORM 7, Drizzle ORM 0.45. Version-specific DDL behaviour matters: PostgreSQL 11 and later add a column with a constant default without rewriting the table, and MySQL 8.0.12 and later support instant `ADD COLUMN` in most cases — but the add-nullable, backfill, constrain sequence is still the safe default on large tables.
 
 ## Official Documentation
 
@@ -70,7 +71,7 @@ This skill covers safe database schema evolution: writing versioned, reviewable,
 - Migrations are versioned, ordered, and immutable once applied in a shared environment; a mistake is fixed by a new migration, never by editing history.
 - Every migration is idempotent in intent: the migration runner tracks which migrations have run, and a migration never assumes it can run twice.
 - Destructive changes (drop column, drop table, change type) are separate migrations from additive changes, so each can be reviewed and rolled back independently.
-- Adding a column with a default on a large table is done carefully: on some engines it rewrites the table; add the column nullable, backfill, then add the constraint.
+- Adding a column with a default on a large table is done carefully: on older engines it rewrites the table (PostgreSQL 11+ and MySQL 8.0.12+ avoid the rewrite for most constant defaults); add the column nullable, backfill, then add the constraint.
 - Renames are expand-and-contract, never a single rename, when old application code may still be running during the deploy.
 - Backfills run in batches (for example 1,000 rows per batch) with a pause between batches, and are resumable.
 - Migration files are reviewed like code: the reviewer checks the DDL, the rollback, the lock behaviour, and the data impact.

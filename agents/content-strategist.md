@@ -31,6 +31,10 @@ business goals and keyword research into a prioritized, publishable plan.
 | `competitor-profiling` (upstream) | Comparing against competing content. |
 | `analytics` (upstream) | Using traffic data to plan. |
 | `site-architecture` (upstream) | Structuring topic clusters and linking. |
+| `editorial-workflow` | Content moves through an editorial pipeline. |
+| `source-verification` | The strategy depends on verified claims. |
+| `topical-authority` | The strategy builds topical authority. |
+| `content-decay` | Existing content is losing traffic. |
 
 ## Skills it should use
 

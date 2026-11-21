@@ -1,0 +1,4415 @@
+{
+  "generated": "2026-11-20",
+  "summary": {
+    "scored": 228,
+    "meanOverall": 87,
+    "meanDimensions": {
+      "accuracy": 100,
+      "completeness": 99,
+      "actionability": 91,
+      "security": 95,
+      "testing": 37,
+      "documentation": 99,
+      "versioning": 76,
+      "maintainability": 98
+    },
+    "critical": 0,
+    "lowest": [
+      {
+        "path": "skills/content/content-brief/SKILL.md",
+        "overall": 71
+      },
+      {
+        "path": "skills/content/fact-checking/SKILL.md",
+        "overall": 71
+      },
+      {
+        "path": "skills/content/faq-generation/SKILL.md",
+        "overall": 72
+      },
+      {
+        "path": "skills/content/keyword-to-content/SKILL.md",
+        "overall": 72
+      },
+      {
+        "path": "skills/architecture/modular-monolith/SKILL.md",
+        "overall": 73
+      },
+      {
+        "path": "skills/content/content-localization/SKILL.md",
+        "overall": 73
+      },
+      {
+        "path": "skills/content/editorial-review/SKILL.md",
+        "overall": 73
+      },
+      {
+        "path": "skills/content/seo-content-writing/SKILL.md",
+        "overall": 73
+      },
+      {
+        "path": "skills/content/article-writing/SKILL.md",
+        "overall": 74
+      },
+      {
+        "path": "skills/content/blog-writing/SKILL.md",
+        "overall": 74
+      }
+    ]
+  },
+  "results": [
+    {
+      "path": "skills/ai-engineering/agent-evaluation/SKILL.md",
+      "name": "agent-evaluation",
+      "category": "ai-engineering",
+      "lines": 374,
+      "overall": 99,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 92
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/ai-engineering/ai-agents/SKILL.md",
+      "name": "ai-agents",
+      "category": "ai-engineering",
+      "lines": 385,
+      "overall": 95,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 78,
+        "security": 100,
+        "testing": 91,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 88
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/ai-engineering/llm-integration/SKILL.md",
+      "name": "llm-integration",
+      "category": "ai-engineering",
+      "lines": 376,
+      "overall": 96,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 74,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 91
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/ai-engineering/mcp-security/SKILL.md",
+      "name": "mcp-security",
+      "category": "ai-engineering",
+      "lines": 453,
+      "overall": 94,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 66
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/ai-engineering/rag/SKILL.md",
+      "name": "rag",
+      "category": "ai-engineering",
+      "lines": 357,
+      "overall": 97,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 78,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 98
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/architecture/changesets/SKILL.md",
+      "name": "changesets",
+      "category": "architecture",
+      "lines": 250,
+      "overall": 98,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/architecture/dependency-management/SKILL.md",
+      "name": "dependency-management",
+      "category": "architecture",
+      "lines": 232,
+      "overall": 92,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 35,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/architecture/domain-driven-design/SKILL.md",
+      "name": "domain-driven-design",
+      "category": "architecture",
+      "lines": 198,
+      "overall": 77,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 67,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/architecture/microservices/SKILL.md",
+      "name": "microservices",
+      "category": "architecture",
+      "lines": 163,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 83,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/architecture/modular-monolith/SKILL.md",
+      "name": "modular-monolith",
+      "category": "architecture",
+      "lines": 163,
+      "overall": 73,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 67,
+        "testing": 9,
+        "documentation": 71,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/architecture/monorepo/SKILL.md",
+      "name": "monorepo",
+      "category": "architecture",
+      "lines": 179,
+      "overall": 88,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 67,
+        "testing": 35,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/architecture/nx/SKILL.md",
+      "name": "nx",
+      "category": "architecture",
+      "lines": 257,
+      "overall": 100,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/architecture/package-boundaries/SKILL.md",
+      "name": "package-boundaries",
+      "category": "architecture",
+      "lines": 183,
+      "overall": 75,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 67,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/architecture/pnpm-workspaces/SKILL.md",
+      "name": "pnpm-workspaces",
+      "category": "architecture",
+      "lines": 186,
+      "overall": 87,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 83,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/architecture/release-management/SKILL.md",
+      "name": "release-management",
+      "category": "architecture",
+      "lines": 200,
+      "overall": 97,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 91,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/architecture/system-design/SKILL.md",
+      "name": "system-design",
+      "category": "architecture",
+      "lines": 172,
+      "overall": 78,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 83,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/architecture/turborepo/SKILL.md",
+      "name": "turborepo",
+      "category": "architecture",
+      "lines": 189,
+      "overall": 94,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/auth/auth-security/SKILL.md",
+      "name": "auth-security",
+      "category": "auth",
+      "lines": 167,
+      "overall": 86,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/auth/authentication/SKILL.md",
+      "name": "authentication",
+      "category": "auth",
+      "lines": 163,
+      "overall": 79,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/auth/authjs/SKILL.md",
+      "name": "authjs",
+      "category": "auth",
+      "lines": 319,
+      "overall": 97,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 91,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/auth/authorization/SKILL.md",
+      "name": "authorization",
+      "category": "auth",
+      "lines": 165,
+      "overall": 88,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/auth/better-auth/SKILL.md",
+      "name": "better-auth",
+      "category": "auth",
+      "lines": 166,
+      "overall": 86,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 18,
+        "documentation": 83,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/auth/clerk/SKILL.md",
+      "name": "clerk",
+      "category": "auth",
+      "lines": 318,
+      "overall": 98,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/auth/jwt/SKILL.md",
+      "name": "jwt",
+      "category": "auth",
+      "lines": 163,
+      "overall": 82,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 93,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/auth/mfa/SKILL.md",
+      "name": "mfa",
+      "category": "auth",
+      "lines": 174,
+      "overall": 87,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/auth/multi-tenancy/SKILL.md",
+      "name": "multi-tenancy",
+      "category": "auth",
+      "lines": 173,
+      "overall": 88,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/auth/oauth/SKILL.md",
+      "name": "oauth",
+      "category": "auth",
+      "lines": 175,
+      "overall": 88,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/auth/passkeys/SKILL.md",
+      "name": "passkeys",
+      "category": "auth",
+      "lines": 385,
+      "overall": 97,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 88
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/auth/rbac/SKILL.md",
+      "name": "rbac",
+      "category": "auth",
+      "lines": 169,
+      "overall": 88,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/auth/session-management/SKILL.md",
+      "name": "session-management",
+      "category": "auth",
+      "lines": 166,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/auth/supabase-auth/SKILL.md",
+      "name": "supabase-auth",
+      "category": "auth",
+      "lines": 339,
+      "overall": 97,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 91,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/advanced-api-architecture/SKILL.md",
+      "name": "advanced-api-architecture",
+      "category": "backend",
+      "lines": 426,
+      "overall": 95,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 75
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/api-client-generation/SKILL.md",
+      "name": "api-client-generation",
+      "category": "backend",
+      "lines": 372,
+      "overall": 97,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 93
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/api-design/SKILL.md",
+      "name": "api-design",
+      "category": "backend",
+      "lines": 268,
+      "overall": 86,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/background-jobs/SKILL.md",
+      "name": "background-jobs",
+      "category": "backend",
+      "lines": 244,
+      "overall": 90,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 35,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/caching/SKILL.md",
+      "name": "caching",
+      "category": "backend",
+      "lines": 240,
+      "overall": 79,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/backend/express/SKILL.md",
+      "name": "express",
+      "category": "backend",
+      "lines": 397,
+      "overall": 95,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 91,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 84
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/fastify/SKILL.md",
+      "name": "fastify",
+      "category": "backend",
+      "lines": 396,
+      "overall": 98,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 85
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/graphql/SKILL.md",
+      "name": "graphql",
+      "category": "backend",
+      "lines": 270,
+      "overall": 85,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 78,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/hono/SKILL.md",
+      "name": "hono",
+      "category": "backend",
+      "lines": 245,
+      "overall": 89,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 93,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/mcp-development/SKILL.md",
+      "name": "mcp-development",
+      "category": "backend",
+      "lines": 274,
+      "overall": 93,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 93,
+        "security": 100,
+        "testing": 53,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/nestjs/SKILL.md",
+      "name": "nestjs",
+      "category": "backend",
+      "lines": 377,
+      "overall": 99,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 91
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/nodejs/SKILL.md",
+      "name": "nodejs",
+      "category": "backend",
+      "lines": 262,
+      "overall": 94,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 78,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/openapi/SKILL.md",
+      "name": "openapi",
+      "category": "backend",
+      "lines": 452,
+      "overall": 94,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 66
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/package-development/SKILL.md",
+      "name": "package-development",
+      "category": "backend",
+      "lines": 266,
+      "overall": 94,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/python-sdk/SKILL.md",
+      "name": "python-sdk",
+      "category": "backend",
+      "lines": 461,
+      "overall": 95,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 63
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/queues/SKILL.md",
+      "name": "queues",
+      "category": "backend",
+      "lines": 243,
+      "overall": 88,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/rate-limiting/SKILL.md",
+      "name": "rate-limiting",
+      "category": "backend",
+      "lines": 264,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/backend/rest-api/SKILL.md",
+      "name": "rest-api",
+      "category": "backend",
+      "lines": 248,
+      "overall": 87,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 78,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/sdk-development/SKILL.md",
+      "name": "sdk-development",
+      "category": "backend",
+      "lines": 269,
+      "overall": 89,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 78,
+        "security": 100,
+        "testing": 35,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/trpc/SKILL.md",
+      "name": "trpc",
+      "category": "backend",
+      "lines": 244,
+      "overall": 85,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 78,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/backend/typescript-sdk/SKILL.md",
+      "name": "typescript-sdk",
+      "category": "backend",
+      "lines": 394,
+      "overall": 96,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 85
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/content/article-writing/SKILL.md",
+      "name": "article-writing",
+      "category": "content",
+      "lines": 158,
+      "overall": 74,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 100,
+        "security": 50,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/content/blog-writing/SKILL.md",
+      "name": "blog-writing",
+      "category": "content",
+      "lines": 150,
+      "overall": 74,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 100,
+        "security": 50,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/content/content-brief/SKILL.md",
+      "name": "content-brief",
+      "category": "content",
+      "lines": 233,
+      "overall": 71,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 85,
+        "security": 33,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/content/content-localization/SKILL.md",
+      "name": "content-localization",
+      "category": "content",
+      "lines": 156,
+      "overall": 73,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 85,
+        "security": 50,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/content/content-refresh/SKILL.md",
+      "name": "content-refresh",
+      "category": "content",
+      "lines": 154,
+      "overall": 76,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 100,
+        "security": 50,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/content/content-repurposing/SKILL.md",
+      "name": "content-repurposing",
+      "category": "content",
+      "lines": 157,
+      "overall": 74,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 100,
+        "security": 50,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/content/content-research/SKILL.md",
+      "name": "content-research",
+      "category": "content",
+      "lines": 149,
+      "overall": 74,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 93,
+        "security": 50,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/content/content-strategy/SKILL.md",
+      "name": "content-strategy",
+      "category": "content",
+      "lines": 156,
+      "overall": 74,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 100,
+        "security": 50,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/content/copywriting/SKILL.md",
+      "name": "copywriting",
+      "category": "content",
+      "lines": 158,
+      "overall": 82,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 50,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/content/editorial-review/SKILL.md",
+      "name": "editorial-review",
+      "category": "content",
+      "lines": 167,
+      "overall": 73,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 93,
+        "security": 50,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/content/editorial-workflow/SKILL.md",
+      "name": "editorial-workflow",
+      "category": "content",
+      "lines": 259,
+      "overall": 94,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 48,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/content/eeat-writing/SKILL.md",
+      "name": "eeat-writing",
+      "category": "content",
+      "lines": 158,
+      "overall": 74,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 100,
+        "security": 50,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/content/fact-checking/SKILL.md",
+      "name": "fact-checking",
+      "category": "content",
+      "lines": 143,
+      "overall": 71,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 78,
+        "security": 50,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/content/faq-generation/SKILL.md",
+      "name": "faq-generation",
+      "category": "content",
+      "lines": 178,
+      "overall": 72,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 85,
+        "security": 50,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/content/human-editing/SKILL.md",
+      "name": "human-editing",
+      "category": "content",
+      "lines": 154,
+      "overall": 74,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 100,
+        "security": 50,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/content/keyword-to-content/SKILL.md",
+      "name": "keyword-to-content",
+      "category": "content",
+      "lines": 148,
+      "overall": 72,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 93,
+        "security": 33,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/content/seo-content-writing/SKILL.md",
+      "name": "seo-content-writing",
+      "category": "content",
+      "lines": 159,
+      "overall": 73,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 50,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/content/source-verification/SKILL.md",
+      "name": "source-verification",
+      "category": "content",
+      "lines": 265,
+      "overall": 96,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 65,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/content/technical-writing/SKILL.md",
+      "name": "technical-writing",
+      "category": "content",
+      "lines": 170,
+      "overall": 86,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 67,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/core/clean-code/SKILL.md",
+      "name": "clean-code",
+      "category": "core",
+      "lines": 207,
+      "overall": 86,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 35,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/core/code-review/SKILL.md",
+      "name": "code-review",
+      "category": "core",
+      "lines": 179,
+      "overall": 80,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 83,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/core/debugging/SKILL.md",
+      "name": "debugging",
+      "category": "core",
+      "lines": 195,
+      "overall": 90,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/core/design-patterns/SKILL.md",
+      "name": "design-patterns",
+      "category": "core",
+      "lines": 219,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/core/engineering-standards/SKILL.md",
+      "name": "engineering-standards",
+      "category": "core",
+      "lines": 223,
+      "overall": 94,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 53,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/core/performance/SKILL.md",
+      "name": "performance",
+      "category": "core",
+      "lines": 210,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/core/refactoring/SKILL.md",
+      "name": "refactoring",
+      "category": "core",
+      "lines": 195,
+      "overall": 88,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/core/security/SKILL.md",
+      "name": "security",
+      "category": "core",
+      "lines": 225,
+      "overall": 86,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/core/software-architecture/SKILL.md",
+      "name": "software-architecture",
+      "category": "core",
+      "lines": 209,
+      "overall": 79,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/core/tdd/SKILL.md",
+      "name": "tdd",
+      "category": "core",
+      "lines": 211,
+      "overall": 94,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/core/technical-decision-records/SKILL.md",
+      "name": "technical-decision-records",
+      "category": "core",
+      "lines": 216,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/database/backup-recovery/SKILL.md",
+      "name": "backup-recovery",
+      "category": "database",
+      "lines": 168,
+      "overall": 94,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 85,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/clickhouse/SKILL.md",
+      "name": "clickhouse",
+      "category": "database",
+      "lines": 275,
+      "overall": 100,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 100,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/connection-pooling/SKILL.md",
+      "name": "connection-pooling",
+      "category": "database",
+      "lines": 170,
+      "overall": 85,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 85,
+        "security": 83,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/database-design/SKILL.md",
+      "name": "database-design",
+      "category": "database",
+      "lines": 186,
+      "overall": 83,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 85,
+        "security": 83,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/database-security/SKILL.md",
+      "name": "database-security",
+      "category": "database",
+      "lines": 179,
+      "overall": 87,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/drizzle/SKILL.md",
+      "name": "drizzle",
+      "category": "database",
+      "lines": 194,
+      "overall": 83,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 83,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/elasticsearch/SKILL.md",
+      "name": "elasticsearch",
+      "category": "database",
+      "lines": 254,
+      "overall": 100,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 100,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/indexing/SKILL.md",
+      "name": "indexing",
+      "category": "database",
+      "lines": 172,
+      "overall": 83,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 85,
+        "security": 67,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/migrations/SKILL.md",
+      "name": "migrations",
+      "category": "database",
+      "lines": 169,
+      "overall": 91,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 100,
+        "security": 83,
+        "testing": 44,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/mongodb/SKILL.md",
+      "name": "mongodb",
+      "category": "database",
+      "lines": 181,
+      "overall": 86,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 83,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/mysql/SKILL.md",
+      "name": "mysql",
+      "category": "database",
+      "lines": 169,
+      "overall": 89,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 100,
+        "security": 100,
+        "testing": 26,
+        "documentation": 83,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/opensearch/SKILL.md",
+      "name": "opensearch",
+      "category": "database",
+      "lines": 276,
+      "overall": 100,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 100,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/postgresql/SKILL.md",
+      "name": "postgresql",
+      "category": "database",
+      "lines": 178,
+      "overall": 87,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 85,
+        "security": 100,
+        "testing": 26,
+        "documentation": 83,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/prisma/SKILL.md",
+      "name": "prisma",
+      "category": "database",
+      "lines": 201,
+      "overall": 87,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/redis/SKILL.md",
+      "name": "redis",
+      "category": "database",
+      "lines": 231,
+      "overall": 98,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/sql-optimization/SKILL.md",
+      "name": "sql-optimization",
+      "category": "database",
+      "lines": 167,
+      "overall": 90,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 85,
+        "security": 67,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/sqlite/SKILL.md",
+      "name": "sqlite",
+      "category": "database",
+      "lines": 169,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 85,
+        "security": 83,
+        "testing": 0,
+        "documentation": 83,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/database/transactions/SKILL.md",
+      "name": "transactions",
+      "category": "database",
+      "lines": 175,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 99,
+        "actionability": 85,
+        "security": 67,
+        "testing": 44,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/desktop/electron/SKILL.md",
+      "name": "electron",
+      "category": "desktop",
+      "lines": 475,
+      "overall": 95,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 58
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/desktop/rust/SKILL.md",
+      "name": "rust",
+      "category": "desktop",
+      "lines": 440,
+      "overall": 94,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 70
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/desktop/tauri/SKILL.md",
+      "name": "tauri",
+      "category": "desktop",
+      "lines": 424,
+      "overall": 97,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 75
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/documentation/api-documentation/SKILL.md",
+      "name": "api-documentation",
+      "category": "documentation",
+      "lines": 261,
+      "overall": 88,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/documentation/changelog-management/SKILL.md",
+      "name": "changelog-management",
+      "category": "documentation",
+      "lines": 237,
+      "overall": 89,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/documentation/developer-experience/SKILL.md",
+      "name": "developer-experience",
+      "category": "documentation",
+      "lines": 248,
+      "overall": 82,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/documentation/readme-engineering/SKILL.md",
+      "name": "readme-engineering",
+      "category": "documentation",
+      "lines": 259,
+      "overall": 79,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/documentation/technical-documentation/SKILL.md",
+      "name": "technical-documentation",
+      "category": "documentation",
+      "lines": 234,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/frontend/accessibility/SKILL.md",
+      "name": "accessibility",
+      "category": "frontend",
+      "lines": 279,
+      "overall": 96,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/frontend/astro/SKILL.md",
+      "name": "astro",
+      "category": "frontend",
+      "lines": 305,
+      "overall": 88,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/frontend/css/SKILL.md",
+      "name": "css",
+      "category": "frontend",
+      "lines": 252,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/frontend/expo/SKILL.md",
+      "name": "expo",
+      "category": "frontend",
+      "lines": 391,
+      "overall": 96,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 86
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/frontend/frontend-performance/SKILL.md",
+      "name": "frontend-performance",
+      "category": "frontend",
+      "lines": 259,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/frontend/html/SKILL.md",
+      "name": "html",
+      "category": "frontend",
+      "lines": 249,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/frontend/hugo/SKILL.md",
+      "name": "hugo",
+      "category": "frontend",
+      "lines": 271,
+      "overall": 86,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/frontend/javascript/SKILL.md",
+      "name": "javascript",
+      "category": "frontend",
+      "lines": 264,
+      "overall": 82,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/frontend/modern-css/SKILL.md",
+      "name": "modern-css",
+      "category": "frontend",
+      "lines": 261,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/frontend/nextjs/SKILL.md",
+      "name": "nextjs",
+      "category": "frontend",
+      "lines": 315,
+      "overall": 89,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/frontend/nuxt/SKILL.md",
+      "name": "nuxt",
+      "category": "frontend",
+      "lines": 375,
+      "overall": 97,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 92
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/frontend/react-native/SKILL.md",
+      "name": "react-native",
+      "category": "frontend",
+      "lines": 380,
+      "overall": 97,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 90
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/frontend/react/SKILL.md",
+      "name": "react",
+      "category": "frontend",
+      "lines": 301,
+      "overall": 89,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/frontend/responsive-design/SKILL.md",
+      "name": "responsive-design",
+      "category": "frontend",
+      "lines": 253,
+      "overall": 89,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 61,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/frontend/semantic-html/SKILL.md",
+      "name": "semantic-html",
+      "category": "frontend",
+      "lines": 241,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/frontend/shadcn-ui/SKILL.md",
+      "name": "shadcn-ui",
+      "category": "frontend",
+      "lines": 295,
+      "overall": 84,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/frontend/sveltekit/SKILL.md",
+      "name": "sveltekit",
+      "category": "frontend",
+      "lines": 386,
+      "overall": 99,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 88
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/frontend/tailwind-css/SKILL.md",
+      "name": "tailwind-css",
+      "category": "frontend",
+      "lines": 251,
+      "overall": 79,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/frontend/typescript/SKILL.md",
+      "name": "typescript",
+      "category": "frontend",
+      "lines": 300,
+      "overall": 88,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/frontend/ui-design/SKILL.md",
+      "name": "ui-design",
+      "category": "frontend",
+      "lines": 255,
+      "overall": 82,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/frontend/vue/SKILL.md",
+      "name": "vue",
+      "category": "frontend",
+      "lines": 388,
+      "overall": 98,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 87
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/infrastructure/aws/SKILL.md",
+      "name": "aws",
+      "category": "infrastructure",
+      "lines": 311,
+      "overall": 100,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/infrastructure/ci-cd/SKILL.md",
+      "name": "ci-cd",
+      "category": "infrastructure",
+      "lines": 203,
+      "overall": 87,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 78,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/infrastructure/cloudflare-d1/SKILL.md",
+      "name": "cloudflare-d1",
+      "category": "infrastructure",
+      "lines": 233,
+      "overall": 84,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/infrastructure/cloudflare-kv/SKILL.md",
+      "name": "cloudflare-kv",
+      "category": "infrastructure",
+      "lines": 216,
+      "overall": 84,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/infrastructure/cloudflare-queues/SKILL.md",
+      "name": "cloudflare-queues",
+      "category": "infrastructure",
+      "lines": 235,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/infrastructure/cloudflare-r2/SKILL.md",
+      "name": "cloudflare-r2",
+      "category": "infrastructure",
+      "lines": 225,
+      "overall": 82,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/infrastructure/cloudflare-workers/SKILL.md",
+      "name": "cloudflare-workers",
+      "category": "infrastructure",
+      "lines": 233,
+      "overall": 84,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/infrastructure/cloudflare/SKILL.md",
+      "name": "cloudflare",
+      "category": "infrastructure",
+      "lines": 204,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/infrastructure/deployment/SKILL.md",
+      "name": "deployment",
+      "category": "infrastructure",
+      "lines": 218,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/infrastructure/docker/SKILL.md",
+      "name": "docker",
+      "category": "infrastructure",
+      "lines": 242,
+      "overall": 79,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/infrastructure/durable-objects/SKILL.md",
+      "name": "durable-objects",
+      "category": "infrastructure",
+      "lines": 242,
+      "overall": 84,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/infrastructure/fly-io/SKILL.md",
+      "name": "fly-io",
+      "category": "infrastructure",
+      "lines": 385,
+      "overall": 95,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 83,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 88
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/infrastructure/gcp/SKILL.md",
+      "name": "gcp",
+      "category": "infrastructure",
+      "lines": 342,
+      "overall": 98,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/infrastructure/github-actions/SKILL.md",
+      "name": "github-actions",
+      "category": "infrastructure",
+      "lines": 238,
+      "overall": 96,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/infrastructure/kubernetes/SKILL.md",
+      "name": "kubernetes",
+      "category": "infrastructure",
+      "lines": 379,
+      "overall": 97,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 83,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 90
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/infrastructure/observability/SKILL.md",
+      "name": "observability",
+      "category": "infrastructure",
+      "lines": 225,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/infrastructure/pulumi/SKILL.md",
+      "name": "pulumi",
+      "category": "infrastructure",
+      "lines": 389,
+      "overall": 97,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 87
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/infrastructure/railway/SKILL.md",
+      "name": "railway",
+      "category": "infrastructure",
+      "lines": 315,
+      "overall": 96,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 83,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/infrastructure/render/SKILL.md",
+      "name": "render",
+      "category": "infrastructure",
+      "lines": 372,
+      "overall": 97,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 83,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 93
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/infrastructure/self-hosted-vps/SKILL.md",
+      "name": "self-hosted-vps",
+      "category": "infrastructure",
+      "lines": 443,
+      "overall": 94,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 69
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/infrastructure/terraform/SKILL.md",
+      "name": "terraform",
+      "category": "infrastructure",
+      "lines": 341,
+      "overall": 98,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/infrastructure/vercel/SKILL.md",
+      "name": "vercel",
+      "category": "infrastructure",
+      "lines": 216,
+      "overall": 79,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/media/ai-image-generation/SKILL.md",
+      "name": "ai-image-generation",
+      "category": "media",
+      "lines": 229,
+      "overall": 79,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/media/blog-featured-images/SKILL.md",
+      "name": "blog-featured-images",
+      "category": "media",
+      "lines": 237,
+      "overall": 86,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/media/brand-visual-consistency/SKILL.md",
+      "name": "brand-visual-consistency",
+      "category": "media",
+      "lines": 250,
+      "overall": 86,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/media/image-accessibility/SKILL.md",
+      "name": "image-accessibility",
+      "category": "media",
+      "lines": 257,
+      "overall": 89,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/media/image-compression/SKILL.md",
+      "name": "image-compression",
+      "category": "media",
+      "lines": 239,
+      "overall": 89,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 85,
+        "security": 100,
+        "testing": 35,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)"
+      ]
+    },
+    {
+      "path": "skills/media/image-format-conversion/SKILL.md",
+      "name": "image-format-conversion",
+      "category": "media",
+      "lines": 244,
+      "overall": 90,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/media/image-prompt-engineering/SKILL.md",
+      "name": "image-prompt-engineering",
+      "category": "media",
+      "lines": 240,
+      "overall": 82,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/media/infographic-generation/SKILL.md",
+      "name": "infographic-generation",
+      "category": "media",
+      "lines": 234,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/media/og-image-generation/SKILL.md",
+      "name": "og-image-generation",
+      "category": "media",
+      "lines": 253,
+      "overall": 86,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)"
+      ]
+    },
+    {
+      "path": "skills/media/platform-social-images/SKILL.md",
+      "name": "platform-social-images",
+      "category": "media",
+      "lines": 333,
+      "overall": 98,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/media/resvg/SKILL.md",
+      "name": "resvg",
+      "category": "media",
+      "lines": 300,
+      "overall": 98,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 83,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/media/satori/SKILL.md",
+      "name": "satori",
+      "category": "media",
+      "lines": 307,
+      "overall": 98,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/media/sharp/SKILL.md",
+      "name": "sharp",
+      "category": "media",
+      "lines": 289,
+      "overall": 94,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 65,
+        "documentation": 83,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/media/social-preview/SKILL.md",
+      "name": "social-preview",
+      "category": "media",
+      "lines": 241,
+      "overall": 79,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/media/twitter-card-images/SKILL.md",
+      "name": "twitter-card-images",
+      "category": "media",
+      "lines": 269,
+      "overall": 86,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)"
+      ]
+    },
+    {
+      "path": "skills/media/youtube-thumbnails/SKILL.md",
+      "name": "youtube-thumbnails",
+      "category": "media",
+      "lines": 251,
+      "overall": 87,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 85,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)"
+      ]
+    },
+    {
+      "path": "skills/metadata/dynamic-metadata/SKILL.md",
+      "name": "dynamic-metadata",
+      "category": "metadata",
+      "lines": 253,
+      "overall": 88,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 85,
+        "security": 100,
+        "testing": 26,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)"
+      ]
+    },
+    {
+      "path": "skills/metadata/metadata-validation/SKILL.md",
+      "name": "metadata-validation",
+      "category": "metadata",
+      "lines": 245,
+      "overall": 89,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 100,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/metadata/open-graph/SKILL.md",
+      "name": "open-graph",
+      "category": "metadata",
+      "lines": 239,
+      "overall": 87,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 85,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/metadata/seo-metadata/SKILL.md",
+      "name": "seo-metadata",
+      "category": "metadata",
+      "lines": 238,
+      "overall": 80,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/metadata/social-sharing/SKILL.md",
+      "name": "social-sharing",
+      "category": "metadata",
+      "lines": 253,
+      "overall": 85,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 44,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/metadata/twitter-cards/SKILL.md",
+      "name": "twitter-cards",
+      "category": "metadata",
+      "lines": 245,
+      "overall": 84,
+      "dimensions": {
+        "completeness": 90,
+        "actionability": 85,
+        "security": 100,
+        "testing": 44,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "accessibility: no accessibility content (applicable category)",
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/performance/bundle-optimization/SKILL.md",
+      "name": "bundle-optimization",
+      "category": "performance",
+      "lines": 229,
+      "overall": 86,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/performance/caching-strategy/SKILL.md",
+      "name": "caching-strategy",
+      "category": "performance",
+      "lines": 249,
+      "overall": 84,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 35,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/performance/core-web-vitals/SKILL.md",
+      "name": "core-web-vitals",
+      "category": "performance",
+      "lines": 250,
+      "overall": 87,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 44,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/performance/image-optimization/SKILL.md",
+      "name": "image-optimization",
+      "category": "performance",
+      "lines": 255,
+      "overall": 86,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/performance/javascript-optimization/SKILL.md",
+      "name": "javascript-optimization",
+      "category": "performance",
+      "lines": 256,
+      "overall": 82,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/performance/lighthouse/SKILL.md",
+      "name": "lighthouse",
+      "category": "performance",
+      "lines": 218,
+      "overall": 89,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 26,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/performance/pagespeed-insights/SKILL.md",
+      "name": "pagespeed-insights",
+      "category": "performance",
+      "lines": 219,
+      "overall": 82,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/performance/web-performance-audit/SKILL.md",
+      "name": "web-performance-audit",
+      "category": "performance",
+      "lines": 228,
+      "overall": 85,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 26,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/security/csrf-protection/SKILL.md",
+      "name": "csrf-protection",
+      "category": "security",
+      "lines": 231,
+      "overall": 88,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/security/dependency-security/SKILL.md",
+      "name": "dependency-security",
+      "category": "security",
+      "lines": 230,
+      "overall": 88,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 53,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/security/owasp/SKILL.md",
+      "name": "owasp",
+      "category": "security",
+      "lines": 238,
+      "overall": 96,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/security/secrets-management/SKILL.md",
+      "name": "secrets-management",
+      "category": "security",
+      "lines": 231,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/security/secure-headers/SKILL.md",
+      "name": "secure-headers",
+      "category": "security",
+      "lines": 254,
+      "overall": 89,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/security/security-auditing/SKILL.md",
+      "name": "security-auditing",
+      "category": "security",
+      "lines": 242,
+      "overall": 90,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/security/sql-injection-prevention/SKILL.md",
+      "name": "sql-injection-prevention",
+      "category": "security",
+      "lines": 228,
+      "overall": 86,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 35,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/security/xss-prevention/SKILL.md",
+      "name": "xss-prevention",
+      "category": "security",
+      "lines": 241,
+      "overall": 84,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 35,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/aeo-optimization/SKILL.md",
+      "name": "aeo-optimization",
+      "category": "seo",
+      "lines": 258,
+      "overall": 79,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/canonical-management/SKILL.md",
+      "name": "canonical-management",
+      "category": "seo",
+      "lines": 235,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/competitor-analysis/SKILL.md",
+      "name": "competitor-analysis",
+      "category": "seo",
+      "lines": 210,
+      "overall": 84,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/content-decay/SKILL.md",
+      "name": "content-decay",
+      "category": "seo",
+      "lines": 362,
+      "overall": 94,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 56,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 96
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/seo/content-gap-analysis/SKILL.md",
+      "name": "content-gap-analysis",
+      "category": "seo",
+      "lines": 212,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/eeat/SKILL.md",
+      "name": "eeat",
+      "category": "seo",
+      "lines": 252,
+      "overall": 82,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/entity-seo/SKILL.md",
+      "name": "entity-seo",
+      "category": "seo",
+      "lines": 364,
+      "overall": 97,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 83,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 95
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/seo/geo-optimization/SKILL.md",
+      "name": "geo-optimization",
+      "category": "seo",
+      "lines": 259,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/hreflang/SKILL.md",
+      "name": "hreflang",
+      "category": "seo",
+      "lines": 259,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/image-seo/SKILL.md",
+      "name": "image-seo",
+      "category": "seo",
+      "lines": 262,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/internal-linking/SKILL.md",
+      "name": "internal-linking",
+      "category": "seo",
+      "lines": 222,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/international-seo/SKILL.md",
+      "name": "international-seo",
+      "category": "seo",
+      "lines": 262,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/keyword-clustering/SKILL.md",
+      "name": "keyword-clustering",
+      "category": "seo",
+      "lines": 211,
+      "overall": 82,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/keyword-research/SKILL.md",
+      "name": "keyword-research",
+      "category": "seo",
+      "lines": 205,
+      "overall": 79,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/llm-seo/SKILL.md",
+      "name": "llm-seo",
+      "category": "seo",
+      "lines": 263,
+      "overall": 83,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 26,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/llms-txt/SKILL.md",
+      "name": "llms-txt",
+      "category": "seo",
+      "lines": 255,
+      "overall": 79,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/local-seo/SKILL.md",
+      "name": "local-seo",
+      "category": "seo",
+      "lines": 265,
+      "overall": 79,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/off-page-seo/SKILL.md",
+      "name": "off-page-seo",
+      "category": "seo",
+      "lines": 226,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/on-page-seo/SKILL.md",
+      "name": "on-page-seo",
+      "category": "seo",
+      "lines": 225,
+      "overall": 79,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/programmatic-seo/SKILL.md",
+      "name": "programmatic-seo",
+      "category": "seo",
+      "lines": 254,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/schema-jsonld/SKILL.md",
+      "name": "schema-jsonld",
+      "category": "seo",
+      "lines": 295,
+      "overall": 88,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/search-console/SKILL.md",
+      "name": "search-console",
+      "category": "seo",
+      "lines": 262,
+      "overall": 88,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/search-intent/SKILL.md",
+      "name": "search-intent",
+      "category": "seo",
+      "lines": 209,
+      "overall": 77,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 83,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/seo-audit/SKILL.md",
+      "name": "seo-audit",
+      "category": "seo",
+      "lines": 211,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 9,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/seo-migration/SKILL.md",
+      "name": "seo-migration",
+      "category": "seo",
+      "lines": 242,
+      "overall": 82,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 18,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/serp-analysis/SKILL.md",
+      "name": "serp-analysis",
+      "category": "seo",
+      "lines": 217,
+      "overall": 81,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 0,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/serp-monitoring/SKILL.md",
+      "name": "serp-monitoring",
+      "category": "seo",
+      "lines": 383,
+      "overall": 91,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 56,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 89
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/seo/sitemap-robots/SKILL.md",
+      "name": "sitemap-robots",
+      "category": "seo",
+      "lines": 259,
+      "overall": 85,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 44,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/structured-data/SKILL.md",
+      "name": "structured-data",
+      "category": "seo",
+      "lines": 246,
+      "overall": 87,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 61,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/technical-seo/SKILL.md",
+      "name": "technical-seo",
+      "category": "seo",
+      "lines": 247,
+      "overall": 84,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 35,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/seo/topical-authority/SKILL.md",
+      "name": "topical-authority",
+      "category": "seo",
+      "lines": 343,
+      "overall": 100,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 100,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/testing/accessibility-testing/SKILL.md",
+      "name": "accessibility-testing",
+      "category": "testing",
+      "lines": 232,
+      "overall": 96,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/testing/e2e-testing/SKILL.md",
+      "name": "e2e-testing",
+      "category": "testing",
+      "lines": 215,
+      "overall": 90,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/testing/integration-testing/SKILL.md",
+      "name": "integration-testing",
+      "category": "testing",
+      "lines": 242,
+      "overall": 89,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 93,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/testing/performance-testing/SKILL.md",
+      "name": "performance-testing",
+      "category": "testing",
+      "lines": 235,
+      "overall": 90,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/testing/playwright/SKILL.md",
+      "name": "playwright",
+      "category": "testing",
+      "lines": 241,
+      "overall": 96,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/testing/regression-testing/SKILL.md",
+      "name": "regression-testing",
+      "category": "testing",
+      "lines": 212,
+      "overall": 90,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 50,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": [
+        "versioning: no version info in Prerequisites"
+      ]
+    },
+    {
+      "path": "skills/testing/unit-testing/SKILL.md",
+      "name": "unit-testing",
+      "category": "testing",
+      "lines": 234,
+      "overall": 96,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 100,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    },
+    {
+      "path": "skills/testing/vitest/SKILL.md",
+      "name": "vitest",
+      "category": "testing",
+      "lines": 263,
+      "overall": 94,
+      "dimensions": {
+        "completeness": 100,
+        "actionability": 85,
+        "security": 100,
+        "testing": 70,
+        "documentation": 100,
+        "versioning": 100,
+        "accuracy": 100,
+        "maintainability": 100
+      },
+      "flags": []
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "ai-engineering": "LLM integration, RAG, AI agents, MCP security, agent evaluation.",
+  "architecture": "Monorepos, Turborepo, modular monoliths, microservices, DDD.",
+  "auth": "Authentication, authorization, OAuth, sessions, JWT, RBAC, MFA.",
+  "backend": "Node.js, APIs, queues, caching, SDK and package development, MCP.",
+  "content": "Content strategy, article writing, editorial review, localization.",
+  "core": "Software engineering fundamentals: architecture, code quality, debugging, review.",
+  "database": "Database design, SQL, PostgreSQL/MySQL/SQLite/MongoDB, Prisma, Drizzle.",
+  "desktop": "Desktop apps: Tauri 2, Electron, Rust, native APIs, packaging.",
+  "documentation": "Technical docs, API docs, changelogs, READMEs, DX.",
+  "frontend": "HTML, CSS, JavaScript, TypeScript, React, Next.js, Astro, Hugo, UI.",
+  "infrastructure": "Cloudflare, Vercel, Docker, CI/CD, deployment, observability.",
+  "media": "AI image generation, OG images, thumbnails, image optimization.",
+  "metadata": "SEO metadata, Open Graph, Twitter Cards, social sharing.",
+  "performance": "Core Web Vitals, Lighthouse, image/JS optimization, caching.",
+  "security": "OWASP, XSS/CSRF/SQLi prevention, secrets, headers, auditing.",
+  "seo": "Technical SEO, on-page SEO, schema, GEO/AEO, keyword research.",
+  "testing": "Unit, integration, E2E, accessibility and performance testing.",
+  "upstream": "Imported upstream skills, organized by vendor."
+}

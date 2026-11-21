@@ -40,6 +40,13 @@ vulnerabilities, and removing what is no longer needed.
 ## Prerequisites
 
 - The package manager and lockfile are in place (pnpm with `pnpm-lock.yaml` is the recommended default).
+- Supported versions (verified 2026-11-20): pnpm 12.x is current
+  (stable August 2026; a Rust rewrite that keeps pnpm 11's commands,
+  flags, settings, and lockfile format). pnpm 11 is supported until
+  2027-04-30; pnpm 10 and earlier are unsupported. The npm CLI's
+  current major is npm 12 (July 2026); note that the npm bundled with
+  Node.js is still 11.x (Node.js 26 ships npm 11.20.0), so npm 12 must
+  be installed explicitly (`npm install -g npm@12`).
 - CI runs installs from the lockfile (`--frozen-lockfile` for pnpm).
 - The team has a way to receive security advisories (GitHub Dependabot alerts, Renovate, or `pnpm audit` in CI).
 
@@ -48,7 +55,7 @@ vulnerabilities, and removing what is no longer needed.
 - [pnpm documentation](https://pnpm.io/) — install, update, audit, and outdated commands.
 - [Renovate documentation](https://docs.renovatebot.com/) — automated dependency updates.
 - [Dependabot documentation](https://docs.github.com/en/code-security/dependabot) — GitHub's automated updates and alerts.
-- [npm audit documentation](https://docs.npmjs.com/cli/v11/commands/npm-audit) — the npm audit command reference.
+- [npm audit documentation](https://docs.npmjs.com/cli/v12/commands/npm-audit) — the npm audit command reference.
 
 ## Required Workflow
 
@@ -74,6 +81,62 @@ vulnerabilities, and removing what is no longer needed.
 - Overrides (forced resolutions) are a last resort, documented with a comment explaining why, and revisited on each update cycle.
 - No dependency is added without a lockfile update in the same commit.
 
+## Workspace Dependency Governance
+
+In a monorepo, dependency decisions are repository-wide: one package's
+choice becomes every package's problem. This section governs
+dependencies across workspace packages. The workspace layout itself is
+covered by `pnpm-workspaces` and `monorepo`; import direction and
+boundaries by `package-boundaries`; the task graph that consumes the
+dependency graph by `turborepo` and `nx`.
+
+- **Workspace protocol.** Internal dependencies always use
+  `workspace:*` (or a `workspace:` range when a package genuinely
+  needs a published version). Never depend on a sibling by a published
+  version number: changes stop being atomic and the lockfile can
+  resolve the sibling to a stale release. `workspace:*` also keeps
+  `changeset version` and the release tooling able to rewrite internal
+  ranges at publish time.
+- **Dependency constraints.** Declare which dependencies a package may
+  use, not just which it does use: a shared UI package must not depend
+  on a server-only database client, and a published library must not
+  depend on an internal-only package. Enforce with boundary rules (see
+  `package-boundaries`) and, where the tooling supports it, with
+  workspace-level allowlists reviewed in code review.
+- **Hoisting vs isolated node_modules.** pnpm's default layout is
+  isolated: a package can only import what it declares, and there is
+  no hoisted flat `node_modules` to paper over a missing declaration.
+  Do not weaken this with hoisting settings (`node-linker=hoisted`,
+  `public-hoist-pattern`) to fix a phantom dependency — declare the
+  dependency instead. Hoisting is a compatibility escape hatch for a
+  tool that genuinely requires it, not a default; document each use
+  with the reason.
+- **Deduplication.** One version of each shared dependency across the
+  repository. Use the catalog (`pnpm-workspace.yaml`) for versions
+  shared by more than one package so a bump is one change. Diagnose
+  duplicates with `pnpm why <dep>` and `pnpm list`; resolve duplicate
+  majors deliberately (upgrade the straggler, or record a time-boxed
+  exception with a reason). Duplicates bloat bundles, double memory,
+  and — for singleton libraries such as React — break at runtime.
+- **Version alignment across packages.** Shared peer dependencies
+  (React, TypeScript, ESLint) must resolve to one version range in
+  every package; misaligned peers produce duplicate installs and
+  confusing build errors. The catalog is the alignment mechanism; a
+  scheduled check (`pnpm outdated` across the workspace, or a CI job
+  that fails on catalog drift) keeps it honest.
+- **Lockfile discipline.** One lockfile at the root, committed, and
+  the source of truth. CI installs with `--frozen-lockfile` so a
+  drifted lockfile fails loudly. Never commit a per-package lockfile,
+  never let a `package.json` change land without its lockfile update,
+  and regenerate the lockfile only with the pinned package-manager
+  version so the format does not churn.
+- **Governance automation.** Automate what humans forget: Renovate or
+  Dependabot grouped updates for shared dependencies, a CI check that
+  fails on a new duplicate major version, `pnpm audit` in CI on a
+  schedule, and a dependency dashboard (or a monthly review) for
+  packages that fall behind. Automation proposes; a human still
+  reviews major updates and security exceptions.
+
 ## Best Practices
 
 - Prefer the standard library and small, focused packages over large frameworks for narrow needs.
@@ -86,6 +149,17 @@ vulnerabilities, and removing what is no longer needed.
 ## Security Considerations
 
 - Supply-chain attacks target dependencies: a compromised package update can inject code. Prefer packages with a track record, and review major updates.
+- On pnpm 11 and later, installs are safer by default: newly published
+  releases are held for 24 hours (`minimumReleaseAge: 1440`), exotic
+  (non-registry) subdependencies are blocked, and dependency build
+  scripts need explicit approval (`allowBuilds`, `pnpm approve-builds`).
+  Do not disable these defaults to silence an install failure. Use
+  `pnpm audit signatures` (11.1+) to verify package signatures and
+  `pnpm sbom` (11.0+) to generate a software bill of materials.
+- On npm 12, dependency install scripts are blocked by default unless
+  allowed by the root package's `allowScripts` policy; on the npm 11
+  bundled with Node.js they still run (with a warning), so upgrade to
+  npm 12 or set `strict-allow-scripts` for equivalent protection.
 - Audit on a schedule and on every advisory; a known vulnerability with a fix available should not linger.
 - Lockfiles pin exact versions and hashes; never install without one, and never let CI rewrite it.
 - Avoid installing packages from untrusted sources or arbitrary URLs; use the configured registry.
@@ -154,4 +228,4 @@ pnpm install --frozen-lockfile  # CI install: verifies the lockfile
 - [pnpm documentation](https://pnpm.io/)
 - [Renovate documentation](https://docs.renovatebot.com/)
 - [Dependabot documentation](https://docs.github.com/en/code-security/dependabot)
-- Related skills in this repository: `pnpm-workspaces`, `monorepo`, `package-boundaries`.
+- Related skills in this repository: `pnpm-workspaces`, `monorepo`, `package-boundaries`, `turborepo`, `nx`.

@@ -53,7 +53,8 @@ ranked by estimated impact — not a single number treated as a verdict.
 ## Prerequisites
 
 - A Chromium-based browser (for the DevTools panel) or Node.js 24 LTS
-  (for the CLI).
+  (for the CLI). Lighthouse requires Node.js 22 LTS or later;
+  Node.js 26 is the newer LTS since October 2026.
 - The URL to audit, reachable from the machine running the audit.
 - For CLI use: the `lighthouse` package, runnable with `npx`.
 - For meaningful comparisons: a quiet machine, a stable network, and
@@ -66,7 +67,12 @@ ranked by estimated impact — not a single number treated as a verdict.
 - [web.dev — Lighthouse](https://web.dev/) — guides on interpreting
   scores and the audits behind them.
 - [Lighthouse on GitHub](https://github.com/GoogleChrome/lighthouse)
-  — source, configuration options, and release notes.
+  — source, configuration options, and release notes. Current
+  versions run four categories (performance, accessibility,
+  best-practices, seo); the PWA category and the `--budget-path`
+  LightWallet workflow were removed in earlier majors, so do not
+  use them. Check `lighthouse --help` for the flags your installed
+  version accepts.
 
 ## Required Workflow
 
@@ -159,12 +165,15 @@ ranked by estimated impact — not a single number treated as a verdict.
 ## Examples
 
 Run a mobile audit from the command line and save JSON and HTML
-reports:
+reports. With multiple outputs, `--output-path` takes a single base
+path and Lighthouse appends the report extension for each format
+(`./lighthouse-report.report.json` and
+`./lighthouse-report.report.html`); do not pass `--output-path`
+twice.
 
 ```bash
 npx lighthouse https://example.com/ \
-  --output=json --output-path=./lighthouse-report.json \
-  --output=html --output-path=./lighthouse-report.html \
+  --output=json --output=html --output-path=./lighthouse-report \
   --only-categories=performance,accessibility
 ```
 

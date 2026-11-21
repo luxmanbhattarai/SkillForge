@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "generated": "2026-11-20",
   "categories": [
+    "ai-engineering",
     "architecture",
     "auth",
     "backend",
     "content",
     "core",
     "database",
+    "desktop",
     "documentation",
     "frontend",
     "infrastructure",
@@ -20,7 +22,7 @@
     "testing",
     "upstream"
   ],
-  "total_skills": 226,
+  "total_skills": 277,
   "skills": [
     {
       "name": "accessibility",
@@ -35,7 +37,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "frontend-performance",
+        "ai-image-generation",
+        "blog-featured-images",
+        "brand-guidelines",
+        "og-image-generation"
+      ]
     },
     {
       "name": "accessibility-testing",
@@ -50,7 +59,30 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "advanced-api-architecture",
+      "description": "Design production APIs at the architecture level: REST and GraphQL architecture decisions, API versioning, pagination and filtering, rate limiting strategy, idempotency, validation strategy, error handling, authentication and authorization, API security, caching, background jobs, webhooks, observability, and distributed-systems patterns. Use when designing a new API, evolving a public API, or reviewing an API's architecture before it ships.",
+      "path": "skills/backend/advanced-api-architecture",
+      "category": "backend",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "api-design",
+        "api-client-generation",
+        "authentication",
+        "database-design",
+        "express"
+      ]
     },
     {
       "name": "aeo-optimization",
@@ -65,7 +97,52 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "ai-seo",
+        "geo-optimization",
+        "llm-seo",
+        "schema-jsonld",
+        "technical-seo"
+      ]
+    },
+    {
+      "name": "agent-evaluation",
+      "description": "Evaluate LLM applications and AI agents systematically: evaluation datasets and golden sets, task-based evals, LLM-as-judge grading (and its limits), hallucination and faithfulness testing, regression evals, metrics (task pass rate, tool-use accuracy, latency, cost), eval harnesses, CI integration, and human review sampling. Use when measuring whether a model, prompt, RAG pipeline, or agent actually works, before shipping it and on every change after.",
+      "path": "skills/ai-engineering/agent-evaluation",
+      "category": "ai-engineering",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "verification-before-completion",
+        "debugging",
+        "llm-integration",
+        "mcp-security",
+        "observability"
+      ]
+    },
+    {
+      "name": "ai-agents",
+      "description": "Design, build, and operate AI agents: agent architectures (ReAct, plan-and-execute, multi-agent), tool design, memory and state, orchestration, guardrails, human-in-the-loop approval, evaluation, and production deployment. Covers failure modes including loops, tool misuse, context overflow, and prompt injection. Use when building a system where a model calls tools in a loop to complete multi-step tasks, or when reviewing or debugging an existing agent.",
+      "path": "skills/ai-engineering/ai-agents",
+      "category": "ai-engineering",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "ai-image-generation",
@@ -80,7 +157,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "accessibility",
+        "blog-featured-images",
+        "brand-guidelines",
+        "frontend-performance",
+        "og-image-generation"
+      ]
     },
     {
       "name": "ai-seo",
@@ -90,12 +174,19 @@
       "vendor": "marketingskills",
       "source_type": "upstream",
       "source": "marketingskills",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "2.12.7",
       "license": "MIT",
       "maintainer": "marketingskills",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "aeo-optimization",
+        "geo-optimization",
+        "llm-seo",
+        "schema-jsonld",
+        "technical-seo"
+      ]
     },
     {
       "name": "analytics",
@@ -110,7 +201,36 @@
       "license": "MIT",
       "maintainer": "marketingskills",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "keyword-research",
+        "on-page-seo",
+        "serp-analysis",
+        "competitor-profiling",
+        "content-decay"
+      ]
+    },
+    {
+      "name": "api-client-generation",
+      "description": "Generate API clients from an OpenAPI contract with OpenAPI Generator, orval, hey-api, or openapi-typescript: generator selection, pinned versions, configuration, generated-code hygiene (never hand-edit), versioning, CI drift checks, and testing generated clients. Use when creating or maintaining a client generated from an OpenAPI document, automating client regeneration in CI, or choosing between code generators.",
+      "path": "skills/backend/api-client-generation",
+      "category": "backend",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "api-design",
+        "openapi",
+        "advanced-api-architecture",
+        "authentication",
+        "changelog-management"
+      ]
     },
     {
       "name": "api-design",
@@ -125,7 +245,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "api-client-generation",
+        "openapi",
+        "advanced-api-architecture",
+        "database-design",
+        "mcp-builder"
+      ]
     },
     {
       "name": "api-documentation",
@@ -140,7 +267,13 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "changelog-management",
+        "openapi",
+        "sdk-development",
+        "technical-documentation"
+      ]
     },
     {
       "name": "article-writing",
@@ -155,7 +288,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "blog-featured-images",
+        "content-research",
+        "copy-editing",
+        "editorial-review",
+        "editorial-workflow"
+      ]
     },
     {
       "name": "astro",
@@ -170,7 +310,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS and an Astro 7 project; server adapters need a compatible hosting target.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "nextjs",
+        "typescript",
+        "database-design",
+        "drizzle",
+        "prisma"
+      ]
     },
     {
       "name": "auth-security",
@@ -185,7 +332,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "authentication",
+        "csrf-protection",
+        "owasp",
+        "secrets-management",
+        "secure-headers"
+      ]
     },
     {
       "name": "authentication",
@@ -200,7 +354,36 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "auth-security",
+        "csrf-protection",
+        "owasp",
+        "passkeys",
+        "secrets-management"
+      ]
+    },
+    {
+      "name": "authjs",
+      "description": "Implement authentication with Auth.js (formerly NextAuth.js) v5: OAuth and credentials providers, database vs JWT session strategies, adapters, callbacks, route protection with proxy/middleware, and deployment. Use when the task mentions Auth.js, NextAuth, next-auth, sign in with Google/GitHub, session strategy, Prisma/Drizzle adapter, or auth() in a Next.js or other JavaScript-framework app.",
+      "path": "skills/auth/authjs",
+      "category": "auth",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "authentication",
+        "clerk",
+        "passkeys",
+        "session-management",
+        "supabase-auth"
+      ]
     },
     {
       "name": "authorization",
@@ -215,7 +398,30 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "aws",
+      "description": "Use this skill when building, deploying, or operating workloads on Amazon Web Services (AWS): EC2, Lambda, ECS, EKS, S3, RDS, Aurora, DynamoDB, VPC networking, IAM, Secrets Manager, CloudWatch, CloudTrail, CloudFormation, scaling, disaster recovery, cost optimization, and production operations. Trigger keywords: AWS, Amazon Web Services, EC2, Lambda, ECS, EKS, S3, RDS, Aurora, DynamoDB, VPC, IAM, CloudWatch, CloudTrail, CloudFormation, Secrets Manager, Route 53, cost optimization, disaster recovery.",
+      "path": "skills/infrastructure/aws",
+      "category": "infrastructure",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "deployment",
+        "fly-io",
+        "gcp",
+        "kubernetes",
+        "observability"
+      ]
     },
     {
       "name": "background-jobs",
@@ -230,7 +436,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a job runner or queue (such as BullMQ, Inngest, or Trigger.dev) and a backing store such as Redis or Postgres.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "backup-recovery",
@@ -245,7 +452,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "better-auth",
@@ -260,7 +468,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "authentication",
+        "passkeys",
+        "auth-security",
+        "authjs",
+        "clerk"
+      ]
     },
     {
       "name": "blog-featured-images",
@@ -275,7 +490,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "og-image-generation",
+        "open-graph",
+        "seo-metadata",
+        "accessibility",
+        "ai-image-generation"
+      ]
     },
     {
       "name": "blog-writing",
@@ -290,7 +512,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "brainstorming",
@@ -305,7 +528,8 @@
       "license": "MIT",
       "maintainer": "superpowers",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "brand-guidelines",
@@ -320,7 +544,14 @@
       "license": "Complete terms in LICENSE.txt",
       "maintainer": "anthropic",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "accessibility",
+        "ai-image-generation",
+        "blog-featured-images",
+        "frontend-performance",
+        "og-image-generation"
+      ]
     },
     {
       "name": "brand-visual-consistency",
@@ -335,7 +566,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "bundle-optimization",
@@ -350,7 +582,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "caching",
@@ -365,7 +598,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a cache store such as Redis or the HTTP cache layer being used.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "core-web-vitals",
+        "frontend-performance",
+        "lighthouse",
+        "observability",
+        "redis"
+      ]
     },
     {
       "name": "caching-strategy",
@@ -380,7 +620,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "canonical-management",
@@ -395,7 +636,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "changelog-management",
@@ -410,7 +652,36 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "package-development",
+        "unit-testing",
+        "changesets",
+        "openapi",
+        "regression-testing"
+      ]
+    },
+    {
+      "name": "changesets",
+      "description": "Manage package versioning and changelogs with Changesets: the changeset workflow, semver bumps (major, minor, patch), changelog generation, snapshot releases, prereleases, CI release automation with the changesets/action Version Packages pull request, and monorepo publishing. Use when the task mentions changesets, .changeset, changeset version, changeset publish, Version Packages PR, snapshot release, or releasing packages from a monorepo.",
+      "path": "skills/architecture/changesets",
+      "category": "architecture",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "changelog-management",
+        "package-development",
+        "release-management",
+        "deployment",
+        "integration-testing"
+      ]
     },
     {
       "name": "ci-cd",
@@ -425,7 +696,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "clean-code",
@@ -440,11 +712,56 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "code-review",
+        "owasp",
+        "debugging",
+        "receiving-code-review",
+        "regression-testing"
+      ]
+    },
+    {
+      "name": "clerk",
+      "description": "Implement authentication and user management with Clerk: hosted sign-in and sign-up components, session tokens, Organizations with roles and permissions, social connections, Svix-signed webhooks, middleware/route protection with auth.protect(), and user management. Use when the task mentions Clerk, hosted auth, SignIn/SignUp components, Organizations, org roles, Clerk webhooks, or clerkMiddleware.",
+      "path": "skills/auth/clerk",
+      "category": "auth",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "authentication",
+        "authjs",
+        "passkeys",
+        "session-management",
+        "supabase-auth"
+      ]
+    },
+    {
+      "name": "clickhouse",
+      "description": "Build and operate ClickHouse for real-time analytics: MergeTree table engines, data modeling with partitioning and ordering keys, data skipping indexes and projections, queries and aggregations, materialized views, replication with ReplicatedMergeTree and Keeper, sharding with Distributed tables, backups, security (users, roles, quotas, row policies), monitoring, performance tuning, and production deployment. Trigger keywords: clickhouse, mergetree, olap, analytics, columnar, distributed table, materialized view, keeper, partition, order by key, skipping index.",
+      "path": "skills/database/clickhouse",
+      "category": "database",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "cloudflare",
-      "description": "Use this skill when working with the Cloudflare platform: setting up a Cloudflare account, configuring DNS and custom domains, managing zones, configuring SSL/TLS, page rules, caching, WAF and security settings, and choosing between Cloudflare products such as Workers, Pages, D1, R2, KV, Queues, and Durable Objects. Trigger keywords: Cloudflare, DNS, zone, custom domain, SSL, TLS, WAF, cache, CDN, Cloudflare account, nameserver.",
+      "description": "Use this skill when working with the Cloudflare platform: setting up a Cloudflare account, configuring DNS and custom domains, managing zones, configuring SSL/TLS, redirect, cache, and configuration rules, caching, WAF and security settings, and choosing between Cloudflare products such as Workers, Pages, D1, R2, KV, Queues, and Durable Objects. Trigger keywords: Cloudflare, DNS, zone, custom domain, SSL, TLS, WAF, cache, CDN, Cloudflare account, nameserver.",
       "path": "skills/infrastructure/cloudflare",
       "category": "infrastructure",
       "vendor": null,
@@ -455,7 +772,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a Cloudflare account and network access to the Cloudflare dashboard and API.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "cloudflare-d1",
@@ -470,7 +788,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js, the Wrangler CLI, a Cloudflare account, and network access to Cloudflare.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "cloudflare-kv",
@@ -485,7 +804,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js, the Wrangler CLI, a Cloudflare account, and network access to Cloudflare.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "cloudflare-queues",
@@ -500,7 +820,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js, the Wrangler CLI, a Cloudflare account, and network access to Cloudflare.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "cloudflare-r2",
@@ -515,7 +836,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js, the Wrangler CLI, a Cloudflare account, and network access to Cloudflare.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "cloudflare-workers",
@@ -530,7 +852,12 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js, the Wrangler CLI, a Cloudflare account, and network access to Cloudflare.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "deployment",
+        "observability",
+        "vercel"
+      ]
     },
     {
       "name": "code-review",
@@ -545,7 +872,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "clean-code",
+        "owasp",
+        "regression-testing",
+        "unit-testing",
+        "verification-before-completion"
+      ]
     },
     {
       "name": "competitor-analysis",
@@ -560,7 +894,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "competitor-profiling",
@@ -570,12 +905,19 @@
       "vendor": "marketingskills",
       "source_type": "upstream",
       "source": "marketingskills",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "2.1.9",
       "license": "MIT",
       "maintainer": "marketingskills",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "analytics",
+        "content-research",
+        "keyword-research",
+        "on-page-seo",
+        "serp-analysis"
+      ]
     },
     {
       "name": "connection-pooling",
@@ -590,7 +932,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "content-brief",
@@ -605,7 +948,30 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "content-decay",
+      "description": "Diagnose why published content is losing search visibility: detect decay from traffic and impression curves, freshness signals, cannibalization, and outdated facts; identify the cause; prioritize decaying pages; and decide refresh vs redirect vs remove. This is the diagnostic skill — the rewrite workflow itself lives in content-refresh. Use when a page's clicks or impressions are declining, during a content audit, or after a ranking drop. Trigger keywords: content decay, declining traffic, traffic drop, outdated content, cannibalization, freshness, refresh or redirect or remove, decaying pages, content audit.",
+      "path": "skills/seo/content-decay",
+      "category": "seo",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "analytics",
+        "keyword-research",
+        "on-page-seo",
+        "serp-analysis",
+        "site-architecture"
+      ]
     },
     {
       "name": "content-gap-analysis",
@@ -620,7 +986,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "content-localization",
@@ -635,7 +1002,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "content-refresh",
@@ -650,7 +1018,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "content-repurposing",
@@ -665,7 +1034,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "content-research",
@@ -680,7 +1050,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "keyword-research",
+        "on-page-seo",
+        "serp-analysis",
+        "editorial-review",
+        "editorial-workflow"
+      ]
     },
     {
       "name": "content-strategy",
@@ -695,7 +1072,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "content-research",
+        "editorial-review",
+        "editorial-workflow",
+        "keyword-research",
+        "on-page-seo"
+      ]
     },
     {
       "name": "copy-editing",
@@ -710,7 +1094,14 @@
       "license": "MIT",
       "maintainer": "marketingskills",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "article-writing",
+        "blog-featured-images",
+        "content-research",
+        "editorial-review",
+        "editorial-workflow"
+      ]
     },
     {
       "name": "copywriting",
@@ -725,7 +1116,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "core-web-vitals",
@@ -740,7 +1132,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "seo-audit",
+        "technical-seo",
+        "caching",
+        "frontend-performance",
+        "lighthouse"
+      ]
     },
     {
       "name": "cro",
@@ -750,12 +1149,13 @@
       "vendor": "marketingskills",
       "source_type": "upstream",
       "source": "marketingskills",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "2.0.6",
       "license": "MIT",
       "maintainer": "marketingskills",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "csrf-protection",
@@ -770,7 +1170,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "auth-security",
+        "authentication",
+        "owasp",
+        "secrets-management",
+        "secure-headers"
+      ]
     },
     {
       "name": "css",
@@ -785,7 +1192,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "database-design",
@@ -800,7 +1208,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "drizzle",
+        "prisma",
+        "software-architecture",
+        "api-design",
+        "package-boundaries"
+      ]
     },
     {
       "name": "database-security",
@@ -815,7 +1230,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "debugging",
@@ -830,7 +1246,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "tdd",
+        "unit-testing",
+        "verification-before-completion",
+        "agent-evaluation",
+        "changelog-management"
+      ]
     },
     {
       "name": "dependency-management",
@@ -845,7 +1268,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "owasp",
+        "package-boundaries",
+        "secrets-management",
+        "software-architecture",
+        "api-design"
+      ]
     },
     {
       "name": "dependency-security",
@@ -860,7 +1290,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "deploy-to-vercel",
@@ -875,7 +1306,8 @@
       "license": "MIT",
       "maintainer": "vercel",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "deployment",
@@ -890,7 +1322,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "observability",
+        "cloudflare-workers",
+        "vercel",
+        "owasp",
+        "regression-testing"
+      ]
     },
     {
       "name": "design-patterns",
@@ -905,7 +1344,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "developer-experience",
@@ -920,7 +1360,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "diagnosing-superpowers",
@@ -935,7 +1376,8 @@
       "license": "MIT",
       "maintainer": "superpowers",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "dispatching-parallel-agents",
@@ -950,7 +1392,8 @@
       "license": "MIT",
       "maintainer": "superpowers",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "doc-coauthoring",
@@ -965,7 +1408,8 @@
       "license": "Apache-2.0",
       "maintainer": "anthropic",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "docker",
@@ -980,7 +1424,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Docker installed and running on the machine, and network access to pull base images.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "domain-driven-design",
@@ -995,7 +1440,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "drizzle",
@@ -1010,7 +1456,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "database-design",
+        "prisma",
+        "astro",
+        "nextjs",
+        "regression-testing"
+      ]
     },
     {
       "name": "durable-objects",
@@ -1025,7 +1478,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js, the Wrangler CLI, a Cloudflare account, and network access to Cloudflare.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "dynamic-metadata",
@@ -1040,7 +1494,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "e2e-testing",
@@ -1055,7 +1510,13 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "integration-testing",
+        "regression-testing",
+        "unit-testing",
+        "verification-before-completion"
+      ]
     },
     {
       "name": "editorial-review",
@@ -1070,7 +1531,36 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "source-verification",
+        "content-research",
+        "editorial-workflow",
+        "keyword-research",
+        "on-page-seo"
+      ]
+    },
+    {
+      "name": "editorial-workflow",
+      "description": "Run a piece of content end to end through the editorial pipeline: ideation, brief, draft, review, edit, approval, publish, and update, with named roles, approval gates, and an editorial calendar. Use when setting up or running a publishing process, assigning editorial work, or deciding what happens to a draft next. Trigger keywords: editorial workflow, publishing pipeline, editorial calendar, content workflow, approval gate, editorial process, content production, publish process.",
+      "path": "skills/content/editorial-workflow",
+      "category": "content",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "content-research",
+        "editorial-review",
+        "keyword-research",
+        "on-page-seo",
+        "serp-analysis"
+      ]
     },
     {
       "name": "eeat",
@@ -1085,7 +1575,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "eeat-writing",
@@ -1100,7 +1591,40 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "elasticsearch",
+      "description": "Build and operate Elasticsearch search and analytics: index design and mappings, Query DSL and ES|QL queries, aggregations, analyzers and relevance tuning, cluster architecture with sharding and replication, snapshots and restore, security (TLS, API keys, role-based access), monitoring, performance tuning, and production deployment. Trigger keywords: elasticsearch, elastic, query DSL, ES|QL, mapping, analyzer, aggregation, shard, snapshot, relevance, full-text search, kibana.",
+      "path": "skills/database/elasticsearch",
+      "category": "database",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "electron",
+      "description": "Build cross-platform desktop apps with Electron: main and renderer process architecture, secure IPC with ipcMain, ipcRenderer, and contextBridge, preload scripts, context isolation and process sandboxing, native APIs (menus, dialogs, tray, notifications), auto-updates with electron-updater and the built-in autoUpdater, code signing and notarization, and packaging with electron-builder or Electron Forge. Use when creating or extending an Electron app, wiring IPC between main and renderer, hardening an Electron app's security, or shipping signed, auto-updating desktop builds.",
+      "path": "skills/desktop/electron",
+      "category": "desktop",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "engineering-standards",
@@ -1115,7 +1639,27 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "entity-seo",
+      "description": "Make the people, organizations, places, and concepts a site covers unambiguously identifiable to search engines: entity inventory, disambiguation, knowledge-graph checks, Organization and ProfilePage structured data, sameAs references, and internal linking that clarifies which entity each page is about. Use when a brand or author shares a name with others, when a knowledge panel shows the wrong entity, or when building clear entity coverage for a topic. Trigger keywords: entity SEO, knowledge graph, disambiguation, sameAs, knowledge panel, Organization schema, ProfilePage, entity relationships, E-E-A-T.",
+      "path": "skills/seo/entity-seo",
+      "category": "seo",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "schema-jsonld",
+        "technical-seo"
+      ]
     },
     {
       "name": "executing-plans",
@@ -1125,12 +1669,51 @@
       "vendor": "superpowers",
       "source_type": "upstream",
       "source": "superpowers",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "superpowers",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "expo",
+      "description": "Build, test, and ship universal iOS, Android, and web apps with Expo SDK 58 and Expo Router. Use when creating an Expo project, choosing between Expo Go and development builds, configuring EAS Build, Update, and Submit, writing config plugins, adding push notifications with expo-notifications, handling over-the-air updates, or deploying to the App Store and Google Play.",
+      "path": "skills/frontend/expo",
+      "category": "frontend",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": "Requires Node.js 22.13+, 24.3+, or 26+ (odd-numbered releases unsupported) and an Expo account for EAS cloud builds, updates, and submissions.",
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "express",
+      "description": "Build web APIs and services with Express: routing and routers, middleware, error handling, security hardening with helmet and rate limiting, async patterns, testing, and production setup. Use when starting a new Express app, adding routes or middleware to an existing Express service, migrating an Express 4 app to Express 5, or choosing the minimal, widely-known Node.js web framework.",
+      "path": "skills/backend/express",
+      "category": "backend",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": "Requires Node.js 18 or later (Express 5.x).",
+      "last_verified": "2026-11-20",
+      "related": [
+        "advanced-api-architecture",
+        "api-client-generation",
+        "api-design",
+        "authentication",
+        "fastify"
+      ]
     },
     {
       "name": "fact-checking",
@@ -1145,7 +1728,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "faq-generation",
@@ -1160,7 +1744,30 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "fastify",
+      "description": "Build fast, low-overhead web APIs with Fastify: routing, plugins and encapsulation, JSON Schema validation and serialization, lifecycle hooks, Pino logging, performance tuning, testing with inject(), and deployment. Use when starting a new Fastify service, adding routes or plugins to an existing Fastify app, or choosing a high-throughput Node.js framework with built-in schema validation.",
+      "path": "skills/backend/fastify",
+      "category": "backend",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": "Requires Node.js 20 or later (Fastify 5.x).",
+      "last_verified": "2026-11-20",
+      "related": [
+        "advanced-api-architecture",
+        "api-client-generation",
+        "api-design",
+        "authentication",
+        "express"
+      ]
     },
     {
       "name": "finishing-a-development-branch",
@@ -1175,7 +1782,30 @@
       "license": "MIT",
       "maintainer": "superpowers",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "fly-io",
+      "description": "Use this skill when deploying and running applications on Fly.io: launching apps with flyctl, writing fly.toml, deploying Docker-based apps to one or many regions, managing secrets, volumes, and custom domains with TLS, provisioning Managed Postgres, monitoring logs and Machine health, scaling Machines, and rolling back to a previous image. Trigger keywords: Fly.io, flyctl, fly.toml, fly deploy, fly launch, Machine, Machines, region, volume, secrets, Managed Postgres, MPG, custom domain, certs, scaling, autoscaling, rollback.",
+      "path": "skills/infrastructure/fly-io",
+      "category": "infrastructure",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": "Requires a Fly.io account, a Dockerfile or a buildable project, flyctl installed, and network access to Fly.io.",
+      "last_verified": "2026-11-20",
+      "related": [
+        "aws",
+        "deployment",
+        "gcp",
+        "kubernetes",
+        "observability"
+      ]
     },
     {
       "name": "frontend-design",
@@ -1190,7 +1820,8 @@
       "license": "Complete terms in LICENSE.txt",
       "maintainer": "anthropic",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "frontend-performance",
@@ -1205,7 +1836,36 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "accessibility",
+        "observability",
+        "vercel-optimize",
+        "ai-image-generation",
+        "blog-featured-images"
+      ]
+    },
+    {
+      "name": "gcp",
+      "description": "Use this skill when building, deploying, or operating workloads on Google Cloud Platform (GCP): Compute Engine, Cloud Run, GKE, Cloud Storage, Cloud SQL, VPC networking, Cloud IAM, Secret Manager, Cloud Monitoring and Logging, Cloud Build, scaling, disaster recovery, cost optimization, and production operations. Trigger keywords: GCP, Google Cloud, gcloud, Compute Engine, Cloud Run, GKE, Kubernetes Engine, Cloud Storage, Cloud SQL, IAM, Secret Manager, Cloud Monitoring, Cloud Logging, Cloud Build.",
+      "path": "skills/infrastructure/gcp",
+      "category": "infrastructure",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "aws",
+        "deployment",
+        "fly-io",
+        "kubernetes",
+        "observability"
+      ]
     },
     {
       "name": "geo-optimization",
@@ -1220,7 +1880,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "aeo-optimization",
+        "ai-seo",
+        "llm-seo",
+        "schema-jsonld",
+        "technical-seo"
+      ]
     },
     {
       "name": "github-actions",
@@ -1235,7 +1902,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a GitHub repository with Actions enabled and network access to GitHub.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "graphql",
@@ -1249,8 +1917,9 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires Node.js 24 LTS and a GraphQL server library such as GraphQL Yoga or Apollo Server.",
-      "last_verified": "2026-11-20"
+      "compatibility": "Requires Node.js 24 LTS or later and a GraphQL server library: GraphQL Yoga 6.x or Apollo Server 5.x.",
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "hono",
@@ -1264,8 +1933,9 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires Node.js 24 LTS or a supported edge runtime; TypeScript 5.x recommended.",
-      "last_verified": "2026-11-20"
+      "compatibility": "Requires Node.js 24 LTS or later or a supported edge runtime; TypeScript 7.x recommended.",
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "hreflang",
@@ -1280,7 +1950,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "html",
@@ -1295,7 +1966,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "hugo",
@@ -1309,8 +1981,9 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires the Hugo binary (extended edition for Sass/SCSS support) installed on the machine building the site.",
-      "last_verified": "2026-11-20"
+      "compatibility": "Requires the Hugo binary installed on the machine building the site; Sass/SCSS support needs a separate Dart Sass install (see Prerequisites).",
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "human-editing",
@@ -1325,7 +1998,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "image-accessibility",
@@ -1340,7 +2014,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "image-compression",
@@ -1355,7 +2030,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "image-format-conversion",
@@ -1370,7 +2046,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "image-optimization",
@@ -1385,7 +2062,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "image-prompt-engineering",
@@ -1400,7 +2078,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "image-seo",
@@ -1415,7 +2094,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "indexing",
@@ -1430,7 +2110,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "infographic-generation",
@@ -1445,7 +2126,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "integration-testing",
@@ -1460,7 +2142,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "unit-testing",
+        "owasp",
+        "secrets-management",
+        "api-client-generation",
+        "api-design"
+      ]
     },
     {
       "name": "internal-linking",
@@ -1475,7 +2164,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "international-seo",
@@ -1490,7 +2180,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "javascript",
@@ -1505,7 +2196,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "javascript-optimization",
@@ -1520,7 +2212,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "jwt",
@@ -1535,7 +2228,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "auth-security",
+        "authentication",
+        "better-auth",
+        "csrf-protection",
+        "mfa"
+      ]
     },
     {
       "name": "keyword-clustering",
@@ -1550,7 +2250,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "keyword-research",
@@ -1565,7 +2266,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "on-page-seo",
+        "serp-analysis",
+        "content-research",
+        "analytics",
+        "editorial-review"
+      ]
     },
     {
       "name": "keyword-to-content",
@@ -1580,7 +2288,30 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "kubernetes",
+      "description": "Use this skill when working with Kubernetes: cluster architecture, Deployments, StatefulSets, Jobs, Services, Ingress, ConfigMaps, Secrets, RBAC, networking, storage, observability, autoscaling with HPA and VPA, Helm charts, GitOps, security hardening, and production cluster operations. Trigger keywords: Kubernetes, k8s, kubectl, pod, Deployment, StatefulSet, Service, Ingress, Helm, RBAC, HPA, namespace, ConfigMap, GitOps, Argo CD, Flux, cluster.",
+      "path": "skills/infrastructure/kubernetes",
+      "category": "infrastructure",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "aws",
+        "deployment",
+        "fly-io",
+        "gcp",
+        "observability"
+      ]
     },
     {
       "name": "lighthouse",
@@ -1595,7 +2326,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "caching",
+        "core-web-vitals",
+        "frontend-performance",
+        "observability",
+        "vercel-optimize"
+      ]
     },
     {
       "name": "link-building",
@@ -1605,12 +2343,35 @@
       "vendor": "marketingskills",
       "source_type": "upstream",
       "source": "marketingskills",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "1.1.0",
       "license": "MIT",
       "maintainer": "marketingskills",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "llm-integration",
+      "description": "Integrate large language models into production applications: multi-provider clients with a clean abstraction, prompt management and versioning, structured outputs (JSON Schema, strict mode), tool and function calling, context-window budgeting and truncation, streaming, retries, timeouts, error handling, cost and latency optimization, observability, and eval hooks. Use when adding chat, generation, extraction, classification, or summarization features powered by an LLM API.",
+      "path": "skills/ai-engineering/llm-integration",
+      "category": "ai-engineering",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "agent-evaluation",
+        "mcp-security",
+        "observability",
+        "rag",
+        "verification-before-completion"
+      ]
     },
     {
       "name": "llm-seo",
@@ -1625,7 +2386,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "aeo-optimization",
+        "ai-seo",
+        "geo-optimization",
+        "schema-jsonld",
+        "technical-seo"
+      ]
     },
     {
       "name": "llms-txt",
@@ -1640,7 +2408,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "local-seo",
@@ -1655,7 +2424,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "mcp-builder",
@@ -1670,7 +2440,14 @@
       "license": "Complete terms in LICENSE.txt",
       "maintainer": "anthropic",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "mcp-development",
+        "api-design",
+        "advanced-api-architecture",
+        "api-client-generation",
+        "database-design"
+      ]
     },
     {
       "name": "mcp-development",
@@ -1684,8 +2461,37 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires Node.js 24 LTS, TypeScript 5.x, and the MCP TypeScript SDK; network access for remote servers.",
-      "last_verified": "2026-11-20"
+      "compatibility": "Requires Node.js 24 LTS or later, TypeScript 7.x, and the MCP TypeScript SDK v2 (`@modelcontextprotocol/server`); network access for remote servers.",
+      "last_verified": "2026-11-20",
+      "related": [
+        "mcp-builder",
+        "api-design",
+        "advanced-api-architecture",
+        "api-client-generation",
+        "database-design"
+      ]
+    },
+    {
+      "name": "mcp-security",
+      "description": "Secure Model Context Protocol (MCP) servers and clients: tool authorization and least privilege, per-tool permission scoping, input validation, output sanitization, trust boundaries, secret handling, untrusted content handling, tool poisoning, prompt injection (direct and indirect), server verification, transport security, OAuth 2.1 authorization, user confirmation for consequential actions, and audit logging. Use when hardening an MCP deployment, reviewing an MCP server or client for security, or connecting an agent to third-party MCP servers. Building a server is covered by mcp-development; this skill is the security half.",
+      "path": "skills/ai-engineering/mcp-security",
+      "category": "ai-engineering",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "agent-evaluation",
+        "auth-security",
+        "authentication",
+        "csrf-protection",
+        "llm-integration"
+      ]
     },
     {
       "name": "metadata-validation",
@@ -1700,7 +2506,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "mfa",
@@ -1715,7 +2522,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "auth-security",
+        "authentication",
+        "better-auth",
+        "csrf-protection",
+        "jwt"
+      ]
     },
     {
       "name": "microservices",
@@ -1730,7 +2544,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "migrations",
@@ -1745,7 +2560,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "modern-css",
@@ -1760,7 +2576,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "modular-monolith",
@@ -1775,7 +2592,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "mongodb",
@@ -1790,7 +2608,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "monorepo",
@@ -1805,7 +2624,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "nx",
+        "package-boundaries",
+        "software-architecture",
+        "turborepo",
+        "database-design"
+      ]
     },
     {
       "name": "multi-tenancy",
@@ -1820,7 +2646,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "mysql",
@@ -1835,7 +2662,30 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "nestjs",
+      "description": "Build scalable server-side applications with NestJS: modules, controllers, and providers, dependency injection, middleware, guards, interceptors, pipes, validation, testing with @nestjs/testing, configuration, and deployment. Use when starting a new NestJS app, adding a feature to an existing NestJS service, or choosing an opinionated TypeScript backend framework with a built-in architecture.",
+      "path": "skills/backend/nestjs",
+      "category": "backend",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": "Requires Node.js v20.19+ or v22.12+ (NestJS 12; CLI generators need 22.22.3+/24.15+/26+); TypeScript 6.x (TypeScript 7 not yet supported by nest build).",
+      "last_verified": "2026-11-20",
+      "related": [
+        "advanced-api-architecture",
+        "api-client-generation",
+        "api-design",
+        "authentication",
+        "express"
+      ]
     },
     {
       "name": "nextjs",
@@ -1850,7 +2700,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS and a Next.js 16 project; deployment targets may need a hosting account.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "astro",
+        "typescript",
+        "database-design",
+        "deployment",
+        "drizzle"
+      ]
     },
     {
       "name": "nodejs",
@@ -1865,7 +2722,50 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS or later and npm; network access for installing dependencies.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "database-design",
+        "debugging",
+        "rest-api"
+      ]
+    },
+    {
+      "name": "nuxt",
+      "description": "Build full-stack Vue applications with Nuxt 4 using file-based routing, server routes, useFetch and useAsyncData, SSR, SSG, and hybrid rendering. Use when creating or editing a Nuxt app, adding pages, layouts, server API routes, or modules, fetching data, configuring route rules and rendering modes, or deploying with Nitro.",
+      "path": "skills/frontend/nuxt",
+      "category": "frontend",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": "Requires Node.js ^22.22.3, ^24.15.0, or >=26.0.0 and a Nuxt 4 project.",
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "nx",
+      "description": "Set up and run an Nx monorepo workspace: project graph, affected builds, task orchestration with dependsOn pipelines, local and remote caching, generators, module boundaries with tags and dependency constraints, CI optimization with Nx Cloud, and migration from Turborepo or other monorepo tools. Use when the task mentions Nx, nx.json, nx graph, nx affected, nx run-many, Nx Cloud, or choosing a monorepo task runner.",
+      "path": "skills/architecture/nx",
+      "category": "architecture",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "monorepo",
+        "package-boundaries",
+        "software-architecture",
+        "turborepo",
+        "database-design"
+      ]
     },
     {
       "name": "oauth",
@@ -1880,7 +2780,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "observability",
@@ -1895,7 +2796,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "deployment",
+        "cloudflare-workers",
+        "frontend-performance",
+        "owasp",
+        "secrets-management"
+      ]
     },
     {
       "name": "off-page-seo",
@@ -1910,7 +2818,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "og-image-generation",
@@ -1925,7 +2834,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "blog-featured-images",
+        "open-graph",
+        "seo-metadata",
+        "accessibility",
+        "ai-image-generation"
+      ]
     },
     {
       "name": "on-page-seo",
@@ -1940,7 +2856,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "keyword-research",
+        "serp-analysis",
+        "content-research",
+        "schema-jsonld",
+        "analytics"
+      ]
     },
     {
       "name": "open-graph",
@@ -1955,7 +2878,52 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "blog-featured-images",
+        "og-image-generation",
+        "seo-metadata",
+        "accessibility",
+        "ai-image-generation"
+      ]
+    },
+    {
+      "name": "openapi",
+      "description": "Write and maintain OpenAPI 3.x documents: operations, schemas and components, parameters, responses, security schemes, examples, versioning, linting with Spectral or Redocly, bundling multi-file specs, documentation generation, mocking with Prism, and contract testing with Schemathesis and oasdiff. Use when authoring, validating, or governing an OpenAPI specification for an HTTP API.",
+      "path": "skills/backend/openapi",
+      "category": "backend",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "api-client-generation",
+        "api-design",
+        "changelog-management",
+        "sdk-development",
+        "technical-documentation"
+      ]
+    },
+    {
+      "name": "opensearch",
+      "description": "Build and operate OpenSearch search and analytics: index design and mappings, Query DSL, SQL, and PPL queries, aggregations, analyzers and relevance tuning, cluster architecture with sharding and replication, snapshots and restore, the Security plugin (roles, tenants, audit), Index State Management, monitoring, performance tuning, and production deployment. Trigger keywords: opensearch, dashboards, query DSL, PPL, mapping, analyzer, aggregation, shard, snapshot, ISM, k-NN, hybrid search.",
+      "path": "skills/database/opensearch",
+      "category": "database",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "owasp",
@@ -1970,7 +2938,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "secrets-management",
+        "auth-security",
+        "authentication",
+        "code-review",
+        "csrf-protection"
+      ]
     },
     {
       "name": "package-boundaries",
@@ -1985,7 +2960,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "software-architecture",
+        "database-design",
+        "dependency-management",
+        "monorepo",
+        "nx"
+      ]
     },
     {
       "name": "package-development",
@@ -1999,8 +2981,15 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires Node.js 24 LTS, npm, and an npm account for publishing.",
-      "last_verified": "2026-11-20"
+      "compatibility": "Requires Node.js 24 LTS or later, npm, and an npm account for publishing.",
+      "last_verified": "2026-11-20",
+      "related": [
+        "changelog-management",
+        "changesets",
+        "api-client-generation",
+        "api-design",
+        "openapi"
+      ]
     },
     {
       "name": "pagespeed-insights",
@@ -2015,7 +3004,30 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "passkeys",
+      "description": "Implement passkeys and WebAuthn: registration and authentication ceremonies, attestation, relying party configuration, discoverable credentials, cross-device sign-in, conditional mediation (autofill), fallback and recovery, and migration from passwords. Use when the task mentions passkeys, WebAuthn, FIDO2, security keys, biometric sign-in, navigator.credentials, or passwordless authentication.",
+      "path": "skills/auth/passkeys",
+      "category": "auth",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "authentication",
+        "authjs",
+        "better-auth",
+        "clerk",
+        "session-management"
+      ]
     },
     {
       "name": "performance",
@@ -2030,7 +3042,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "performance-testing",
@@ -2045,7 +3058,24 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "platform-social-images",
+      "description": "Choose the right social preview image per platform: Facebook, LinkedIn, X, WhatsApp, Slack, Discord, and other unfurlers each publish different dimensions, file-size limits, and rendering behavior. Use when a link preview must look right on more than one platform, when platforms disagree, or when deciding whether one image can serve them all. Trigger keywords: social image sizes, platform OG image, link preview sizes, per-platform social image, Facebook LinkedIn X image size, WhatsApp preview image, Discord embed image, Slack unfurl image, social image dimensions.",
+      "path": "skills/media/platform-social-images",
+      "category": "media",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified-with-limitations",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "playwright",
@@ -2060,7 +3090,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js and downloads browser binaries on install.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "debugging",
+        "regression-testing",
+        "tdd",
+        "unit-testing",
+        "vitest"
+      ]
     },
     {
       "name": "pnpm-workspaces",
@@ -2075,7 +3112,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "monorepo",
+        "nx",
+        "package-boundaries",
+        "software-architecture",
+        "turborepo"
+      ]
     },
     {
       "name": "postgresql",
@@ -2090,7 +3134,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "prisma",
@@ -2105,7 +3150,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "database-design",
+        "drizzle",
+        "astro",
+        "nextjs",
+        "regression-testing"
+      ]
     },
     {
       "name": "prisma-cli",
@@ -2120,7 +3172,8 @@
       "license": "MIT",
       "maintainer": "prisma",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "prisma-client-api",
@@ -2135,7 +3188,8 @@
       "license": "MIT",
       "maintainer": "prisma",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "prisma-compute",
@@ -2145,12 +3199,13 @@
       "vendor": "prisma",
       "source_type": "upstream",
       "source": "prisma",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "2.1.0",
       "license": "MIT",
       "maintainer": "prisma",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "prisma-database-setup",
@@ -2165,7 +3220,8 @@
       "license": "MIT",
       "maintainer": "prisma",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "prisma-driver-adapter-implementation",
@@ -2180,7 +3236,8 @@
       "license": "MIT",
       "maintainer": "prisma",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "prisma-mongodb-upgrade",
@@ -2190,12 +3247,13 @@
       "vendor": "prisma",
       "source_type": "upstream",
       "source": "prisma",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "0.2.0",
       "license": "MIT",
       "maintainer": "prisma",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "prisma-orm-setup",
@@ -2210,7 +3268,8 @@
       "license": "MIT",
       "maintainer": "prisma",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "prisma-postgres",
@@ -2225,7 +3284,8 @@
       "license": "MIT",
       "maintainer": "prisma",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "prisma-postgres-setup",
@@ -2240,7 +3300,8 @@
       "license": "MIT",
       "maintainer": "prisma",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "prisma-postgres-upgrade",
@@ -2250,12 +3311,13 @@
       "vendor": "prisma",
       "source_type": "upstream",
       "source": "prisma",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "2.0.0",
       "license": "MIT",
       "maintainer": "prisma",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "prisma-upgrade-v7",
@@ -2265,12 +3327,13 @@
       "vendor": "prisma",
       "source_type": "upstream",
       "source": "prisma",
-      "status": "verified",
+      "status": "needs-correction",
       "version": "7.6.0",
       "license": "MIT",
       "maintainer": "prisma",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "programmatic-seo",
@@ -2285,7 +3348,52 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "pulumi",
+      "description": "Use this skill when managing infrastructure as code with Pulumi: infrastructure in TypeScript, Python, Go, .NET, Java, YAML, or HCL; projects and stacks; state backends including Pulumi Cloud and DIY backends; components; secrets management; testing; policy as code with CrossGuard; and CI/CD integration. Trigger keywords: Pulumi, pulumi up, pulumi preview, stack, Pulumi Cloud, CrossGuard, policy pack, Automation API, infrastructure as code, IaC, ESC.",
+      "path": "skills/infrastructure/pulumi",
+      "category": "infrastructure",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "aws",
+        "deployment",
+        "fly-io",
+        "gcp",
+        "kubernetes"
+      ]
+    },
+    {
+      "name": "python-sdk",
+      "description": "Build and publish a Python SDK for an API: src-layout packaging with hatchling or PDM, pyproject.toml metadata, typing with py.typed and mypy or Pyright, sync and async clients with httpx, authentication, retries, timeouts, pagination, error models, streaming, testing with pytest, semantic versioning, publishing to PyPI with trusted publishing, and backward compatibility. Use when creating or maintaining a Python client library for an API.",
+      "path": "skills/backend/python-sdk",
+      "category": "backend",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "api-client-generation",
+        "api-design",
+        "changelog-management",
+        "openapi",
+        "package-development"
+      ]
     },
     {
       "name": "queues",
@@ -2300,7 +3408,52 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a queue system such as Redis with BullMQ, RabbitMQ, Amazon SQS, or Cloudflare Queues.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "rag",
+      "description": "Build Retrieval-Augmented Generation systems: document ingestion and chunking, embedding model selection, vector database selection (Pinecone, Weaviate, Qdrant, Chroma, pgvector), retrieval pipelines, reranking, hybrid search, context assembly with citations, grounding, and RAG evaluation (faithfulness, relevance). Use when a chatbot or assistant must answer from your own documents, knowledge base, or private data instead of the model's training knowledge.",
+      "path": "skills/ai-engineering/rag",
+      "category": "ai-engineering",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "agent-evaluation",
+        "llm-integration",
+        "mcp-security",
+        "observability",
+        "verification-before-completion"
+      ]
+    },
+    {
+      "name": "railway",
+      "description": "Use this skill when deploying and running applications on Railway: creating projects and services, deploying from GitHub or the Railway CLI, managing environment variables, adding custom domains, attaching persistent volumes, provisioning managed PostgreSQL and Redis, monitoring logs and metrics, scaling services, and rolling back deployments. Trigger keywords: Railway, railway CLI, railway up, deploy, service, project, environment, variables, domain, volume, Postgres, Redis, rollback, scaling, Railpack.",
+      "path": "skills/infrastructure/railway",
+      "category": "infrastructure",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": "Requires a Railway account, a Git repository or a local project directory, and network access to Railway.",
+      "last_verified": "2026-11-20",
+      "related": [
+        "aws",
+        "deployment",
+        "fly-io",
+        "gcp",
+        "kubernetes"
+      ]
     },
     {
       "name": "rate-limiting",
@@ -2315,7 +3468,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a shared store such as Redis for limits that work across multiple server instances.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "rbac",
@@ -2330,7 +3484,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "auth-security",
+        "authentication",
+        "better-auth",
+        "csrf-protection",
+        "jwt"
+      ]
     },
     {
       "name": "react",
@@ -2345,7 +3506,29 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS and a React 19 project set up with a bundler or framework such as Vite or Next.js.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "astro",
+        "nextjs",
+        "tailwind-css",
+        "typescript"
+      ]
+    },
+    {
+      "name": "react-native",
+      "description": "Build native iOS and Android apps with React Native 0.88 using TypeScript, the New Architecture, and Hermes. Use when creating or editing a bare React Native app, adding navigation with React Navigation, managing state, fetching data, writing native modules, styling with StyleSheet, optimizing FlatList performance, adding accessibility, testing with Jest and React Native Testing Library, or shipping release builds to the App Store and Google Play.",
+      "path": "skills/frontend/react-native",
+      "category": "frontend",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": "Requires Node.js 22 LTS; Xcode on macOS for iOS builds and Android Studio for Android builds.",
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "readme-engineering",
@@ -2360,7 +3543,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "receiving-code-review",
@@ -2375,7 +3559,33 @@
       "license": "MIT",
       "maintainer": "superpowers",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "clean-code",
+        "code-review",
+        "debugging",
+        "requesting-code-review",
+        "tdd"
+      ]
+    },
+    {
+      "name": "redis",
+      "description": "Use Redis as an in-memory data structure store: data modeling with strings, hashes, lists, sets, sorted sets, streams, JSON, and vector sets; commands, pipelining, transactions (MULTI/EXEC, WATCH), Lua scripts and Functions; pub/sub and streams; persistence (RDB/AOF), replication, Sentinel, and Cluster; eviction and caching patterns; AUTH/ACL/TLS security; monitoring and production deployment. Trigger keywords: redis, cache, sorted set, stream, pub/sub, sentinel, cluster, eviction, lua script, redis functions.",
+      "path": "skills/database/redis",
+      "category": "database",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "caching",
+        "database-design"
+      ]
     },
     {
       "name": "refactoring",
@@ -2390,7 +3600,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "regression-testing",
@@ -2405,7 +3616,58 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "unit-testing",
+        "changelog-management",
+        "code-review",
+        "deployment",
+        "verification-before-completion"
+      ]
+    },
+    {
+      "name": "release-management",
+      "description": "Run a release process end to end: versioning policy with semantic versioning, release trains versus continuous release, release planning and freeze, changelog and release notes coordination, publishing pipelines, rollbacks, release automation, and coordinating releases across packages in a monorepo. Use when the task mentions release management, release process, release train, release cadence, release notes, rollback, release checklist, or shipping a new version.",
+      "path": "skills/architecture/release-management",
+      "category": "architecture",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "changelog-management",
+        "changesets",
+        "deployment",
+        "integration-testing",
+        "package-development"
+      ]
+    },
+    {
+      "name": "render",
+      "description": "Use this skill when deploying and running applications on Render: creating web services, static sites, background workers, and cron jobs, defining infrastructure as code with Blueprints (render.yaml), managing environment variables and environment groups, adding custom domains with managed TLS, attaching persistent disks, provisioning managed PostgreSQL and Key Value (Redis-compatible), monitoring logs and metrics, scaling services, and rolling back deployments. Trigger keywords: Render, render.yaml, Blueprint, web service, static site, background worker, cron job, environment group, custom domain, persistent disk, Postgres, Key Value, rollback, zero-downtime, autoscaling.",
+      "path": "skills/infrastructure/render",
+      "category": "infrastructure",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": "Requires a Render account, a Git repository (GitHub, GitLab, or Bitbucket), and network access to Render.",
+      "last_verified": "2026-11-20",
+      "related": [
+        "aws",
+        "deployment",
+        "fly-io",
+        "gcp",
+        "kubernetes"
+      ]
     },
     {
       "name": "requesting-code-review",
@@ -2420,7 +3682,14 @@
       "license": "MIT",
       "maintainer": "superpowers",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "clean-code",
+        "code-review",
+        "debugging",
+        "receiving-code-review",
+        "tdd"
+      ]
     },
     {
       "name": "responsive-design",
@@ -2435,7 +3704,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "rest-api",
@@ -2449,8 +3719,63 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires a Node.js HTTP framework such as Hono or Express and TypeScript 5.x.",
-      "last_verified": "2026-11-20"
+      "compatibility": "Requires a Node.js HTTP framework such as Hono or Express and TypeScript 7.x.",
+      "last_verified": "2026-11-20",
+      "related": [
+        "api-client-generation",
+        "api-design",
+        "changelog-management",
+        "database-design",
+        "debugging"
+      ]
+    },
+    {
+      "name": "resvg",
+      "description": "Render SVG to raster images (PNG) with resvg, the fast, portable Rust SVG renderer. Covers the CLI, the Rust library, the Node.js bindings (@resvg/resvg-js and @resvg/resvg-wasm), font handling, scaling, and the Satori-to-PNG pipeline. Use when converting SVG to PNG, rasterizing Satori output, or rendering SVG without a browser. Trigger keywords: resvg, SVG to PNG, rasterize SVG, svg renderer, @resvg/resvg-js, resvg-wasm, Satori PNG, SVG rendering.",
+      "path": "skills/media/resvg",
+      "category": "media",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "rust",
+      "description": "Write modern, production-quality Rust: ownership, borrowing, and lifetimes; error handling with Result, thiserror, and anyhow; async programming with Tokio; crates and workspaces; unit, integration, and doc testing; clippy and rustfmt; safe unsafe guidelines; FFI basics; performance profiling; and dependency security with cargo-audit and cargo-deny. Use when writing or reviewing Rust code, setting up a Rust project or workspace, debugging borrow checker or async errors, or auditing a Rust dependency tree. Desktop and Tauri emphasis, general enough to stand alone.",
+      "path": "skills/desktop/rust",
+      "category": "desktop",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "satori",
+      "description": "Render HTML and CSS (as JSX) to SVG with Satori, Vercel's library for programmatic Open Graph images and social cards. Covers the supported CSS subset, fonts, JSX usage, the standalone WASM build, and the limits of Satori rendering versus a browser. Use when generating OG images or social cards from markup, or debugging a Satori layout. Trigger keywords: satori, HTML to SVG, JSX to SVG, OG image generation, @vercel/og, next/og, ImageResponse, social card generation, dynamic OG image.",
+      "path": "skills/media/satori",
+      "category": "media",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "schema",
@@ -2465,11 +3790,18 @@
       "license": "MIT",
       "maintainer": "marketingskills",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "core-web-vitals",
+        "on-page-seo",
+        "schema-jsonld",
+        "search-console",
+        "seo-audit"
+      ]
     },
     {
       "name": "schema-jsonld",
-      "description": "Add JSON-LD structured data to pages so search engines can understand entities, articles, products, FAQs, and breadcrumbs and show rich results. Use when implementing schema markup, fixing rich result errors, or adding Article, FAQ, Product, or BreadcrumbList markup.",
+      "description": "Add JSON-LD structured data to pages so search engines can understand entities, articles, products, and breadcrumbs and show rich results. Use when implementing schema markup, fixing rich result errors, or adding Article, Product, or BreadcrumbList markup.",
       "path": "skills/seo/schema-jsonld",
       "category": "seo",
       "vendor": null,
@@ -2480,7 +3812,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "on-page-seo",
+        "content-research",
+        "keyword-research",
+        "serp-analysis",
+        "technical-seo"
+      ]
     },
     {
       "name": "sdk-development",
@@ -2494,8 +3833,15 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires Node.js 24 LTS and TypeScript 5.x; the target API must be documented.",
-      "last_verified": "2026-11-20"
+      "compatibility": "Requires Node.js 24 LTS or later and TypeScript 7.x; the target API must be documented.",
+      "last_verified": "2026-11-20",
+      "related": [
+        "changelog-management",
+        "openapi",
+        "technical-documentation",
+        "api-client-generation",
+        "api-design"
+      ]
     },
     {
       "name": "search-console",
@@ -2510,7 +3856,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "core-web-vitals",
+        "on-page-seo",
+        "schema",
+        "schema-jsonld",
+        "seo-audit"
+      ]
     },
     {
       "name": "search-intent",
@@ -2525,7 +3878,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "secrets-management",
@@ -2540,11 +3894,18 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "owasp",
+        "auth-security",
+        "authentication",
+        "csrf-protection",
+        "unit-testing"
+      ]
     },
     {
       "name": "secure-headers",
-      "description": "Configure HTTP security headers (CSP, HSTS, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, and frame controls) for web applications. Use when hardening response headers, setting a Content Security Policy, fixing a header finding from a scan, or reviewing a deployment's header configuration.",
+      "description": "Configure HTTP security headers (CSP, HSTS, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, and frame controls) for web applications, including Helmet configuration for Express. Use when hardening response headers, setting a Content Security Policy, fixing a header finding from a scan, or reviewing a deployment's header configuration.",
       "path": "skills/security/secure-headers",
       "category": "security",
       "vendor": null,
@@ -2555,7 +3916,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "auth-security",
+        "authentication",
+        "csrf-protection",
+        "owasp",
+        "secrets-management"
+      ]
     },
     {
       "name": "security",
@@ -2570,7 +3938,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "security-auditing",
@@ -2585,7 +3954,30 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "self-hosted-vps",
+      "description": "Use this skill when setting up and operating an application on a self-hosted virtual private server: provisioning a Linux server, hardening SSH, configuring a firewall, running a reverse proxy (Caddy or Nginx) with automatic TLS, deploying with Docker Compose, running a database, setting up monitoring and backups, scaling a single server, and rolling back a bad deploy. Trigger keywords: VPS, self-hosted, server setup, SSH hardening, UFW, firewall, Caddy, Nginx, reverse proxy, TLS, Let's Encrypt, Docker Compose, deploy, backup, fail2ban, hardening, bare metal.",
+      "path": "skills/infrastructure/self-hosted-vps",
+      "category": "infrastructure",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": "Requires root or sudo access to a Linux VPS (Ubuntu LTS or Debian stable) and a domain name for TLS.",
+      "last_verified": "2026-11-20",
+      "related": [
+        "aws",
+        "deployment",
+        "fly-io",
+        "gcp",
+        "kubernetes"
+      ]
     },
     {
       "name": "semantic-html",
@@ -2600,7 +3992,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "seo",
@@ -2610,12 +4003,13 @@
       "vendor": "agentic-seo",
       "source_type": "upstream",
       "source": "agentic-seo",
-      "status": "verified",
+      "status": "needs-correction",
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "agentic-seo",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "seo-audit",
@@ -2630,7 +4024,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "core-web-vitals",
+        "technical-seo",
+        "on-page-seo",
+        "schema",
+        "schema-jsonld"
+      ]
     },
     {
       "name": "seo-content-writing",
@@ -2645,7 +4046,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "seo-metadata",
@@ -2660,11 +4062,18 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "blog-featured-images",
+        "og-image-generation",
+        "open-graph",
+        "accessibility",
+        "ai-image-generation"
+      ]
     },
     {
       "name": "seo-migration",
-      "description": "Plans and executes SEO-safe website migrations: domain changes, URL restructuring, platform moves, HTTPS changes, and redesigns, without losing rankings or traffic. Use when changing domains, restructuring URLs, moving platforms or CMSs, redesigning a site, or merging sites, and when auditing a migration that already happened. Trigger keywords: SEO migration, site migration, domain change, URL redirect, 301 redirect map, platform migration, redesign SEO, site move, redirect chains.",
+      "description": "Plans and executes SEO-safe website migrations: domain changes, URL restructuring, platform moves, HTTPS changes, and redesigns, aiming to preserve as much search visibility as possible. Use when changing domains, restructuring URLs, moving platforms or CMSs, redesigning a site, or merging sites, and when auditing a migration that already happened. Trigger keywords: SEO migration, site migration, domain change, URL redirect, 301 redirect map, platform migration, redesign SEO, site move, redirect chains.",
       "path": "skills/seo/seo-migration",
       "category": "seo",
       "vendor": null,
@@ -2675,7 +4084,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "serp-analysis",
@@ -2690,7 +4100,35 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "keyword-research",
+        "on-page-seo",
+        "content-research",
+        "analytics",
+        "editorial-review"
+      ]
+    },
+    {
+      "name": "serp-monitoring",
+      "description": "Track search visibility over time: ongoing rank and SERP-feature monitoring, volatility detection, competitor movement, Search Console and rank-tracker workflows, alerting, and reporting cadence — with disciplined interpretation so normal fluctuation is not mistaken for a problem. Use when setting up regular SEO reporting, watching rankings after a launch or update, or investigating whether a ranking shift is real. Trigger keywords: SERP monitoring, rank tracking, rank monitoring, volatility, ranking report, position tracking, SERP features, competitor rankings, search visibility, ranking alerts.",
+      "path": "skills/seo/serp-monitoring",
+      "category": "seo",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "analytics",
+        "keyword-research",
+        "on-page-seo",
+        "serp-analysis"
+      ]
     },
     {
       "name": "session-management",
@@ -2705,7 +4143,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "authentication",
+        "authjs",
+        "clerk",
+        "passkeys",
+        "supabase-auth"
+      ]
     },
     {
       "name": "shadcn-ui",
@@ -2720,7 +4165,24 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS, a React project with Tailwind CSS v4, and the shadcn/ui CLI (npx shadcn@latest).",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "sharp",
+      "description": "Process images at high speed with Sharp, the Node.js library built on libvips: resize, crop, convert, and optimize JPEG, PNG, WebP, GIF, AVIF, and TIFF images, with correct color, metadata, and alpha handling. Use when resizing images, converting formats, optimizing images for the web, compositing, or building an image pipeline. Trigger keywords: sharp, resize image, image processing, convert image, optimize image, WebP, AVIF, libvips, image pipeline, crop image, compress image.",
+      "path": "skills/media/sharp",
+      "category": "media",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "site-architecture",
@@ -2730,12 +4192,19 @@
       "vendor": "marketingskills",
       "source_type": "upstream",
       "source": "marketingskills",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "2.1.3",
       "license": "MIT",
       "maintainer": "marketingskills",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "on-page-seo",
+        "analytics",
+        "content-decay",
+        "core-web-vitals",
+        "keyword-research"
+      ]
     },
     {
       "name": "sitemap-robots",
@@ -2750,7 +4219,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "skill-creator",
@@ -2765,7 +4235,8 @@
       "license": "Apache-2.0",
       "maintainer": "anthropic",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "social-preview",
@@ -2775,12 +4246,13 @@
       "vendor": null,
       "source_type": "original",
       "source": "original",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "social-sharing",
@@ -2795,7 +4267,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "software-architecture",
@@ -2810,7 +4283,36 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "database-design",
+        "package-boundaries",
+        "dependency-management",
+        "monorepo",
+        "nx"
+      ]
+    },
+    {
+      "name": "source-verification",
+      "description": "Vet the sources behind a piece before it is written or published: judge source quality and credibility, separate primary from secondary and tertiary sources, check citations, corroborate with independent sources, and spot unreliable, biased, or AI-generated sources. Use when choosing sources for a draft, auditing a draft's references, or deciding whether a source is trustworthy enough to cite. Trigger keywords: source verification, verify sources, source credibility, vet sources, primary source, citation check, unreliable source, biased source, AI-generated source, source quality, corroborate.",
+      "path": "skills/content/source-verification",
+      "category": "content",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "editorial-review",
+        "content-research",
+        "editorial-workflow",
+        "keyword-research",
+        "on-page-seo"
+      ]
     },
     {
       "name": "sql-injection-prevention",
@@ -2825,7 +4327,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "auth-security",
+        "authentication",
+        "csrf-protection",
+        "owasp",
+        "secrets-management"
+      ]
     },
     {
       "name": "sql-optimization",
@@ -2840,7 +4349,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "sqlite",
@@ -2855,7 +4365,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "structured-data",
@@ -2870,7 +4381,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "subagent-driven-development",
@@ -2885,7 +4397,46 @@
       "license": "MIT",
       "maintainer": "superpowers",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "supabase-auth",
+      "description": "Implement authentication with Supabase Auth: email/password, magic link and OTP, OAuth social sign-in, phone auth, passkeys, MFA with TOTP, password recovery, JWT sessions, and Row Level Security (RLS) authorization. Use when the task mentions Supabase Auth, supabase-js, @supabase/ssr, getClaims, getUser, RLS policies, auth.uid(), MFA enrollment, or protecting Supabase tables and Edge Functions.",
+      "path": "skills/auth/supabase-auth",
+      "category": "auth",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "authentication",
+        "authjs",
+        "clerk",
+        "passkeys",
+        "session-management"
+      ]
+    },
+    {
+      "name": "sveltekit",
+      "description": "Build full-stack web apps with SvelteKit 3 and Svelte 5 runes, including file-based routing, load functions, form actions, SSR, prerendering, and adapters. Use when creating or editing a SvelteKit app, adding routes, layouts, server endpoints, or form actions, fetching data with load functions, choosing an adapter, or deploying to Node, Vercel, Netlify, or Cloudflare.",
+      "path": "skills/frontend/sveltekit",
+      "category": "frontend",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": "Requires Node.js 22.17 or newer, Vite 8, and Svelte 5.56.4 or newer.",
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "system-design",
@@ -2900,7 +4451,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "tailwind-css",
@@ -2915,7 +4467,29 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS and a Tailwind CSS v4 project with the Tailwind CLI, PostCSS plugin, or Vite plugin.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "astro",
+        "nextjs",
+        "react",
+        "typescript"
+      ]
+    },
+    {
+      "name": "tauri",
+      "description": "Build cross-platform desktop apps with Tauri 2: a Rust core with a webview frontend, type-safe IPC commands and events, the capabilities and permissions system, official plugins (filesystem, dialog, shell, updater), window management, code signing, auto-updates, and per-OS packaging. Use when creating or extending a Tauri v2 app, writing Rust commands called from the frontend, fixing \"not allowed\" permission errors, adding a plugin, or shipping signed, auto-updating desktop builds.",
+      "path": "skills/desktop/tauri",
+      "category": "desktop",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "tdd",
@@ -2930,7 +4504,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "debugging",
+        "clean-code",
+        "code-review",
+        "playwright",
+        "receiving-code-review"
+      ]
     },
     {
       "name": "technical-decision-records",
@@ -2945,7 +4526,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "technical-documentation",
@@ -2960,7 +4542,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "changelog-management",
+        "openapi",
+        "sdk-development",
+        "api-client-generation",
+        "api-design"
+      ]
     },
     {
       "name": "technical-seo",
@@ -2975,7 +4564,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "core-web-vitals",
+        "schema-jsonld",
+        "seo-audit",
+        "aeo-optimization",
+        "ai-seo"
+      ]
     },
     {
       "name": "technical-writing",
@@ -2990,7 +4586,30 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
+    },
+    {
+      "name": "terraform",
+      "description": "Use this skill when managing infrastructure as code with HashiCorp Terraform: HCL configuration, providers, remote state and locking, modules, workspaces, plan and apply workflows, importing existing resources, testing and validation, sensitive values and policy as code, and CI/CD integration. Trigger keywords: Terraform, HCL, terraform plan, terraform apply, tfstate, backend, module, provider, workspace, import, OpenTofu, infrastructure as code, IaC.",
+      "path": "skills/infrastructure/terraform",
+      "category": "infrastructure",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "aws",
+        "deployment",
+        "fly-io",
+        "gcp",
+        "kubernetes"
+      ]
     },
     {
       "name": "theme-factory",
@@ -3005,7 +4624,33 @@
       "license": "Complete terms in LICENSE.txt",
       "maintainer": "anthropic",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "accessibility",
+        "frontend-performance"
+      ]
+    },
+    {
+      "name": "topical-authority",
+      "description": "Build deep, organized coverage of a topic so a site becomes a comprehensive resource for it: topic boundaries, pillar and cluster architecture, semantic coverage mapping, internal linking strategy, depth versus breadth decisions, and measuring coverage over time. Use when planning a content program around a topic, expanding into adjacent subtopics, or auditing whether a site covers a topic thoroughly. Trigger keywords: topical authority, topic cluster, pillar page, semantic coverage, content depth, topic map, hub and spoke, subject matter coverage.",
+      "path": "skills/seo/topical-authority",
+      "category": "seo",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "analytics",
+        "content-decay",
+        "keyword-research",
+        "on-page-seo",
+        "serp-analysis"
+      ]
     },
     {
       "name": "transactions",
@@ -3020,7 +4665,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "trpc",
@@ -3034,8 +4680,9 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires Node.js 24 LTS, TypeScript 5.x, and a TypeScript client; works best in a monorepo.",
-      "last_verified": "2026-11-20"
+      "compatibility": "Requires Node.js 24 LTS or later, TypeScript 7.x, and a TypeScript client; works best in a monorepo.",
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "turborepo",
@@ -3050,37 +4697,46 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "monorepo",
+        "nx",
+        "package-boundaries",
+        "software-architecture",
+        "database-design"
+      ]
     },
     {
       "name": "twitter-card-images",
-      "description": "Create X (Twitter) card images and tags so shared links show a correct large-image preview on X. Use when a task asks for a Twitter card, X card, summary_large_image card, twitter:image tag, or a 1200x675 social image for sharing a page on X.",
+      "description": "Create X (Twitter) card images and tags so shared links show a correct large-image preview on X. Use when a task asks for a Twitter card, X card, summary_large_image card, twitter:image tag, or a 1200x600 social image for sharing a page on X.",
       "path": "skills/media/twitter-card-images",
       "category": "media",
       "vendor": null,
       "source_type": "original",
       "source": "original",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "twitter-cards",
-      "description": "Add Twitter (X) Card meta tags so links shared on X render rich previews with the right image, title, and description. Use when a link's preview on X is missing, wrong, or cropped; when choosing between summary and summary_large_image cards; or when setting up sharing for a new site. Covers twitter:card, twitter:image, and the X card validator.",
+      "description": "Add Twitter (X) Card meta tags so links shared on X render rich previews with the right image, title, and description. Use when a link's preview on X is missing, wrong, or cropped; when choosing between summary and summary_large_image cards; or when setting up sharing for a new site. Covers twitter:card, twitter:image, and testing cards with the post composer.",
       "path": "skills/metadata/twitter-cards",
       "category": "metadata",
       "vendor": null,
       "source_type": "original",
       "source": "original",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "typescript",
@@ -3095,7 +4751,36 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS and the TypeScript compiler (tsc) for type checking and builds.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "astro",
+        "changelog-management",
+        "nextjs",
+        "accessibility",
+        "database-design"
+      ]
+    },
+    {
+      "name": "typescript-sdk",
+      "description": "Build and publish a TypeScript SDK for an API: package layout, dual CJS/ESM builds with tsdown or tsup, declaration files, publint and Are The Types Wrong checks, typed client design, authentication, retries, timeouts, pagination, error models, streaming, testing with Vitest, semantic versioning, npm publishing with provenance, and backward compatibility. Use when creating or maintaining a TypeScript client library for an API.",
+      "path": "skills/backend/typescript-sdk",
+      "category": "backend",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": null,
+      "last_verified": "2026-11-20",
+      "related": [
+        "api-client-generation",
+        "api-design",
+        "changelog-management",
+        "openapi",
+        "package-development"
+      ]
     },
     {
       "name": "ui-design",
@@ -3110,7 +4795,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "unit-testing",
@@ -3125,7 +4811,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "integration-testing",
+        "changelog-management",
+        "owasp",
+        "regression-testing",
+        "secrets-management"
+      ]
     },
     {
       "name": "using-git-worktrees",
@@ -3140,7 +4833,8 @@
       "license": "MIT",
       "maintainer": "superpowers",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "using-superpowers",
@@ -3150,12 +4844,13 @@
       "vendor": "superpowers",
       "source_type": "upstream",
       "source": "superpowers",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "superpowers",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "vercel",
@@ -3170,7 +4865,13 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a Vercel account, a Git repository, and network access to Vercel.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "deployment",
+        "cloudflare-workers",
+        "observability",
+        "nextjs"
+      ]
     },
     {
       "name": "vercel-cli-with-tokens",
@@ -3180,12 +4881,13 @@
       "vendor": "vercel",
       "source_type": "upstream",
       "source": "vercel",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "vercel",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "vercel-composition-patterns",
@@ -3195,12 +4897,13 @@
       "vendor": "vercel",
       "source_type": "upstream",
       "source": "vercel",
-      "status": "verified",
+      "status": "needs-correction",
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "vercel",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "vercel-optimize",
@@ -3210,12 +4913,19 @@
       "vendor": "vercel",
       "source_type": "upstream",
       "source": "vercel",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "1.2.0",
       "license": "MIT",
       "maintainer": "vercel",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "frontend-performance",
+        "observability",
+        "caching",
+        "core-web-vitals",
+        "lighthouse"
+      ]
     },
     {
       "name": "vercel-react-best-practices",
@@ -3225,12 +4935,16 @@
       "vendor": "vercel",
       "source_type": "upstream",
       "source": "vercel",
-      "status": "verified",
+      "status": "needs-correction",
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "vercel",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "frontend-performance",
+        "nextjs"
+      ]
     },
     {
       "name": "vercel-react-view-transitions",
@@ -3240,12 +4954,13 @@
       "vendor": "vercel",
       "source_type": "upstream",
       "source": "vercel",
-      "status": "verified",
+      "status": "needs-correction",
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "vercel",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "verification-before-completion",
@@ -3260,7 +4975,14 @@
       "license": "MIT",
       "maintainer": "superpowers",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "agent-evaluation",
+        "code-review",
+        "debugging",
+        "observability",
+        "owasp"
+      ]
     },
     {
       "name": "vitest",
@@ -3275,7 +4997,30 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js and a Vite-based or ESM TypeScript project.",
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "astro",
+        "database-design",
+        "debugging",
+        "drizzle",
+        "nextjs"
+      ]
+    },
+    {
+      "name": "vue",
+      "description": "Build user interfaces with Vue 3.5 using the Composition API, single-file components, Vue Router 5, and Pinia 4. Use when creating or editing Vue components, managing reactivity and shared state, adding routing, fetching data, writing composables, testing with Vitest and Vue Test Utils, or building and deploying a Vue SPA.",
+      "path": "skills/frontend/vue",
+      "category": "frontend",
+      "vendor": null,
+      "source_type": "original",
+      "source": "original",
+      "status": "verified",
+      "version": "1.0.0",
+      "license": "MIT",
+      "maintainer": "skills-library",
+      "compatibility": "Requires Node.js ^22.18.0 or >=24.12.0 and a Vite-based project created with create-vue.",
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "web-artifacts-builder",
@@ -3285,12 +5030,13 @@
       "vendor": "anthropic",
       "source_type": "upstream",
       "source": "anthropic",
-      "status": "verified",
+      "status": "needs-correction",
       "version": "1.0.0",
       "license": "Complete terms in LICENSE.txt",
       "maintainer": "anthropic",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "web-design-guidelines",
@@ -3301,11 +5047,12 @@
       "source_type": "upstream",
       "source": "vercel",
       "status": "verified",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "license": "MIT",
       "maintainer": "vercel",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "web-performance-audit",
@@ -3320,7 +5067,8 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "webapp-testing",
@@ -3335,7 +5083,10 @@
       "license": "Complete terms in LICENSE.txt",
       "maintainer": "anthropic",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "verification-before-completion"
+      ]
     },
     {
       "name": "writing-guidelines",
@@ -3350,7 +5101,8 @@
       "license": "MIT",
       "maintainer": "vercel",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "writing-plans",
@@ -3365,7 +5117,14 @@
       "license": "MIT",
       "maintainer": "superpowers",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "database-design",
+        "software-architecture",
+        "astro",
+        "drizzle",
+        "monorepo"
+      ]
     },
     {
       "name": "writing-skills",
@@ -3375,12 +5134,13 @@
       "vendor": "superpowers",
       "source_type": "upstream",
       "source": "superpowers",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "superpowers",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": []
     },
     {
       "name": "xss-prevention",
@@ -3395,11 +5155,18 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "auth-security",
+        "authentication",
+        "csrf-protection",
+        "mcp-security",
+        "owasp"
+      ]
     },
     {
       "name": "youtube-thumbnails",
-      "description": "Design YouTube video thumbnails that are readable at small sizes and honest about the video's content. Use when a task asks for a YouTube thumbnail, video thumbnail, or custom thumbnail for a video, at the standard 1280x720 size.",
+      "description": "Design YouTube video thumbnails that are readable at small sizes and honest about the video's content. Use when a task asks for a YouTube thumbnail, video thumbnail, or custom thumbnail for a video, at YouTube's recommended 3840x2160 size (1280x720 still accepted).",
       "path": "skills/media/youtube-thumbnails",
       "category": "media",
       "vendor": null,
@@ -3410,7 +5177,14 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20"
+      "last_verified": "2026-11-20",
+      "related": [
+        "accessibility",
+        "ai-image-generation",
+        "blog-featured-images",
+        "brand-guidelines",
+        "frontend-performance"
+      ]
     }
   ]
 }

@@ -55,6 +55,10 @@ park unprocessable messages in a dead-letter queue.
 - An understanding of at-least-once delivery: a message may be delivered
   more than once, so consumers must be idempotent.
 - A plan for failure: how many retries, and where failed messages go.
+- Consumer defaults in `wrangler.toml` (per the Queues docs):
+  `max_batch_size` 10, `max_batch_timeout` 5 seconds, `max_retries` 3.
+  `max_concurrency` and `retry_delay` are also available for tuning.
+  Wrangler 4.x is the current major version.
 
 ## Official Documentation
 
@@ -142,8 +146,9 @@ park unprocessable messages in a dead-letter queue.
   non-idempotent consumer creates duplicate side effects.
 - Acknowledging a message before the work completes — a crash after
   acknowledgment loses the work.
-- No dead-letter queue — failed messages retry forever and clog the
-  queue.
+- No dead-letter queue — after `max_retries` (default 3) a failed
+  message is discarded, so the failure is silent; set a
+  `dead_letter_queue` to keep failed messages for inspection.
 - Putting large payloads in messages — keep messages small and store
   large data in R2 or D1.
 - Retrying permanent failures — invalid data will never succeed; send it

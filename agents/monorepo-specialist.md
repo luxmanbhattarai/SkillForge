@@ -30,6 +30,8 @@ the shared tooling that keeps a monorepo fast and consistent.
 | `dependency-management` | Shared deps, versions, and upgrades. |
 | `package-development` | Publishing packages out of the monorepo. |
 | `software-architecture` | Deciding how to split code into packages. |
+| `nx` | The monorepo uses Nx. |
+| `changesets` | Versioning uses Changesets. |
 
 ## Skills it should use
 

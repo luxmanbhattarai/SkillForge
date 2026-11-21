@@ -1,0 +1,125 @@
+Phase 2 — installer test results
+================================
+Date: 2026-11-20
+Branch: feat/skillforge-production-upgrade
+Runtime: Node v24.22.1
+Scope: H-01, M-05, M-06, M-09 (installer overhaul)
+
+Test suite
+----------
+Command: npm test            (package.json: "test": "node --test")
+Result:  62 pass, 0 fail, 0 skipped (11.4s)
+
+Note: the runner counts test/helpers.mjs as a test file (it has no
+tests of its own), so the suite is 61 real tests + 1 empty helper
+file. All tests run in temp sandboxes (fake HOME + fake project
+dir) and never touch the real home directory or real agent dirs.
+
+By file:
+  test/installer.test.mjs  42 end-to-end CLI tests (child processes)
+  test/library.test.mjs     7 unit tests (selection, transforms)
+  test/targets.test.mjs     8 unit tests (verified target paths)
+  test/hashing.test.mjs     4 unit tests (hashing, fingerprints)
+
+Coverage (installer.test.mjs):
+  - fresh install (skill dir, SKILL.md identical to library, manifest)
+  - legacy invocation (no command + --skills) still works
+  - selective install, category install, bare install = all skills
+  - user-scope install (temp HOME override), project install
+  - codex -> .agents/skills, antigravity -> .agents/skills +
+    ~/.gemini/config/skills, --target claude alias
+  - dry-run changes nothing (including on a conflict)
+  - repeated install is an idempotent no-op (manifest byte-identical)
+  - conflict refusal without --force (installed + foreign content);
+    user content survives; --force backs up first
+  - backup creation + restore round-trip (incl. pre-restore backup);
+    backups live in a sibling dir, never inside the skills dir
+  - uninstall (single, modified-without---force refusal,
+    --all needing --force non-interactively)
+  - update from the current library (fixture library with
+    SKILLFORGE_ROOT), update refusing user-modified installs
+  - manifest corruption: list falls back to a scan, doctor fails,
+    install quarantines + repairs
+  - unknown skill/category/target/agent errors (exit 2)
+  - --link: symlink creation, idempotency, uninstall removes only
+    the link; agents are copied (not linked) with a note
+  - agent install: Claude Code (frontmatter), Codex (TOML),
+    Cursor + Antigravity locations, --dest-only error
+  - workflow install: Antigravity only + deprecation warning;
+    other targets error clearly
+  - doctor: healthy / tampered (warn) / missing skill (fail),
+    legacy-path detection, --json
+  - validate: pass, frontmatter-name mismatch, missing SKILL.md
+  - list --json, restore --list (empty + unknown id)
+  - interrupted install: copy failure leaves no half-installed
+    skill (CLI-level + staging unit test)
+  - interactive conflict prompt under a PTY (overwrite + skip)
+  - --dest + --target split (skills to --dest, agents to target dir)
+  - adoption of content identical to the library
+  - help and version
+
+Regression checks (all re-run after the Phase 2 changes)
+-------------------------------------------------------
+  npm run validate           PASS with 11 warnings (same 11
+                             pre-existing upstream warnings as the
+                             Phase 1 baseline; no new warnings)
+  npm run check:frontmatter  PASS (226 skills)
+  npm run check:links        PASS (14 internal links; 320 unique
+                             external URLs — 311 baseline + 9 new
+                             vendor-doc links in docs/INSTALLATION.md,
+                             each verified HTTP 200 by curl on
+                             2026-11-20)
+  npm run check:sources      PASS with 0 warnings (226 skills)
+  npm run check:duplicates   PASS (threshold 0.8)
+  npm run check:security     PASS: no findings
+  npm run registry           no diff (deterministic regeneration)
+
+Manual smoke test (temp dir, sandboxed HOME, 2026-11-20)
+--------------------------------------------------------
+  install --dry-run (one skill)   ok, nothing created
+  install one skill               ok, manifest written
+  list                            ok, 1 item
+  doctor                          ok, 0 failures, 0 warnings
+  uninstall                       ok, skill + manifest entry gone
+  install --skills all (Codex)    226 skills installed in 1.1s;
+                                  doctor 0/0, validate 226 passed
+
+Interactive prompt (PTY, via `script`)
+--------------------------------------
+  Tampered skill + install under a PTY: prompt appears, 'o'
+  overwrites (with backup), 's' skips. Verified manually and
+  covered by the PTY test above (skips itself when `script` is
+  unavailable).
+
+Bugs found and fixed during testing
+-----------------------------------
+  1. resolveLocations crashed on targets whose legacySkills
+     segments are null (claude-code, cursor). Fixed in
+     scripts/install/installer.mjs.
+  2. doctor called scanSkillDirs' isSymlink boolean as a
+     function. Fixed in scripts/install/commands.mjs.
+  3. askChoice resolved null for every answer: rl.close() was
+     called before resolve(), and the 'close' handler (EOF case)
+     settled the promise first. Fixed in
+     scripts/install/prompt.mjs (resolve before close; one shared
+     readline interface per run so batched answers are not lost).
+  4. Refusal/failure lines were printed twice (inline + summary).
+     Summary detail lines removed.
+  5. ENOTDIR (destination blocked by a file) crashed install
+     instead of failing the item cleanly. lstatOrNull,
+     readManifest, and directory scans now treat ENOTDIR like
+     "does not exist"; the item fails with a clear message and
+     nothing is half-installed.
+  6. `node --test test/` does not scan the directory on Node
+     v24.22.1 (treats it as a test file; MODULE_NOT_FOUND).
+     `npm test` uses bare `node --test` instead; see
+     ai/decisions/2026-11-20-installer-test-command.md.
+
+Not covered by automated tests
+------------------------------
+  - Windows --link failure mode (no Windows runner here): the
+    EPERM path exists in stageItem with a clear message but is
+    untested. Manual check on Windows recommended.
+  - `npx skills add` is verified manually (sandbox, see
+    ai/decisions/2026-11-20-npx-skills-verification.md), not in
+    the suite: it downloads from npm and clones from GitHub.

@@ -12,7 +12,7 @@ metadata:
   maintainer: skills-library
   source: original
   last_verified: "2026-11-20"
-compatibility: Requires Node.js 24 LTS and TypeScript 5.x; the target API must be documented.
+compatibility: Requires Node.js 24 LTS or later and TypeScript 7.x; the target API must be documented.
 ---
 
 # SDK Development
@@ -52,16 +52,20 @@ caught by the type checker instead of at runtime.
 - A decision on hand-written versus generated code: hand-written for
   ergonomics and small APIs, generated for large APIs that change
   often.
-- Node.js 24 LTS and TypeScript 5.x for a TypeScript SDK.
+- Node.js 24 LTS or later (26 is the current LTS line) and
+  TypeScript 7.x for a TypeScript SDK.
 
 ## Official Documentation
 
-- [OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0) — the
-  contract SDKs are built from.
+- [OpenAPI Specification](https://spec.openapis.org/oas/v3.2.0.html) — the
+  contract SDKs are built from. OpenAPI 3.2 is current (3.2.1 is the
+  latest patch, September 2026, editorial only).
 - [Stripe API reference](https://docs.stripe.com/api) — an example of
   an API with well-designed SDKs.
 - [TypeScript documentation](https://www.typescriptlang.org/docs/) —
-  TypeScript 5.x reference.
+  TypeScript 7.x reference. TypeScript 7.0 (July 2026) is the current
+  release; 6.0 was the last JavaScript-based release and 5.x is
+  superseded.
 - [Semantic Versioning](https://semver.org/) — versioning rules for
   SDK releases.
 
@@ -101,7 +105,11 @@ caught by the type checker instead of at runtime.
   (network errors, `429`, `5xx`), with exponential backoff and jitter
   and a bounded number of attempts. Never retry a `4xx` other than
   `429`.
-- Respect `Retry-After` on `429` responses.
+- Respect `Retry-After` on `429` responses, and read the draft
+  `RateLimit-Policy` / `RateLimit` headers where the API sends them
+  (see `rate-limiting`); the older `RateLimit-Limit` /
+  `RateLimit-Remaining` / `RateLimit-Reset` header names are
+  superseded draft syntax but still common in the wild.
 - Every request has a timeout; the default should be generous enough
   for normal operations (for example 30 seconds) and configurable.
 - Pagination helpers return all pages lazily (async iterator) or
@@ -121,7 +129,10 @@ caught by the type checker instead of at runtime.
 - Make the SDK work with zero configuration beyond credentials: sane
   defaults for base URL, timeout, and retries.
 - Return typed domain objects, not raw HTTP responses, but expose the
-  raw response (status, headers) for callers that need it.
+  raw response (status, headers) for callers that need it. Keep
+  `AbortSignal.timeout()` (used for the request timeout) in mind as
+  the standard timeout mechanism — it is stable in all supported
+  Node.js versions.
 - Keep dependencies minimal: prefer the platform `fetch` over an HTTP
   client library so the SDK stays small and portable.
 - Provide both callback-free `async`/`await` APIs and, where it helps,
@@ -249,7 +260,7 @@ export class ExampleClient {
 
 ## References
 
-- [OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0)
+- [OpenAPI Specification](https://spec.openapis.org/oas/v3.2.0.html)
 - [Stripe API reference](https://docs.stripe.com/api)
 - [TypeScript documentation](https://www.typescriptlang.org/docs/)
 - [Semantic Versioning](https://semver.org/)

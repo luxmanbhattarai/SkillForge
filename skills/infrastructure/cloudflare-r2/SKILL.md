@@ -49,6 +49,9 @@ efficiently.
 ## Prerequisites
 
 - A Cloudflare account and Wrangler installed and authenticated.
+  Wrangler 4.x is the current major version. In Wrangler 4, `wrangler
+  r2 object` commands default to local mode; add `--remote` to operate
+  on the live bucket.
 - A Worker project with a `wrangler.toml` that will declare the R2 binding.
 - An understanding of object keys (paths), content types, and the
   difference between public and private buckets.

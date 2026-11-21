@@ -47,7 +47,8 @@ that the team can modify freely instead of a black-box dependency.
 
 ## Prerequisites
 
-- Node.js 24 LTS installed (current LTS line as of 2026-11-20).
+- Node.js 24 LTS or 26 LTS installed (26 is the newest LTS line as
+  of 2026-11-20; 24 and 22 remain in LTS).
 - A React project with Tailwind CSS v4 configured (see `tailwind-css`).
 - The `cn` utility (a `clsx` + `tailwind-merge` helper) in the project,
   normally created by the CLI during setup.
@@ -60,6 +61,8 @@ that the team can modify freely instead of a black-box dependency.
   theming, and CLI reference.
 - [shadcn/ui components](https://ui.shadcn.com/docs/components) — the
   component catalog with usage examples.
+- [shadcn/ui CLI reference](https://ui.shadcn.com/docs/cli) — `init`,
+  `add`, `docs`, and other CLI commands.
 - [Radix UI documentation](https://www.radix-ui.com/primitives/docs/overview/introduction) —
   the primitives shadcn/ui builds on.
 
@@ -68,8 +71,10 @@ that the team can modify freely instead of a black-box dependency.
 1. Confirm the project has React and Tailwind CSS v4 set up; if not, set
    those up first.
 2. Initialize shadcn/ui with the CLI (`npx shadcn@latest init`) and
-   answer the prompts for style, base color, and CSS variables. The CLI
-   creates the `components.json` config, the `cn` utility, and the theme
+   answer the prompts (component library base, style, base color, and
+   CSS variables — the exact prompts vary by CLI version; check
+   `npx shadcn@latest init --help`). The CLI creates the
+   `components.json` config, the `cn` utility, and the theme
    variables.
 3. Add components with the CLI (`npx shadcn@latest add button dialog`),
    which copies the component source into `components/ui/` and installs
@@ -90,9 +95,15 @@ that the team can modify freely instead of a black-box dependency.
   `components/ui/`) and are owned by the project; editing them is
   expected, not a hack.
 - Theme tokens are CSS variables (`--background`, `--foreground`,
-  `--primary`, `--radius`) defined in the global stylesheet; components
-  reference them through Tailwind utilities such as `bg-background` and
-  `text-foreground`.
+  `--primary`, `--radius`) defined in the global stylesheet; in
+  Tailwind v4 they must be mapped to Tailwind with an `@theme inline`
+  block (`--color-background: var(--background);` and so on) — without
+  that mapping, utilities such as `bg-background` and
+  `text-foreground` are never generated. Current shadcn/ui themes use
+  OKLCH color values. A class-based dark-mode toggle also needs
+  `@custom-variant dark (&:where(.dark, .dark *));` (see
+  `tailwind-css`), since v4's `dark:` variant follows
+  `prefers-color-scheme` by default.
 - Variants use `class-variance-authority` (cva): define variants in the
   component file and select them with props (`variant="outline"`,
   `size="sm"`).
@@ -162,6 +173,9 @@ that the team can modify freely instead of a black-box dependency.
   overwrites the file. Put customizations in wrappers or re-apply them.
 - Skipping the CSS variables — components styled with `bg-background`
   and `text-foreground` look broken without the theme variables defined.
+- Defining theme variables without the `@theme inline` mapping — in
+  Tailwind v4 the variables alone generate no utilities; the mapping
+  is what creates `bg-background`, `text-foreground`, and the rest.
 - Forgetting the `cn` utility — class overrides then conflict instead of
   merging.
 - Rendering dialog content outside the portal — breaks focus trapping
@@ -219,21 +233,35 @@ export function DeleteAccountDialog() {
 }
 ```
 
-Theme variables in the global stylesheet (Tailwind v4):
+Theme variables in the global stylesheet (Tailwind v4). The `@theme
+inline` block is required: it is what turns the CSS variables into
+Tailwind utilities such as `bg-background`. Without it the variables
+exist but no component utility is generated:
 
 ```css
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --primary: #2563eb;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --primary: oklch(0.488 0.243 264.376);
+  --primary-foreground: oklch(0.985 0 0);
   --radius: 0.5rem;
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #fafafa;
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --radius-lg: var(--radius);
 }
 ```
 

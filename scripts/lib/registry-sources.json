@@ -1,0 +1,51 @@
+{
+  "agentic-seo": {
+    "id": "agentic-seo",
+    "type": "upstream",
+    "name": "Agentic SEO Skill",
+    "url": "https://github.com/pwg-projects/agentic-seo-skill",
+    "license": "MIT"
+  },
+  "anthropic": {
+    "id": "anthropic",
+    "type": "upstream",
+    "name": "Anthropic Skills",
+    "url": "https://github.com/anthropics/skills",
+    "license": "Apache-2.0"
+  },
+  "marketingskills": {
+    "id": "marketingskills",
+    "type": "upstream",
+    "name": "Marketing Skills",
+    "url": "https://github.com/coreyhaines31/marketingskills",
+    "license": "MIT"
+  },
+  "original": {
+    "id": "original",
+    "type": "original",
+    "name": "SkillForge (original)",
+    "url": "https://github.com/luxmanbhattarai/SkillForge",
+    "license": "MIT"
+  },
+  "prisma": {
+    "id": "prisma",
+    "type": "upstream",
+    "name": "Prisma Skills",
+    "url": "https://github.com/prisma/skills",
+    "license": "MIT"
+  },
+  "superpowers": {
+    "id": "superpowers",
+    "type": "upstream",
+    "name": "Superpowers",
+    "url": "https://github.com/obra/superpowers",
+    "license": "MIT"
+  },
+  "vercel": {
+    "id": "vercel",
+    "type": "upstream",
+    "name": "Vercel Agent Skills",
+    "url": "https://github.com/vercel-labs/agent-skills",
+    "license": "MIT"
+  }
+}

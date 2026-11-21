@@ -15,8 +15,17 @@ copying or linking them into the path the agent reads, per vendor docs.
 | --- | --- | --- | --- |
 | Claude Code | `--target claude-code` | `.claude/skills` | `~/.claude/skills` |
 | Cursor | `--target cursor` | `.cursor/skills` | `~/.cursor/skills` |
-| Codex | `--target codex` | `.codex/skills` | `~/.codex/skills` |
-| Antigravity | `--target antigravity` | `.agent/skills` | `~/.agent/skills` |
+| Codex | `--target codex` | `.agents/skills` | `~/.agents/skills` |
+| Antigravity | `--target antigravity` | `.agents/skills` | `~/.gemini/config/skills` |
+
+Paths verified against each vendor's current official documentation on
+2026-11-20 (sources in `scripts/install/targets.mjs`). Codex and
+Antigravity moved since v1.0.0: Codex from `.codex/skills`, Antigravity
+from `.agent/skills` (its v1.0.0 user path `~/.agent/skills` was never a
+documented path). The installer detects installs left in the legacy
+locations — run `node scripts/install-skills.mjs doctor` — and
+re-running install migrates them. See `docs/INSTALLATION.md` for the
+full story, including agent and workflow locations.
 
 These are the paths the install script (`scripts/install-skills.mjs`)
 uses. Install with:
@@ -38,6 +47,17 @@ See `docs/INSTALLATION.md` for full usage.
   the Codex docs for how skills are loaded.
 - **Antigravity** — skills install into the Antigravity skills
   directories. See the Antigravity docs for how skills are loaded.
+
+## Compatibility data
+
+Some skills declare environment requirements in their frontmatter
+`compatibility` field. The registry groups those in
+`registry/compatibility.json`; query them with the CLI:
+
+```bash
+npm run query -- compat            # all compatibility groups
+npm run query -- compat <skill>    # one skill's compatibility info
+```
 
 For anything beyond install paths — how an agent discovers skills,
 whether it supports skill `scripts/` or `references/`, and any

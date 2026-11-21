@@ -171,7 +171,19 @@ curl -s -o /dev/null -w "%{http_code}\n" https://example.com/
 curl -s https://example.com/api/status
 ```
 
-Rollback on Cloudflare Workers (redeploy the previous known-good commit):
+Rollback on Cloudflare Workers — prefer the platform rollback, which
+re-activates a previous deployed version immediately (limited to the
+100 most recently published versions; it does not roll back database
+or storage writes):
+
+```bash
+wrangler rollback
+# Or roll back to a specific version:
+wrangler rollback <version-id>
+```
+
+Fallback when no platform rollback is available: redeploy the previous
+known-good commit:
 
 ```bash
 git checkout <previous-commit-sha>

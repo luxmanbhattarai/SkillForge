@@ -2,9 +2,9 @@
 name: schema-jsonld
 description: >
   Add JSON-LD structured data to pages so search engines can understand
-  entities, articles, products, FAQs, and breadcrumbs and show rich
+  entities, articles, products, and breadcrumbs and show rich
   results. Use when implementing schema markup, fixing rich result
-  errors, or adding Article, FAQ, Product, or BreadcrumbList markup.
+  errors, or adding Article, Product, or BreadcrumbList markup.
 license: MIT
 metadata:
   version: "1.0.0"
@@ -25,11 +25,19 @@ Article, FAQPage, BreadcrumbList, Product, Organization, and WebSite —
 and validating it with Google's testing tools. Structured data can make
 a page eligible for rich results; it never guarantees them.
 
+> Retired features (verified 2026-11-20): `HowTo` rich results were
+> deprecated by Google in September 2023, and FAQ rich results stopped
+> appearing in Google Search on 7 May 2026 (documentation removed
+> June 2026). Both types remain valid schema.org vocabulary, but
+> adding them earns no Google rich result. Do not add FAQPage or HowTo
+> markup expecting a Google search feature.
+
 ## When to Use
 
 - Adding structured data to a new page or template.
 - Fixing rich result errors reported in Search Console.
-- Adding FAQ, how-to, article, product, or breadcrumb markup.
+- Adding article, product, or breadcrumb markup. (FAQ and HowTo
+  markup no longer earn a Google rich result — see Purpose.)
 - Auditing whether existing JSON-LD is valid and matches the visible
   page content.
 - Planning which schema types a site should use per template.
@@ -51,6 +59,14 @@ a page eligible for rich results; it never guarantees them.
 - The schema.org type reference and Google's structured data feature
   guides (linked below).
 - Access to Google's Rich Results Test and Search Console for validation.
+- Guidance current as of 2026-11-20. Google retires rich result
+  features regularly: besides FAQ (May 2026) and HowTo (September
+  2023), Google removed the sitelinks search box (November 2024) and,
+  in September 2025, the course info, estimated salary, learning
+  video, special announcement, and vehicle listing features. Always
+  check the current search gallery before adding a type; the
+  schema.org type staying valid does not mean Google still shows the
+  feature.
 
 ## Official Documentation
 
@@ -64,6 +80,14 @@ a page eligible for rich results; it never guarantees them.
   Google's tool for validating markup on a page.
 - [Schema Markup Validator](https://validator.schema.org/) — the
   schema.org validator for general JSON-LD correctness.
+- [Changes to HowTo and FAQ rich results](https://developers.google.com/search/blog/2023/08/howto-faq-changes) —
+  Google's announcement of the FAQ restriction and HowTo deprecation.
+- [Farewell, Sitelinks Search Box](https://developers.google.com/search/blog/2024/10/sitelinks-search-box) —
+  Google's announcement retiring the sitelinks search box
+  (November 2024).
+- [Latest documentation updates](https://developers.google.com/search/updates) —
+  Google's changelog, where feature retirements (including the FAQ
+  removal in May 2026) are recorded.
 
 ## Required Workflow
 
@@ -104,7 +128,17 @@ a page eligible for rich results; it never guarantees them.
 - Do not mark up the same entity twice with conflicting values on one
   page.
 - FAQPage markup is only for pages with a genuine question-and-answer
-  list where the questions and answers are visible on the page.
+  list where the questions and answers are visible on the page. Note
+  it earns no Google rich result as of May 2026; it remains valid
+  schema.org vocabulary that other consumers may use.
+- Breadcrumb rich results appear on desktop search results only, not
+  on mobile (Google, January 2025). BreadcrumbList markup is still
+  worth adding for desktop results and for other consumers.
+- Do not add `WebSite` + `SearchAction` markup expecting a sitelinks
+  search box: Google retired that feature in November 2024. Keep
+  `WebSite` `name` markup on the homepage — Google uses it for site
+  names — and add `SearchAction` only if the site has real site
+  search that other consumers can use.
 
 ## Best Practices
 
@@ -202,7 +236,8 @@ Example BreadcrumbList JSON-LD:
 ```
 
 Example FAQPage JSON-LD (only when the questions and answers are
-visible on the page):
+visible on the page; earns no Google rich result since May 2026, but
+remains valid schema.org markup):
 
 ```html
 <script type="application/ld+json">
@@ -251,5 +286,9 @@ visible on the page):
   supported rich result features.
 - [Rich Results Test](https://search.google.com/test/rich-results) —
   validation tool.
+- [Changes to HowTo and FAQ rich results](https://developers.google.com/search/blog/2023/08/howto-faq-changes) —
+  Google's FAQ/HowTo announcement.
+- [Latest documentation updates](https://developers.google.com/search/updates) —
+  Google's changelog for feature retirements.
 - Related skills in this repository: `structured-data`, `on-page-seo`,
   `technical-seo`, `search-console`.

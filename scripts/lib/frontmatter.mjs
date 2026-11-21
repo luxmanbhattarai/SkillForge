@@ -24,6 +24,24 @@ function unquote(value) {
   return v;
 }
 
+function isQuoted(value) {
+  const v = value.trim();
+  return (v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"));
+}
+
+// A plain (unquoted) scalar must not contain ': ' (colon + space):
+// strict YAML reads it as a nested mapping, so spec-compliant tools
+// reject the whole frontmatter. Found by the Skills CLI in Phase 12:
+// skills/backend/graphql was invisible to `npx skills add --list`
+// because its compatibility line contained ': '. Quote the value
+// instead. Block-scalar content is literal and is not checked.
+function checkPlainScalar(value, where) {
+  if (!isQuoted(value) && value.includes(': ')) {
+    return `${where}: plain scalar value contains ': ' — quote the value (strict YAML rejects it)`;
+  }
+  return null;
+}
+
 // Parses the frontmatter block. Returns { data } or { error }.
 export function parseFrontmatter(raw) {
   const lines = raw.replace(/\r\n/g, '\n').split('\n');
@@ -61,6 +79,8 @@ export function parseFrontmatter(raw) {
         const map = {};
         while (i < lines.length && /^  [A-Za-z0-9_-]+:/.test(lines[i])) {
           const sm = lines[i].match(/^  ([A-Za-z0-9_-]+):\s*(.*)$/);
+          const bad = checkPlainScalar(sm[2], `frontmatter line ${i + 1}`);
+          if (bad) return { error: bad };
           map[sm[1]] = unquote(sm[2]);
           i++;
         }
@@ -69,6 +89,8 @@ export function parseFrontmatter(raw) {
       }
       const parts = [];
       while (i < lines.length && /^  \S/.test(lines[i])) {
+        const bad = checkPlainScalar(lines[i].trim(), `frontmatter line ${i + 1}`);
+        if (bad) return { error: bad };
         parts.push(lines[i].trim());
         i++;
       }
@@ -76,6 +98,8 @@ export function parseFrontmatter(raw) {
       data[key] = parts.join(' ').replace(/\s+/g, ' ').trim();
       continue;
     }
+    const bad = checkPlainScalar(value, `frontmatter line ${i + 1}`);
+    if (bad) return { error: bad };
     data[key] = unquote(value);
     i++;
   }

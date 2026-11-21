@@ -49,7 +49,9 @@ replaced.
 ## Prerequisites
 
 - Access to the project's source code and build configuration.
-- Node.js 24 LTS and the project's package manager.
+- Node.js 24 LTS and the project's package manager. Node.js 26 is
+  the newer LTS since October 2026; Node.js 24 LTS is supported
+  through April 2028.
 - A baseline measurement: bundle sizes (per route, if split) and a
   lab metric such as Total Blocking Time.
 - A bundle analyzer for the project's bundler, or a way to inspect
@@ -64,7 +66,11 @@ replaced.
 - [Rollup](https://rollupjs.org/) — the bundler behind many tools;
   its documentation explains tree-shaking in depth.
 - [esbuild](https://esbuild.github.io/) — a fast bundler with a
-  built-in bundle analyzer.
+  built-in bundle analyzer. esbuild 0.28.x is the current stable
+  line as of mid-2026.
+- [esbuild — Analyze](https://esbuild.github.io/analyze/) — the
+  metafile visualizer; the CLI `--analyze` flag prints the same
+  report from a metafile piped on stdin.
 
 ## Required Workflow
 

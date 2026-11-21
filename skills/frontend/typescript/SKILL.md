@@ -45,11 +45,21 @@ the code ever runs.
 
 ## Prerequisites
 
-- Node.js 24 LTS installed (current LTS line as of 2026-11-20).
-- TypeScript 5.x installed in the project (current major line as of
-  2026-11-20); do not assume a minor version.
+- Node.js 24 LTS or 26 LTS installed (26 is the newest LTS line as
+  of 2026-11-20; 24 and 22 remain in LTS).
+- TypeScript 7.x installed in the project (current major line as of
+  2026-11-20; 7.0 released 2026-07-08 as a native Go port of the
+  compiler, same `typescript` package and `tsc` command, roughly 10x
+  faster builds). Do not assume a minor version. TypeScript 6.0
+  (2026-03-23) was the bridge release from the JavaScript compiler:
+  it changed defaults that 7.0 inherits — `strict` defaults to
+  `true`, `module` to `esnext`, `target` to the current-year ES
+  version, `types` to `[]` (no automatic `@types` inclusion), and
+  `rootDir` to `.`. TypeScript 5.x is superseded; do not write new
+  guidance against its defaults.
 - A `tsconfig.json` in the project, or willingness to create one with
-  strict mode enabled.
+  strict mode enabled (explicit `strict: true` is still recommended
+  even though it is the default in 6.0+).
 - Familiarity with the `javascript` skill; TypeScript builds on it.
 
 ## Official Documentation
@@ -60,6 +70,11 @@ the code ever runs.
   the guided introduction to the type system.
 - [TypeScript release notes](https://www.typescriptlang.org/docs/handbook/release-notes/overview.html) —
   what changed in each version.
+- [Announcing TypeScript 7.0](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/) —
+  the native Go compiler, side-by-side use with TypeScript 6.0, and
+  the missing programmatic API (expected in 7.1).
+- [Announcing TypeScript 6.0](https://devblogs.microsoft.com/typescript/announcing-typescript-6-0/) —
+  the new defaults and the deprecation sweep that 7.0 inherits.
 
 ## Required Workflow
 
@@ -108,7 +123,17 @@ the code ever runs.
   serialize cleanly.
 - Keep `tsconfig.json` paths and module resolution consistent with the
   bundler (`moduleResolution: "bundler"` for Vite-style projects,
-  `"node"` for Node.js-first projects).
+  `"nodenext"` for Node.js-first projects). The legacy `"node"`
+  (node10) and `"classic"` resolutions were deprecated in TypeScript
+  6.0 — do not use them in new projects. Also avoid other options
+  deprecated in 6.0 and removed in 7.0: `target: "es5"`,
+  `--downlevelIteration`, `--baseUrl`, `--outFile`, and the `amd`,
+  `umd`, and `systemjs` module values.
+- TypeScript 7.0 ships no programmatic compiler API (one is expected
+  in 7.1). Tooling that drives the compiler API (for example
+  typescript-eslint) runs against TypeScript 6.0 via the
+  `@typescript/typescript6` compatibility package (`tsc6` binary),
+  which can sit side by side with 7.0's `tsc`.
 
 ## Best Practices
 
@@ -168,6 +193,9 @@ the code ever runs.
   data before treating it as a typed value.
 - Enums with numeric values serialized to an API — numeric enums are
   opaque over the wire. Use string literal unions.
+- Relying on automatic `@types` inclusion — since TypeScript 6.0 the
+  `types` option defaults to `[]`, so global type packages (for
+  example `node`) must be listed explicitly in `tsconfig.json`.
 - Turning off `strict` to make errors go away — strict mode is the point;
   fix the code instead.
 
@@ -218,12 +246,14 @@ async function loadArticle(id: string): Promise<Article> {
 }
 ```
 
-Strict `tsconfig.json` for a browser project:
+Strict `tsconfig.json` for a browser project (TypeScript 6.0+/7.0;
+`strict`, `module`, and `target` are shown explicitly even though
+the first two are now defaults):
 
 ```json
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ES2025",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "strict": true,
@@ -263,5 +293,7 @@ Strict `tsconfig.json` for a browser project:
   guided introduction to the type system.
 - [TypeScript release notes](https://www.typescriptlang.org/docs/handbook/release-notes/overview.html) —
   version history.
+- [Announcing TypeScript 7.0](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/) —
+  the current major line and its Go compiler.
 - Related skills in this repository: `javascript`, `react`, `nextjs`,
   `astro`.

@@ -62,7 +62,10 @@ cropping, compression, alt text, and naming.
 - [Squoosh](https://squoosh.app/) — a browser tool for resizing and
   compressing images without installing software.
 - [Sharp documentation](https://sharp.pixelplumbing.com/) — scripted
-  resizing and conversion for bulk image work.
+  resizing and conversion for bulk image work. Code examples in this skill
+  use the Sharp 0.35.x API (current as of November 2026); the
+  `.resize()`, `.jpeg()`, `.webp()`, `.avif()`, and `.png()` calls shown
+  here are stable across Sharp 0.3x releases.
 
 ## Required Workflow
 

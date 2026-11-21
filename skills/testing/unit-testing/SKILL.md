@@ -48,7 +48,9 @@ reports into regression tests.
 ## Prerequisites
 
 - A test runner installed in the project (`vitest` for Vite-based
-  projects; Node's built-in test runner also works).
+  projects; Node's built-in test runner also works). Vitest 5.x is
+  the current major and requires Node.js >= 22.12 and Vite >= 6.4;
+  see the `vitest` skill for version details.
 - The module under test is importable without side effects at import time
   (no network calls or database connections on module load).
 - Familiarity with the project's assertion style and test file layout

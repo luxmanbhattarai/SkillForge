@@ -60,7 +60,7 @@ Policy as a safety net.
 - [OWASP XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html) —
   the canonical defensive guidance.
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/) — Injection
-  category context.
+  (A05 in the current 2025 edition) category context.
 - [MDN Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) —
   CSP directives and examples.
 - [DOMPurify](https://github.com/cure53/DOMPurify) — HTML sanitizer

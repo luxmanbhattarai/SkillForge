@@ -13,7 +13,7 @@ metadata:
   maintainer: skills-library
   source: original
   last_verified: "2026-11-20"
-compatibility: Requires Node.js 24 LTS or a supported edge runtime; TypeScript 5.x recommended.
+compatibility: Requires Node.js 24 LTS or later or a supported edge runtime; TypeScript 7.x recommended.
 ---
 
 # Hono
@@ -47,16 +47,18 @@ reason about, easy to test, and portable across runtimes.
 
 ## Prerequisites
 
-- Node.js 24 LTS installed, or a target edge runtime such as
-  Cloudflare Workers.
-- Familiarity with TypeScript 5.x and HTTP fundamentals.
+- Node.js 24 LTS or later installed (26 is the current LTS line),
+  or a target edge runtime such as Cloudflare Workers.
+- Familiarity with TypeScript 7.x and HTTP fundamentals.
 - A project scaffolded with Hono (for example via the Hono starter
   templates) or an existing Hono app.
+- Hono 4.13.x (4.13.19, November 2026). Validate with Zod 4.x via
+  `@hono/zod-validator` 0.9.x, which supports Zod 4.
 
 ## Official Documentation
 
 - [Hono documentation](https://hono.dev/docs) — guides, API reference,
-  and middleware catalog.
+  and middleware catalog. Hono 4.13.x is the current release line.
 - [Hono website](https://hono.dev/) — overview and getting started.
 - [Node.js documentation](https://nodejs.org/docs/) — for Node.js
   deployment targets.
@@ -88,9 +90,10 @@ reason about, easy to test, and portable across runtimes.
 - Use the context object (`c`) for everything in a handler: read input
   with `c.req.json()`, `c.req.param()`, and `c.req.query()`; respond
   with `c.json()`, `c.text()`, or `c.html()`.
-- Validate with the validator middleware (`zValidator`) and a Zod
-  schema for `json`, `query`, and `param` inputs. Return `400` or
-  `422` with a problem detail on validation failure.
+- Validate with the validator middleware (`zValidator` from
+  `@hono/zod-validator`) and a Zod 4.x schema for `json`, `query`,
+  and `param` inputs. Return `400` or `422` with a problem detail on
+  validation failure.
 - Centralize errors with `app.onError`: map known error types to
   RFC 9457 problem details and return a generic `500` for anything
   unexpected. Never leak stack traces to clients.

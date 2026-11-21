@@ -52,7 +52,7 @@ into a customer, subscriber, or user.
 
 - [FTC](https://www.ftc.gov/) — U.S. advertising rules, including endorsement and testimonial guides.
 - [plainlanguage.gov](https://www.plainlanguage.gov/) — plain-language guidelines for clear copy.
-- [Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/WAI/standards-guidelines/wcag/) — accessibility requirements for web copy and CTAs.
+- [Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/WAI/standards-guidelines/wcag/) — accessibility requirements for web copy and CTAs. WCAG 2.2 (W3C Recommendation, October 2023) is the current version; Level AA requires a contrast ratio of at least 4.5:1 for normal text and 3:1 for large text (success criterion 1.4.3). WCAG 3.0 is still a Working Draft and must not be cited as a requirement.
 
 ## Required Workflow
 

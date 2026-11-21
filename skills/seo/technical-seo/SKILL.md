@@ -69,6 +69,8 @@ prevent a site from competing.
 - [Web Vitals](https://web.dev/vitals/) — definitions and thresholds for
   Core Web Vitals.
 
+Guidance current as of 2026-11-20.
+
 ## Required Workflow
 
 1. Verify the basics: the site serves over HTTPS, the canonical domain
@@ -112,6 +114,13 @@ prevent a site from competing.
   content that only exists after user interaction is not reliably indexed.
 - Core Web Vitals: aim for Google's published "good" thresholds for LCP,
   INP, and CLS on the main templates; treat failing templates as defects.
+  The "good" thresholds (web.dev, verified 2026-11-20) are: Largest
+  Contentful Paint at or under 2.5 seconds, Interaction to Next Paint
+  at or under 200 milliseconds, and Cumulative Layout Shift at or under
+  0.1 — assessed at the 75th percentile of real-user (CrUX) data over
+  a 28-day window, per device. INP replaced First Input Delay (FID)
+  as the responsiveness metric in March 2024; do not use FID targets
+  or lab-only PageSpeed scores as the pass bar.
 - Sitemaps: split at 50,000 URLs or 50 MB uncompressed per file, use a
   sitemap index for large sites, and list only indexable URLs.
 - `robots.txt`: block only what must not be crawled (admin, search

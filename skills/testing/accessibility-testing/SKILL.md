@@ -55,7 +55,9 @@ and meets legal and contractual accessibility requirements.
 - A screen reader for verification when the flow is critical (NVDA on
   Windows, VoiceOver on macOS).
 - Familiarity with WCAG 2.x success criteria at level AA, the usual
-  conformance target.
+  conformance target. WCAG 2.2 is the current version of the
+  guidelines; WCAG 3.0 remains a draft and is not a conformance
+  target.
 
 ## Official Documentation
 

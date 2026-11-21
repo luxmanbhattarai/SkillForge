@@ -44,6 +44,7 @@ This skill covers index design for relational databases: choosing the right inde
 - The queries the indexes must serve, with their filter, join, and sort columns.
 - Representative data to verify index usage with `EXPLAIN`.
 - Access to run `EXPLAIN` and, where available, index usage statistics.
+- The examples use PostgreSQL syntax. Supported versions as of 2026-11-20: PostgreSQL 15–19, MySQL 8.4/9.7 LTS, SQLite 3.51. Note the version-specific differences: `INCLUDE` columns need PostgreSQL 11 or later and have no MySQL equivalent; `CREATE INDEX CONCURRENTLY` is PostgreSQL-only (MySQL uses online DDL, SQLite has no concurrent form).
 
 ## Official Documentation
 
@@ -131,6 +132,8 @@ CREATE INDEX CONCURRENTLY idx_orders_active_customer
 
 ```sql
 -- Example: covering index — the query's columns are all in the index.
+-- PostgreSQL syntax (INCLUDE needs PostgreSQL 11+); MySQL has no
+-- INCLUDE clause — include extra columns in the index key list instead.
 CREATE INDEX CONCURRENTLY idx_books_author_title
   ON books (author_id) INCLUDE (title, price_cents);
 
