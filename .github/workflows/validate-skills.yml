@@ -69,7 +69,7 @@ jobs:
   registry:
     # Registry validation: the committed registry must match what the
     # generator produces, and must pass schema validation. Runs on
-    # Node 20 only; generation is deterministic (see
+    # Node 24 only; generation is deterministic (see
     # ai/decisions/2026-11-20-registry-determinism.md), so one version
     # is enough.
     name: Registry
@@ -149,7 +149,7 @@ jobs:
     #        the runner image is unverified from here.
     # Remove continue-on-error (and add this job to the required
     # branch-protection checks) once the leg is green for real.
-    # Until then, do NOT require the "Windows (Node 20)" check.
+    # Until then, do NOT require the "Windows (Node 24)" check.
     #
     # Deliberately NOT run here: check:security (W-2),
     # check:links (the upstream exclusion is a POSIX-prefix match
@@ -158,7 +158,7 @@ jobs:
     # registry diff (W-3), evals (covered on Ubuntu; the mock
     # provider adds no Windows signal). All are covered by the
     # Ubuntu jobs in this workflow.
-    name: Windows (Node 20)
+    name: Windows (Node 24)
     runs-on: windows-latest
     timeout-minutes: 20
     continue-on-error: true

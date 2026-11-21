@@ -17,10 +17,10 @@ PR validation, now covering every local check:
   `check:agents`, `score`, and `npm test` (regression tests).
   `check:duplicates` and `check:sources` previously ran in no
   workflow (M-03).
-- `registry` job (Node 20) — `npm run check:registry` (Phase 9
+- `registry` job (Node 24) — `npm run check:registry` (Phase 9
   contract script, see below), then regenerate + diff. The diff step
   prints the fix: run `npm run registry` and commit.
-- `evals` job (Node 20) — `npm run evals` with the default mock
+- `evals` job (Node 24) — `npm run evals` with the default mock
   provider (deterministic, no LLM APIs, no keys, no network).
 - `permissions: contents: read`. All actions pinned to SHAs.
 
@@ -121,8 +121,8 @@ position relative to the base).
 - **No caching:** `actions/setup-node` runs with no cache in every
   job — zero dependencies and no lockfile means there is nothing
   to cache. Each use says so in a comment.
-- **Node versions:** matrix 18/20/22 on the main validation job
-  only; every other job runs Node 20.
+- **Node versions:** matrix 24 on the main validation job
+  only; every other job runs Node 24.
 
 ## Contract scripts (coordinator-owned, Phase 9)
 
