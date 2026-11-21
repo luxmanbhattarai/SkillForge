@@ -461,8 +461,9 @@ scanner itself was run in throwaway worktrees (removed afterwards):
   `cursor.com/docs/skills` 403 did **not** recur (the URL is in scope at
   `docs/INSTALLATION.md:145` and passed this run).
   **Validation rules (read from code):** scope = all `*.md` except `.git`,
-  `node_modules`, and (by default) `skills/upstream/`; only Markdown `[text](url)`
-  links matched; `mailto:` and `#` anchors ignored; internal links checked by file
+  `node_modules`, and (by default) `skills/upstream/`; only Markdown links
+  (a `[text]` label followed by a parenthesized target) matched; `mailto:` and
+  `#` anchors ignored; internal links checked by file
   existence only (fragment stripped, no anchor validation). "Verified" = sequential
   `HEAD` request per unique URL with a browser User-Agent, `redirect: 'follow'`, 15 s
   timeout; on 405/403/429 only, one `GET` retry (body cancelled). Any final status
