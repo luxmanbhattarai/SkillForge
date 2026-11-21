@@ -2343,7 +2343,7 @@
       "vendor": "marketingskills",
       "source_type": "upstream",
       "source": "marketingskills",
-      "status": "verified-with-limitations",
+      "status": "verified",
       "version": "1.1.0",
       "license": "MIT",
       "maintainer": "marketingskills",

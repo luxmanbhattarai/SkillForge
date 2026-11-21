@@ -31,12 +31,16 @@
 //   npm run score
 // Exit code 1 if any skill is CRITICAL (security pattern hit), else 0.
 
-import { readdir, readFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { splitFrontmatter, parseFrontmatter } from './lib/frontmatter.mjs';
 import { toPosixPath } from './lib/paths.mjs';
+// Shared skill discovery + standard constants (A2-18): one copy of
+// findSkillFiles, REQUIRED_SECTIONS, and the placeholder regexes
+// for every check script, so a fix in one place reaches all of them.
+import { findSkillFiles, REQUIRED_SECTIONS, PLACEHOLDER_ACRONYM_RE, PLACEHOLDER_PHRASE_RE } from './lib/skill-files.mjs';
 // Security patterns come from the shared library (score scope: secrets
 // + injection only — command/code patterns need context triage and live
 // in the scanner, not in a score cap).
@@ -45,23 +49,14 @@ import { scanLine } from './lib/security-patterns.mjs';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SKILLS_DIR = path.join(ROOT, 'skills');
 
-const REQUIRED_SECTIONS = [
-  'Purpose', 'When to Use', 'When Not to Use', 'Prerequisites',
-  'Official Documentation', 'Required Workflow', 'Implementation Standards',
-  'Best Practices', 'Security Considerations', 'Performance Considerations',
-  'Common Mistakes', 'Examples', 'Validation Checklist',
-  'Expected Deliverables', 'References',
-];
-
 // Categories where accessibility content is applicable (Phase 5 standard).
 const A11Y_CATEGORIES = new Set(['frontend', 'media', 'content', 'metadata']);
 
 // (Security patterns live in scripts/lib/security-patterns.mjs;
 // the security dimension uses its 'score' scope via scanLine.)
 
-// Placeholder markers — same split as scripts/validate-skills.mjs.
-const PLACEHOLDER_ACRONYM_RE = /\b(TODO|FIXME|XXX|TBD)\b/;
-const PLACEHOLDER_PHRASE_RE = /lorem ipsum|coming soon|placeholder text/i;
+// (REQUIRED_SECTIONS and the placeholder regexes live in
+// scripts/lib/skill-files.mjs — the shared copy, audit A2-18.)
 const REL_LINK_RE = /\[[^\]]*\]\((?!https?:|mailto:|#)([^)\s]+)\)/g;
 const EXT_LINK_RE = /\[[^\]]*\]\((https?:[^)\s]+)\)/g;
 
@@ -69,16 +64,6 @@ const args = process.argv.slice(2);
 const filterIdx = args.indexOf('--filter');
 const FILTER = filterIdx >= 0 ? args[filterIdx + 1] : null;
 const JSON_OUT = args.includes('--json');
-
-async function findSkillFiles(dir) {
-  const out = [];
-  for (const e of await readdir(dir, { withFileTypes: true }).catch(() => [])) {
-    const full = path.join(dir, e.name);
-    if (e.isDirectory()) out.push(...await findSkillFiles(full));
-    else if (e.name === 'SKILL.md') out.push(full);
-  }
-  return out;
-}
 
 // Split body into sections by ## heading. Returns Map<heading, text>.
 function sections(body) {
@@ -209,7 +194,7 @@ function scoreSkill(relPath, text) {
   // --- overall + caps ---
   const values = Object.values(dims);
   let overall = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
-  if (secHits.length > 0) overall = Math.min(overall, 40);
+  if (secHits.size > 0) overall = Math.min(overall, 40);
   if (missing.length > 0) { overall = Math.min(overall, 50); flags.push(`completeness: missing sections: ${missing.join(', ')}`); }
   if (placeholder) overall = Math.min(overall, 60);
 
@@ -261,4 +246,6 @@ if (JSON_OUT) {
   console.log('\nNote: the accuracy dimension scores checkable proxies only (no placeholders, no broken relative links, https links). It does not verify technical accuracy.');
 }
 
-process.exit(critical.length > 0 ? 1 : 0);
+// exitCode, not process.exit(): a hard exit discards pending piped
+// stdout. Natural exit flushes it first (see validate-registry.mjs).
+process.exitCode = critical.length > 0 ? 1 : 0;

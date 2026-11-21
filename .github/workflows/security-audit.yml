@@ -1,10 +1,12 @@
 name: Security audit
 
-# Local security scan (scripts/security-scan.mjs) plus a dependency
-# audit. Runs on every push/PR and weekly, so newly disclosed issues
-# surface even without code changes. CodeQL runs in its own workflow
-# (codeql.yml); GitHub secret scanning and Dependabot alerts are repo
-# settings, not workflow steps — see ai/phase10/NOTES.md.
+# Local security scan (scripts/security-scan.mjs), Semgrep SAST, plus
+# a dependency audit. Runs on every push/PR and weekly, so newly
+# disclosed issues surface even without code changes. The custom
+# scanner is a pattern-based smoke screen, not SAST — the Semgrep
+# job is the real SAST. CodeQL runs in its own workflow
+# (codeql.yml); GitHub secret scanning and Dependabot alerts are
+# repo settings, not workflow steps — see ai/phase10/NOTES.md.
 
 on:
   push:
@@ -31,11 +33,12 @@ concurrency:
 jobs:
   security-audit:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Check out repository
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
-      - name: Set up Node.js 20
+      - name: Set up Node.js 24
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "24"
@@ -56,3 +59,40 @@ jobs:
             echo "No package-lock.json: zero dependencies, nothing to audit."
             echo "(npm audit would fail with ENOLOCK; see ai/phase10/NOTES.md.)"
           fi
+
+  semgrep:
+    # Real SAST: the custom scanner (security-audit job) is a
+    # pattern-based smoke screen, not SAST. Semgrep ran clean
+    # once locally in Stage D (1.186.0, p/javascript over
+    # scripts/test/evals); this job keeps it in CI. Pinned to
+    # the Stage D version so results are reproducible.
+    #
+    # SUPPLY-CHAIN RESIDUAL (audit finding A4-06, documented
+    # honestly rather than faked): the install is a PyPI version
+    # pin only (semgrep==1.186.0) — transitive dependencies are
+    # unpinned, there is no --require-hashes lockfile, and
+    # --config p/javascript resolves the ruleset from the Semgrep
+    # Registry at runtime. A hash-pinned requirements file was
+    # deliberately NOT added: pip-tools is not available in the
+    # dev environment, and a lockfile must be generated against
+    # the runner's Python version to be portable. The job has now
+    # run in CI (PR #4 runs 44942929351, 44944634176, 44944906367),
+    # so the follow-up is unblocked: generate the lockfile
+    # (pip-tools, --generate-hashes) and pin the ruleset version.
+    # Bounding the risk meanwhile: this
+    # job runs workflow code from the PR branch, so a
+    # compromised or withdrawn release breaks the run loudly (a
+    # failed check) rather than passing silently — a
+    # supply-chain break here cannot produce a false green.
+    name: Semgrep (SAST)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Install Semgrep 1.186.0
+        run: python3 -m pip install semgrep==1.186.0
+
+      - name: Run Semgrep (p/javascript)
+        run: semgrep --config p/javascript --error scripts/ test/ evals/

@@ -13,29 +13,26 @@
 // mode: upstream files are never edited, so an upstream warning is
 // informational by policy (see ai/decisions/2026-11-20-validate-strict-upstream-warnings.md).
 
-import { readdir, readFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { splitFrontmatter, parseFrontmatter, validateName } from './lib/frontmatter.mjs';
 import { toPosixPath } from './lib/paths.mjs';
+// Shared skill-file discovery and constants (A2-18): one copy of
+// findSkillFiles, REQUIRED_SECTIONS, and the placeholder regexes
+// for all the check scripts, so a fix in one place cannot miss
+// the others (as the W-3/A2-14 path bugs did).
+import {
+  findSkillFiles,
+  REQUIRED_SECTIONS,
+  PLACEHOLDER_ACRONYM_RE,
+  PLACEHOLDER_PHRASE_RE,
+} from './lib/skill-files.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SKILLS_DIR = path.join(ROOT, 'skills');
 
-const REQUIRED_SECTIONS = [
-  'Purpose', 'When to Use', 'When Not to Use', 'Prerequisites',
-  'Official Documentation', 'Required Workflow', 'Implementation Standards',
-  'Best Practices', 'Security Considerations', 'Performance Considerations',
-  'Common Mistakes', 'Examples', 'Validation Checklist',
-  'Expected Deliverables', 'References',
-];
-
-// Placeholder markers: acronyms match only in UPPERCASE (so ordinary prose
-// like "a todo list" does not trip the check); phrases match any case.
-// Two regexes because a single /i flag would apply to the whole pattern.
-const PLACEHOLDER_ACRONYM_RE = /\b(TODO|FIXME|XXX|TBD)\b/;
-const PLACEHOLDER_PHRASE_RE = /lorem ipsum|coming soon|placeholder text/i;
 const REL_LINK_RE = /\[[^\]]*\]\((?!https?:|mailto:|#)([^)\s]+)\)/g;
 
 const args = process.argv.slice(2);
@@ -43,15 +40,18 @@ const filterIdx = args.indexOf('--filter');
 const FILTER = filterIdx >= 0 ? args[filterIdx + 1] : null;
 const STRICT = args.includes('--strict');
 
-async function findSkillFiles(dir) {
-  const out = [];
-  const entries = await readdir(dir, { withFileTypes: true }).catch(() => []);
-  for (const e of entries) {
-    const full = path.join(dir, e.name);
-    if (e.isDirectory()) out.push(...await findSkillFiles(full));
-    else if (e.name === 'SKILL.md') out.push(full);
-  }
-  return out;
+/**
+ * Does the repo-relative path `rel` match the --filter prefix?
+ * Both sides are normalized to POSIX separators first (A2-14):
+ * path.relative returns backslashes on Windows while the
+ * documented filter form is POSIX, so an unnormalized prefix
+ * match silently checked zero skills there. Exported for testing
+ * (a Windows-style path can be fed in on POSIX).
+ */
+export function matchesFilter(rel, filter) {
+  if (!filter) return true;
+  const prefix = toPosixPath(filter).replace(/^\.\//, '');
+  return toPosixPath(rel).startsWith(prefix);
 }
 
 function headings(body) {
@@ -87,7 +87,7 @@ async function main() {
   const files = (await findSkillFiles(SKILLS_DIR)).sort();
   for (const file of files) {
     const rel = path.relative(ROOT, file);
-    if (FILTER && !rel.startsWith(FILTER.replace(/^\.\//, ''))) continue;
+    if (!matchesFilter(rel, FILTER)) continue;
     checked++;
     const parts = rel.split(path.sep); // skills/<category>/<name>/SKILL.md
     const isUpstream = parts[1] === 'upstream';
@@ -200,7 +200,9 @@ async function main() {
       ? `PASS with ${totalWarnings} warning(s)${upstreamWarnings.length ? ` (${upstreamWarnings.length} upstream, informational)` : ''}.`
       : 'PASS: all skills valid.')
     : `FAIL: ${errors.length} error(s), ${totalWarnings} warning(s).`);
-  process.exit(failed ? 1 : 0);
+  // exitCode, not process.exit(): a hard exit discards pending piped
+  // stdout. Natural exit flushes it first (see validate-registry.mjs).
+  process.exitCode = failed ? 1 : 0;
 }
 
 // Main guard (same idiom as evals/runners/run-evals.mjs): importing

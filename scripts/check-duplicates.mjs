@@ -3,24 +3,16 @@
 // descriptions (Jaccard similarity over description tokens).
 // Usage: node scripts/check-duplicates.mjs [--threshold 0.8]
 
-import { readdir, readFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { splitFrontmatter, parseFrontmatter } from './lib/frontmatter.mjs';
+// Shared skill-file discovery (A2-18).
+import { findSkillFiles } from './lib/skill-files.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const tIdx = process.argv.indexOf('--threshold');
 const THRESHOLD = tIdx >= 0 ? parseFloat(process.argv[tIdx + 1]) : 0.8;
-
-async function findSkillFiles(dir) {
-  const out = [];
-  for (const e of await readdir(dir, { withFileTypes: true }).catch(() => [])) {
-    const full = path.join(dir, e.name);
-    if (e.isDirectory()) out.push(...await findSkillFiles(full));
-    else if (e.name === 'SKILL.md') out.push(full);
-  }
-  return out;
-}
 
 function tokens(text) {
   return new Set((text || '').toLowerCase().replace(/[^a-z0-9\s-]/g, '').split(/\s+/).filter((w) => w.length > 2));
@@ -56,4 +48,6 @@ console.log(`Compared ${skills.length} skills (threshold ${THRESHOLD}).`);
 for (const w of warnings) console.log(`  WARN  ${w}`);
 for (const e of errors) console.log(`  ERROR ${e}`);
 console.log(errors.length ? `FAIL: ${errors.length} error(s).` : warnings.length ? `PASS with ${warnings.length} warning(s).` : 'PASS.');
-process.exit(errors.length ? 1 : 0);
+// exitCode, not process.exit(): a hard exit discards pending piped
+// stdout. Natural exit flushes it first (see validate-registry.mjs).
+process.exitCode = errors.length ? 1 : 0;

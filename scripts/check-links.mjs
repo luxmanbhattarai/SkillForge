@@ -15,6 +15,16 @@
 // Link extraction ignores fenced code blocks and inline code spans:
 // link-shaped text in code is an example, not a link (A-23 — a prose
 // example tripped the offline check in Stage B).
+// Redirects are followed manually with an SSRF guard (A5-06): a link
+// redirecting to localhost, a loopback/private/link-local IP, or a
+// non-http(s) scheme is refused, never fetched. The guard applies
+// to redirect TARGETS only, not to the initial URL (tests and local
+// tooling legitimately fetch http://127.0.0.1 stubs). DNS rebinding
+// — a public hostname resolving to a private IP — is out of scope:
+// Node's fetch resolves the hostname after this check, and closing
+// that hole would need a custom lookup. Only the HTTP status is ever
+// recorded, bodies are cancelled, and no credentials are sent, so a
+// redirect can at most probe — never exfiltrate.
 // The online path retries 403/429 responses and network errors with
 // exponential backoff, and waits briefly between requests, so transient
 // rate-limiting (e.g. the cursor.com 403 seen in the v1.0.0 run) does
@@ -24,6 +34,7 @@
 
 import { readdir, readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { isIP } from 'node:net';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { toPosixPath } from './lib/paths.mjs';
@@ -40,6 +51,7 @@ export const FETCH_TIMEOUT_MS = 15000;
 export const MAX_ATTEMPTS = 3; // initial attempt + 2 retries
 export const BACKOFF_BASE_MS = 500; // 500ms, then 1000ms (exponential)
 export const REQUEST_DELAY_MS = 200; // pause between requests, not before the first
+export const MAX_REDIRECTS = 5; // follows per fetch before giving up
 // Statuses worth retrying: rate-limiting and bot-gate responses that
 // often clear on a second attempt. Other 4xx/5xx are reported as-is.
 const RETRYABLE_STATUS = new Set([403, 429]);
@@ -69,6 +81,157 @@ const EXCEPTIONS = [
 ];
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// --- Redirect-target SSRF guard (A5-06) ------------------------------
+// A redirect target is unsafe when its scheme is not http(s), its
+// hostname is localhost, or its hostname is an IP literal in a
+// loopback, private, or link-local range (IPv4 or IPv6, including
+// IPv4-mapped IPv6 like ::ffff:127.0.0.1). Returns a human-readable
+// reason, or null when the target is safe to fetch.
+
+function parseIpv4(host) {
+  const parts = host.split('.');
+  if (parts.length !== 4) return null;
+  const octets = [];
+  for (const p of parts) {
+    if (!/^\d{1,3}$/.test(p)) return null;
+    const n = Number(p);
+    if (n > 255) return null;
+    octets.push(n);
+  }
+  return octets;
+}
+
+function isUnsafeIpv4([a, b]) {
+  if (a === 0) return true; // 0.0.0.0/8 ("this network")
+  if (a === 10) return true; // 10.0.0.0/8 (private)
+  if (a === 127) return true; // 127.0.0.0/8 (loopback)
+  if (a === 169 && b === 254) return true; // 169.254.0.0/16 (link-local)
+  if (a === 172 && b >= 16 && b <= 31) return true; // 172.16.0.0/12 (private)
+  if (a === 192 && b === 168) return true; // 192.168.0.0/16 (private)
+  return false;
+}
+
+// Parse an IPv6 literal into 8 16-bit groups, or null when invalid.
+// Handles '::' compression and an embedded IPv4 tail (::ffff:1.2.3.4).
+function parseIpv6(host) {
+  const halves = host.split('::');
+  if (halves.length > 2) return null;
+  const parseSide = (side) => {
+    if (side === '') return [];
+    const out = [];
+    for (const seg of side.split(':')) {
+      if (seg.includes('.')) {
+        const v4 = parseIpv4(seg);
+        if (!v4) return null;
+        out.push(((v4[0] << 8) | v4[1]) >>> 0, ((v4[2] << 8) | v4[3]) >>> 0);
+      } else {
+        if (!/^[0-9a-fA-F]{1,4}$/.test(seg)) return null;
+        out.push(parseInt(seg, 16));
+      }
+    }
+    return out;
+  };
+  const left = parseSide(halves[0]);
+  if (left === null) return null;
+  if (halves.length === 1) return left.length === 8 ? left : null;
+  const right = parseSide(halves[1]);
+  if (right === null) return null;
+  const missing = 8 - left.length - right.length;
+  if (missing < 1) return null; // '::' must compress at least one group
+  return [...left, ...new Array(missing).fill(0), ...right];
+}
+
+function isUnsafeIpv6(groups) {
+  const [g0, g1, g2, g3, g4, g5, g6, g7] = groups;
+  // IPv4-mapped (::ffff:a.b.c.d): judge the embedded IPv4 address.
+  if (g0 === 0 && g1 === 0 && g2 === 0 && g3 === 0 && g4 === 0 && g5 === 0xffff) {
+    return isUnsafeIpv4([g6 >> 8, g6 & 0xff, g7 >> 8, g7 & 0xff]);
+  }
+  if (groups.every((g) => g === 0)) return true; // :: (unspecified)
+  if (g7 === 1 && groups.slice(0, 7).every((g) => g === 0)) return true; // ::1 (loopback)
+  if (g0 >= 0xfe80 && g0 <= 0xfebf) return true; // fe80::/10 (link-local)
+  if (g0 >= 0xfc00 && g0 <= 0xfdff) return true; // fc00::/7 (unique-local)
+  return false;
+}
+
+/**
+ * Why the redirect target `target` (a URL or URL string) must not
+ * be fetched, or null when it is safe. Exported for testing.
+ */
+export function unsafeRedirectReason(target) {
+  let url;
+  try {
+    url = target instanceof URL ? target : new URL(target);
+  } catch {
+    return 'not a valid URL';
+  }
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    return `protocol '${url.protocol}' is not http(s)`;
+  }
+  // WHATWG URL keeps the brackets in hostname for IPv6 literals
+  // ('[::1]'), and net.isIP does not accept brackets — strip them.
+  const host = url.hostname.toLowerCase().replace(/\.$/, '').replace(/^\[(.*)\]$/, '$1');
+  if (host === 'localhost' || host.endsWith('.localhost')) {
+    return `hostname '${host}' is localhost`;
+  }
+  const kind = isIP(host);
+  if (kind === 4) {
+    const octets = parseIpv4(host);
+    if (octets && isUnsafeIpv4(octets)) return `IP literal '${host}' is loopback, private, or link-local`;
+  } else if (kind === 6) {
+    const groups = parseIpv6(host);
+    if (groups && isUnsafeIpv6(groups)) return `IP literal '${host}' is loopback, private, or link-local`;
+  }
+  return null;
+}
+
+const REDIRECT_STATUS = new Set([301, 302, 303, 307, 308]);
+
+// Fetch one URL following redirects manually (fetch's
+// redirect: 'follow' would fetch any Location unguarded). Each
+// redirect target passes unsafeRedirectReason; an unsafe target,
+// an invalid Location, or too many hops throws an Error with
+// `noRetry: true`, so fetchWithRetry does not retry it. The
+// request method is kept across redirects (only HEAD/GET are used
+// here, so the 303 POST→GET rule never applies).
+async function fetchWithRedirects(url, { method, fetchFn, timeoutMs }) {
+  let current = url;
+  for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
+    const res = await fetchFn(current, {
+      method,
+      redirect: 'manual',
+      headers: { 'User-Agent': USER_AGENT },
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+    if (!REDIRECT_STATUS.has(res.status)) return res;
+    const location = res.headers?.get?.('location');
+    if (!location) return res;
+    let next;
+    try {
+      next = new URL(location, current);
+    } catch {
+      const err = new Error(`redirect to invalid URL ${JSON.stringify(location)} from ${current}`);
+      err.noRetry = true;
+      throw err;
+    }
+    const problem = unsafeRedirectReason(next);
+    if (problem) {
+      const err = new Error(`refusing redirect from ${current} to ${next.href}: ${problem}`);
+      err.code = 'UNSAFE_REDIRECT';
+      err.noRetry = true;
+      throw err;
+    }
+    if (hop === MAX_REDIRECTS) {
+      const err = new Error(`too many redirects (>${MAX_REDIRECTS}) starting at ${url}`);
+      err.noRetry = true;
+      throw err;
+    }
+    if (res.body) await res.body.cancel().catch(() => {});
+    current = next.href;
+  }
+  throw new Error('unreachable: redirect loop always returns or throws');
+}
 
 async function findMd(dir) {
   const out = [];
@@ -114,6 +277,9 @@ export function extractLinks(text) {
  * exponential backoff (BACKOFF_BASE_MS, doubling). Returns the final
  * Response; throws the last error when every attempt threw. A
  * non-retryable status is returned immediately, never retried.
+ * Redirects are followed manually with the A5-06 SSRF guard (see
+ * fetchWithRedirects); a refused redirect throws immediately and is
+ * never retried.
  */
 export async function fetchWithRetry(url, {
   method = 'HEAD',
@@ -126,16 +292,14 @@ export async function fetchWithRetry(url, {
   let lastError;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const res = await fetchFn(url, {
-        method,
-        redirect: 'follow',
-        headers: { 'User-Agent': USER_AGENT },
-        signal: AbortSignal.timeout(timeoutMs),
-      });
+      const res = await fetchWithRedirects(url, { method, fetchFn, timeoutMs });
       if (!RETRYABLE_STATUS.has(res.status) || attempt === maxAttempts) return res;
       // Retryable status: free the connection before backing off.
       if (res.body) await res.body.cancel().catch(() => {});
     } catch (e) {
+      // Guard errors (unsafe redirect, invalid Location, too many
+      // redirects) are deterministic — retrying cannot help.
+      if (e && e.noRetry) throw e;
       lastError = e;
       if (attempt === maxAttempts) throw e;
     }
@@ -248,7 +412,9 @@ async function main() {
   console.log(`Checked ${checked} internal links; ${external.size} unique external URLs ${ONLINE ? `(${fetched} checked live, ${skipped} skipped: example domains / documented exceptions)` : 'listed (use --online to verify)'}.`);
   for (const e of errors) console.log(`  ERROR ${e}`);
   console.log(errors.length ? `FAIL: ${errors.length} error(s).` : 'PASS.');
-  process.exit(errors.length ? 1 : 0);
+  // exitCode, not process.exit(): a hard exit discards pending piped
+  // stdout. Natural exit flushes it first (see validate-registry.mjs).
+  process.exitCode = errors.length ? 1 : 0;
 }
 
 // Only run when invoked as a script: unit tests import the helpers

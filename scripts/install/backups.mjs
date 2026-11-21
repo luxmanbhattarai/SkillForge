@@ -161,7 +161,15 @@ export async function listBackups(skillsDir) {
     const dir = path.join(base, entry.name);
     try {
       const record = JSON.parse(await readFile(path.join(dir, 'backup.json'), 'utf8'));
-      out.push({ ...record, dir });
+      // A2-05: a record that parses but has no items array (e.g.
+      // `{}`) is corrupt too — the old code pushed it as-is and
+      // the human `restore --list` path crashed on b.items.map().
+      // Report it in the same corrupt shape as the catch branch.
+      if (!record || typeof record !== 'object' || Array.isArray(record) || !Array.isArray(record.items)) {
+        out.push({ id: entry.name, dir, corrupt: true, created: null, items: [] });
+      } else {
+        out.push({ ...record, dir });
+      }
     } catch {
       out.push({ id: entry.name, dir, corrupt: true, created: null, items: [] });
     }
@@ -329,6 +337,13 @@ export async function recoverBackupRecord(skillsDir, id) {
       }
       const files = children.filter((c) => c.isFile());
       if (files.length !== 1 || validatePathSegment(files[0].name, 'fileName')) continue;
+      // A5-03: the recovered file name must name the item itself
+      // (`<name>.md`/`.toml`) — the normal path (validateBackupRecord)
+      // enforces destName-must-match-name, but the recovery path
+      // used to skip that check, so a crafted `items/0-agent-foo/
+      // bar.md` would restore over a DIFFERENT agent's file. A
+      // mismatched item is skipped, never recovered.
+      if (files[0].name !== `${name}.md` && files[0].name !== `${name}.toml`) continue;
       fileName = files[0].name;
     }
     items.push({

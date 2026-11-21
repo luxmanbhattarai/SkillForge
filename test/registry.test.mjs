@@ -232,8 +232,19 @@ test('registry generation is atomic under a concurrent reader (A-37)', async () 
   const reader = (async () => {
     while (!stop) {
       reads++;
+      let text;
       try {
-        JSON.parse(await readFile(skillsJson, 'utf8'));
+        text = await readFile(skillsJson, 'utf8');
+      } catch {
+        // Transient read failure, not a partial write: on
+        // Windows the target is briefly unavailable while the
+        // generator swaps the temp file in (EBUSY/EPERM/ENOENT
+        // during the rename window). No content was observed.
+        // (Same class as the A2-22 reader flake on d010069.)
+        continue;
+      }
+      try {
+        JSON.parse(text);
       } catch (e) {
         if (e instanceof SyntaxError) partialReads++;
         else throw e;
@@ -247,7 +258,14 @@ test('registry generation is atomic under a concurrent reader (A-37)', async () 
     }
   } finally {
     stop = true;
-    await reader;
+    // Bound the wait: a reader that never observes `stop` must
+    // fail the test, not hang the suite until the job timeout.
+    await Promise.race([
+      reader,
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('concurrent reader did not stop within 60s')), 60000),
+      ),
+    ]);
   }
   assert.ok(reads > 0, 'concurrent reader never ran');
   assert.equal(partialReads, 0, `saw ${partialReads} partial reads of skills.json in ${reads} reads`);
@@ -282,9 +300,14 @@ test('query CLI: search, show, status, categories, stale', async () => {
   // verified-with-limitations (platform-social-images) — so no skill
   // remains unverified. Update these numbers only when an audit
   // re-labels a skill, never to make the test pass.
-  assert.equal(status.counts.verified, 254);
+  // A3-01 (2026-11-21 re-audit): link-building was promoted from
+  // verified-with-limitations to verified — its only limitation
+  // (6 broken tools/ links) was resolved by the Phase 4 tools/
+  // import — so the split is now 255 verified / 16 with
+  // limitations. See AUDIT_OVERRIDES in scripts/validate-registry.mjs.
+  assert.equal(status.counts.verified, 255);
   assert.equal(status.counts.unverified, 0);
-  assert.equal(status.counts['verified-with-limitations'], 17);
+  assert.equal(status.counts['verified-with-limitations'], 16);
   assert.equal(status.counts['needs-correction'], 6);
 
   r = await runNode(QUERY, ['categories']);

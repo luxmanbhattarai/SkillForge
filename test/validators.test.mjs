@@ -96,7 +96,7 @@ test('check-duplicates passes on the real repo', async () => {
 });
 
 test('check-duplicates flags a duplicate name and near-duplicate descriptions', async () => {
-  const root = await makeFixtureRepo('check-duplicates.mjs', ['frontmatter.mjs']);
+  const root = await makeFixtureRepo('check-duplicates.mjs', ['frontmatter.mjs', 'skill-files.mjs']);
   try {
     await writeSkill(root, 'cat-a/dup', 'dup', 'First duplicate skill.');
     await writeSkill(root, 'cat-b/dup', 'dup', 'Second duplicate skill.');

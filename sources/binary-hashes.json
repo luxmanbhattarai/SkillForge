@@ -1,0 +1,10 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "skills/upstream/agentic-seo/seo/docs/images/example-prompt-output.png": "f245824212620cbcf6e9b75b4780155b2d821febb3d9b69fcbea897d57839bb7",
+    "skills/upstream/agentic-seo/seo/docs/images/report-dashboard.png": "1c4bf2aeb6d7a4ccffbce2a333a69d5d3a35ba8c0a22e639d5b947a73bcab6bb",
+    "skills/upstream/anthropic/theme-factory/theme-showcase.pdf": "3e126eca9fe99088051f7cb984c97cedb31c7d9e09ce0ba5d61bd01e70a0d253",
+    "skills/upstream/anthropic/web-artifacts-builder/scripts/shadcn-components.tar.gz": "1296f069e825de7933de7e8ac63672495cacce3f88f2dc45554dbcddbcbca60f"
+  },
+  "note": "SHA-256 hashes of the vendored binary assets, verified by npm run check:security (scripts/security-scan.mjs). A hash mismatch, a missing listed file, or a binary file not listed here fails the scan. Recompute with `sha256sum <file>` after any re-import and update this file in the same commit (audit A5-09). Paths are POSIX, relative to the repo root."
+}

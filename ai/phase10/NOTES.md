@@ -17,6 +17,9 @@ PR validation, now covering every local check:
   `check:agents`, `score`, and `npm test` (regression tests).
   `check:duplicates` and `check:sources` previously ran in no
   workflow (M-03).
+  Update (2026-11-21): the matrix is now Node 24 only
+  (`engines: >=24`, matrix `["24"]`); the 18/20/22 matrix was
+  dropped in the package.json cleanup.
 - `registry` job (Node 24) — `npm run check:registry` (Phase 9
   contract script, see below), then regenerate + diff. The diff step
   prints the fix: run `npm run registry` and commit.
@@ -121,8 +124,9 @@ position relative to the base).
 - **No caching:** `actions/setup-node` runs with no cache in every
   job — zero dependencies and no lockfile means there is nothing
   to cache. Each use says so in a comment.
-- **Node versions:** matrix 24 on the main validation job
-  only; every other job runs Node 24.
+- **Node versions:** Node 24 everywhere — the validate job uses a
+  single-version matrix `["24"]` and every other job pins Node 24.
+  (Corrected 2026-11-21; the earlier text contradicted itself.)
 
 ## Contract scripts (coordinator-owned, Phase 9)
 
@@ -177,12 +181,15 @@ they are branch-independent):
    layer — it scans skill content for leaked secrets, while
    GitHub's scans the repo history and blocks pushes of known
    secret formats.)
+   Done 2026-11-21: secret scanning is enabled, with push
+   protection.
 2. **Dependabot alerts** — Settings → Code security → Dependabot
    alerts → Enable. This is separate from the `dependabot.yml`
    file: the file drives version-update PRs, alerts drive
    vulnerability notifications. Enable both. (With zero npm
    dependencies, alerts will be quiet; they matter if a
    dependency is ever added, and for the GitHub Actions updates.)
+   Done 2026-11-21: Dependabot security updates are enabled.
 3. **CodeQL — do NOT enable default setup.** This repo uses
    CodeQL advanced setup via `.github/workflows/codeql.yml`
    (pinned action SHAs, explicit schedule, version-controlled).
@@ -198,11 +205,18 @@ they are branch-independent):
    merging (these are the check *names* GitHub shows — the jobs'
    display `name:` values with matrix values expanded, not the
    job ids; requiring `validate` would never match a check run):
-   `Validate (Node 24)`, `Registry`, `Behavioral evals`, `lint`, and
-   `security-audit` (plus `Analyze (javascript-typescript)` for
-   CodeQL, recommended). Do NOT require `Windows (Node 24)` until
-   the Windows leg is promoted from advisory (Stage D). The
-   workflows exist; protection is what makes them gating.
+   `Validate (Node 24)`, `Registry`, `Behavioral evals`, `lint`,
+   `security-audit`, `Windows (Node 24)`, and `Semgrep (SAST)`
+   (plus `Analyze (javascript-typescript)` for CodeQL,
+   recommended). The Windows leg was promoted from advisory to
+   gating on 2026-11-21 after going green on a real runner
+   (PR #1, run 44933250315). The workflows exist; protection
+   is what makes them gating. Note (2026-11-21): `Semgrep (SAST)`
+   was added in b619388 and has not run on GitHub yet — do not
+   require it until it has reported at least once, or it will
+   block all merges. Branch protection itself is still not
+   enabled (user decision — it would block direct pushes to
+   `main`).
 
 ## Coordinator follow-up (2026-11-20)
 
@@ -231,6 +245,11 @@ commits behind, as reported above). Full results in
   permissions, and script references were verified locally, but
   no workflow run exists yet. The first PR/push after merge is
   the real test; watch the Actions tab.
+  Update (2026-11-21, corrected 2026-11-21): partially
+  superseded — 4 of 6 workflows ran on PR #1 and pass
+  (Validate, Lint, Security audit, CodeQL; run 44933250315;
+  Windows 250/255, 0 fail, 5 POSIX-only skipped).
+  `scheduled-maintenance` and `release` have never run.
 - **The three contract scripts** (above) have now landed — see
   the coordinator follow-up above. The `registry`,
   `stale-verification`, and `upstream` jobs can pass once the
@@ -240,12 +259,22 @@ commits behind, as reported above). Full results in
   per `ai/test-results/phase6-eval-results.json` and
   `ai/test-results/phase7-security-results.json`. If evals
   regress, the `evals` job will fail PRs — that is intended.
+  Update (2026-11-21): the suite is now 463 cases (186
+  hand-written + 277 generated), 463/463 passing.
 - **CodeQL, Semgrep, Gitleaks, TruffleHog are not installed
   locally** and none of them ran here. CodeQL runs only on
   GitHub via the new workflow; the others are not in CI at all
   (the Phase 7 audit recorded them as blocked/not installed).
+  Update (2026-11-21): CodeQL has run on GitHub (PR #1, run
+  44933250387; 5 open alerts, all in upstream code — triaged
+  in `ai/audits/SECURITY-STATUS.md`). Semgrep is in CI
+  (`security-audit.yml`, added in b619388) but has not run
+  yet; Gitleaks/TruffleHog ran clean once locally in Stage D
+  and are not in CI.
 - **Secret scanning and Dependabot alerts** cannot be verified
   from here — see the manual steps above.
 - **Node 18/22 matrix legs** were not run locally (local Node
   is v24.22.1); the matrix exists precisely to exercise them in
   CI.
+  Moot (2026-11-21): the matrix is Node 24 only; there are no
+  18/22 legs.

@@ -20,7 +20,7 @@ scripts/              # validation, registry generation, install tooling
 ├── lib/              # shared libraries (frontmatter, security patterns, schemas)
 └── schemas/          # JSON Schemas for registry/ and verification status
 evals/                # behavioral evaluation suite (mock agent, 463 cases)
-test/                 # unit tests, node:test (196 tests)
+test/                 # unit tests, node:test (326 tests)
 templates/            # SKILL-TEMPLATE.md for new skills
 sources/              # research log, licenses, attribution, verification status
 docs/                 # this documentation
@@ -113,7 +113,7 @@ accuracy audit (`ai/audits/TECHNICAL-ACCURACY-AUDIT.md`) and the
 Stage C audit of the 51 Phase 4 skills
 (`ai/audits/SKILL-AUDIT-MATRIX.md`). A skill with no entry defaults to
 `unverified` with a warning — never to `verified`. Current split:
-254 verified, 17 verified-with-limitations, 6 needs-correction (all
+255 verified, 16 verified-with-limitations, 6 needs-correction (all
 upstream), 0 unverified. See
 `ai/decisions/2026-11-20-verification-status-sidecar.md`.
 
@@ -156,7 +156,7 @@ the same commands (see [Validation and CI](#validation-and-ci)).
 | Security | `npm run check:security` | Credential / prompt-injection / dangerous-code scan |
 | Upstream drift | `npm run check:upstream` | Vendor repos vs pinned commits (monitoring, exits 0 on drift) |
 | Quality score | `npm run score` | 22-element standard, 8 dimensions, hard caps (see `docs/SKILL-STANDARDS.md`) |
-| Unit tests | `npm test` | 196 tests (`node:test`), temp directories only |
+| Unit tests | `npm test` | 326 tests (`node:test`), temp directories only |
 | Behavioral evals | `npm run evals` | 463 cases against the mock agent |
 | Report | `npm run report` | Coverage and audit report (`report.json`) |
 
@@ -206,7 +206,7 @@ completeness, safety guidance — not an LLM's reasoning ability.
 
 | Piece | What it is |
 | --- | --- |
-| `evals/cases/` | 172 hand-written JSON cases (selection, content, refusal, code) |
+| `evals/cases/` | 186 hand-written JSON cases (selection, content, refusal, code) |
 | `evals/datasets/discovery-generated.json` | 277 generated discovery cases, one per skill (`npm run evals:generate` regenerates them) |
 | `evals/runners/run-evals.mjs` | CLI runner (`npm run evals`); validates every case before running, writes `evals/reports/latest.json` + `latest.md`, compares against the baseline in `evals/baselines/` |
 | `evals/runners/mock-agent.mjs` | The deterministic simulated agent |
@@ -248,9 +248,12 @@ pinned to SHAs, least-privilege permissions, no secrets):
 | `release.yml` | Strict validation on `v*.*.*` tags; validation only — no release is created and nothing is published |
 
 Dependabot covers `github-actions` only (`.github/dependabot.yml`).
-Secret scanning, Dependabot alerts, and branch protection are manual
-repo settings, not files — see `ai/phase10/NOTES.md`. No workflow has
-run on GitHub yet.
+Secret scanning (with push protection) and Dependabot security
+updates are enabled; branch protection is still not enabled (user
+decision) — these are manual repo settings, not files, see
+`ai/phase10/NOTES.md`. 4 of 6 workflows have run on GitHub
+(PR #1, 2026-11-21); `scheduled-maintenance` and `release` have
+never run.
 
 ## Discovery flow
 

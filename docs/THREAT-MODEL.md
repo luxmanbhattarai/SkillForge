@@ -32,8 +32,8 @@ public repos within minutes.
   binaries; quality scorer caps any skill with a secret-pattern hit.
 - **Residual risk:** the placeholder guard can miss a real credential
   containing a placeholder word; encoded or split secrets are not
-  detected. GitHub secret scanning would add a second, independent
-  detector — it is a manual repo setting, still to be enabled (see
+  detected. GitHub secret scanning (with push protection) is
+  enabled and adds a second, independent detector (see
   `ai/phase10/NOTES.md`).
 
 ### 2. Prompt injection via skill content

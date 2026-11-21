@@ -28,10 +28,11 @@
 // baseline. A model run and a mock run answer different questions;
 // comparing them as regressions would be meaningless.
 
-import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { atomicWriteFile } from '../../scripts/lib/atomic-write.mjs';
 import { createProvider } from './providers.mjs';
 import { scoreSelection } from '../scorers/selection.mjs';
 import { scoreContent } from '../scorers/content.mjs';
@@ -319,7 +320,9 @@ async function main() {
   if (CASE_FILTER) {
     cases = cases.filter((c) => c.id.includes(CASE_FILTER) || c.category.includes(CASE_FILTER) || (c.skill || '').includes(CASE_FILTER));
   }
-  cases.sort((a, b) => a.id.localeCompare(b.id));
+  // Code-point sort (A2-07): localeCompare depends on the runtime's
+  // ICU default locale; eval case order must not.
+  cases.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   if (cases.length === 0) {
     console.error('No cases found' + (CASE_FILTER ? ` for filter "${CASE_FILTER}"` : '') + (CASES_FILE ? ` in cases file "${CASES_FILE}"` : '') + '.');
     process.exit(2);
@@ -402,8 +405,14 @@ async function main() {
     ? (path.isAbsolute(OUT_DIR) ? OUT_DIR : path.join(ROOT, OUT_DIR))
     : (providerKind === 'model' ? path.join(REPORTS_DIR, 'model') : REPORTS_DIR);
   await mkdir(reportDir, { recursive: true });
-  await writeFile(path.join(reportDir, 'latest.json'), JSON.stringify(report, null, 2) + '\n', 'utf8');
-  await writeFile(path.join(reportDir, 'latest.md'), toMarkdown(report), 'utf8');
+  // A2-12: report/baseline/regression writes are atomic (temp file
+  // + rename, via scripts/lib/atomic-write.mjs) — a plain
+  // writeFile left truncated latest.json/current.json visible to a
+  // concurrent or interrupted run, and the next baseline
+  // comparison crashed on JSON.parse. Same treatment the registry
+  // and manifest got after A-37.
+  await atomicWriteFile(path.join(reportDir, 'latest.json'), JSON.stringify(report, null, 2) + '\n');
+  await atomicWriteFile(path.join(reportDir, 'latest.md'), toMarkdown(report));
   if (SAVE_BASELINE) {
     // Baselines store slim results (id/pass/score/critical only): the
     // comparison needs pass/fail per id, and the full report already
@@ -420,8 +429,8 @@ async function main() {
     };
     await mkdir(BASELINES_DIR, { recursive: true });
     const stamp = timestamp.slice(0, 10);
-    await writeFile(path.join(BASELINES_DIR, `baseline-${stamp}.json`), JSON.stringify(slim, null, 2) + '\n', 'utf8');
-    await writeFile(CURRENT_BASELINE, JSON.stringify(slim, null, 2) + '\n', 'utf8');
+    await atomicWriteFile(path.join(BASELINES_DIR, `baseline-${stamp}.json`), JSON.stringify(slim, null, 2) + '\n');
+    await atomicWriteFile(CURRENT_BASELINE, JSON.stringify(slim, null, 2) + '\n');
     console.log(`Baseline saved to evals/baselines/current.json (snapshot baseline-${stamp}.json).`);
   }
   if (comparison && !NO_COMPARE) {
@@ -430,7 +439,7 @@ async function main() {
     const regressionDir = OUT_DIR ? reportDir : path.join(EVALS_DIR, 'regression');
     const regressionFile = OUT_DIR ? 'regression.json' : 'latest.json';
     await mkdir(regressionDir, { recursive: true });
-    await writeFile(path.join(regressionDir, regressionFile), JSON.stringify({ generated: timestamp, ...comparison }, null, 2) + '\n', 'utf8');
+    await atomicWriteFile(path.join(regressionDir, regressionFile), JSON.stringify({ generated: timestamp, ...comparison }, null, 2) + '\n');
   }
 
   // Display path: relative when the report lives inside the repo
@@ -452,7 +461,9 @@ async function main() {
     console.log(`Report: ${reportRel}/latest.json, ${reportRel}/latest.md`);
   }
 
-  process.exit(summary.failed > 0 && !REPORT_ONLY ? 1 : 0);
+  // exitCode, not process.exit(): a hard exit discards pending piped
+  // stdout. Natural exit flushes it first (see validate-registry.mjs).
+  process.exitCode = summary.failed > 0 && !REPORT_ONLY ? 1 : 0;
 }
 
 // Only run when invoked as a script: unit tests import validateCases

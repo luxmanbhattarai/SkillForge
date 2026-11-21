@@ -108,6 +108,20 @@ export function parseModelConfig(env = process.env) {
   if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
     throw new Error(`EVAL_PROVIDER_URL must use http(s): "${url}"`);
   }
+  // A5-08: the API key is sent as a Bearer token, so a plaintext
+  // http:// endpoint for a non-localhost host exposes it in
+  // cleartext (a typo'd URL, or a provider without TLS). Warn
+  // loudly on stderr — but stay silent for localhost, where
+  // local-LLM users legitimately run http:// with no network
+  // exposure. This is a warning, not a refusal: local servers on
+  // a LAN hostname are the user's call.
+  if (parsedUrl.protocol === 'http:' && !isLocalHost(parsedUrl.hostname)) {
+    console.error(
+      `WARNING: EVAL_PROVIDER_URL uses plaintext http:// for a non-localhost host (${parsedUrl.host}). ` +
+        'The API key is sent as a Bearer token over cleartext and can be intercepted. ' +
+        'Use https://, or http://localhost for a local model server.',
+    );
+  }
   return {
     url,
     key,
@@ -119,6 +133,29 @@ export function parseModelConfig(env = process.env) {
     inputPricePer1k: parseNonNegativeNumber(env.EVAL_PROVIDER_PRICE_INPUT_PER_1K, 'EVAL_PROVIDER_PRICE_INPUT_PER_1K', undefined),
     outputPricePer1k: parseNonNegativeNumber(env.EVAL_PROVIDER_PRICE_OUTPUT_PER_1K, 'EVAL_PROVIDER_PRICE_OUTPUT_PER_1K', undefined),
   };
+}
+
+// Loopback hostnames: http:// is safe there (no network exposure),
+// so the A5-08 plaintext warning stays silent for them.
+function isLocalHost(hostname) {
+  const host = String(hostname).toLowerCase().replace(/\.$/, '');
+  return host === 'localhost' || host.endsWith('.localhost')
+    || host === '127.0.0.1' || host === '::1' || host === '0.0.0.0';
+}
+
+/**
+ * Parse a Retry-After header value (delay-seconds, or an HTTP-date)
+ * into a millisecond delay, or null when absent or unparseable.
+ * A past HTTP-date means "retry now" (0), not an error.
+ * Exported for testing.
+ */
+export function parseRetryAfter(value, nowMs = Date.now()) {
+  if (value === null || value === undefined) return null;
+  const trimmed = String(value).trim();
+  if (/^\d+$/.test(trimmed)) return Number(trimmed) * 1000;
+  const when = Date.parse(trimmed);
+  if (Number.isNaN(when)) return null;
+  return Math.max(0, when - nowMs);
 }
 
 // True when the three required vars are present (values not validated).
@@ -224,6 +261,9 @@ export function createModelProvider(env = process.env, fetchImpl = globalThis.fe
             const err = new Error(`model provider HTTP ${res.status}`);
             err.status = res.status;
             err.retryable = isRetryableStatus(res.status);
+            // A2-13: carry the server's Retry-After so the retry
+            // loop can honor it instead of the fixed backoff.
+            err.retryAfterMs = parseRetryAfter(res.headers?.get?.('Retry-After'));
             throw err;
           }
           let data;
@@ -270,7 +310,14 @@ export function createModelProvider(env = process.env, fetchImpl = globalThis.fe
               && e.message !== 'model provider returned a non-JSON response');
           if (!retryable || attempt >= config.maxRetries) break;
           usage.retries++;
-          await sleep(Math.min(config.retryDelayMs * 2 ** attempt, MAX_BACKOFF_MS));
+          // A2-13: honor Retry-After when the server sent one —
+          // a 429 with a long Retry-After used to burn retries on
+          // the fixed backoff. Capped at MAX_BACKOFF_MS: a
+          // Retry-After of an hour must not stall the run.
+          const backoff = e.retryAfterMs != null
+            ? Math.min(e.retryAfterMs, MAX_BACKOFF_MS)
+            : Math.min(config.retryDelayMs * 2 ** attempt, MAX_BACKOFF_MS);
+          await sleep(backoff);
         }
       }
       usage.errors++;

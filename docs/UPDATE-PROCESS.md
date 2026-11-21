@@ -25,9 +25,16 @@ Upstream skills are imported verbatim and never edited. To update one:
    vendor's `ATTRIBUTION.md` and in `sources/imported-skills.md`.
 6. **Regenerate and validate.** Run `npm run registry` and
    `npm run validate`.
-7. **Update the changelog.** Add an entry under `Unreleased` in
+7. **Verify binary hashes.** If the re-import touched any binary
+   asset (images, PDFs, tarballs), recompute its SHA-256 with
+   `sha256sum <file>` and update `sources/binary-hashes.json` in
+   the same commit. `npm run check:security` verifies the recorded
+   hashes and fails on a mismatch, a missing listed file, or a
+   binary file not listed there — a tampered binary is caught by
+   the scan, not by review alone.
+8. **Update the changelog.** Add an entry under `Unreleased` in
    `CHANGELOG.md` naming the vendor and the new upstream commit.
-8. **Review before merging.** Upstream content is untrusted until
+9. **Review before merging.** Upstream content is untrusted until
    reviewed. Read the diff — especially any scripts — and confirm it
    agrees with official documentation and this repository's security
    rules.

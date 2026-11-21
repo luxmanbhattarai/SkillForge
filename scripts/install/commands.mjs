@@ -287,6 +287,21 @@ function printPlan(ctx, plannedItems, locations) {
         ctx.out(`would ${p.action} ${label(p.kind, p.name)}`);
     }
   }
+  // Agentic-SEO warnings (S-08/S-09): a dry run is the careful
+  // path — warn here too, so a user who previews first learns
+  // about the unsafe upstream docs before the real run. Only for
+  // items the run would leave installed (install/update/
+  // overwrite/already); skipped/refused items warn about nothing.
+  // Once per run, like the execute-phase warning.
+  if (
+    plannedItems.some(
+      (p) =>
+        ['install', 'update', 'overwrite', 'already'].includes(p.action) &&
+        isAgenticSeoSource(p.item?.source),
+    )
+  ) {
+    for (const w of AGENTIC_SEO_WARNINGS) ctx.err(w);
+  }
 }
 
 function printSummary(ctx, results) {
@@ -361,7 +376,10 @@ async function executeInstallRun(ctx, locations, plannedItems, manifest, { comma
   // installed, or the quarantine would leave no manifest at all.
   let manifestDirty = initialDirty;
   // Agentic-SEO warnings (S-08/S-09): emitted once per run, when
-  // the first item from that upstream vendor is installed/updated.
+  // the first item from that upstream vendor is installed/updated
+  // — or found already installed (below): a re-run that finds the
+  // seo skill in place used to warn about nothing, so users who
+  // installed before the warnings existed never saw them.
   let warnedAgenticSeo = false;
   // Persist incrementally (A-09): a kill mid-run leaves the items
   // installed so far recorded, instead of losing the whole run.
@@ -429,6 +447,15 @@ async function executeInstallRun(ctx, locations, plannedItems, manifest, { comma
 
   for (const p of plannedItems) {
     if (p.action === 'already') {
+      // Agentic-SEO warnings (S-08/S-09): a run that leaves the
+      // seo skill installed warns even when nothing was written
+      // this run — otherwise a re-run, or an update with nothing
+      // to do, silently skips the warning. Same once-per-run flag
+      // as the install/update warning above.
+      if (!warnedAgenticSeo && isAgenticSeoSource(p.item.source)) {
+        warnedAgenticSeo = true;
+        for (const w of AGENTIC_SEO_WARNINGS) ctx.err(w);
+      }
       if (p.adopt) {
         try {
           const files = p.method === 'link' ? new Map() : await hashInstalled(p);
@@ -499,9 +526,29 @@ async function runInstall(ctx, locations) {
   warnDeprecatedWorkflows(ctx, items, locations);
   noteLinkScope(ctx, items);
 
+  // A2-03: planning is per-item fault-isolated. computePlanned
+  // throws on a missing skill source dir, an unreadable agent
+  // file, or a '"""' in an agent body — and one such item used to
+  // abort the whole run, contradicting the engine's stated rule
+  // ("one bad item never aborts the run", installer.mjs). A
+  // planning failure is now recorded like an execute-phase
+  // failure: the rest install, and the failure is listed in the
+  // summary with a non-zero exit code.
   const plannedItems = [];
+  const planningFailures = [];
   for (const item of items) {
-    plannedItems.push(await computePlanned(ctx.library, item, locations, ctx));
+    try {
+      plannedItems.push(await computePlanned(ctx.library, item, locations, ctx));
+    } catch (err) {
+      // A UsageError is a problem with the invocation itself (e.g.
+      // agent install without --target, or a workflow for a target
+      // with no workflow location), not a bad library item: it
+      // aborts the run with exit 2, as before the isolation. Only
+      // data failures (missing/unreadable sources) are per-item.
+      if (err instanceof UsageError) throw err;
+      planningFailures.push({ label: label(item.kind, item.name), error: err.message });
+      ctx.err(`failed: ${label(item.kind, item.name)} — ${err.message}`);
+    }
   }
   // Dry runs change nothing (A-08): classify against a read-only
   // manifest read. A corrupt manifest is reported, not quarantined
@@ -531,9 +578,14 @@ async function runInstall(ctx, locations) {
   if (!ctx.dryRun) await resolveConflicts(ctx, plannedItems);
   if (ctx.dryRun) {
     printPlan(ctx, plannedItems, locations);
+    if (planningFailures.length) {
+      printSummary(ctx, { installed: [], updated: [], already: [], skipped: [], refused: [], failed: planningFailures });
+      return 1;
+    }
     return 0;
   }
   const results = await executeInstallRun(ctx, locations, plannedItems, manifest, { command: 'install', manifestDirty: wasCorrupt });
+  results.failed.push(...planningFailures);
   printSummary(ctx, results);
   if (results.installed.length || results.updated.length) {
     ctx.out('Restart the agent (or reload the project) so it picks up the new skills.');
@@ -619,6 +671,7 @@ async function runUpdate(ctx, locations) {
   warnDeprecatedWorkflows(ctx, entries, locations);
 
   const plannedItems = [];
+  const planningFailures = [];
   const skipped = [];
   for (const entry of entries) {
     const byKind =
@@ -628,7 +681,18 @@ async function runUpdate(ctx, locations) {
       skipped.push(`${label(entry.kind, entry.name)} (no longer in the library; left in place)`);
       continue;
     }
-    plannedItems.push(await computePlannedFromEntry(ctx.library, item, entry, locations.skillsDir));
+    // A2-03: per-item fault isolation, as in runInstall — a
+    // missing/unreadable library source for one entry must not
+    // abort the update of the rest. UsageErrors (an invocation
+    // problem, not a data failure) still abort the run, as in
+    // runInstall.
+    try {
+      plannedItems.push(await computePlannedFromEntry(ctx.library, item, entry, locations.skillsDir));
+    } catch (err) {
+      if (err instanceof UsageError) throw err;
+      planningFailures.push({ label: label(entry.kind, entry.name), error: err.message });
+      ctx.err(`failed: ${label(entry.kind, entry.name)} — ${err.message}`);
+    }
   }
   for (const p of plannedItems) {
     const entry = manifest.items[entryKey(p.kind, p.name)];
@@ -640,9 +704,14 @@ async function runUpdate(ctx, locations) {
   if (ctx.dryRun) {
     printPlan(ctx, plannedItems, locations);
     for (const s of skipped) ctx.out(`would skip ${s}`);
+    if (planningFailures.length) {
+      printSummary(ctx, { installed: [], updated: [], already: [], skipped: [], refused: [], failed: planningFailures });
+      return 1;
+    }
     return 0;
   }
   const results = await executeInstallRun(ctx, locations, plannedItems, manifest, { command: 'update' });
+  results.failed.push(...planningFailures);
   for (const s of skipped) {
     results.skipped.push(s);
     ctx.out(`skipped: ${s}`);
@@ -1167,6 +1236,26 @@ async function runUninstall(ctx, locations) {
       continue;
     }
     if (t.entry.method === 'link') {
+      // A5-02: a link entry must actually BE a link. If the
+      // destination is real content — the user replaced the link
+      // with their own directory, or a crafted git-traveled
+      // manifest claims 'link' for a path holding user content —
+      // removing it without a backup would silently delete user
+      // data. Classify it as modified with a backup instead, like
+      // any other unexpected content. Doctor already flags this
+      // shape as a failure; uninstall must not ignore its own
+      // diagnostic. (On Windows a junction reports as a symlink
+      // via lstat, so junction installs still take the fast path.)
+      if (!st.isSymbolicLink()) {
+        planned.push({
+          ...t,
+          destAbs,
+          action: 'modified',
+          reason: 'recorded as a symlink install but is a real file/directory on disk (may contain your content)',
+          needsBackup: true,
+        });
+        continue;
+      }
       planned.push({ ...t, destAbs, action: 'remove', reason: 'symlink recorded in the manifest', needsBackup: !inLibrary(t.kind, t.name) });
       continue;
     }
@@ -1434,8 +1523,26 @@ async function runRestore(ctx, locations) {
     const skillNames = new Set(splitList(ctx.skills));
     const agentNames = new Set(splitList(ctx.agents));
     const workflowNames = new Set(splitList(ctx.workflows));
+    // A2-09: --category used to be silently ignored here (the
+    // filter matched names only, yet hasSelectors counts
+    // categories), so `restore <id> --category seo` always
+    // reported "No items match". Categories now resolve to skill
+    // names through the library, as in runUpdate; an unknown
+    // category is a usage error, not a silent no-op.
+    const categories = splitList(ctx.categories);
+    for (const cat of categories) {
+      if (cat !== 'all' && !ctx.library.categories.has(cat)) {
+        throw new UsageError(`unknown category '${cat}' (known: ${[...ctx.library.categories].sort().join(', ')})`);
+      }
+    }
+    const categorySet = new Set(categories);
     items = items.filter((i) => {
-      if (i.kind === 'skill') return skillNames.has(i.name);
+      if (i.kind === 'skill') {
+        if (skillNames.has(i.name)) return true;
+        if (categorySet.has('all')) return true;
+        const rec = ctx.library.skills.get(i.name);
+        return rec && categorySet.has(rec.category);
+      }
       if (i.kind === 'agent') return agentNames.has(i.name);
       return workflowNames.has(i.name);
     });

@@ -148,3 +148,27 @@ The final acceptance suite's coverage map (mission brief §11):
 - [ ] Re-verify Prisma 8 skills when Prisma 8 reaches GA.
 - [ ] Keep the weekly scheduled maintenance green (online links, stale
       verification, upstream monitoring).
+
+## Addendum — post-PR status (2026-11-21, Phase C finding A1-05)
+
+This checklist is frozen at head `4f909da` (2026-11-20, pre-PR) and
+is retained as the Stage E historical record. The rows below are
+superseded by events since then; **do not use this checklist to sign
+off the current HEAD**. Sign-off moves to the forthcoming
+`ai/audits/RELEASE-ACCEPTANCE.md` (Phase G of the
+production-readiness mission), which re-runs acceptance at the
+final HEAD.
+
+| Row | Superseded because |
+| --- | --- |
+| R7 | Verification split is now 255 / 16 / 6 / 0 — `link-building` was promoted to `verified` in Phase C (A3-01); its only limitation (6 broken `tools/` links) was resolved by the Phase 4 `tools/` import. |
+| Q7 | Live unit-test count is now 250 (`npm test` 2026-11-21: 250 pass, 0 fail). The printed count still equals the real count. |
+| C3 | The Node 18/20/22 matrix no longer exists — CI is Node 24 only (`engines: >=24`). |
+| C4 | OPEN no longer holds: 4 of 6 workflows ran on PR #1 and pass (Validate, Lint, Security audit, CodeQL; run 44933250315). `scheduled-maintenance` and `release` have never run. |
+| C5 | The Windows leg was promoted from advisory to gating on 2026-11-21 after going green on a real runner (250/255, 0 fail, 5 POSIX-only skipped). |
+| C6 | Still OPEN and still correct: branch protection is not enabled (user decision). |
+| C7 | Secret scanning (with push protection) and Dependabot security updates are now enabled; only branch protection remains. |
+| S9 | CodeQL ran on PR #1 (run 44933250387); 5 open alerts, all in upstream code, triaged in `ai/audits/SECURITY-STATUS.md` (A4-03). |
+| I8 / I9 | Real Windows execution has now happened (PR #1); the I9 junction fallback is proven on a real runner. Junction-*removal* proof specifically remains a verification gap (production-readiness audit A5-11). |
+| D3 | Falsified at audit time by A1-02/A1-03 (stale counts in the living docs); the docs were corrected in Phase C. |
+| Post-merge list | "Add `Windows (Node 20)`" names the wrong version — the leg is `Windows (Node 24)`. "Watch the first runs of all 6 workflows" — only 4 ran. |

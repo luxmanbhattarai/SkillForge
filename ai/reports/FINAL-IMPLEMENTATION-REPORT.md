@@ -867,3 +867,36 @@ secret scanning are manual post-merge settings (L-Settings).
 open items above can only be closed by the first PR run, a real
 Windows run, and upstream fixes. Evidence and acceptance
 criteria: `ai/reports/PRODUCTION-ACCEPTANCE-CHECKLIST.md`.
+
+### Post-PR update (2026-11-21, Phase C finding A1-07)
+
+- **L-CI partially closed:** 4 of 6 workflows ran on PR #1 and
+  pass (Validate, Lint, Security audit, CodeQL; run 44933250315).
+  `scheduled-maintenance` and `release` have never run anywhere.
+  (The remediation report's §8 item 10 overstated this as "all 6
+  workflows"; see its §8 item 11 correction.)
+- **L-Win closed:** the junction fallback is proven on a real
+  Windows runner (PR #1, 250/255, 0 fail, 5 POSIX-only skipped);
+  the Windows leg was promoted from advisory to gating.
+- **CodeQL ran** on PR #1 (run 44933250387); 5 open alerts, all
+  in upstream code, triaged in `ai/audits/SECURITY-STATUS.md`
+  (A4-03). None has been dismissed.
+- **L-Settings partially closed:** secret scanning (with push
+  protection) and Dependabot security updates are enabled;
+  branch protection is still not enabled (user decision).
+- **Still open:** no real-model eval run (L-Model);
+  S-08/S-09/S-11 still open upstream.
+- **§20 item 2 check names (corrected):** `Validate (Node
+  18/20/22)` is stale — the check is now `Validate (Node 24)`;
+  the Windows check is `Windows (Node 24)`, not `Windows (Node
+  20)`, and the leg is now gating. Current names are in
+  `ai/phase10/NOTES.md`.
+- **Verification split** is now 255 / 16 / 6 / 0
+  (`link-building` promoted to `verified`, A3-01); evals are
+  463 cases (186 hand-written + 277 generated); live unit-test
+  count is 250 (`npm test` 2026-11-21: 250 pass, 0 fail).
+
+This note corrects the addendum's "What is still open" section
+above; it does not change the Stage E verdict. The
+production-readiness verdict for the current HEAD comes in
+`ai/audits/RELEASE-ACCEPTANCE.md` (Phase G).

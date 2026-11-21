@@ -98,8 +98,14 @@ export const PATTERNS = [
 
   // --- Dangerous shell / commands (scan only; examples abound) ---
   {
-    id: 'CMD-01', severity: 'high', label: 'curl-piped-to-shell command',
-    re: /curl\s+[^|]*\|\s*(?:sudo\s+)?(?:sh|bash)\b/,
+    id: 'CMD-01', severity: 'high', label: 'curl/wget-piped-to-shell or shell-executed download command',
+    // Covers the classic pipe form for both downloaders, plus the
+    // command-substitution form (`sh -c "$(curl …)"`) and process
+    // substitution (`bash <(curl …)`) — all three execute remote
+    // content without review (audit A5-13). `$(curl …)` on its own
+    // (output capture, no shell execution) deliberately does NOT
+    // match, and neither does a plain `curl -o file` download.
+    re: /(?:(?:curl|wget)\s+[^|]*\|\s*(?:sudo\s+)?(?:sh|bash)\b|(?:sh|bash)\s+-c\s+["'`]?\$\((?:curl|wget)\b|(?:sh|bash)\s+<\((?:curl|wget)\b)/,
     scopes: ['scan'],
   },
   {

@@ -19,16 +19,45 @@ permissions:
 jobs:
   release-validation:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Check out repository
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
-      - name: Set up Node.js 20
+      - name: Set up Node.js 24
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "24"
           # No cache: this repo has zero dependencies and no lockfile,
           # so there is nothing to cache.
+
+      - name: Check tag matches package.json version
+        # Release checklist (docs/UPDATE-PROCESS.md): the package.json
+        # version must match the release. Without this gate a tag like
+        # v1.1.0 pushed while package.json still says 1.0.0 would
+        # validate green. Bump package.json (and CHANGELOG.md) to the
+        # release version — including any -rc.N suffix — before tagging.
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG="$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "$PKG" ]; then
+            echo "::error::Tag v$TAG does not match package.json version $PKG."
+            echo "Fix: set package.json \"version\" to \"$TAG\" and re-tag."
+            exit 1
+          fi
+          echo "Tag v$TAG matches package.json version."
+
+      - name: Check CHANGELOG has an entry for this version
+        # Release checklist (docs/UPDATE-PROCESS.md): CHANGELOG.md must
+        # have an entry for the release.
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          if ! grep -qF "## [$TAG]" CHANGELOG.md; then
+            echo "::error::CHANGELOG.md has no '## [$TAG]' entry."
+            echo "Fix: move the release notes out of [Unreleased] into a '## [$TAG]' section."
+            exit 1
+          fi
+          echo "CHANGELOG.md has an entry for [$TAG]."
 
       - name: Validate skills (strict)
         run: npm run validate:strict
@@ -57,6 +86,14 @@ jobs:
       - name: Run regression tests
         run: npm test
 
+      - name: Run behavioral evals (mock provider)
+        # The header promises full validation, and the PR workflow runs
+        # evals — but this workflow did not. With branch protection off,
+        # a tag can be pushed on a commit that never went through PR CI,
+        # so the release gate is the last line of defense. Mock provider:
+        # no LLM APIs, no keys, no network. (~11s locally.)
+        run: npm run evals
+
       - name: Validate registry schema and contents
         run: npm run check:registry
 
@@ -69,5 +106,20 @@ jobs:
             echo "::error::The committed registry is out of date."
             echo "Fix: run 'npm run registry' locally and commit the result."
             git diff --stat registry/
+            exit 1
+          fi
+
+      - name: Regenerate audit report
+        run: npm run report
+
+      - name: Fail if audit report differs from generated output
+        # A2-11: report.json / AUDIT-REPORT.md are generated from
+        # the registry; without this gate they could go stale
+        # silently after a registry change.
+        run: |
+          if ! git diff --exit-code --quiet -- report.json AUDIT-REPORT.md; then
+            echo "::error::The committed audit report is out of date."
+            echo "Fix: run 'npm run report' locally and commit the result."
+            git diff --stat -- report.json AUDIT-REPORT.md
             exit 1
           fi

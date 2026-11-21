@@ -126,6 +126,17 @@ function allowedRootsFor(target, scope, skillsDir) {
   return out;
 }
 
+// Maximum leading '..' segments a tier-2 root may climb (A5-12).
+// The deepest legitimate root in any documented target is two
+// levels (Codex: skills .agents/skills -> agents .codex/agents is
+// '../../.codex/agents'; every other target is one level), so a
+// cap of 3 leaves one level of headroom for custom --dest layouts
+// while bounding how far a crafted git-traveled manifest can steer
+// an agent/workflow root: at most three directories above the
+// skills dir, and still only into a directory named agents,
+// workflows, or global_workflows (see below).
+export const MAX_ROOT_CLIMB = 3;
+
 /**
  * Tier 2 (shape): for manifests the tier-1 check cannot cover
  * (custom --dest installs, unknown target). A legitimate root is
@@ -138,16 +149,22 @@ function allowedRootsFor(target, scope, skillsDir) {
  * '../..') or lands on any other directory name — is rejected,
  * so the worst a crafted root can do is point at an
  * agents/workflows directory, a location the installer legitimately
- * writes to anyway. When the entry kind is known, the terminal
- * directory must match it: agents end in 'agents', workflows in
- * 'workflows' or 'global_workflows' — an agent entry pointing at a
- * workflows directory (or vice versa) is never legitimate.
+ * writes to anyway. The climb itself is capped at MAX_ROOT_CLIMB
+ * leading '..' segments (A5-12): an unbounded climb could reach
+ * another project's agents directory. When the entry kind is
+ * known, the terminal directory must match it: agents end in
+ * 'agents', workflows in 'workflows' or 'global_workflows' — an
+ * agent entry pointing at a workflows directory (or vice versa)
+ * is never legitimate.
  */
 function validateRootShape(root, kind = null) {
   const segs = root.split(/[\\/]+/);
   let i = 0;
   while (i < segs.length && segs[i] === '..') i++;
   if (i === 0) return `root ${JSON.stringify(root)} must be '.' or start with '..'`;
+  if (i > MAX_ROOT_CLIMB) {
+    return `root ${JSON.stringify(root)} climbs ${i} level(s) above the skills directory (maximum ${MAX_ROOT_CLIMB})`;
+  }
   const down = segs.slice(i);
   if (!down.length) return `root ${JSON.stringify(root)} must name an install location`;
   if (down.some((s) => s === '' || s === '.' || s === '..')) {

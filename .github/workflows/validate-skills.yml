@@ -30,6 +30,7 @@ jobs:
     # engines >= 24, so CI exercises the supported floor.
     name: Validate (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -64,7 +65,15 @@ jobs:
         run: npm run score
 
       - name: Run regression tests
-        run: npm test
+        # Tee the spec output so the next step can verify the recorded
+        # runner counts in ai/PROJECT-STATUS.json. pipefail keeps a
+        # failing suite failing this step (tee alone would mask it).
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee /tmp/test-output.txt
+
+      - name: Verify test counts match canonical status
+        run: node scripts/check-status.mjs --verify-tests /tmp/test-output.txt
 
   registry:
     # Registry validation: the committed registry must match what the
@@ -74,11 +83,12 @@ jobs:
     # is enough.
     name: Registry
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Check out repository
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
-      - name: Set up Node.js 20
+      - name: Set up Node.js 24
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "24"
@@ -100,17 +110,33 @@ jobs:
             exit 1
           fi
 
+      - name: Regenerate audit report
+        run: npm run report
+
+      - name: Fail if audit report differs from generated output
+        # A2-11: report.json / AUDIT-REPORT.md are generated from
+        # the registry; without this gate they could go stale
+        # silently after a registry change.
+        run: |
+          if ! git diff --exit-code --quiet -- report.json AUDIT-REPORT.md; then
+            echo "::error::The committed audit report is out of date."
+            echo "Fix: run 'npm run report' locally and commit the result."
+            git diff --stat -- report.json AUDIT-REPORT.md
+            exit 1
+          fi
+
   evals:
     # Behavioral evaluation of the library with the deterministic mock
     # provider (the default: no LLM APIs, no keys, no network). A
     # model-provider run needs credentials and is not run in CI.
     name: Behavioral evals
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Check out repository
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
-      - name: Set up Node.js 20
+      - name: Set up Node.js 24
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "24"
@@ -126,42 +152,34 @@ jobs:
     # resolution, line endings), so Windows runs the full
     # regression suite plus the validators that are Windows-safe.
     #
-    # ADVISORY, not gating (continue-on-error): the suite is not
-    # yet green on Windows. Three known gaps, all outside this
-    # file — see ai/remediation/stage-d/ci-validation.md:
-    #   W-1  test-support/helpers.mjs runCli sets HOME only; the installer
-    #        resolves home via os.homedir(), which reads
-    #        USERPROFILE on Windows, so user-scope installer tests
-    #        fail and write into the real runner profile.
-    #   W-2  scripts/security-scan.mjs compares backslash
-    #        relative paths against POSIX exception/skip prefixes,
-    #        so no exception matches on Windows (check:security
-    #        and scanner.test.mjs fail there).
-    #   W-3  scripts/generate-registry.mjs and
-    #        scripts/validate-registry.mjs emit/compare native
-    #        relative paths, so registry tests fail on Windows.
-    #   W-4  Link-mode install/backup on Windows depends on the
-    #        junction fallback in scripts/install/links.mjs (A-11):
-    #        a directory symlink needs Developer Mode or admin
-    #        rights, a junction needs neither. Whether that module
-    #        is present and correct is verified by the --link tests
-    #        themselves on the first run; Developer Mode status on
-    #        the runner image is unverified from here.
-    # Remove continue-on-error (and add this job to the required
-    # branch-protection checks) once the leg is green for real.
-    # Until then, do NOT require the "Windows (Node 24)" check.
+    # GATING (promoted 2026-11-21): the leg went green on a real
+    # Windows runner (PR #1, run 44933250315: 250/255 pass,
+    # 0 fail, 5 POSIX-only skipped). The gaps that made it
+    # advisory are closed: W-1/W-2/W-3 were fixed in Stage D
+    # (USERPROFILE sandboxing, POSIX path normalization in the
+    # scanner, registry generator/validator, link checker, and
+    # scorer), W-4 (junction fallback) is proven by the --link
+    # tests passing on the real runner, and the validator's
+    # Windows path bug plus 7 Windows-only test failures were
+    # fixed from the first real runs (see ai/PROJECT-STATUS.md).
+    # The leg is a RECOMMENDED required branch-protection check
+    # (ai/phase10/NOTES.md) — recommended, not in force: branch
+    # protection is NOT currently enabled on main (audit finding
+    # A4-02), so today the leg gates the run — a failure fails the
+    # run — but does not block merging. Enabling protection is an
+    # owner decision (it blocks direct pushes to main).
     #
-    # Deliberately NOT run here: check:security (W-2),
-    # check:links (the upstream exclusion is a POSIX-prefix match
-    # and silently stops excluding on Windows), score (the
-    # category fallback splits on '/'), check:registry and the
-    # registry diff (W-3), evals (covered on Ubuntu; the mock
-    # provider adds no Windows signal). All are covered by the
-    # Ubuntu jobs in this workflow.
+    # Deliberately NOT run here: check:security, check:links,
+    # score, check:registry and the registry diff, evals. All are
+    # covered by the Ubuntu jobs in this workflow; Windows runs
+    # the platform-sensitive surface (validate, frontmatter, the
+    # full regression suite). The Windows path bugs that once
+    # excluded these checks (W-2, POSIX-prefix matching) were
+    # fixed in Stage D.
+    #
     name: Windows (Node 24)
     runs-on: windows-latest
     timeout-minutes: 20
-    continue-on-error: true
     defaults:
       run:
         # Git Bash ships on windows-latest; bash keeps step
@@ -178,7 +196,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
-      - name: Set up Node.js 20
+      - name: Set up Node.js 24
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "24"

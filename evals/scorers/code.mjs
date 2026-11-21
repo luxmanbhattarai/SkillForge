@@ -70,7 +70,17 @@ export function tsStructure(code) {
   return { ok: true };
 }
 
+// Fixture names are single segments of [A-Za-z0-9_-] (A5-05): the
+// name comes from eval-case JSON or a user-supplied --cases-file
+// and is dynamically imported, so an unvalidated name like
+// '../../scripts/x' would import and execute an arbitrary .mjs
+// file. Fixture execution is by design; the traversal is not.
+export const FIXTURE_NAME_RE = /^[A-Za-z0-9_-]+$/;
+
 async function runFixture(fixtureName) {
+  if (typeof fixtureName !== 'string' || !FIXTURE_NAME_RE.test(fixtureName)) {
+    return [{ name: `fixture: ${fixtureName}`, pass: false, detail: `invalid fixture name "${fixtureName}" (must match ${FIXTURE_NAME_RE})` }];
+  }
   const file = path.join(FIXTURES_DIR, fixtureName + '.mjs');
   let mod;
   try {

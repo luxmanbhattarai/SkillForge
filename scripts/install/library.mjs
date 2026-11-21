@@ -30,12 +30,51 @@ import path from 'node:path';
 
 export class LibraryError extends Error {}
 
+/**
+ * Validate one registry entry's name and source path (A5-04). The
+ * registry is generated and repo-controlled, so a tampered registry
+ * needs repo write access — but the installer joins `source`
+ * straight onto the library root and hashes/copies whatever it
+ * finds there, so a `../` path or a separator-containing name must
+ * never survive loading. Throws a LibraryError naming the problem.
+ */
+function validateRegistryEntry(entry, kind, root, where) {
+  const what = `${where} entry ${JSON.stringify(entry?.name ?? '?')}`;
+  if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
+    throw new LibraryError(`${where}: registry entry is not an object`);
+  }
+  if (typeof entry.name !== 'string' || entry.name === '' || entry.name.includes('/')
+    || entry.name.includes('\\') || entry.name.includes('\0')
+    || entry.name === '.' || entry.name === '..') {
+    throw new LibraryError(`${what}: name must be a single path segment`);
+  }
+  if (typeof entry.path !== 'string' || entry.path === '') {
+    throw new LibraryError(`${what}: path must be a non-empty string`);
+  }
+  const resolved = path.resolve(root, entry.path);
+  if (resolved !== root && !resolved.startsWith(root + path.sep)) {
+    throw new LibraryError(`${what}: path ${JSON.stringify(entry.path)} escapes the library root`);
+  }
+}
+
 /** Load the library rooted at `root` (the repository root). */
 export async function loadLibrary(root) {
   const pkg = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
   const reg = JSON.parse(await readFile(path.join(root, 'registry', 'skills.json'), 'utf8'));
+  // A2-17: shape validation. The old code did `reg.skills || []`,
+  // so a registry parsing to `[]` (or any non-object) silently
+  // produced an empty library — "Nothing to install" — and every
+  // command failed or misled exactly when the repo was broken. A
+  // malformed registry is now a clear LibraryError.
+  if (!reg || typeof reg !== 'object' || Array.isArray(reg) || !Array.isArray(reg.skills)) {
+    throw new LibraryError(
+      'registry/skills.json is malformed: expected an object with a "skills" array. ' +
+        'Regenerate it with `npm run registry`.',
+    );
+  }
   const skills = new Map();
-  for (const s of reg.skills || []) {
+  for (const s of reg.skills) {
+    validateRegistryEntry(s, 'skill', root, 'registry/skills.json');
     skills.set(s.name, {
       kind: 'skill',
       name: s.name,
@@ -59,7 +98,27 @@ async function loadKind(root, dir, kind, pkgVersion) {
   const registryFile = path.join(root, 'registry', `${dir}.json`);
   try {
     const doc = JSON.parse(await readFile(registryFile, 'utf8'));
+    // Same shape discipline as skills (A2-17): a registry file
+    // that parses to a non-object, or whose list is present but
+    // not an array, is a clear error — not a silently empty kind.
+    if (!doc || typeof doc !== 'object' || Array.isArray(doc)) {
+      throw new LibraryError(
+        `registry/${dir}.json is malformed: expected an object with a "${dir}" array. ` +
+          'Regenerate it with `npm run registry`.',
+      );
+    }
+    if (doc[dir] !== undefined && !Array.isArray(doc[dir])) {
+      throw new LibraryError(
+        `registry/${dir}.json is malformed: "${dir}" must be an array. ` +
+          'Regenerate it with `npm run registry`.',
+      );
+    }
     for (const entry of doc[dir] || []) {
+      // A5-04: validate the effective source path — the default
+      // `${dir}/${name}.md` is safe by construction, an explicit
+      // path is not.
+      const effective = { name: entry?.name, path: entry?.path || `${dir}/${entry?.name}.md` };
+      validateRegistryEntry(effective, kind, root, `registry/${dir}.json`);
       out.set(entry.name, {
         kind,
         name: entry.name,
