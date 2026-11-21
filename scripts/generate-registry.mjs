@@ -24,7 +24,7 @@
 //
 // Usage: node scripts/generate-registry.mjs
 
-import { readdir, readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readdir, readFile, writeFile, mkdir, rename } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { splitFrontmatter, parseFrontmatter } from './lib/frontmatter.mjs';
@@ -210,7 +210,21 @@ const versions = { registry_version: VERSION, generated: GENERATED, skills: {} }
 for (const s of skills) versions.skills[s.name] = s.version;
 
 await mkdir(REGISTRY_DIR, { recursive: true });
-const write = (name, obj) => writeFile(path.join(REGISTRY_DIR, name), JSON.stringify(obj, null, 2) + '\n');
+// A-37: writes are atomic (temp file in the same directory + rename).
+// A plain writeFile leaves a partially-written file visible to any
+// concurrent reader — the test suite runs the generator against the
+// real repo while other test files read registry/skills.json, and a
+// mid-write read parses as truncated JSON (proven: 20 partial reads
+// in 30 generator runs under a concurrent reader). rename is atomic
+// on POSIX and Windows (same volume), so readers always see the old
+// or the new file, never a half-written one. The pid suffix keeps
+// concurrent generator runs from sharing a temp name.
+const write = async (name, obj) => {
+  const target = path.join(REGISTRY_DIR, name);
+  const tmp = `${target}.tmp-${process.pid}`;
+  await writeFile(tmp, JSON.stringify(obj, null, 2) + '\n');
+  await rename(tmp, target);
+};
 await write('skills.json', {
   name: 'skillforge',
   version: VERSION,

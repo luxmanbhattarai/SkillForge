@@ -215,6 +215,44 @@ test('registry generation is deterministic (regenerate = zero diff)', async () =
   assert.equal(after, before);
 });
 
+test('registry generation is atomic under a concurrent reader (A-37)', async () => {
+  // A-37: the generator used to write registry files with a plain
+  // writeFile, so a concurrent reader could parse a half-written
+  // skills.json (proven: 20 partial-read SyntaxErrors in 30
+  // generator runs under a concurrent reader). In the full suite
+  // that surfaced as an intermittent single-test failure: a spawned
+  // script reading the registry mid-write exited 2. Writes are now
+  // temp-file + rename, so a reader must never see partial JSON.
+  // 10 rounds is enough to fail reliably pre-fix (~7 partial reads
+  // expected) and takes ~6s.
+  const skillsJson = path.join(REPO_ROOT, 'registry', 'skills.json');
+  let reads = 0;
+  let partialReads = 0;
+  let stop = false;
+  const reader = (async () => {
+    while (!stop) {
+      reads++;
+      try {
+        JSON.parse(await readFile(skillsJson, 'utf8'));
+      } catch (e) {
+        if (e instanceof SyntaxError) partialReads++;
+        else throw e;
+      }
+    }
+  })();
+  try {
+    for (let i = 0; i < 10; i++) {
+      const r = await runNode(GENERATOR);
+      assert.equal(r.code, 0, r.stdout + r.stderr);
+    }
+  } finally {
+    stop = true;
+    await reader;
+  }
+  assert.ok(reads > 0, 'concurrent reader never ran');
+  assert.equal(partialReads, 0, `saw ${partialReads} partial reads of skills.json in ${reads} reads`);
+});
+
 // --- query CLI smoke tests ---
 
 test('query CLI: search, show, status, categories, stale', async () => {
