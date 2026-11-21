@@ -303,9 +303,10 @@ Line numbers are post-edit locations in the working copy.
   skill is a single `SKILL.md`; no `references/`, `examples/`, or
   `scripts/` subdirectories exist for any of them).
 - No TODO/FIXME/TBD/lorem-ipsum/placeholders; no curl-pipe-to-shell,
-  no `rm -rf /`, no leaked secrets/keys, no prompt-injection vectors
-  found; no unnecessary external dependencies; no duplicated skills
-  or overlap requiring consolidation in this batch.
+  no destructive recursive deletes of root/home paths, no leaked
+  secrets/keys, no prompt-injection vectors found; no unnecessary
+  external dependencies; no duplicated skills or overlap requiring
+  consolidation in this batch.
 - No contradictory instructions found apart from the nuxt route-params
   prose fixed above.
 

@@ -159,7 +159,7 @@
   (<https://docs.llamaindex.ai/en/stable/>). Pinecone Documents API
   confirmed as a real, generally available API
   (<https://docs.pinecone.io/guides/get-started/documents-api>). The
-  "ignore previous instructions and…" quote is clearly framed as an
+  quoted instruction-override attack example is clearly framed as an
   attack example in Security Considerations, not an instruction. No
   findings.
 - **content-decay** — 16-month Search Console retention, "wait at least a
