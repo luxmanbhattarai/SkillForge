@@ -68,7 +68,7 @@ starting values, and how to verify them.
   Express and Node.js. Helmet 8.x is the current line (8.3.0 as of
   November 2026, Node.js 18+). The HSTS option is
   `strictTransportSecurity` — the old `hsts` option name was
-  removed in Helmet 4 and is silently ignored if used.
+  removed in Helmet 8 and is silently ignored if used.
 
 ## Required Workflow
 

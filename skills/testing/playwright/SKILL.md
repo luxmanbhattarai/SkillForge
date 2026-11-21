@@ -50,7 +50,7 @@ them reliably in CI. It is the recommended tool behind the
 
 - Node.js installed: use Node.js 22, 24, or 26. Playwright 1.65
   (current as of 2026-11-20; 1.65.1 released 2026-11-13) no longer
-  tests on Node.js 20, which reached end-of-life in March 2026.
+  tests on Node.js 20, which reached end-of-life on 30 April 2026.
 - Playwright installed, plus its browser binaries (installed with the
   Playwright install command).
 - Version-specific differences to know: since 1.57 the bundled

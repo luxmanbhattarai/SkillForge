@@ -57,7 +57,7 @@ request. It produces workflows that are fast, secure, and easy to debug.
   later); v6 changed checkout's credential storage and limited
   setup-node's automatic caching to npm; v7 migrated internals to
   ESM. v4 and earlier run on Node.js 20, which reached end-of-life
-  in March 2026 — do not use v4 for new workflows.
+  on 30 April 2026 — do not use v4 for new workflows.
 - Node.js 22, 24, and 26 are the active LTS lines as of 2026-11-20;
   use one of them for `node-version`.
 

@@ -48,7 +48,7 @@ the content — instead of a bare link or a badly cropped image.
 ## Prerequisites
 
 - Access to the site's source code or CMS where meta tags are set.
-- A preview image for each page or template (1200x628 for a large
+- A preview image for each page or template (1200x600 for a large
   card).
 - Knowledge of the page's canonical URL.
 - The site's X handle, if cards should attribute the site or creator.
@@ -75,7 +75,7 @@ the content — instead of a bare link or a badly cropped image.
      page where the image carries the message.
    - `summary` for pages where the image is secondary (a small
      thumbnail is enough).
-3. Prepare the image: 1200x628 pixels for a large card, with
+3. Prepare the image: 1200x600 pixels (2:1) for a large card, with
    important content centered so cropping does not remove it.
 4. Add the tags to the page's `<head>`: `twitter:card`,
    `twitter:title`, `twitter:description`, and `twitter:image`.
@@ -103,10 +103,13 @@ the content — instead of a bare link or a badly cropped image.
   `twitter:image`.
 - Use absolute URLs for `twitter:image`. Relative URLs are a common
   cause of missing card images.
-- The recommended large-card image size is 1200x628 pixels (about
-  1.91:1). A large-card image must be at least 300x157, at most
-  4096x4096, and under 5 MB; smaller images fall back to a small
-  card. A summary-card image must be at least 144x144.
+- The recommended large-card image size is 1200x600 pixels (2:1,
+  per X's documented card specification). A 1200x628 (1.91:1) or
+  1200x630 image is also acceptable, losing only about 14 px top
+  and bottom to the 2:1 crop. A large-card image must be at least
+  300x157, at most 4096x4096, and under 5 MB; smaller images fall
+  back to a small card. A summary-card image must be at least
+  144x144.
 - `twitter:card` must be one of the supported card types. Do not
   invent a card type. Do not use the `app` card type: app cards
   have rendered as plain summary cards since early 2022. The
@@ -214,7 +217,7 @@ Twitter Card tags for a general page with a small summary card:
 - [ ] Every public page has `twitter:card`, `twitter:title`,
       `twitter:description`, and `twitter:image`.
 - [ ] `twitter:image` is an absolute URL.
-- [ ] Large-card images are 1200x628 (at least 300x157, under
+- [ ] Large-card images are 1200x600 (2:1; at least 300x157, under
       5 MB).
 - [ ] The card type fits the page (large image for articles and
       landing pages, summary where the image is secondary).
@@ -228,7 +231,7 @@ Twitter Card tags for a general page with a small summary card:
 ## Expected Deliverables
 
 - Twitter Card tags for each page or template.
-- Card images at 1200x628 for large cards, with a fallback image.
+- Card images at 1200x600 for large cards, with a fallback image.
 - Composer preview test results for at least one page per template.
 - Notes on any card that renders differently than expected and why.
 

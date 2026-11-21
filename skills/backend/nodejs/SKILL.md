@@ -51,7 +51,7 @@ in production.
 
 - Node.js 26 LTS installed (the current LTS line as of 2026-11-20;
   Node.js 24 and 22 remain supported LTS lines). Node.js 20 reached
-  end-of-life in March 2026 and Node.js 25 was a short-lived Current
+  end-of-life on 30 April 2026 and Node.js 25 was a short-lived Current
   release — do not start new projects on either.
 - npm, the package manager bundled with Node.js.
 - Familiarity with JavaScript or TypeScript and asynchronous programming.

@@ -48,7 +48,7 @@ code, and deploy reliably to production.
 
 - Node.js installed (22, 24, and 26 are the active LTS lines as of
   2026-11-20; Node.js 26 "Lithium" is the newest LTS. Node.js 20
-  reached end-of-life in March 2026).
+  reached end-of-life on 30 April 2026).
 - Wrangler 4.x installed, either globally or as a project dev
   dependency. Wrangler 4 is the current major version; in v4, commands
   that can run locally default to local mode and need `--remote` to

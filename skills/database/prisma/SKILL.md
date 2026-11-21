@@ -43,12 +43,12 @@ This skill covers Prisma ORM 7 usage in TypeScript and JavaScript applications: 
 
 - Node.js 26 LTS (24 and 22 remain supported LTS lines) and TypeScript 7.x (or JavaScript with the same runtime).
 - This skill describes Prisma ORM 7, the current stable line (7.10.1 as of 2026-11-20). Prisma ORM 7 receives bug fixes and security updates for 18 months after Prisma ORM 8 reaches general availability.
-- Prisma ORM 8 is a release candidate, not a stable release: as of 16 November 2026 the `latest` npm tag installs `prisma@8.0.0-rc.34` (CLI) with `@prisma/orm-postgres@8.0.0-rc.24` (library). It replaces `schema.prisma` with a contract, `prisma generate` with `prisma contract emit`, and `@prisma/client` with per-database libraries such as `@prisma/orm-postgres`, and it has no `generate`, `migrate dev`, or `db push` commands. It supports PostgreSQL and MongoDB (early access) only, so far. Do not follow this skill's commands on a Prisma ORM 8 project.
+- Prisma ORM 8 is a release candidate, not a stable release: as of 16 November 2026 the `latest` npm tag installs `prisma@8.0.0-rc.34` (CLI) with `@prisma/orm-postgres@8.0.0-rc.24` (library). It replaces `schema.prisma` with a contract, `prisma generate` with `prisma contract emit`, and `@prisma/client` with per-database libraries such as `@prisma/orm-postgres`, and it has no `generate`, `migrate dev`, or `db push` commands. Database support so far: PostgreSQL (release candidate) and MongoDB (early access); MySQL is an early preview (migrations, reads, and writes), MariaDB an early preview (migrations only), and SQLite experimental. Do not follow this skill's commands on a Prisma ORM 8 project.
 - Pin the major version in `package.json` (`prisma@7` and `@prisma/client@7`): an unpinned `npm install prisma` now installs the Prisma ORM 8 release candidate. In CI or one-off commands use `npx prisma@7`.
 - Prisma ORM 6 reached end of life on 19 November 2026 and receives no more updates; upgrade to Prisma ORM 7 (or to Prisma ORM 8 on PostgreSQL or MongoDB).
 - A supported database reachable from the project. Prisma ORM 7 supports PostgreSQL, MySQL, MariaDB, SQLite, SQL Server, and CockroachDB; it has no MongoDB support (MongoDB is available in Prisma ORM 8 only).
 - The connection string stored as an environment variable such as `$DATABASE_URL`, never committed to the repository.
-- Prisma ORM 7 does not load `.env` files by default: load them with `dotenv`, or define the connection in `prisma.config.ts`.
+- Prisma ORM 7 does not load `.env` files by default: load them with `dotenv`, or define the connection in the Prisma config file (`prisma7.config.ts` on 7.10+, `prisma.config.ts` on 7.0–7.9; the 7.10 CLI reads either name, so edit the file `prisma init` created — do not create a second one).
 
 ## Official Documentation
 

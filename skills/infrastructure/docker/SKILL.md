@@ -54,7 +54,7 @@ containers that build reproducibly and run the same everywhere.
   standalone `docker-compose` v1 binary is end-of-life.
 - Base images: Node.js 22, 24, and 26 are the active LTS lines as of
   2026-11-20 (26 is the newest LTS; `node:26-alpine` exists on Docker
-  Hub). Node.js 20 reached end-of-life in March 2026; do not base new
+  Hub). Node.js 20 reached end-of-life on 30 April 2026; do not base new
   images on it. Alpine images use musl libc, so verify native
   dependencies work there before choosing `-alpine` over `-slim`.
 - The application builds and runs outside Docker first; containerize a
