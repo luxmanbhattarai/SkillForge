@@ -30,18 +30,28 @@
 | PASS (no findings) | 19 |
 | FIXED (findings fixed in place) | 32 |
 | NEEDS-REVIEW | 0 |
-| **Findings total** | **59** |
+| **Findings total** | **60** |
 | Critical | 0 |
 | High | 3 |
-| Medium | 10 |
+| Medium | 11 |
 | Low | 38 |
 | Informational | 8 |
-| Findings fixed in place | 53 |
+| Findings fixed in place | 54 |
 | Informational, no fix needed | 6 |
 | Unresolved findings | 0 |
 | Recommended status: `verified` | 50 |
 | Recommended status: `verified-with-limitations` | 1 (`platform-social-images`) |
 | Still `unverified` after audit | 0 |
+
+**Correction (Stage E, 2026-11-20):** this summary originally read
+59 findings (10 Medium, 53 fixed). A mechanical re-count of the
+51 per-skill rows gives 60 findings (11 Medium, 54 fixed): the
+Stage C batch table undercounted batch 4 (infrastructure) by one —
+kubernetes, pulumi, and railway each carry one Medium finding
+(K-01, P-01, R-01), i.e. 3 Mediums in the batch, not 2. The row
+data and the detailed findings sections were always consistent
+at 60/54; only the summary totals and the Stage C batch table
+were wrong. No finding was added or removed.
 
 No fabricated capabilities, no unsafe shell commands, no credential
 leakage, no prompt-injection vectors, and no duplicated skills were
@@ -143,7 +153,7 @@ deprecation/shutdown docs. Fix: example now creates the Artifact
 Registry repository first and deploys from it, with a note recording
 the shutdown date.
 
-## Findings — Medium (10, all fixed)
+## Findings — Medium (11, all fixed)
 
 ### B1-01 — advanced-api-architecture — Medium — FIXED
 

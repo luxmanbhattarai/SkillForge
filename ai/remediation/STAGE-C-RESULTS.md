@@ -191,3 +191,20 @@ Commands run from the repo root. Full battery after the last edit:
 | `7cf084d` | Pinned status counts + living-doc counts + query CLI stable status schema |
 
 Stage C started at head `87b9fee` (Stage B done). Stage C head at the time of writing: `7cf084d` (this results file, the register updates, and the PROJECT-STATUS log entry follow in the closing commit).
+
+## Correction (Stage E, 2026-11-20) — finding totals
+
+The totals in the outcome summary (§1 batch table: batch 4 =
+10 findings, 0/1/2/7/0, 10 fixed) are off by one. A mechanical
+re-count of the 51 per-skill rows in
+`ai/audits/SKILL-AUDIT-MATRIX.md` gives **60 findings (0
+Critical, 3 High, 11 Medium, 38 Low, 8 Informational), 54 fixed
+in place**, 6 Informational needing no fix, 0 unresolved: batch
+4 (infrastructure) has 11 findings (0/1/3/7/0), 11 fixed —
+kubernetes, pulumi, and railway each carry one Medium finding
+(K-01, P-01, R-01). The matrix's row data and detailed findings
+sections were always consistent at 60/54; only the summary
+totals and this file's batch table were wrong. The matrix
+summary has been corrected; the tables above are left as
+written (historical record) with this note. No finding was
+added or removed.
