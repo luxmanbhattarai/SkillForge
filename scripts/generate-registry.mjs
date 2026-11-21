@@ -28,6 +28,7 @@ import { readdir, readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { splitFrontmatter, parseFrontmatter } from './lib/frontmatter.mjs';
+import { toPosixPath } from './lib/paths.mjs';
 import { extractSection, extractSkillTokens, extractTitle, extractDescription, classifyToken } from './lib/agents-workflows.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -58,8 +59,11 @@ async function findSkillFiles(dir) {
 
 const skills = [];
 for (const file of (await findSkillFiles(path.join(ROOT, 'skills'))).sort()) {
-  const relDir = path.relative(ROOT, path.dirname(file)); // skills/<cat>/<name> or skills/upstream/<vendor>/<name>
-  const parts = relDir.split(path.sep);
+  // Normalized to POSIX separators: registry paths are stored
+  // POSIX-style, and a Windows regeneration must produce the same
+  // output (Stage D, W-3). No-op on POSIX.
+  const relDir = toPosixPath(path.relative(ROOT, path.dirname(file))); // skills/<cat>/<name> or skills/upstream/<vendor>/<name>
+  const parts = relDir.split('/');
   const text = await readFile(file, 'utf8');
   const { raw } = splitFrontmatter(text);
   const { data } = parseFrontmatter(raw || '');

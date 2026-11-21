@@ -35,6 +35,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { patternsFor } from './lib/security-patterns.mjs';
+import { toPosixPath } from './lib/paths.mjs';
 
 const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const rootFlagIdx = process.argv.indexOf('--root');
@@ -187,7 +188,10 @@ let textFiles = 0;
 let binaryFiles = 0;
 
 for (const file of files) {
-  const rel = path.relative(ROOT, file);
+  // Normalized to POSIX separators: the exception/skip lists use
+  // POSIX prefixes, which a Windows backslash path would never
+  // match (Stage D, W-2). No-op on POSIX.
+  const rel = toPosixPath(path.relative(ROOT, file));
   if (SKIP_FILES.has(rel)) continue;
   if (SKIP_PREFIXES.some((p) => matchesPrefix(rel, p))) continue;
   if (TEXT_EXT.test(file)) {

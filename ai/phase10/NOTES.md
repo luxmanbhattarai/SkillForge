@@ -194,10 +194,16 @@ they are branch-independent):
    CodeQL action version and keeps the configuration in the
    repo. See `ai/decisions/2026-11-20-codeql-advanced-setup.md`.
 4. **Branch protection (recommended)** — Settings → Branches →
-   add a rule for `main` requiring the `validate`, `registry`,
-   `evals`, `lint`, and `security-audit` status checks before
-   merging. The workflows exist; protection is what makes them
-   gating.
+   add a rule for `main` requiring these status checks before
+   merging (these are the check *names* GitHub shows — the jobs'
+   display `name:` values with matrix values expanded, not the
+   job ids; requiring `validate` would never match a check run):
+   `Validate (Node 18)`, `Validate (Node 20)`, `Validate (Node
+   22)`, `Registry`, `Behavioral evals`, `lint`, and
+   `security-audit` (plus `Analyze (javascript-typescript)` for
+   CodeQL, recommended). Do NOT require `Windows (Node 20)` until
+   the Windows leg is promoted from advisory (Stage D). The
+   workflows exist; protection is what makes them gating.
 
 ## Coordinator follow-up (2026-11-20)
 

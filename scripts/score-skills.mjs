@@ -36,6 +36,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { splitFrontmatter, parseFrontmatter } from './lib/frontmatter.mjs';
+import { toPosixPath } from './lib/paths.mjs';
 // Security patterns come from the shared library (score scope: secrets
 // + injection only — command/code patterns need context triage and live
 // in the scanner, not in a score cap).
@@ -217,13 +218,18 @@ function scoreSkill(relPath, text) {
 
 const files = (await findSkillFiles(SKILLS_DIR))
   .filter((f) => !f.includes(`${path.sep}upstream${path.sep}`))
-  .filter((f) => !FILTER || path.relative(ROOT, f).startsWith(FILTER))
+  // Normalized to POSIX separators: the FILTER prefix match and
+  // scoreSkill's category fallback (split('/')[1]) both assume
+  // forward slashes, which a Windows backslash path would break
+  // (Stage D, same class as W-2). No-op on POSIX.
+  .map((f) => toPosixPath(path.relative(ROOT, f)))
+  .filter((rel) => !FILTER || rel.startsWith(FILTER))
   .sort();
 
 const results = [];
-for (const f of files) {
-  const text = await readFile(f, 'utf8');
-  results.push(scoreSkill(path.relative(ROOT, f), text));
+for (const rel of files) {
+  const text = await readFile(path.join(ROOT, rel), 'utf8');
+  results.push(scoreSkill(rel, text));
 }
 
 const critical = results.filter((r) => r.flags.some((fl) => fl.startsWith('CRITICAL')));

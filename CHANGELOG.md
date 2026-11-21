@@ -92,6 +92,10 @@ Phases 1–11, all 2026-11-20):
   Turborepo, and retired Google/X features.
 - Category descriptions, the report target tree, and registry source
   data externalized from code into `scripts/lib/*.json`.
+- Vercel upstream re-imported (`vercel-labs/agent-skills`
+  `1a2c79d4` → `5a37a632`): `web-design-guidelines` 1.0.0 → 1.1.0;
+  the skill now reads bundled guidelines instead of fetching them
+  from `main` at review time.
 
 ### Fixed
 

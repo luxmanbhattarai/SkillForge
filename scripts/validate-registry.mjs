@@ -15,6 +15,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateAgainstSchema } from './lib/schema-validate.mjs';
+import { toPosixPath } from './lib/paths.mjs';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_ROOT = path.resolve(SCRIPT_DIR, '..');
@@ -52,7 +53,10 @@ async function findSkillFiles(dir) {
   for (const e of await readdir(dir, { withFileTypes: true }).catch(() => [])) {
     const full = path.join(dir, e.name);
     if (e.isDirectory()) out.push(...await findSkillFiles(full));
-    else if (e.name === 'SKILL.md') out.push(path.relative(ROOT, path.dirname(full)));
+    // Normalized to POSIX separators so disk paths compare equal
+    // to the POSIX paths stored in the registry on Windows too
+    // (Stage D, W-3). No-op on POSIX.
+    else if (e.name === 'SKILL.md') out.push(toPosixPath(path.relative(ROOT, path.dirname(full))));
   }
   return out;
 }
