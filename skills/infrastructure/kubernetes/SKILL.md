@@ -335,10 +335,12 @@ kubectl describe pod <pod-name> -n production
 kubectl rollout undo deployment/web -n production
 ```
 
-Install a chart with Helm, pinned to a chart version:
+Install a chart with Helm, pinned to a chart version. `--version` pins
+the version only for repository and OCI chart references; for a local
+chart directory the version comes from the chart's own `Chart.yaml`:
 
 ```bash
-helm upgrade --install my-app ./charts/my-app \
+helm upgrade --install my-app oci://ghcr.io/example/charts/my-app \
   --namespace production --create-namespace \
   --version 1.4.2 --values values-production.yaml
 ```

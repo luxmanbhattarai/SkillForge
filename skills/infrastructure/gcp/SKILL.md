@@ -65,7 +65,8 @@ following Google Cloud's own architecture and security guidance.
   with billing enabled and a budget alert configured.
 - Google Cloud CLI (`gcloud`) installed and authenticated; 594.0.0 was
   the latest release as of 2026-11-17. Run `gcloud components update`
-  to stay current, and `gcloud auth login` plus
+  to stay current (tarball installs; package-manager installs update
+  through the package manager), and `gcloud auth login` plus
   `gcloud config set project PROJECT_ID` before working.
 - The target region(s) decided, with data-residency and latency
   requirements understood. Prefer multi-zone or multi-region designs
@@ -226,7 +227,9 @@ following Google Cloud's own architecture and security guidance.
   is metered; keep chatty services in the same region where consistency
   allows it.
 - Use committed use discounts for steady-state Compute Engine and Cloud
-  SQL capacity, and sustained-use pricing is automatic for the rest.
+  SQL capacity; sustained-use discounts apply automatically, but only to
+  eligible Compute Engine usage (including GKE nodes), not to Cloud SQL
+  or other services.
 
 ## Common Mistakes
 
@@ -256,11 +259,16 @@ gcloud auth list
 gcloud config get-value project
 ```
 
-Deploy a containerized service to Cloud Run:
+Deploy a containerized service to Cloud Run. Images live in Artifact
+Registry — Container Registry (`gcr.io`) stopped accepting writes on
+18 March 2025, so new projects must not use it:
 
 ```bash
+gcloud artifacts repositories create my-service \
+  --repository-format=docker --location=us-central1
+
 gcloud run deploy my-service \
-  --image gcr.io/PROJECT_ID/my-service:1.0.0 \
+  --image us-central1-docker.pkg.dev/PROJECT_ID/my-service/my-service:1.0.0 \
   --region us-central1 \
   --allow-unauthenticated \
   --max-instances 10

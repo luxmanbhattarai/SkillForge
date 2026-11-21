@@ -69,7 +69,9 @@ reproducible, observable, and reversible.
   `railway.toml` config-as-code files are deprecated in favor of
   Infrastructure as Code (a `.railway/railway.ts` file managed with
   `railway config plan` and `railway config apply`); do not start a new
-  service on the old files. Confirm current status in the official docs.
+  service on the old files. Existing Config as Code files stop being
+  read on 2026-12-01 (hard cutoff); migrate with
+  `railway config migrate` before then.
 
 ## Official Documentation
 
@@ -202,7 +204,7 @@ reproducible, observable, and reversible.
 - Use the private network for service-to-service calls; public domains
   add a round trip through the edge.
 - For connection-heavy workloads against Postgres, enable PgBouncer
-  connection pooling (`railway postgres pgbouncer`) instead of opening
+  connection pooling (`railway postgres pgbouncer add`) instead of opening
   a new connection per request.
 - Keep build times down with a small build context and cached
   dependencies; every redeploy rebuilds unless the image is reused by
@@ -262,7 +264,7 @@ railway redeploy
 A minimal `Dockerfile` that respects Railway's injected port:
 
 ```dockerfile
-FROM node:24-alpine
+FROM node:26-alpine
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev

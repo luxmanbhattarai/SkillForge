@@ -271,19 +271,26 @@ safe to change in teams.
 ## Examples
 
 A minimal TypeScript program creating an S3 bucket with versioning
-and encryption:
+and encryption. Bucket settings are separate resources in the current
+provider — the inline `versioning`, `serverSideEncryptionConfiguration`,
+and `acl` arguments on `aws.s3.Bucket` are deprecated:
 
 ```ts
 import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 
-const bucket = new aws.s3.Bucket("app-bucket", {
-  versioning: { enabled: true },
-  serverSideEncryptionConfiguration: {
-    rule: {
-      applyServerSideEncryptionByDefault: { sseAlgorithm: "AES256" },
-    },
-  },
+const bucket = new aws.s3.Bucket("app-bucket");
+
+new aws.s3.BucketVersioning("app-bucket-versioning", {
+  bucket: bucket.id,
+  versioningConfiguration: { status: "Enabled" },
+});
+
+new aws.s3.BucketServerSideEncryptionConfiguration("app-bucket-encryption", {
+  bucket: bucket.id,
+  rules: [{
+    applyServerSideEncryptionByDefault: { sseAlgorithm: "AES256" },
+  }],
 });
 
 export const bucketName = bucket.id;
@@ -300,9 +307,14 @@ export class PrivateBucket extends pulumi.ComponentResource {
 
   constructor(name: string, opts?: pulumi.ComponentResourceOptions) {
     super("example:storage:PrivateBucket", name, {}, opts);
-    this.bucket = new aws.s3.Bucket(name, {
+    this.bucket = new aws.s3.Bucket(name, {}, { parent: this });
+    new aws.s3.BucketAcl(name, {
+      bucket: this.bucket.id,
       acl: "private",
-      versioning: { enabled: true },
+    }, { parent: this });
+    new aws.s3.BucketVersioning(name, {
+      bucket: this.bucket.id,
+      versioningConfiguration: { status: "Enabled" },
     }, { parent: this });
     this.registerOutputs({ bucketName: this.bucket.id });
   }
@@ -323,9 +335,9 @@ new PolicyPack("acme-baseline", {
       description: "S3 buckets must not allow public read access.",
       enforcementLevel: "mandatory",
       validateResource: validateResourceOfType(
-        aws.s3.Bucket,
-        (bucket, args, reportViolation) => {
-          if (bucket.acl === "public-read") {
+        aws.s3.BucketAcl,
+        (acl, args, reportViolation) => {
+          if (acl.acl === "public-read") {
             reportViolation("S3 buckets must not use the public-read ACL.");
           }
         },

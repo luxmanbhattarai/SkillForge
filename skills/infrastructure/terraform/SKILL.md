@@ -203,7 +203,10 @@ reviewable, repeatable, and safe to change in teams.
   routine apply path.
 - Refresh is the slow part of a plan on large infrastructures; the
   `-minimal-refresh` option (1.17) limits how much state Terraform
-  re-checks during a plan.
+  re-checks during a plan. It refreshes only resources the plan would
+  change, so it hides drift on untouched resources — use it for fast
+  inner-loop plans, not as the only plan that runs against production;
+  keep a scheduled full or `-refresh-only` plan to catch drift.
 - Parallelism defaults to 10 operations; raise `-parallelism` only
   when the provider and the cloud API can absorb it.
 - Provider plugin startup dominates short runs; keep the number of

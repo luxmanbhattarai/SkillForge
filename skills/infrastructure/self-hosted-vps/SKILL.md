@@ -353,7 +353,7 @@ A Compose file for the app and its database:
 ```yaml
 services:
   app:
-    image: my-app:${APP_VERSION:-latest}
+    image: my-app:${APP_VERSION:?Set APP_VERSION to a Git commit SHA}
     restart: unless-stopped
     env_file:
       - .env
