@@ -196,7 +196,7 @@ npm run report              # coverage + audit report
 ```
 
 CI runs the same checks on every pull request (`.github/workflows/`):
-validation on Node 18/20/22, registry regeneration diff, evals, lint,
+validation on Node 24, registry regeneration diff, evals, lint,
 security audit, CodeQL, and weekly scheduled maintenance (online links,
 stale verification, upstream monitoring). See
 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md#validation-and-ci) for the

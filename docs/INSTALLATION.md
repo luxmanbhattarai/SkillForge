@@ -443,7 +443,7 @@ page (both verified against vendor docs on 2026-11-20).
 ## Developing the installer
 
 The installer is zero-dependency Node (builtins only, Node
-`>= 18`). The CLI entry is `scripts/install-skills.mjs`; the
+`>= 24`). The CLI entry is `scripts/install-skills.mjs`; the
 implementation lives in `scripts/install/` (`targets.mjs` for
 paths, `library.mjs` for the library and format transforms,
 `manifest.mjs`, `backups.mjs`, `installer.mjs` for the engine,

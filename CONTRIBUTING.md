@@ -186,7 +186,7 @@ new commit and date in the vendor's `ATTRIBUTION.md` and in
    ```
 3. Open a pull request using the PR template. Describe what changed and
    why, and list the official sources you verified against.
-4. CI runs validation (Node 18/20/22), registry regeneration diff,
+4. CI runs validation (Node 24), registry regeneration diff,
    evals, lint, a security audit, and CodeQL on every PR. All checks
    must pass before merge.
 5. A maintainer reviews for accuracy, originality, and standards

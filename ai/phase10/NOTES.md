@@ -198,10 +198,9 @@ they are branch-independent):
    merging (these are the check *names* GitHub shows — the jobs'
    display `name:` values with matrix values expanded, not the
    job ids; requiring `validate` would never match a check run):
-   `Validate (Node 18)`, `Validate (Node 20)`, `Validate (Node
-   22)`, `Registry`, `Behavioral evals`, `lint`, and
+   `Validate (Node 24)`, `Registry`, `Behavioral evals`, `lint`, and
    `security-audit` (plus `Analyze (javascript-typescript)` for
-   CodeQL, recommended). Do NOT require `Windows (Node 20)` until
+   CodeQL, recommended). Do NOT require `Windows (Node 24)` until
    the Windows leg is promoted from advisory (Stage D). The
    workflows exist; protection is what makes them gating.
 

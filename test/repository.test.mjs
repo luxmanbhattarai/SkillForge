@@ -127,7 +127,7 @@ test('repository structure: package.json declares the acceptance scripts', async
   const pkg = await readJson('package.json');
   assert.equal(pkg.name, 'skillforge');
   assert.equal(pkg.type, 'module', 'package.json must declare ESM (type: module)');
-  assert.equal(pkg.engines?.node, '>=18', 'package.json must declare engines.node >= 18');
+  assert.equal(pkg.engines?.node, '>=24', 'package.json must declare engines.node >= 24');
   const expected = [
     'test', 'validate', 'validate:strict',
     'check:frontmatter', 'check:links', 'check:duplicates', 'check:sources',

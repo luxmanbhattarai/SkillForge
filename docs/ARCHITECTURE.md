@@ -29,7 +29,7 @@ ai/                   # internal working notes: audits, decisions, phase notes
 ```
 
 Zero dependencies, no lockfile: every script runs on Node builtins
-only (Node `>= 18`). There is no build step and no publish artifact;
+only (Node `>= 24`). There is no build step and no publish artifact;
 the package is private.
 
 ## Categories
@@ -240,7 +240,7 @@ pinned to SHAs, least-privilege permissions, no secrets):
 
 | Workflow | What it does |
 | --- | --- |
-| `validate-skills.yml` | PR validation: every local check on a Node 18/20/22 matrix, registry regeneration diff, evals job |
+| `validate-skills.yml` | PR validation: every local check on a Node 24 matrix, registry regeneration diff, evals job |
 | `lint.yml` | Frontmatter, offline links, trailing whitespace in Markdown |
 | `security-audit.yml` | `npm run check:security` on push/PR and weekly; dependency audit skipped with an explanation (zero dependencies, no lockfile) |
 | `codeql.yml` | CodeQL advanced setup (workflow) for JavaScript/TypeScript, weekly; default setup must NOT also be enabled |
