@@ -151,7 +151,7 @@ required sections were added).
 | 11 | Implementation standards | `Implementation Standards` |
 | 12 | Security requirements | `Security Considerations` |
 | 13 | Performance requirements | `Performance Considerations` |
-| 14 | Accessibility requirements | `Implementation Standards` subsection where applicable (frontend, media, content, metadata skills); other skills state N/A with a reason |
+| 14 | Accessibility requirements | Accessibility content where the skill's deliverable is user-facing: a `### Accessibility` subsection in `Implementation Standards`, or substantive prose guidance (WCAG / ARIA / screen-reader / keyboard). Required for frontend, media, content, metadata, and desktop skills; other skills include it only where their subject has a user-facing surface, and no N/A statement is required otherwise |
 | 15 | Testing strategy | `Implementation Standards` subsection (how the work is tested) |
 | 16 | Common mistakes | `Common Mistakes` (mistake → correction pairs) |
 | 17 | Correct examples | `Examples` |
@@ -160,6 +160,24 @@ required sections were added).
 | 20 | Expected deliverables | `Expected Deliverables` |
 | 21 | References | `References` (official sources + related skills) |
 | 22 | Last verified date | Frontmatter `metadata.last_verified` (the real verification date) |
+
+Note on element 14 (narrowed 2026-11-21, Phase C finding A3-03):
+the previous wording required a subsection for frontend, media,
+content, and metadata skills plus an N/A statement with a reason
+everywhere else — but only 14 of 228 original skills carry an
+Accessibility subsection, and the scorer (`scripts/score-skills.mjs`)
+enforces the element as a content mention (accessibility / WCAG /
+ARIA / screen-reader / keyboard), not a subsection. The narrowed
+wording above matches the enforced convention: accessibility
+*content* (subsection or substantive prose) for the five
+user-facing categories, nothing required elsewhere. Desktop is
+included because all three desktop skills already carry
+Accessibility subsections (Stage C batch 2); the scorer's
+category set does not include desktop yet, so that part is
+enforced by review, not by `npm run score`. A library-wide
+Accessibility pass remains follow-up work, not a blocker; it is
+recorded in `ai/reports/FINAL-REMEDIATION-REPORT.md` §11
+(Element-14 row) and `ai/audits/SKILL-AUDIT-MATRIX.md`.
 
 ## Quality rules (all original skills)
 

@@ -2,6 +2,8 @@
 
 - **Audit date:** 2026-11-20
 - **Branch:** `feat/skillforge-production-upgrade` (local only; nothing pushed)
+  — superseded 2026-11-21: the branch was pushed, PR #1 opened, merged,
+  and reverted (see `ai/PROJECT-STATUS.md`).
 - **Scope:** the 51 skills added in Phase 4 of the production upgrade, all
   previously recorded as `unverified` in `sources/verification-status.json`
 - **Method:** Phase 3 technical-accuracy method

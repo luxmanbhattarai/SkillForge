@@ -61,8 +61,8 @@ registry — a skill with no audit entry is `unverified`, never silently
 
 | Status | Skills | Meaning |
 | --- | --- | --- |
-| `verified` | 254 | Audited against official docs; guidance confirmed. |
-| `verified-with-limitations` | 17 | Audited; known limits recorded (e.g. docs unavailable, RC software). |
+| `verified` | 255 | Audited against official docs; guidance confirmed. |
+| `verified-with-limitations` | 16 | Audited; known limits recorded (e.g. docs unavailable, RC software). |
 | `needs-correction` | 6 | Known errors — all upstream; fixes belong upstream, never edited here. |
 | `unverified` | 0 | No unaudited skills remain; the 51 Phase 4 skills were audited in Stage C (2026-11-20). |
 
@@ -190,7 +190,7 @@ npm run check:links         # internal link check (add --online for external URL
 npm run check:security      # credential / prompt-injection scan
 npm run check:upstream      # upstream drift vs pinned commits
 npm run score               # quality score for every original skill (0–100)
-npm run test                # unit tests (196 tests, node:test, zero dependencies)
+npm run test                # unit tests (250 tests, node:test, zero dependencies)
 npm run evals               # behavioral evals: 463 cases, deterministic mock agent
 npm run registry            # regenerate registry/ from disk (never hand-edit it)
 npm run report              # coverage + audit report
@@ -204,7 +204,7 @@ stale verification, upstream monitoring). See
 full pipeline.
 
 The eval suite (`evals/`) runs a deterministic mock agent — no LLM APIs,
-no keys, no network — against 172 hand-written cases (skill selection,
+no keys, no network — against 186 hand-written cases (skill selection,
 content grounding, refusal, code generation) plus 277 generated discovery
 cases, one per skill. It evaluates the library, not a real model: see
 [`docs/EVALUATION.md`](docs/EVALUATION.md).
@@ -235,15 +235,19 @@ what is and is not defended against.
   an imported script without reading it first.
 
 Known limits: the custom security scanner is a pattern-based smoke
-screen, not SAST (see `docs/SECURITY-SCANNING.md`); real SAST runs in
-CI via the Semgrep job in the security-audit workflow
-(`p/javascript` over `scripts/`, `test/`, `evals/`), and
+screen, not SAST (see `docs/SECURITY-SCANNING.md`); real SAST is
+configured in CI via the Semgrep job in the security-audit workflow
+(`p/javascript` over `scripts/`, `test/`, `evals/`), added in
+b619388 and awaiting its first run on GitHub (it ran clean locally
+in Stage D, 0 findings, 68 rules), and
 Gitleaks/TruffleHog ran clean once in Stage D (2026-11-20) but are
 not in CI. GitHub secret scanning (with push protection) and
 Dependabot security updates are enabled; branch protection is not
 yet enabled (see `ai/phase10/NOTES.md` for the recommended checks).
-All 6 workflows plus the Windows leg have run on GitHub and pass
-(PR #1, run 44933250315, 2026-11-21).
+4 of 6 workflows ran on PR #1 and pass (Validate, Lint, Security
+audit, CodeQL; run 44933250315, 2026-11-21), including the Windows
+leg (250/255, 0 fail, 5 POSIX-only skipped).
+`scheduled-maintenance` and `release` have never run.
 
 ## Documentation
 

@@ -165,13 +165,16 @@ does not apply: the repository has zero dependencies and no lockfile,
 so there is nothing to audit. The scanner above plus manual review is
 the local story.
 
-On the GitHub side, CodeQL now runs via a workflow
+On the GitHub side, CodeQL runs via a workflow
 (`.github/workflows/codeql.yml`, advanced setup — do not also enable
-CodeQL default setup). GitHub secret scanning and Dependabot alerts
-are manual repo settings that still need enabling; branch protection
-is recommended too (see `ai/phase10/NOTES.md`). No workflow has run
-on GitHub yet, so do not claim any of those tools have run until
-they have.
+CodeQL default setup) and has run on PR #1 (2026-11-21). GitHub
+secret scanning (with push protection) and Dependabot security
+updates are enabled; branch protection is still not enabled (user
+decision — it would block direct pushes to `main`). 4 of 6
+workflows have run on GitHub (Validate, Lint, Security audit,
+CodeQL); `scheduled-maintenance` and `release` have never run, and
+the Semgrep job added in b619388 is still awaiting its first run —
+do not claim any of those have run until they have.
 
 ## Files
 

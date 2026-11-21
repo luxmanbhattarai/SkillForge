@@ -85,7 +85,7 @@ Codex and Antigravity share `.agents/skills` by vendor design.
   Schemas (`scripts/schemas/`), and `npm run check:registry`.
 - Skill `status` now derives from `sources/verification-status.json`
   (the Phase 3 audit, plus the Stage C audit of the 51 Phase 4 skills —
-  see `ai/audits/SKILL-AUDIT-MATRIX.md`): 254 verified, 17
+  see `ai/audits/SKILL-AUDIT-MATRIX.md`): 255 verified, 16
   verified-with-limitations, 6 needs-correction (all upstream),
   0 unverified.
   Do not read v1.0.0-era claims that all skills are verified — the

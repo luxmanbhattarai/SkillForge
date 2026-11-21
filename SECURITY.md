@@ -73,10 +73,13 @@ Security here is layered; no single check is the whole story. See
   the pinned commits is monitored weekly by CI
   (`npm run check:upstream`).
 - **CI scanning:** CodeQL runs via a workflow
-  (`.github/workflows/codeql.yml`, advanced setup). GitHub secret
-  scanning, Dependabot alerts, and branch protection are manual repo
-  settings, still to be enabled — see `ai/phase10/NOTES.md`. No
-  workflow has run on GitHub yet.
+  (`.github/workflows/codeql.yml`, advanced setup) and has run on
+  GitHub (PR #1, 2026-11-21; 5 open alerts, all in upstream code —
+  triaged in `ai/audits/SECURITY-STATUS.md`). GitHub secret
+  scanning (with push protection) and Dependabot security updates
+  are enabled; branch protection is not yet enabled (user
+  decision). 4 of 6 workflows have run on GitHub; see
+  `ai/phase10/NOTES.md` for the current state.
 - **Manual review:** imported executable code (scripts, installers) is
   read before it is trusted; the audit report records what was
   reviewed, what was found, and what remains an accepted upstream risk.

@@ -612,6 +612,23 @@ report itself, recording:
     open upstream. Secret scanning (with push protection) and
     Dependabot security updates are enabled on the repo;
     branch protection is not yet enabled.
+11. Correction to item 10 (2026-11-21, Phase C finding A1-01):
+    item 10 overstated the CI coverage — only 4 of 6 workflows
+    ran on PR #1 (Validate, Lint, Security audit, CodeQL; run
+    44933250315); `scheduled-maintenance` and `release` have
+    never run anywhere, and the Semgrep job added in b619388 is
+    still awaiting its first run. The Windows-leg and L-Win
+    statements in item 10 stand. Also corrected in this round:
+    the verification split is now 255/16/6/0 (`link-building`
+    promoted to `verified`, A3-01 — its only limitation, 6
+    broken `tools/` links, was resolved by the Phase 4 `tools/`
+    import); the eval breakdown is 186 hand-written + 277
+    generated = 463 (A1-03); the live unit-test count is 250
+    (`npm test` 2026-11-21: 250 pass, 0 fail). The 17 truncated
+    verification notes were restored in full (A3-02). The 5
+    open CodeQL alerts are triaged in
+    `ai/audits/SECURITY-STATUS.md` (A4-03); none has been
+    dismissed.
 
 ## 9. Documentation and consistency
 
@@ -704,22 +721,22 @@ this section is the correction (A-38 was the cause).
 
 | ID | Sev. | Risk | Recommended action |
 | --- | --- | --- | --- |
-| L-CI | Medium | No CI workflow has ever run on GitHub. All workflow validation is local (123 checks, pins re-verified, script references checked). The first push/PR is the real test for all 6 workflows + the Windows leg. | Open the PR, watch the first runs, do not merge on a red leg. Promote the Windows leg to gating only after it is green on a real PR. |
-| L-Win | Medium | No real Windows execution has happened. The junction fallback, W-1/W-2/W-3 normalizations, and the Windows leg are unproven on a real runner. The catastrophic case is recursive `rm` on a junction following the link and deleting the library (assumption 3, no pure-Node defense). | Run the first-real-Windows-run checklist (`ai/remediation/stage-d/windows-link-analysis.md` §9) in priority order: junction classification first, junction removal safety second. |
+| L-CI | Medium | No CI workflow has ever run on GitHub. All workflow validation is local (123 checks, pins re-verified, script references checked). The first push/PR is the real test for all 6 workflows + the Windows leg. **[Update 2026-11-21: partially closed — 4 of 6 workflows ran on PR #1 and pass (see §8 item 10, corrected by item 11); `scheduled-maintenance` and `release` still never run.]** | Open the PR, watch the first runs, do not merge on a red leg. Promote the Windows leg to gating only after it is green on a real PR. |
+| L-Win | Medium | No real Windows execution has happened. The junction fallback, W-1/W-2/W-3 normalizations, and the Windows leg are unproven on a real runner. The catastrophic case is recursive `rm` on a junction following the link and deleting the library (assumption 3, no pure-Node defense). **[Update 2026-11-21: closed per §8 item 10 — junction fallback proven on a real Windows runner. Junction-*removal* proof specifically remains a verification gap (production-readiness audit A5-11).]** | Run the first-real-Windows-run checklist (`ai/remediation/stage-d/windows-link-analysis.md` §9) in priority order: junction classification first, junction removal safety second. |
 | S-08 | High | Agentic SEO still documents a curl-pipe install upstream (unpinned, unverified, no checksums). Mitigated in-repo (safe-install guide + warnings) but anyone finding upstream directly may follow it. | Raise with the agentic-seo author; re-verify at the next re-import. |
 | S-09 | Medium | Agentic SEO `broken_links.py` still disables TLS verification. Mitigated in-repo (docs + warnings). | Raise with the author; re-import from a fixed upstream commit when available. |
 | S-11 | Medium | Prisma upgrade guide still recommends the insecure TLS workaround first (safe CA path also present). Scanner exceptions are narrow and tested. | Raise with Prisma; re-verify at the next re-import. |
 | S-14 | Medium | Agentic-seo import tracks a dormant fork; the author is 50 commits ahead; the weekly drift check watches the fork, so live-upstream drift is invisible. | Re-point decision at the next re-import; re-verify the source first. |
 | L-Model | Low | No real-model eval run has been executed. The provider layer is proven only against a local stub endpoint. All 463/463 results are from the deterministic mock agent, which evaluates the library, not a real LLM. | Run the 75-case subset (`docs/REAL-MODEL-EVALUATION.md`) with human review of failures when credentials are available. No spend cap in the layer (tracking only). |
-| CodeQL | Low | CodeQL has never run anywhere (Blocked locally; `codeql.yml` untested remotely). | First PR run; do NOT enable CodeQL default setup (conflicts with the workflow setup). |
+| CodeQL | Low | CodeQL has never run anywhere (Blocked locally; `codeql.yml` untested remotely). **[Update 2026-11-21: closed — CodeQL ran on PR #1 (run 44933250387); 5 open alerts, all in upstream code, triaged in `ai/audits/SECURITY-STATUS.md` (A4-03).]** | First PR run; do NOT enable CodeQL default setup (conflicts with the workflow setup). |
 | A-02 residual | Low | Tier-2 manifest-root validation still allows an agent/workflow entry to point at an arbitrary directory named `agents`/`workflows`/`global_workflows` via a deep `..` climb. Bounded (single files/dirs, library-item names only); skill entries cannot escape at all. | Consider tightening tier-2 to known target roots when the manifest's target/scope are unknown; needs care not to break legitimate Codex-style layouts. |
 | A-33 | Info | Four genuine keyword-retrieval gaps: users who don't already know the domain term ("rate limiting", "audit", "unit test", "Dockerfile") may not find the skill via the mock retriever; the stemmer maps "Dockerfiles" to a stem that never matches. | Retriever tuning or registry description enrichment (future work). |
-| Element-14 | Info | Accessibility-subsection enforcement is inconsistent across the library (standard-clarity problem, not skill-accuracy). | Library-wide element-14 pass as follow-up work. |
-| 17 truncated notes | Info | 17 verification-status notes are truncated at 160 chars (pre-existing Phase 3 authoring artifact; 3 Prisma notes completed in Stage C). | Complete from the Phase 3 audit in a later pass. |
+| Element-14 | Info | Accessibility-subsection enforcement is inconsistent across the library (standard-clarity problem, not skill-accuracy). **[Update 2026-11-21 (Phase C, A3-03): the standard's element-14 wording was narrowed to accessibility content for the five user-facing categories; the library-wide pass remains follow-up work.]** | Library-wide element-14 pass as follow-up work. |
+| 17 truncated notes | Info | 17 verification-status notes are truncated at 160 chars (pre-existing Phase 3 authoring artifact; 3 Prisma notes completed in Stage C). **[Update 2026-11-21: closed (Phase C, A3-02) — all 17 notes restored in full from the Phase 3 audit detail tables; 0 notes end in `...`.]** | Complete from the Phase 3 audit in a later pass. |
 | `npx skills` unpinned | Info | `npx skills add` fetches Vercel's `skills` CLI unpinned (`latest` at run time). Documentation-level exposure, not a repo dependency. | Pin a verified CLI version at the next docs pass (the pin must come from a verified install). |
 | Railway cutoff | Info | Railway Config as Code stops being read on 2026-12-01 (11 days after the audit). The skill states the cutoff. | Re-check downstream Railway guidance after that date. |
 | Version drift | Info | Version pins are dated 2026-11-20 and will drift on their normal release cadence. | Re-check at the next audit cycle; `query stale --days 180` fails when re-verification is due. |
-| L-Settings | Low | Secret scanning, Dependabot alerts, and branch protection are manual repo settings, still to be enabled (post-merge). | Enable immediately after merge per `ai/phase10/NOTES.md` (corrected check names). |
+| L-Settings | Low | Secret scanning, Dependabot alerts, and branch protection are manual repo settings, still to be enabled (post-merge). **[Update 2026-11-21: partially closed — secret scanning (with push protection) and Dependabot security updates are enabled; branch protection still not enabled (user decision).]** | Enable immediately after merge per `ai/phase10/NOTES.md` (corrected check names). |
 | Post-swap branches | Info | Post-swap mismatch branches (A-06/A-16a) are covered at unit/helper level only — no CLI input can reach them after a passing pre-swap check. | None (unreachable by construction); revisit if the installer flow changes. |
 | Stale-lock window | Info | A killed run's lock blocks the next run for up to 10 minutes (message gives the removal path); `doctor` reports lingering locks. | None (documented behavior). |
 | A-36 | Low | Link checker never enumerates bare URLs (88 in the tree, mostly `ai/` audit citations). A broken bare URL would not be caught by `check:links`. | Extend the extractor to bare URLs at the next link-checker pass; re-run the online check after the change. |

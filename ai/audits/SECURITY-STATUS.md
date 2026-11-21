@@ -2,6 +2,8 @@
 
 - **Date:** 2026-11-20
 - **Branch:** `feat/skillforge-production-upgrade` (local only; nothing pushed)
+  — superseded 2026-11-21: the branch was pushed, PR #1 opened, merged,
+  and reverted (see `ai/PROJECT-STATUS.md`).
 - **Sources:** Phase 7 audit (`ai/audits/SECURITY-AUDIT.md`), Stage A
   re-review (`ai/remediation/ISSUE-REGISTER.md`), Stage B re-verification
   and fixes (`ai/remediation/STAGE-B-RESULTS.md`), Stage D external
@@ -297,6 +299,80 @@ scanners agree — see "Secret scanning" below).
   source at the next re-import; do not re-import from the
   dormant copy without checking.
 
+## CodeQL alerts — triage (2026-11-21, Phase C finding A4-03)
+
+Source: `gh api repos/luxmanbhattarai/SkillForge/code-scanning/alerts`
+(checked 2026-11-21). All 5 alerts were created 2026-11-21T17:11:11Z
+by the first CodeQL run (PR #1, run 44933250387) and are still open.
+All 5 are in `skills/upstream/` — verbatim imports, so fixes belong
+upstream; no local edit is permitted. The CodeQL workflow does not
+fail on alerts. **No alert has been dismissed** — this section is the
+triage record only; the coordinator dismisses via the API later,
+using the recommended dispositions below. Each alert was triaged
+against the flagged code, read in full.
+
+| # | Rule | Severity | Location | Recommended disposition |
+| --- | --- | --- | --- | --- |
+| 1 | `js/regex-injection` | error | `skills/upstream/vercel/vercel-optimize/lib/verify-claim.mjs:1211` | Dismiss as won't-fix (by design) |
+| 2 | `js/reflected-xss` | error | `skills/upstream/superpowers/brainstorming/scripts/server.cjs:405` | Dismiss as false positive |
+| 3 | `js/incomplete-sanitization` | warning | `skills/upstream/vercel/vercel-optimize/lib/cost-coverage.mjs:142` | Dismiss as won't-fix (cosmetic) |
+| 4 | `js/incomplete-sanitization` | warning | `skills/upstream/vercel/vercel-optimize/lib/render-report.mjs:915` | Dismiss as won't-fix (cosmetic) |
+| 5 | `js/incomplete-sanitization` | warning | `skills/upstream/vercel/vercel-optimize/lib/workspace-resolver.mjs:162` | Dismiss as false positive |
+
+### #1 — `js/regex-injection` (error) — `verify-claim.mjs:1211`
+
+`compilePattern` builds `new RegExp(m[1], ...)` from the
+`/pattern/flags` form of a claim pattern. The regex form is an
+intentional, documented feature ("Supports `/pattern/flags`
+literal-regex form OR plain escaped string" — the plain-string path
+escapes metacharacters). The pattern comes from a claim definition
+supplied by the invoking user of this local CLI verification tool,
+so the "attacker" is the user themselves (same trust boundary as
+S-10); the worst case is a self-inflicted ReDoS on the user's own
+run. **Recommend dismiss-as-won't-fix** with reason "by design:
+user-supplied pattern in a local CLI; plain-string path is
+escaped". An upstream issue is optional and low value.
+
+### #2 — `js/reflected-xss` (error) — `server.cjs:405`
+
+`res.end(bootstrapPage(keyFromQuery))` reflects the query-string
+key into a page. **False positive, two independent reasons:**
+(a) the branch is reached only when
+`timingSafeEqualStr(keyFromQuery, TOKEN)` is true, so the
+reflected value is the server's own token
+(`crypto.randomBytes(32).toString('hex')` — 64 hex chars), never
+arbitrary user input; (b) `bootstrapPage` embeds it via
+`JSON.stringify`, safe for the JS string context, and a hex token
+cannot contain `</script>`. **Recommend dismiss-as-false-positive.**
+
+### #3 — `js/incomplete-sanitization` (warning) — `cost-coverage.mjs:142`
+
+`escapeCell` escapes `|` and newlines but not backslashes. The
+output is a Markdown table cell in a locally generated cost
+report; a backslash in a service name can at worst break table
+layout (cosmetic). No HTML context, no security boundary.
+**Recommend dismiss-as-won't-fix** (cosmetic Markdown escaping;
+no security impact). An upstream issue is optional.
+
+### #4 — `js/incomplete-sanitization` (warning) — `render-report.mjs:915`
+
+Same shape as #3: `escape` escapes `|` and newlines but not
+backslashes, for Markdown table cells in a locally generated
+report. Same reasoning. **Recommend dismiss-as-won't-fix**
+(cosmetic; no security impact). An upstream issue is optional.
+
+### #5 — `js/incomplete-sanitization` (warning) — `workspace-resolver.mjs:162`
+
+`w.valueTemplate.replace('*', star)` replaces only the first `*`
+when resolving a package-exports subpath pattern. The result is
+used only as a local file path (`joinPackagePath`); a leftover
+literal `*` can only cause a resolution miss, never a security
+issue. Whether multi-`*` targets should replace all occurrences
+is a path-resolution correctness question for upstream, not a
+sanitization failure. **Recommend dismiss-as-false-positive**
+(no security impact). An upstream issue noting the
+single-replace behavior is optional.
+
 ## Secret scanning
 
 | Check | Result |
@@ -306,7 +382,7 @@ scanners agree — see "Secret scanning" below).
 | Gitleaks 8.30.1 (Stage D, 66 commits + tree) | 5 findings, 0 real (test fixtures, a public doc-example token, a UUID example key) |
 | TruffleHog 3.100.0 (Stage D, filesystem) | 4 unverified, 0 verified (placeholder connection strings in upstream Prisma docs + 1 historical blob) |
 | Semgrep 1.186.0 (Stage D, `p/javascript` over scripts/test/evals) | 0 findings, 0 errors |
-| CodeQL | Blocked locally (bundle size + DB build); runs via `codeql.yml` on GitHub on the first push/PR |
+| CodeQL | Ran on GitHub (PR #1, run 44933250387, 2026-11-21); 5 open alerts, all in upstream code — triaged in "CodeQL alerts — triage" below. Still Blocked locally (bundle size + DB build) |
 
 No credential values were reproduced in any report. The external
 scanners agree with the repo's own scanner: no real leaked

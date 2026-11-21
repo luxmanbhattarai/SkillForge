@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] (feat/skillforge-production-upgrade)
 
-Production upgrade of the v1.0.0 library, in progress on the
-`feat/skillforge-production-upgrade` branch. Work so far (Waves 1–4,
-Phases 1–11, all 2026-11-20):
+Production upgrade of the v1.0.0 library, on the
+`feat/skillforge-production-upgrade` branch. All 12 phases and the
+5-stage remediation audit are complete (2026-11-20); PR #1 ran CI,
+merged, and was reverted at the owner's request on 2026-11-21, so
+the upgrade currently exists only on this branch, awaiting
+re-merge. Work so far (Waves 1–4, Phases 1–12, all 2026-11-20,
+plus the 2026-11-21 PR #1 run and audit fixes):
 
 ### Added
 
@@ -34,8 +38,8 @@ Phases 1–11, all 2026-11-20):
   `related` skills are derived from agent/workflow co-occurrence.
 - Behavioral evaluation system (`npm run evals`): deterministic mock
   agent (no LLM APIs), 12 categories, 4 scorers, baseline + regression
-  comparison. 449 cases (172 hand-written + 277 generated discovery
-  cases, one per skill), 449/449 passing, 277/277 skills covered.
+  comparison. 463 cases (186 hand-written + 277 generated discovery
+  cases, one per skill), 463/463 passing, 277/277 skills covered.
   Model-based evaluation via an OpenAI-compatible provider interface
   (optional; untested without credentials).
 - Quality scoring (`npm run score`): 22-element standard in
@@ -46,10 +50,12 @@ Phases 1–11, all 2026-11-20):
   sections, reference resolution, should-use ⊆ discover.
 - Upstream drift monitoring (`npm run check:upstream`): compares each
   vendor's live default-branch head against the pinned commit.
-- CI/CD overhaul (6 workflows): validation on a Node 18/20/22 matrix
-  covering every local check, registry regeneration diff, evals job,
-  lint, security audit, CodeQL (advanced setup via workflow), weekly
-  scheduled maintenance (online links, stale verification, upstream
+- CI/CD overhaul (6 workflows): validation on Node 24 only
+  (`engines: >=24`; the earlier Node 18/20/22 matrix was dropped
+  when the engines field moved to Node 24), covering every local
+  check, registry regeneration diff, evals job, lint, security
+  audit, CodeQL (advanced setup via workflow), weekly scheduled
+  maintenance (online links, stale verification, upstream
   monitoring), and release validation on `v*.*.*` tags. All actions
   pinned to SHAs; least-privilege permissions; Dependabot for
   github-actions only.
@@ -121,20 +127,25 @@ Phases 1–11, all 2026-11-20):
 
 ### Known limitations
 
-- No CI workflow has run on GitHub yet; Node 18/22 matrix legs are
-  unexercised locally. Secret scanning, Dependabot alerts, and branch
-  protection are manual repo settings, still to be enabled (see
-  `ai/phase10/NOTES.md`). CodeQL uses the workflow (advanced setup) —
-  default setup must NOT also be enabled.
-- 51 Phase 4 skills are `unverified` (written against official docs,
-  no formal audit yet); 6 upstream skills are `needs-correction`
-  (fixes belong upstream).
+- 4 of 6 workflows have run on GitHub (PR #1, 2026-11-21: Validate,
+  Lint, Security audit, CodeQL); `scheduled-maintenance` and
+  `release` have never run. Secret scanning (with push protection)
+  and Dependabot security updates are enabled; branch protection is
+  still not enabled (user decision — it would block direct pushes
+  to `main`). CodeQL uses the workflow (advanced setup) — default
+  setup must NOT also be enabled.
+- All 51 Phase 4 skills were formally audited in Stage C
+  (2026-11-20); 0 skills are `unverified`. Verification split:
+  255 verified / 16 verified-with-limitations / 6
+  needs-correction (all upstream, fixes belong upstream).
 - Prisma 8 still RC (3 skills); X/Twitter docs unavailable (3 skills).
-- Windows `--link` EPERM path untested (no Windows runner).
+- Windows `--link` junction fallback proven on a real Windows
+  runner (PR #1, 2026-11-21; 250/255 tests pass, 0 fail).
 - Model-based eval provider untested without credentials.
 - NestJS pins TS 6.x (`nest build` lacks TS 7 support).
-- Upstream drift (live 2026-11-20): Vercel is 4 commits behind its
-  `main` head — informational; re-import per `docs/UPDATE-PROCESS.md`
+- Upstream drift (live 2026-11-20, Stage E): all 6 vendors
+  up-to-date, 0 behind — Vercel was re-imported verbatim to
+  `5a37a632` in Stage D. Re-import per `docs/UPDATE-PROCESS.md`
   when a new upstream commit is worth taking.
 
 ## [1.0.0] - 2026-11-20

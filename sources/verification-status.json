@@ -34,7 +34,7 @@
     "ai-seo": {
       "status": "verified-with-limitations",
       "date": "2026-11-20",
-      "note": "No flat errors. Limitations: (1) Brave Search is on Anthropic's subprocessor list as \"Web Search\" since 2025-03-19 (confirmed), but the pipeline is composite..."
+      "note": "No flat errors. Limitations: (1) Brave Search is on Anthropic's subprocessor list as \"Web Search\" since 2025-03-19 (confirmed), but the pipeline is composite (Parallel Web Systems and turbopuffer also listed for web search as of 2026-10-24; image results from Bing). (2) GPT-5.6 framing roughly right (GA 2026-07-09)."
     },
     "analytics": {
       "status": "verified",
@@ -187,7 +187,7 @@
     "competitor-profiling": {
       "status": "verified-with-limitations",
       "date": "2026-11-20",
-      "note": "No content errors. Limitation (import-scope gap): Related Skills sections reference unimported marketingskills siblings (e.g. competitors, content-strategy)...."
+      "note": "No content errors. Limitation (import-scope gap): Related Skills sections reference unimported marketingskills siblings (e.g. competitors, content-strategy)."
     },
     "connection-pooling": {
       "status": "verified",
@@ -357,7 +357,7 @@
     "executing-plans": {
       "status": "verified-with-limitations",
       "date": "2026-11-20",
-      "note": "No content errors. Limitation (import-scope gap): names `superpowers:test-driven-development` as a REQUIRED sub-skill/background and references `superpowers:..."
+      "note": "No content errors. Limitation (import-scope gap): names `superpowers:test-driven-development` as a REQUIRED sub-skill and references `superpowers:systematic-debugging`; neither was imported."
     },
     "expo": {
       "status": "verified",
@@ -508,9 +508,9 @@
       "date": "2026-11-20"
     },
     "link-building": {
-      "status": "verified-with-limitations",
-      "date": "2026-11-20",
-      "note": "No content errors. Limitation (import-scope gap, real): 6 broken relative links to `../../tools/integrations/{ahrefs,semrush,dataforseo,exa,firecrawl,hunter}..."
+      "status": "verified",
+      "date": "2026-11-21",
+      "note": "Limitation resolved 2026-11-21 (Phase C, A3-01): the 6 broken relative links to `../../tools/integrations/{ahrefs,semrush,dataforseo,exa,firecrawl,hunter}.md` now resolve \u2014 the `tools/` directory was imported in Phase 4 (commit caf1f32) after the Phase 3 audit; `npm run validate` emits no warning for this skill. No content errors. Promoted to `verified`."
     },
     "llm-integration": {
       "status": "verified",
@@ -727,7 +727,7 @@
     "prisma-upgrade-v7": {
       "status": "needs-correction",
       "date": "2026-11-20",
-      "note": "Stale version claim: \"Latest stable Prisma ORM version: 7.6.0\" is wrong \u2014 the official release-status page lists `@prisma/client` latest at 7.10.1 (checked 2..."
+      "note": "Stale version claim: \"Latest stable Prisma ORM version: 7.6.0\" is wrong \u2014 the official release-status page lists 7.10.1; frontmatter metadata version also stale. Neon docs flag: Prisma 7.10+ creates `prisma7.config.ts` instead of `prisma.config.ts`."
     },
     "programmatic-seo": {
       "status": "verified",
@@ -868,7 +868,7 @@
     "seo": {
       "status": "needs-correction",
       "date": "2026-11-20",
-      "note": "Multiple errors: (1) Outdated FAQ rule (Critical Rule 2 + `resources/references/schema-types.md:50-52`): \"FAQPage schema is limited to government and healthc..."
+      "note": "Multiple errors: (1) Outdated FAQ rule (Critical Rule 2 + `resources/references/schema-types.md`) contradicting marketingskills/schema \u2014 FAQ rich results retired for ALL sites 2026-05-07. (2) \"12 sub-skills\" vs 15 present. (3) Literal placeholder links in `resources/skills/seo-geo.md`. (4) Retired sitelinks-search-box template in `resources/schema/templates.json`. (5) Only 3 of 19 files carry the required freshness comment (all 2026-02-07, >90 days old per the skill's own rule). (6) E-E-A-T overstatement presented as a Google fact."
     },
     "seo-audit": {
       "status": "verified",
@@ -909,7 +909,7 @@
     "site-architecture": {
       "status": "verified-with-limitations",
       "date": "2026-11-20",
-      "note": "No content errors. Limitation: broken link `/features/analytics` (validator warning 10) \u2014 an illustrative example anchor in the Internal Linking Strategy tab..."
+      "note": "No content errors. Limitation: broken link `/features/analytics` (validator warning 10) \u2014 an illustrative example anchor, not a repo file. Low severity."
     },
     "sitemap-robots": {
       "status": "verified",
@@ -922,7 +922,7 @@
     "social-preview": {
       "status": "verified-with-limitations",
       "date": "2026-11-20",
-      "note": "Named official debuggers (Meta Sharing Debugger link, LinkedIn Post Inspector); added X Card Validator retirement note and post-composer preview method; adde..."
+      "note": "X docs unavailable; LinkedIn Post Inspector corroboration only. Verified against an archived May 2025 reference and secondary sources. Named official debuggers (Meta Sharing Debugger link, LinkedIn Post Inspector); added X Card Validator retirement note and post-composer preview method. Re-check if X republishes Cards docs."
     },
     "social-sharing": {
       "status": "verified",
@@ -1023,12 +1023,12 @@
     "twitter-card-images": {
       "status": "verified-with-limitations",
       "date": "2026-11-20",
-      "note": "Corrected 1200x675 (16:9) \u2192 1200x600 (2:1) throughout incl. frontmatter description; fixed OG-reuse claim (1200x630 loses only ~15 px); added limits (min 300..."
+      "note": "X docs unavailable; sizes verified against secondary sources and the archived reference. Corrected 1200x675 (16:9) \u2192 1200x600 (2:1) throughout incl. frontmatter description; fixed OG-reuse claim (1200x630 loses only ~15 px). Re-check if X republishes Cards docs."
     },
     "twitter-cards": {
       "status": "verified-with-limitations",
       "date": "2026-11-20",
-      "note": "Major corrections \u2014 the skill's testing workflow was outdated: (1) X removed the Card Validator preview on 2 August 2022; the URL now redirects to a login sc..."
+      "note": "X removed its Cards docs; verified against an archived May 2025 reference. The X Card Validator preview was removed on 2 August 2022. Re-check if X republishes Cards docs."
     },
     "typescript": {
       "status": "verified",
@@ -1062,27 +1062,27 @@
     "vercel-cli-with-tokens": {
       "status": "verified-with-limitations",
       "date": "2026-11-20",
-      "note": "No errors. Limitation / documented discrepancy: the skill's Pro-plan 10M CDN/Edge-requests figure matches Vercel's pricing page, but Vercel's Flat Rate CDN d..."
+      "note": "No errors. Limitation / documented discrepancy: the skill's Pro-plan 10M CDN/Edge-requests figure matches Vercel's pricing page, but Vercel's Flat Rate CDN docs describe the included tier as 1M requests (reported Nov 2026) \u2014 docs discrepancy noted."
     },
     "vercel-composition-patterns": {
       "status": "needs-correction",
       "date": "2026-11-20",
-      "note": "Bad code example in AGENTS.md \u00a72.3: the \"Correct\" example calls `use(Composer.Context)` but the `Composer` object defined in the examples (line 224) exports ..."
+      "note": "Bad code example in AGENTS.md \u00a72.3: the \"Correct\" example calls `use(Composer.Context)` but the `Composer` object exports no `Context` member \u2014 the example does not run as written."
     },
     "vercel-optimize": {
       "status": "verified-with-limitations",
       "date": "2026-11-20",
-      "note": "No errors. Limitations: (1) `vercel usage` is now grouped under `vercel billing usage` (Vercel changelog, ~2026-11-19); the old name still works as an alias,..."
+      "note": "No errors. Limitations: (1) `vercel usage` is now grouped under `vercel billing usage` (Vercel changelog, ~2026-11-19); the old name still works as an alias. (2) `docs-library.json` `lastVerified` is 2026-05-26 (~6 months old)."
     },
     "vercel-react-best-practices": {
       "status": "needs-correction",
       "date": "2026-11-20",
-      "note": "3 broken links in AGENTS.md: `./async-defer-await.md`, `./async-cheap-condition-before-await.md`, `./server-hoist-static-io.md` \u2014 the files live in `rules/`,..."
+      "note": "3 broken links in AGENTS.md: `./async-defer-await.md`, `./async-cheap-condition-before-await.md`, `./server-hoist-static-io.md` \u2014 the files live in `rules/`."
     },
     "vercel-react-view-transitions": {
       "status": "needs-correction",
       "date": "2026-11-20",
-      "note": "~29 broken links in AGENTS.md to bare `css-recipes.md`, `patterns.md`, `troubleshooting.md`, `nextjs.md`, `implementation.md`, `../SKILL.md` \u2014 the files live..."
+      "note": "~29 broken links in AGENTS.md to bare `css-recipes.md`, `patterns.md`, `troubleshooting.md`, `nextjs.md`, `implementation.md`, `../SKILL.md` \u2014 the files live in `references/`; stale \"React canary\" framing (Next.js 16.4 ships stable React 19.3)."
     },
     "verification-before-completion": {
       "status": "verified",
@@ -1099,7 +1099,7 @@
     "web-artifacts-builder": {
       "status": "needs-correction",
       "date": "2026-11-20",
-      "note": "Stale React version: SKILL.md:16 says \"Stack: React 18 + \u2026\" but the init script runs unpinned `pnpm create vite --template react-ts`, which installs React 19..."
+      "note": "Stale React version: SKILL.md:16 says \"Stack: React 18 + \u2026\" but the init script runs unpinned `pnpm create vite --template react-ts`, which installs React 19 today."
     },
     "web-design-guidelines": {
       "status": "verified",
@@ -1124,7 +1124,7 @@
     "writing-skills": {
       "status": "verified-with-limitations",
       "date": "2026-11-20",
-      "note": "No errors in SKILL.md. Limitations: (1) names `superpowers:test-driven-development` as REQUIRED background; not imported. (2) `references/anthropic-best-prac..."
+      "note": "No errors in SKILL.md. Limitations: (1) names `superpowers:test-driven-development` as REQUIRED background; not imported. (2) `references/anthropic-best-practices.md` has 16 broken relative links."
     },
     "xss-prevention": {
       "status": "verified",
