@@ -154,3 +154,106 @@ documentation-only change; the validation round recorded above
 (`b3a6f34`) is the authoritative one. The final HEAD's runs are verified
 separately before the release verdict is delivered (see
 `ai/audits/RELEASE-ACCEPTANCE.md`).
+
+## Addendum — Final Staging Validation (2026-11-21)
+
+### Round 3 — HEAD `be03f2c` (third consecutive green round)
+
+Runs 44946198036 (Validate), 44946197878 (Lint), 44946197886
+(Security audit), 44946197946 (CodeQL) — **9/9 checks pass**,
+reproducing the validation counts exactly (Validate 326/325/0/1;
+Windows 330/325/0/5 with the A5-11 junction test passing). This
+round closed the previous mission (READY FOR STAGING).
+
+### Round 4 — HEAD `9fdc0d0` (incomplete: superseded)
+
+Runs 44950229066 (Validate), 44950229137 (Lint), 44950229054
+(Security audit), 44950229057 (CodeQL). Lint, Security audit, and
+CodeQL passed; the Validate run was **cancelled** when the next
+push superseded it (concurrency `cancel-in-progress`), so no
+complete 9/9 round exists at `9fdc0d0`. The full local battery at
+`9fdc0d0` is recorded in `ai/PROJECT-STATUS.md` (325/326 tests,
+463/463 evals, security scan PASS, Semgrep 0 findings, online
+links PASS).
+
+### Round 5 — HEAD `d010069` (9/9 after a Windows re-run)
+
+Runs 44950939765 (Validate), 44950939708 (Lint), 44950939659
+(Security audit), 44950939699 (CodeQL). Lint, Security audit,
+CodeQL, and the Ubuntu Validate jobs passed on the first attempt.
+The Windows job's first attempt (job 136988553801) hit the
+20-minute job timeout: only 60 tests had completed when output
+stopped at 21:20:57, and the A2-22 concurrent-reader test had
+just failed (see below). A re-run of the failed job (job
+136995081852, same head, fresh runner) **passed in 54 seconds:
+330 tests, 325 pass, 0 fail, 5 skipped**, with the A2-22 test
+and the A5-11 junction test both passing. Diagnosis: a degraded
+runner, not a code hang — the first attempt's CLI-spawning
+tests were taking 4–9 s each (vs ~1 s normal), the re-run on a
+fresh runner was 20× faster, and no test in the suite can hang
+indefinitely (`runCli` caps every CLI spawn at 60 s). The A2-22
+failure was a genuine test bug, fixed in the next commit: the
+concurrent reader counted transient Windows read errors
+(EBUSY/EPERM/ENOENT during the rename window) as parse errors.
+The reader in both the A2-22 test and the registry A-37 test now
+distinguishes read failures (retried, not counted) from JSON
+parse failures (counted), and both readers are bounded by a
+60 s stop timeout so a stuck reader fails the test instead of
+hanging the suite.
+
+The "merge-ref problem" section above repeats the earlier
+"432 files, −74,222 lines" figure for the revert. The verified
+size is **479 files, +1,236/−90,456**
+(`git diff --shortstat de6023d..06100e3`). The 432-file figure
+was wrong; the `-s ours` reasoning is unaffected (a normal merge
+would still have applied the revert).
+
+### Windows staging evidence (Phase 5, CI logs)
+
+The only real-Windows evidence is GitHub CI (`windows-latest`).
+Three consecutive heads (`b3a6f34`, `85a44ca`, `be03f2c`) produced
+identical Windows results: **330 tests, 325 pass, 0 fail, 5
+POSIX-only skipped**. The A5-11 junction test — a real junction
+created via `symlink(..., 'junction')`, uninstalled through the
+real CLI, library source verified byte-identical by SHA-256 —
+**executed and passed on all three runs**, closing the Stage D
+catastrophic-failure assumption (`fs.rm` does not follow a
+junction into the library). Verified on the real runner: fresh
+install, selective/category/idempotent install, `--link` (symlink
+form — the runner likely has Developer Mode), upgrade, modified-
+skill protection, backup/restore, uninstall, interrupted-install
+recovery, paths with spaces, Unicode paths, long paths (>260
+chars, with the caveat that `windows-latest` has long-path
+support enabled), concurrent installs (real lockfile contention).
+NOT verified on a real machine: junction *creation* via the
+EPERM→junction fallback (fault-injection only — 6 A-11 unit
+tests), NTFS ACL denial (no test), real file-lock and AV
+scenarios, and no dedicated uninstall→reinstall cycle test.
+**Real-machine staging (a human on a stock Windows PC) is
+PENDING.** The 5 skipped tests are 1 chmod permission test
+(POSIX-only) + 4 PTY prompt tests (`script` not on Windows PATH);
+the prompt paths are covered on Windows by in-process mirrors.
+
+### Workflows that have still never run
+
+- **`release.yml`**: inspected in full (Phase 6); 3 genuine
+  defects found and fixed in `41bba4a` (no tag↔package.json
+  version gate, no CHANGELOG-entry gate, evals omitted from the
+  release gate). All 14 workflow steps were locally simulated
+  in order and passed (~187 s). Actual GitHub execution still
+  requires a tag push (owner approval), and the new gates mean
+  `package.json` + CHANGELOG must be bumped to the RC version
+  first. Correct RC version: `v1.1.0-rc.1` (zero deletions or
+  renames since v1.0.0 → minor bump per `docs/UPDATE-PROCESS.md`).
+- **`scheduled-maintenance.yml`**: inspected in full; no defect
+  in the file (read-only jobs, `contents: read`, cron Monday
+  07:00 UTC, `workflow_dispatch` supported). A manual dispatch
+  was **blocked by a GitHub platform limitation**: dispatch
+  resolves against the default branch (`main`), where the
+  workflow file does not exist (HTTP 404). The first real run
+  is only possible after the file reaches `main` (re-merge).
+- **D1 (fixed in `9fdc0d0`)**: `check-upstream.mjs` used to exit
+  0 when vendors came back UNKNOWN, so a total monitoring
+  failure looked like a green weekly run. It now exits non-zero
+  on any UNKNOWN vendor; drift (BEHIND/AHEAD/DIVERGED) stays
+  informational.

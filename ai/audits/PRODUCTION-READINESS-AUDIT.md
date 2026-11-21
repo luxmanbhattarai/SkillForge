@@ -1082,3 +1082,34 @@ skills); registry PASS (1 override-notice warning); security scan PASS (1,119
 text + 4 binary files, 4 hashes verified); Semgrep 1.186.0 local: 0 findings
 (68 rules, 42 files); registry regeneration zero-diff. Online link check and
 fresh CI results are recorded in `ai/audits/CI-VALIDATION-REPORT.md`.
+
+## Addendum — Final Staging Validation (2026-11-21)
+
+Two corrections to the Resolution appendix above, plus this
+mission's follow-ups. The finding entries (§3–§6) are left as
+written.
+
+**Correction 1 — final tally.** The appendix tallies 48 fixed /
+9 open because it was written at Phase F, before CI ran. The
+final tally (see `ai/audits/RELEASE-ACCEPTANCE.md`) is **50
+fixed, 2 partially addressed, 1 documented residual, 7 open**:
+A4-01 closed by the PR #4 CI rounds (full pipeline green) and
+A5-11 closed by the junction test executing and passing on a
+real Windows runner.
+
+**Correction 2 — A4-09.** "sha_pinning_required is false" is not
+verifiable: no such field exists in the GitHub repo API
+(re-checked 2026-11-21). What is verifiable: all 24 `uses:`
+entries on this branch are SHA-pinned; `main` still uses `v4`
+tags. See `ai/audits/GITHUB-SECURITY-RECOMMENDATIONS.md`.
+
+**New findings from this mission (all addressed or documented):**
+D1 (drift check UNKNOWN exits 0 — fixed in `9fdc0d0`); S-08
+warning coverage holes on dry-run and already-installed (fixed
+in `9fdc0d0`); 3 release.yml defects (fixed in `41bba4a`); RME-01
+(real-model eval plan pricing 1000× inconsistent — fixed in
+`d010069`); stale `PROJECT-STATUS.json` refs and PR #4
+description (fixed); scheduled-maintenance dispatch blocked by
+a GitHub platform limitation (documented — dispatch resolves
+against `main`, where the file does not exist); S-09 FIXED
+upstream at live head (vendored copy still mitigated).
