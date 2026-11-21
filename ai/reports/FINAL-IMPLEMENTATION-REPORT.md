@@ -765,14 +765,14 @@ rewritten. After the 12-phase upgrade, a 5-stage final production
 readiness audit & remediation (Stages A–E) ran on the same branch,
 local only — nothing pushed, merged, or PR'd. Full account:
 `ai/reports/FINAL-REMEDIATION-REPORT.md`. Head at remediation
-completion: `{{FINAL:HEAD}}` (74 commits ahead of
-`main`, 475 files changed, +89,111/−1,234).
+completion: ``4f909da`` (74 commits ahead of
+`main`, 478 files changed, +90,377/−1,234).
 
 ### Reconciled figures at the remediation HEAD
 
 | Metric | As reported (§2/§9/§13) | Reconciled |
 | --- | --- | --- |
-| Files changed vs `main` | 429 (+70,236/−1,165 at `d58d6b4`; +70,240 at `2f1460b`) | 475 files changed, +89,111/−1,234 |
+| Files changed vs `main` | 429 (+70,236/−1,165 at `d58d6b4`; +70,240 at `2f1460b`) | 478 files changed, +90,377/−1,234 |
 | Tracked files | 1,069 | 1,115 |
 | Unit tests | 129/129 pass | 128 real at report time (`test/helpers.mjs` was miscounted as a test — A-18); 249 real at the remediation HEAD, printed == counted after the helpers move to `test-support/` |
 | Eval cases | 449/449 | 463/463 (+14 non-circular discovery cases, A-33) |

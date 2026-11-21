@@ -2,7 +2,7 @@
 
 - **Date:** 2026-11-20
 - **Branch:** `feat/skillforge-production-upgrade`
-- **Head:** {{FINAL:HEAD}}
+- **Head:** `4f909da` (content head; the branch head is one docs-only commit ahead)
 - **Rule:** every criterion carries its evidence (command + result).
   PASS means the evidence exists at the final HEAD. FAIL means the
   criterion is not met. OPEN means it cannot be satisfied from this

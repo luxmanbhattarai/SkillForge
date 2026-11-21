@@ -4,13 +4,18 @@
 - **Branch:** `feat/skillforge-production-upgrade` (from `main` @ `bc304a2`)
 - **Head at remediation start:** `2f1460b` (implementation report head) /
   `0c8bd48` (remediation plan committed)
-- **Head at remediation end:** {{FINAL:HEAD}} (74 commits
-  ahead of `main`; 475 files changed, +89,111/−1,234)
+- **Head at remediation end:** `4f909da` (74 commits
+  ahead of `main` including the follow-up SHA-record commit;
+  478 files changed, +90,377/−1,234). The recorded head is the
+  commit containing all verified work; the branch head is one
+  docs-only commit ahead of it (this commit records the SHA and
+  corrects the diffstat — the battery was re-run green at the
+  branch head, see §10).
 - **Rule throughout:** local commits only; nothing pushed, merged, PR'd,
   or tagged. The user confirmed the branch currently cannot be pushed
   to the repo, so no remote CI run was possible at any point.
 - **Companion documents:** `ai/remediation/VERIFICATION-MATRIX.md`
-  (16-claim verification), `ai/remediation/ISSUE-REGISTER.md` (all 52
+  (16-claim verification), `ai/remediation/ISSUE-REGISTER.md` (all 55
   issues with stage status lines), `ai/audits/SKILL-AUDIT-MATRIX.md`
   (51-skill audit), `ai/audits/SECURITY-STATUS.md` (S-01–S-15),
   `ai/reports/PRODUCTION-ACCEPTANCE-CHECKLIST.md` (acceptance
@@ -44,9 +49,11 @@ report's 16 headline claims against the repository: **11 VERIFIED,
 5 PARTIALLY VERIFIED, 0 NOT VERIFIED — nothing was fabricated.**
 Every quantitative claim reproduced exactly or within an explained
 delta. The audit then found **52 issues** (0 Critical, 3 High,
-15 Medium, 26 Low, 8 Informational) and fixed or mitigated all of
-them except the ones that can only be closed by an upstream
-maintainer or by a push to GitHub:
+15 Medium, 26 Low, 8 Informational); Stage E raised 3 more Low
+findings during final verification (A-36, A-37, A-38), for 55
+in total. All of them were fixed or mitigated except the ones
+that can only be closed by an upstream maintainer or by a push
+to GitHub:
 
 - **All 3 High issues addressed.** A-01 (security scan failing at
   HEAD) fixed; A-02 (installer manifest path traversal) fixed with
@@ -475,10 +482,10 @@ unchanged since Stage C — Prisma 8 still an RC with no GA
 date, `prisma` 8.0.0-rc.34, `@prisma/client` at 7.10.1,
 Prisma 6 EOL 19 Nov 2026. No upgrade to an RC is recommended.
 
-## 6. Stage E — Final verification (11 issues)
+## 6. Stage E — Final verification (14 issues + A-31 remainder)
 
-Head `52f54d1` → {{FINAL:HEAD}} (9
-commits).
+Head `52f54d1` → branch head (9
+Stage E commits).
 
 | Issue | Sev. | Root cause | Fix | Evidence level |
 | --- | --- | --- | --- | --- |
@@ -534,7 +541,7 @@ vacuous "file exists" or bare exit-code assertions were added.
 ## 7. Metrics reconciliation (brief §12)
 
 All figures below were recalculated from the actual repository
-at the final HEAD {{FINAL:HEAD}} — none copied from earlier
+at the remediation head — none copied from earlier
 reports. Commands: `git diff --shortstat main...HEAD`,
 `git log --oneline main..HEAD | wc -l`, `git ls-files | wc -l`,
 `npm run query -- status`, `npm test`, `npm run evals`,
@@ -545,7 +552,7 @@ reports. Commands: `git diff --shortstat main...HEAD`,
 | Metric | Implementation report (Phase 12 head) | Remediation final HEAD | Notes |
 | --- | --- | --- | --- |
 | Commits ahead of `main` | 37 (at `2f1460b`) | 74 | Includes 5 remediation-stage waves |
-| Files changed vs `main` | 429 (+70,236/−1,165 at `d58d6b4`; +70,240 at `2f1460b`) | 475 files changed, +89,111/−1,234 | The +70,236 vs +70,240 discrepancy is the 4-line fix-up commit `2f1460b` (see §2) |
+| Files changed vs `main` | 429 (+70,236/−1,165 at `d58d6b4`; +70,240 at `2f1460b`) | 478 files changed, +90,377/−1,234 | The +70,236 vs +70,240 discrepancy is the 4-line fix-up commit `2f1460b` (see §2) |
 | Tracked files | 1,069 | 1,115 | |
 | Skills / categories | 277 / 18 | 277 / 18 | Unchanged by remediation |
 | Agents / workflows | 24 / 16 | 24 / 16 | Unchanged by remediation |
@@ -618,8 +625,8 @@ report itself, recording:
 
 ## 10. Test results — final battery
 
-All commands run from the repository root at the final HEAD
-{{FINAL:HEAD}}, after the last edit, Node
+All commands run from the repository root at the branch head,
+after the last edit, Node
 v24.22.1. Full battery — no failures, no skipped
 tests except as noted.
 
@@ -709,7 +716,7 @@ this section is the correction (A-38 was the cause).
 
 Evidence supporting the verdict:
 
-- **For:** all 12 implementation phases verified; all 52
+- **For:** all 12 implementation phases verified; all 55
   remediation issues addressed (fixed, mitigated with
   documented residual risk, or recorded as open-by-decision
   with a named owner); 0 Critical findings; the only High
