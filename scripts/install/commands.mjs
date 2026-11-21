@@ -1112,6 +1112,15 @@ async function runUninstall(ctx, locations) {
   }
 
   // Classify each target: absent | remove | modified | foreign.
+  // Each planned item also carries a structured `needsBackup` flag
+  // (A-15): whether removing it must back it up first — modified
+  // and foreign content, and content no longer in the library
+  // (A-14), are backed up; unmodified manifest-matching content
+  // is not (it is identical to the library, so reinstalling
+  // restores it). The flag is set here, at classification time,
+  // and survives the action changes in the resolve loop below —
+  // it is never derived from reason text, so a wording edit
+  // cannot silently disable backups.
   const inLibrary = (kind, name) => {
     const byKind =
       kind === 'skill' ? ctx.library.skills : kind === 'agent' ? ctx.library.agents : ctx.library.workflows;
@@ -1136,15 +1145,15 @@ async function runUninstall(ctx, locations) {
     }
     const st = await lstatOrNull(destAbs);
     if (!st) {
-      planned.push({ ...t, destAbs, action: 'absent', reason: 'not installed' });
+      planned.push({ ...t, destAbs, action: 'absent', reason: 'not installed', needsBackup: false });
       continue;
     }
     if (!t.entry) {
-      planned.push({ ...t, destAbs, action: 'foreign', reason: 'not recorded in the manifest (installed by another tool?)' });
+      planned.push({ ...t, destAbs, action: 'foreign', reason: 'not recorded in the manifest (installed by another tool?)', needsBackup: true });
       continue;
     }
     if (t.entry.method === 'link') {
-      planned.push({ ...t, destAbs, action: 'remove', reason: 'symlink recorded in the manifest', notInLibrary: !inLibrary(t.kind, t.name) });
+      planned.push({ ...t, destAbs, action: 'remove', reason: 'symlink recorded in the manifest', needsBackup: !inLibrary(t.kind, t.name) });
       continue;
     }
     const current = await hashInstalled({ kind: t.kind, name: t.name, destAbs, destName: t.entry.destName });
@@ -1159,10 +1168,10 @@ async function runUninstall(ctx, locations) {
         destAbs,
         action: 'remove',
         reason: gone ? 'matches the manifest; no longer in the library (a backup is made first)' : 'matches the manifest',
-        notInLibrary: gone,
+        needsBackup: gone,
       });
     } else {
-      planned.push({ ...t, destAbs, action: 'modified', reason: 'installed content differs from the manifest (may contain your edits)' });
+      planned.push({ ...t, destAbs, action: 'modified', reason: 'installed content differs from the manifest (may contain your edits)', needsBackup: true });
     }
   }
 
@@ -1229,9 +1238,11 @@ async function runUninstall(ctx, locations) {
 
   const results = { removed: [], skipped: [], refused: [], failed: [], installed: [], updated: [], already: [] };
   const toRemove = planned.filter((p) => p.action === 'remove');
-  const needBackup = planned.filter(
-    (p) => p.action === 'remove' && (p.reason.includes('differs') || p.reason.includes('not recorded') || p.notInLibrary),
-  );
+  // Backup selection reads the structured classification flag
+  // (A-15), not reason text: the resolve loop above rewrites
+  // actions and appends to reasons, but needsBackup was fixed at
+  // classification time.
+  const needBackup = planned.filter((p) => p.action === 'remove' && p.needsBackup);
   if (needBackup.length) {
     try {
       const backup = await createBackup(locations.skillsDir, {

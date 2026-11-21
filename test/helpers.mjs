@@ -46,20 +46,48 @@ export function runCli(args, { home, proj, env = {} } = {}) {
 }
 
 /**
+ * Find an executable on PATH (like `which`). Returns the full path,
+ * or null when no executable entry exists.
+ */
+async function findOnPath(name) {
+  const { access, constants } = await import('node:fs/promises');
+  for (const dir of (process.env.PATH || '').split(path.delimiter)) {
+    if (!dir) continue;
+    const candidate = path.join(dir, name);
+    try {
+      await access(candidate, constants.X_OK);
+      return candidate;
+    } catch {
+      // Not here; keep looking.
+    }
+  }
+  return null;
+}
+
+/**
  * Run the installer under a PTY (via `script`) so it believes it is
  * interactive. `input` is written to the PTY after `delayMs`.
- * Returns { code, output }. Skips itself when `script` is missing.
+ * Returns { code, output }. Skips itself — returning
+ * { skipped: true, reason } — when `script` is missing.
+ *
+ * `script` is looked up on PATH rather than hard-coded to
+ * /usr/bin/script: it lives in /bin on some systems and in other
+ * locations on others (A-13c). Node has no built-in PTY, and the
+ * only portable alternative would be a native dependency
+ * (node-pty) or a second runtime (python3 -c 'pty...'), so a
+ * clear skip with a reason is the honest fallback on systems
+ * without `script` (notably Windows, which has no `script` at
+ * all); the prompt paths are still covered on every Unix CI
+ * runner, where `script` is standard.
  */
 export async function runCliPty(args, { home, proj, input, delayMs = 800, env = {} } = {}) {
-  const { access } = await import('node:fs/promises');
-  try {
-    await access('/usr/bin/script');
-  } catch {
-    return { skipped: true };
+  const scriptPath = await findOnPath('script');
+  if (!scriptPath) {
+    return { skipped: true, reason: 'no PTY available (`script` not found on PATH)' };
   }
   const cmd = `node ${INSTALLER} ${args.map((a) => `'${a}'`).join(' ')}`;
   return new Promise((resolve) => {
-    const child = spawn('script', ['-qec', cmd, '/dev/null'], {
+    const child = spawn(scriptPath, ['-qec', cmd, '/dev/null'], {
       cwd: proj,
       env: { ...process.env, HOME: home, ...env },
     });
@@ -74,7 +102,13 @@ export async function runCliPty(args, { home, proj, input, delayMs = 800, env = 
       clearTimeout(timer);
       resolve({ code, output });
     });
-    child.on('error', (err) => resolve({ code: 1, output: `${output}\nspawn error: ${err.message}` }));
+    child.on('error', (err) => {
+      clearTimeout(timer);
+      // `script` vanished between the PATH lookup and the spawn:
+      // treat it as unavailable, not as a test failure.
+      if (err.code === 'ENOENT') resolve({ skipped: true, reason: `no PTY available (\`script\` not found: ${err.message})` });
+      else resolve({ code: 1, output: `${output}\nspawn error: ${err.message}` });
+    });
   });
 }
 

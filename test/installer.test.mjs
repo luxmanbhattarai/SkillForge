@@ -614,7 +614,7 @@ test('interactive conflict prompt: overwrite answers yes, skip answers no', asyn
     input: 'o\ns\n',
   });
   if (r.skipped) {
-    test.skip('no PTY available (script not found)');
+    test.skip(r.reason || 'no PTY available');
     return;
   }
   assert.equal(r.code, 0, r.output);
@@ -1553,4 +1553,311 @@ test('doctor reports a lingering lock file', async () => {
   const doctor = await runCli(['doctor', '--dest', 'out'], { home, proj, env });
   assert.equal(doctor.code, 0, doctor.stdout); // a warning, not a failure
   assert.match(doctor.stdout, /installer lock file .skillforge-lock is present/);
+});
+
+// ---------------------------------------------------------------- A-12: --backup flag
+
+test('A-12: --backup backs up a conflict and overwrites without prompting', async () => {
+  const { home, proj } = await makeSandbox();
+  const skillsDir = path.join(proj, '.claude', 'skills');
+  const backupsBase = path.join(proj, '.claude', '.skillforge-backups');
+  await runCli(['install', ...CLAUDE, '--skill', 'nextjs'], { home, proj });
+  await appendFile(path.join(skillsDir, 'nextjs', 'SKILL.md'), '\nMY EDIT\n');
+
+  // --backup resolves the conflict like --force, non-interactively:
+  // a backup is made first, then the overwrite proceeds.
+  const r = await runCli(['install', ...CLAUDE, '--skill', 'nextjs', '--backup'], { home, proj });
+  assert.equal(r.code, 0, r.stderr);
+  assert.match(r.stdout, /Backup created: (\S+)/);
+  assert.match(r.stdout, /updated nextjs/);
+  assert.doesNotMatch(await readFile(path.join(skillsDir, 'nextjs', 'SKILL.md'), 'utf8'), /MY EDIT/);
+  // The backup holds the pre-conflict content.
+  const backupId = r.stdout.match(/Backup created: (\S+)/)[1];
+  const backup = await readJson(path.join(backupsBase, backupId, 'backup.json'));
+  assert.equal(backup.items[0].name, 'nextjs');
+  assert.match(
+    await readFile(path.join(backupsBase, backupId, 'items', '0-skill-nextjs', 'SKILL.md'), 'utf8'),
+    /MY EDIT/,
+  );
+  // The overwrite completed cleanly: a re-run is a no-op.
+  const again = await runCli(['install', ...CLAUDE, '--skill', 'nextjs'], { home, proj });
+  assert.equal(again.code, 0, again.stderr);
+  assert.match(again.stdout, /already installed: nextjs/);
+
+  // Foreign content (never installed by this tool) is backed up too.
+  await runCli(['install', ...CLAUDE, '--skill', 'astro'], { home, proj });
+  await rm(path.join(skillsDir, 'astro'), { recursive: true });
+  await mkdir(path.join(skillsDir, 'astro'), { recursive: true });
+  await writeFile(path.join(skillsDir, 'astro', 'mine.txt'), 'not yours');
+  const r2 = await runCli(['install', ...CLAUDE, '--skill', 'astro', '--backup'], { home, proj });
+  assert.equal(r2.code, 0, r2.stderr);
+  const backupId2 = r2.stdout.match(/Backup created: (\S+)/)[1];
+  assert.equal(
+    await readFile(path.join(backupsBase, backupId2, 'items', '0-skill-astro', 'mine.txt'), 'utf8'),
+    'not yours',
+  );
+  assert.equal(await exists(path.join(skillsDir, 'astro', 'SKILL.md')), true);
+});
+
+// ---------------------------------------------------------------- A-13: dry-run purity (update/uninstall/restore)
+
+// Snapshot everything a dry run must leave untouched: the manifest
+// bytes, the skills-dir listing, the backups listing, the lock
+// file, and one installed file's bytes.
+async function snapshotInstallState(skillsDir, backupsBase, watchedFile) {
+  return {
+    manifest: await readFile(path.join(skillsDir, '.skillforge-manifest.json'), 'utf8'),
+    skillsListing: await listNames(skillsDir),
+    backupsListing: await listNames(backupsBase),
+    lockExists: await exists(path.join(skillsDir, '.skillforge-lock')),
+    watched: await readFile(watchedFile, 'utf8'),
+  };
+}
+
+async function assertStateUnchanged(before, skillsDir, backupsBase, watchedFile) {
+  assert.deepEqual(await snapshotInstallState(skillsDir, backupsBase, watchedFile), before);
+}
+
+test('A-13: update dry-run changes nothing (pending update and conflict)', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  const dest = ['--dest', 'out'];
+  await runCli(['install', ...dest, '--skill', 'fixture-one'], { home, proj, env });
+  const skillsDir = path.join(proj, 'out');
+  const backupsBase = path.join(proj, '.skillforge-backups');
+  const installedFile = path.join(skillsDir, 'fixture-one', 'SKILL.md');
+
+  // A library change is pending: the dry run reports it and changes nothing.
+  await fixture.setSkillBody('fixture-one', 'Version two body.');
+  const before = await snapshotInstallState(skillsDir, backupsBase, installedFile);
+  const r = await runCli(['update', ...dest, '--dry-run'], { home, proj, env });
+  assert.equal(r.code, 0, r.stderr);
+  assert.match(r.stdout, /would update fixture-one/);
+  await assertStateUnchanged(before, skillsDir, backupsBase, installedFile);
+
+  // With user edits on top, the dry run reports a refusal — still read-only.
+  await appendFile(installedFile, '\nMY EDIT\n');
+  const before2 = await snapshotInstallState(skillsDir, backupsBase, installedFile);
+  const r2 = await runCli(['update', ...dest, '--dry-run'], { home, proj, env });
+  assert.equal(r2.code, 0, r2.stderr);
+  assert.match(r2.stdout, /would refuse fixture-one/);
+  await assertStateUnchanged(before2, skillsDir, backupsBase, installedFile);
+});
+
+test('A-13: uninstall dry-run changes nothing (single item, --force, and --all)', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  const dest = ['--dest', 'out'];
+  await runCli(['install', ...dest, '--skill', 'fixture-one,fixture-two'], { home, proj, env });
+  const skillsDir = path.join(proj, 'out');
+  const backupsBase = path.join(proj, '.skillforge-backups');
+  const modifiedFile = path.join(skillsDir, 'fixture-two', 'SKILL.md');
+  await appendFile(modifiedFile, '\nMY EDIT\n');
+
+  // Modified content, no --force: the dry run reports a refusal.
+  const before = await snapshotInstallState(skillsDir, backupsBase, modifiedFile);
+  const r = await runCli(['uninstall', ...dest, '--skill', 'fixture-two', '--dry-run'], { home, proj, env });
+  assert.equal(r.code, 0, r.stderr);
+  assert.match(r.stdout, /would refuse fixture-two/);
+  await assertStateUnchanged(before, skillsDir, backupsBase, modifiedFile);
+
+  // With --force the dry run reports a removal — still no backup, no deletion.
+  const r2 = await runCli(['uninstall', ...dest, '--skill', 'fixture-two', '--force', '--dry-run'], { home, proj, env });
+  assert.equal(r2.code, 0, r2.stderr);
+  assert.match(r2.stdout, /would remove fixture-two/);
+  await assertStateUnchanged(before, skillsDir, backupsBase, modifiedFile);
+
+  // --all dry-run needs no --force confirmation and removes nothing.
+  const r3 = await runCli(['uninstall', ...dest, '--all', '--dry-run'], { home, proj, env });
+  assert.equal(r3.code, 0, r3.stderr);
+  assert.match(r3.stdout, /would remove fixture-one/);
+  assert.match(r3.stdout, /would refuse fixture-two/);
+  await assertStateUnchanged(before, skillsDir, backupsBase, modifiedFile);
+});
+
+test('A-13: restore dry-run changes nothing (replace and missing-item cases)', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  const dest = ['--dest', 'out'];
+  await runCli(['install', ...dest, '--skill', 'fixture-one'], { home, proj, env });
+  await appendFile(path.join(proj, 'out', 'fixture-one', 'SKILL.md'), '\nEDIT ONE\n');
+  const forced = await runCli(['install', ...dest, '--skill', 'fixture-one', '--force'], { home, proj, env });
+  assert.equal(forced.code, 0, forced.stderr);
+  const backupId = forced.stdout.match(/Backup created: (\S+)/)[1];
+  const skillsDir = path.join(proj, 'out');
+  const backupsBase = path.join(proj, '.skillforge-backups');
+  const installedFile = path.join(skillsDir, 'fixture-one', 'SKILL.md');
+
+  // Restoring over current content would create a pre-restore
+  // backup in a real run; the dry run creates none and changes nothing.
+  const before = await snapshotInstallState(skillsDir, backupsBase, installedFile);
+  const r = await runCli(['restore', backupId, ...dest, '--dry-run'], { home, proj, env });
+  assert.equal(r.code, 0, r.stderr);
+  assert.match(r.stdout, /would restore fixture-one/);
+  assert.match(r.stdout, /backed up first/);
+  await assertStateUnchanged(before, skillsDir, backupsBase, installedFile);
+
+  // Missing on disk: the dry run reports a restore and creates nothing.
+  await rm(path.join(skillsDir, 'fixture-one'), { recursive: true });
+  const manifestBefore = await readFile(path.join(skillsDir, '.skillforge-manifest.json'), 'utf8');
+  const backupsBefore = await listNames(backupsBase);
+  const r2 = await runCli(['restore', backupId, ...dest, '--dry-run'], { home, proj, env });
+  assert.equal(r2.code, 0, r2.stderr);
+  assert.match(r2.stdout, /would restore fixture-one/);
+  assert.doesNotMatch(r2.stdout, /backed up first/);
+  assert.equal(await exists(path.join(skillsDir, 'fixture-one')), false);
+  assert.equal(await readFile(path.join(skillsDir, '.skillforge-manifest.json'), 'utf8'), manifestBefore);
+  assert.deepEqual(await listNames(backupsBase), backupsBefore);
+  assert.equal(await exists(path.join(skillsDir, '.skillforge-lock')), false);
+});
+
+// ---------------------------------------------------------------- A-13: PTY prompt paths
+
+test('A-13: interactive conflict prompt: abort stops the run and changes nothing', async () => {
+  const { home, proj } = await makeSandbox();
+  await runCli(['install', ...CLAUDE, '--skill', 'nextjs,astro'], { home, proj });
+  const skillsDir = path.join(proj, '.claude', 'skills');
+  await appendFile(path.join(skillsDir, 'nextjs', 'SKILL.md'), '\nMY EDIT\n');
+  await appendFile(path.join(skillsDir, 'astro', 'SKILL.md'), '\nMY EDIT\n');
+  const manifestBefore = await readFile(path.join(skillsDir, '.skillforge-manifest.json'), 'utf8');
+
+  const r = await runCliPty(['install', ...CLAUDE, '--skill', 'nextjs,astro'], {
+    home,
+    proj,
+    input: 'a\n',
+  });
+  if (r.skipped) {
+    test.skip(r.reason || 'no PTY available');
+    return;
+  }
+  assert.equal(r.code, 0, r.output);
+  // Only the first item was ever asked about: abort short-circuits.
+  assert.equal((r.output.match(/Overwrite it/g) || []).length, 1);
+  assert.match(r.output, /skipped: nextjs \(skipped \(run aborted\)\)/);
+  assert.match(r.output, /skipped: astro \(skipped \(run aborted\)\)/);
+  // Nothing was written: both edits intact, no backup, manifest untouched.
+  assert.match(await readFile(path.join(skillsDir, 'nextjs', 'SKILL.md'), 'utf8'), /MY EDIT/);
+  assert.match(await readFile(path.join(skillsDir, 'astro', 'SKILL.md'), 'utf8'), /MY EDIT/);
+  assert.equal(await exists(path.join(proj, '.claude', '.skillforge-backups')), false);
+  assert.equal(await readFile(path.join(skillsDir, '.skillforge-manifest.json'), 'utf8'), manifestBefore);
+});
+
+test('A-13: interactive uninstall --all prompt: no aborts, yes removes everything', async () => {
+  const { home, proj } = await makeSandbox();
+  await runCli(['install', ...CLAUDE, '--skill', 'nextjs,astro'], { home, proj });
+  const skillsDir = path.join(proj, '.claude', 'skills');
+
+  // 'no' aborts: nothing removed, no backup, manifest untouched.
+  const manifestBefore = await readFile(path.join(skillsDir, '.skillforge-manifest.json'), 'utf8');
+  const no = await runCliPty(['uninstall', ...CLAUDE, '--all'], { home, proj, input: 'n\n' });
+  if (no.skipped) {
+    test.skip(no.reason || 'no PTY available');
+    return;
+  }
+  assert.equal(no.code, 0, no.output);
+  assert.match(no.output, /Remove all 2 installed item\(s\)/);
+  assert.match(no.output, /Aborted; nothing removed\./);
+  assert.equal(await exists(path.join(skillsDir, 'nextjs', 'SKILL.md')), true);
+  assert.equal(await exists(path.join(skillsDir, 'astro', 'SKILL.md')), true);
+  assert.equal(await exists(path.join(proj, '.claude', '.skillforge-backups')), false);
+  assert.equal(await readFile(path.join(skillsDir, '.skillforge-manifest.json'), 'utf8'), manifestBefore);
+
+  // 'yes' removes everything (both items are unmodified, so no
+  // per-item prompt follows and no backup is made).
+  const yes = await runCliPty(['uninstall', ...CLAUDE, '--all'], { home, proj, input: 'y\n' });
+  assert.equal(yes.code, 0, yes.output);
+  assert.match(yes.output, /removed nextjs/);
+  assert.match(yes.output, /removed astro/);
+  assert.equal(await exists(path.join(skillsDir, 'nextjs')), false);
+  assert.equal(await exists(path.join(skillsDir, 'astro')), false);
+  assert.equal(await exists(path.join(proj, '.claude', '.skillforge-backups')), false);
+  const manifest = await readJson(path.join(skillsDir, '.skillforge-manifest.json'));
+  assert.deepEqual(manifest.items, {});
+});
+
+test('A-13: interactive uninstall prompt for modified content: no skips, yes removes with a backup', async () => {
+  const { home, proj } = await makeSandbox();
+  await runCli(['install', ...CLAUDE, '--skill', 'nextjs'], { home, proj });
+  const skillsDir = path.join(proj, '.claude', 'skills');
+  const backupsBase = path.join(proj, '.claude', '.skillforge-backups');
+  await appendFile(path.join(skillsDir, 'nextjs', 'SKILL.md'), '\nMY EDIT\n');
+
+  // 'no' skips: the content survives, no backup is made.
+  const no = await runCliPty(['uninstall', ...CLAUDE, '--skill', 'nextjs'], { home, proj, input: 'n\n' });
+  if (no.skipped) {
+    test.skip(no.reason || 'no PTY available');
+    return;
+  }
+  assert.equal(no.code, 0, no.output);
+  assert.match(no.output, /Remove it anyway/);
+  assert.match(no.output, /skipped: nextjs \(skipped by user\)/);
+  assert.match(await readFile(path.join(skillsDir, 'nextjs', 'SKILL.md'), 'utf8'), /MY EDIT/);
+  assert.equal(await exists(backupsBase), false);
+
+  // 'yes' removes it — backed up first, with the edit in the backup.
+  const yes = await runCliPty(['uninstall', ...CLAUDE, '--skill', 'nextjs'], { home, proj, input: 'y\n' });
+  assert.equal(yes.code, 0, yes.output);
+  assert.match(yes.output, /Backup created: (\S+)/);
+  assert.match(yes.output, /removed nextjs/);
+  assert.equal(await exists(path.join(skillsDir, 'nextjs')), false);
+  const backupId = yes.output.match(/Backup created: (\S+)/)[1];
+  assert.match(
+    await readFile(path.join(backupsBase, backupId, 'items', '0-skill-nextjs', 'SKILL.md'), 'utf8'),
+    /MY EDIT/,
+  );
+});
+
+// ---------------------------------------------------------------- A-15: structured backup classification
+
+test('A-15: uninstall backs up modified and foreign content, but not unmodified manifest-matching content', async () => {
+  // needsBackup is a structured classification field (A-15), not a
+  // string match on reason text: this test pins the behavior it
+  // must produce for all three classifications in a single run.
+  // (The fourth case — an unmodified item no longer in the library
+  // — is covered by the A-14 test.)
+  const { home, proj } = await makeSandbox();
+  const dest = ['--dest', 'out'];
+  await runCli(['install', ...dest, '--skill', 'nextjs,astro,seo'], { home, proj });
+  const skillsDir = path.join(proj, 'out');
+  const backupsBase = path.join(proj, '.skillforge-backups');
+  // astro: modified (differs from the manifest).
+  await appendFile(path.join(skillsDir, 'astro', 'SKILL.md'), '\nMY EDIT\n');
+  // seo: foreign — installed content with no manifest entry.
+  const manifestFile = path.join(skillsDir, '.skillforge-manifest.json');
+  const manifest = await readJson(manifestFile);
+  delete manifest.items['skill:seo'];
+  await writeFile(manifestFile, JSON.stringify(manifest, null, 2));
+  // nextjs: unmodified and manifest-matching — the control.
+
+  const r = await runCli(['uninstall', ...dest, '--skill', 'nextjs,astro,seo', '--force'], { home, proj });
+  assert.equal(r.code, 0, r.stderr);
+  assert.match(r.stdout, /Backup created: (\S+)/);
+  assert.match(r.stdout, /removed nextjs/);
+  assert.match(r.stdout, /removed astro/);
+  assert.match(r.stdout, /removed seo/);
+  assert.equal(await exists(path.join(skillsDir, 'nextjs')), false);
+  assert.equal(await exists(path.join(skillsDir, 'astro')), false);
+  assert.equal(await exists(path.join(skillsDir, 'seo')), false);
+
+  // Exactly one backup, holding exactly the modified and foreign
+  // items — the unmodified manifest-matching item was not backed up.
+  const backupId = r.stdout.match(/Backup created: (\S+)/)[1];
+  assert.deepEqual(await listNames(backupsBase), [backupId]);
+  const backup = await readJson(path.join(backupsBase, backupId, 'backup.json'));
+  assert.deepEqual(backup.items.map((i) => i.name).sort(), ['astro', 'seo']);
+  // The backups hold the content that was removed.
+  const byName = Object.fromEntries(backup.items.map((i) => [i.name, i]));
+  assert.match(
+    await readFile(path.join(backupsBase, backupId, 'items', byName.astro.storedAs, 'SKILL.md'), 'utf8'),
+    /MY EDIT/,
+  );
+  const registry = await readJson(path.join(REPO_ROOT, 'registry', 'skills.json'));
+  const seoPath = registry.skills.find((s) => s.name === 'seo').path;
+  assert.equal(
+    await readFile(path.join(backupsBase, backupId, 'items', byName.seo.storedAs, 'SKILL.md'), 'utf8'),
+    await readFile(path.join(REPO_ROOT, seoPath, 'SKILL.md'), 'utf8'),
+  );
 });
