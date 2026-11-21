@@ -42,7 +42,7 @@ agents/              # 24 specialized agent definitions
 workflows/           # 16 end-to-end workflows (feature dev, SEO audit, publishing…)
 registry/            # machine-readable index (generated — never hand-edit)
 scripts/             # validation, registry generation, install tooling
-evals/               # behavioral evaluation suite (mock agent, 449 cases)
+evals/               # behavioral evaluation suite (mock agent, 463 cases)
 sources/             # research log, licenses, attribution, verification status
 ```
 
@@ -189,8 +189,8 @@ npm run check:links         # internal link check (add --online for external URL
 npm run check:security      # credential / prompt-injection scan
 npm run check:upstream      # upstream drift vs pinned commits
 npm run score               # quality score for every original skill (0–100)
-npm run test                # unit tests (129 tests, node:test, zero dependencies)
-npm run evals               # behavioral evals: 449 cases, deterministic mock agent
+npm run test                # unit tests (196 tests, node:test, zero dependencies)
+npm run evals               # behavioral evals: 463 cases, deterministic mock agent
 npm run registry            # regenerate registry/ from disk (never hand-edit it)
 npm run report              # coverage + audit report
 ```

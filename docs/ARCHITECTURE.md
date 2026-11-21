@@ -19,8 +19,8 @@ scripts/              # validation, registry generation, install tooling
 ├── install/          # installer implementation (targets, library, manifest, ...)
 ├── lib/              # shared libraries (frontmatter, security patterns, schemas)
 └── schemas/          # JSON Schemas for registry/ and verification status
-evals/                # behavioral evaluation suite (mock agent, 449 cases)
-test/                 # unit tests, node:test (129 tests)
+evals/                # behavioral evaluation suite (mock agent, 463 cases)
+test/                 # unit tests, node:test (196 tests)
 templates/            # SKILL-TEMPLATE.md for new skills
 sources/              # research log, licenses, attribution, verification status
 docs/                 # this documentation
@@ -109,11 +109,12 @@ diff. See `ai/decisions/2026-11-20-registry-determinism.md`.
 
 **Verification status.** Each skill's `status` comes from
 `sources/verification-status.json`, derived from the Phase 3 technical
-accuracy audit (`ai/audits/TECHNICAL-ACCURACY-AUDIT.md`). A skill with
-no entry defaults to `unverified` with a warning — never to
-`verified`. Current split: 204 verified, 16 verified-with-limitations,
-6 needs-correction (all upstream), 51 unverified (Phase 4 skills, no
-formal audit yet). See
+accuracy audit (`ai/audits/TECHNICAL-ACCURACY-AUDIT.md`) and the
+Stage C audit of the 51 Phase 4 skills
+(`ai/audits/SKILL-AUDIT-MATRIX.md`). A skill with no entry defaults to
+`unverified` with a warning — never to `verified`. Current split:
+254 verified, 17 verified-with-limitations, 6 needs-correction (all
+upstream), 0 unverified. See
 `ai/decisions/2026-11-20-verification-status-sidecar.md`.
 
 **Related skills.** Derived from agent/workflow co-occurrence: two
@@ -155,8 +156,8 @@ the same commands (see [Validation and CI](#validation-and-ci)).
 | Security | `npm run check:security` | Credential / prompt-injection / dangerous-code scan |
 | Upstream drift | `npm run check:upstream` | Vendor repos vs pinned commits (monitoring, exits 0 on drift) |
 | Quality score | `npm run score` | 22-element standard, 8 dimensions, hard caps (see `docs/SKILL-STANDARDS.md`) |
-| Unit tests | `npm test` | 129 tests (`node:test`), temp directories only |
-| Behavioral evals | `npm run evals` | 449 cases against the mock agent |
+| Unit tests | `npm test` | 196 tests (`node:test`), temp directories only |
+| Behavioral evals | `npm run evals` | 463 cases against the mock agent |
 | Report | `npm run report` | Coverage and audit report (`report.json`) |
 
 The frontmatter parser (`scripts/lib/frontmatter.mjs`) is hand-rolled
@@ -209,10 +210,10 @@ completeness, safety guidance — not an LLM's reasoning ability.
 | `evals/datasets/discovery-generated.json` | 277 generated discovery cases, one per skill (`npm run evals:generate` regenerates them) |
 | `evals/runners/run-evals.mjs` | CLI runner (`npm run evals`); validates every case before running, writes `evals/reports/latest.json` + `latest.md`, compares against the baseline in `evals/baselines/` |
 | `evals/runners/mock-agent.mjs` | The deterministic simulated agent |
-| `evals/runners/providers.mjs` | Provider interface: mock + OpenAI-compatible model provider (`EVAL_PROVIDER_URL` / `EVAL_PROVIDER_KEY` / `EVAL_PROVIDER_MODEL`; optional, untested without credentials) |
+| `evals/runners/providers.mjs` | Provider interface: mock + OpenAI-compatible model provider (`EVAL_PROVIDER_URL` / `EVAL_PROVIDER_KEY` / `EVAL_PROVIDER_MODEL`; optional; unit-tested against a stub endpoint — no real-model run has been executed) |
 | `evals/scorers/` | 4 scorers: selection, content, refusal, code |
 
-Full suite: 449/449 passing, 0 critical, 277/277 skills covered.
+Full suite: 463/463 passing, 0 critical, 277/277 skills covered.
 Canonical guide: [`evals/README.md`](../evals/README.md), summarized
 in [`docs/EVALUATION.md`](EVALUATION.md).
 

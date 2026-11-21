@@ -239,9 +239,14 @@ test('query CLI: search, show, status, categories, stale', async () => {
   assert.equal(r.code, 0, r.stdout + r.stderr);
   const status = JSON.parse(r.stdout);
   assert.equal(status.total, 277);
-  assert.equal(status.counts.verified, 204);
-  assert.equal(status.counts.unverified, 51);
-  assert.equal(status.counts['verified-with-limitations'], 16);
+  // Counts pinned to the Stage C audit (ai/audits/SKILL-AUDIT-MATRIX.md):
+  // the 51 Phase 4 skills were audited — 50 verified, 1
+  // verified-with-limitations (platform-social-images) — so no skill
+  // remains unverified. Update these numbers only when an audit
+  // re-labels a skill, never to make the test pass.
+  assert.equal(status.counts.verified, 254);
+  assert.equal(status.counts.unverified, 0);
+  assert.equal(status.counts['verified-with-limitations'], 17);
   assert.equal(status.counts['needs-correction'], 6);
 
   r = await runNode(QUERY, ['categories']);

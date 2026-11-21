@@ -230,7 +230,10 @@ function cmdStale(days, asJson) {
 }
 
 function cmdStatus(asJson) {
-  const counts = {};
+  // All four known statuses are always present (zero when absent), so the
+  // --json output has a stable schema and "0 unverified" is explicit
+  // rather than a missing key.
+  const counts = { verified: 0, 'verified-with-limitations': 0, 'needs-correction': 0, unverified: 0 };
   for (const s of registry.skills) counts[s.status] = (counts[s.status] || 0) + 1;
   const needs = registry.skills.filter((s) => s.status === 'needs-correction').map((s) => s.name).sort();
   const result = { total: registry.total_skills, counts, needs_correction: needs };

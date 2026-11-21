@@ -84,8 +84,10 @@ Codex and Antigravity share `.agents/skills` by vendor design.
 - The registry gained `agents.json` and `workflows.json`, JSON
   Schemas (`scripts/schemas/`), and `npm run check:registry`.
 - Skill `status` now derives from `sources/verification-status.json`
-  (the Phase 3 audit): 204 verified, 16 verified-with-limitations,
-  6 needs-correction (all upstream), 51 unverified (Phase 4 skills).
+  (the Phase 3 audit, plus the Stage C audit of the 51 Phase 4 skills —
+  see `ai/audits/SKILL-AUDIT-MATRIX.md`): 254 verified, 17
+  verified-with-limitations, 6 needs-correction (all upstream),
+  0 unverified.
   Do not read v1.0.0-era claims that all skills are verified — the
   per-skill status in the registry is the truth.
 - New tools: the query CLI (`npm run query`), the quality scorer
