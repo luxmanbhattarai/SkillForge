@@ -1,16 +1,16 @@
 {
-  "generated": "2026-11-20T21:51:58.189Z",
+  "generated": "2026-11-21T00:41:38.522Z",
   "provider": "mock",
   "summary": {
-    "total": 449,
-    "passed": 449,
+    "total": 463,
+    "passed": 463,
     "failed": 0,
     "passRate": 1,
     "criticalFailures": 0,
     "byCategory": {
       "skill-discovery": {
-        "total": 284,
-        "passed": 284,
+        "total": 298,
+        "passed": 298,
         "failed": 0,
         "critical": 0
       },
@@ -83,8 +83,8 @@
     },
     "byType": {
       "positive": {
-        "total": 364,
-        "passed": 364,
+        "total": 378,
+        "passed": 378,
         "failed": 0
       },
       "negative": {
@@ -115,8 +115,8 @@
     },
     "bySource": {
       "hand-written": {
-        "total": 172,
-        "passed": 172
+        "total": 186,
+        "passed": 186
       },
       "generated": {
         "total": 277,
@@ -300,6 +300,160 @@
       "category": "skill-discovery",
       "type": "positive",
       "skill": "rag",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "critical": false,
+      "failureReason": null
+    },
+    {
+      "id": "DIS-real-a11y-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "accessibility",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "critical": false,
+      "failureReason": null
+    },
+    {
+      "id": "DIS-real-astro-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "astro",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "critical": false,
+      "failureReason": null
+    },
+    {
+      "id": "DIS-real-auth-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "authentication",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "critical": false,
+      "failureReason": null
+    },
+    {
+      "id": "DIS-real-debugging-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "debugging",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "critical": false,
+      "failureReason": null
+    },
+    {
+      "id": "DIS-real-docker-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "docker",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "critical": false,
+      "failureReason": null
+    },
+    {
+      "id": "DIS-real-nextjs-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "nextjs",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "critical": false,
+      "failureReason": null
+    },
+    {
+      "id": "DIS-real-playwright-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "playwright",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "critical": false,
+      "failureReason": null
+    },
+    {
+      "id": "DIS-real-prisma-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "prisma",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "critical": false,
+      "failureReason": null
+    },
+    {
+      "id": "DIS-real-ratelimit-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "rate-limiting",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "critical": false,
+      "failureReason": null
+    },
+    {
+      "id": "DIS-real-seo-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "seo-audit",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "critical": false,
+      "failureReason": null
+    },
+    {
+      "id": "DIS-real-tailwind-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "tailwind-css",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "critical": false,
+      "failureReason": null
+    },
+    {
+      "id": "DIS-real-typescript-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "typescript",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "critical": false,
+      "failureReason": null
+    },
+    {
+      "id": "DIS-real-unittest-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "unit-testing",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "critical": false,
+      "failureReason": null
+    },
+    {
+      "id": "DIS-real-workers-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "cloudflare-workers",
       "source": "hand-written",
       "pass": true,
       "score": 100,

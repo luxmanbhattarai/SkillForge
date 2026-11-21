@@ -23,31 +23,40 @@ will use the skills correctly.
 
 Model-based evaluation is supported through a provider interface
 (`evals/runners/providers.mjs`): an OpenAI-compatible endpoint
-configured via `EVAL_PROVIDER_URL`, `EVAL_PROVIDER_KEY`, and
-`EVAL_PROVIDER_MODEL`. It is optional, never required for
-`npm run evals`, and untested without credentials.
+configured via `EVAL_PROVIDER_*` env vars (see
+[`docs/REAL-MODEL-EVALUATION.md`](REAL-MODEL-EVALUATION.md)). The
+provider layer itself is unit-tested against a local stub endpoint
+(no credentials, no network), but **no real-model run has ever been
+executed** — do not claim real-model validation until one has. Model
+runs are opt-in, never required for `npm run evals`, write to
+`evals/reports/model/` (never the mock report), and are never compared
+to the mock baseline.
 
 ## The suite
 
-449 cases, all passing (verified 2026-11-20):
+463 cases, all passing (verified 2026-11-20):
 
 | Cases | Count | What they test |
 | --- | --- | --- |
-| Hand-written (`evals/cases/`) | 172 | Skill selection, content grounding, refusal of unsafe requests, code generation — 12 categories, 4 scorers |
+| Hand-written (`evals/cases/`) | 186 | Skill selection, content grounding, refusal of unsafe requests, code generation — 12 categories, 4 scorers. Includes 14 non-circular discovery cases (`discovery-realistic.json`) written in realistic user phrasing rather than quoting skill descriptions. |
 | Generated discovery (`evals/datasets/discovery-generated.json`) | 277 | One discovery case per skill in the registry |
 
-277/277 skills are covered. Results go to `evals/reports/latest.json`
-and `latest.md`; when a baseline exists, the runner also writes a
-regression comparison to `evals/regression/latest.json`.
+277/277 skills are covered — coverage counts skills the agent
+actually selected, not the case's declared skill field. Results go to
+`evals/reports/latest.json` and `latest.md`; when a baseline exists,
+the runner also writes a regression comparison to
+`evals/regression/latest.json`.
 
 ## Running
 
 ```bash
 npm run evals                        # full suite, mock provider, exit 1 on failure
 npm run evals -- --cases nextjs      # only cases matching "nextjs" (id, category, or skill)
+npm run evals -- --cases-file <path> # only the case ids listed in a JSON file (see evals/datasets/real-model-subset.json)
+npm run evals -- --out <dir>         # write reports to <dir> instead of evals/reports/ (for throwaway runs)
 npm run evals -- --report-only       # always exit 0 (reporting mode)
-npm run evals -- --provider model    # model provider (needs EVAL_PROVIDER_* env vars)
-npm run evals -- --save-baseline     # save this run as the new baseline
+npm run evals -- --provider model    # model provider (needs EVAL_PROVIDER_* env vars; reports go to evals/reports/model/)
+npm run evals -- --save-baseline     # save this run as the new baseline (mock provider only)
 npm run evals:generate               # regenerate the generated discovery cases
 ```
 

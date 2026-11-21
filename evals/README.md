@@ -22,8 +22,12 @@ correctly. See `ai/decisions/2026-11-20-eval-mock-agent.md`.
 
 Model-based evaluation is supported through a provider interface
 (`runners/providers.mjs`): an OpenAI-compatible endpoint configured
-via `EVAL_PROVIDER_URL`, `EVAL_PROVIDER_KEY`, `EVAL_PROVIDER_MODEL`.
-It is optional and never required for `npm run evals`.
+via `EVAL_PROVIDER_*` env vars. It is optional and never required for
+`npm run evals`. The provider layer is unit-tested against a local
+stub endpoint, but **no real-model run has ever been executed** — see
+[`docs/REAL-MODEL-EVALUATION.md`](../docs/REAL-MODEL-EVALUATION.md)
+for the plan. Model runs write to `evals/reports/model/`, are never
+compared to the mock baseline, and cannot save a baseline.
 
 ## Layout
 
@@ -44,7 +48,8 @@ evals/
     content.mjs        must-include / must-exclude / tool plan
     refusal.mjs        refused vs over-refused
     code.mjs           compile checks + fixture execution
-  reports/             latest run output (latest.json, latest.md; gitignored)
+  reports/             latest run output (latest.json, latest.md; gitignored;
+                       model-provider runs go to reports/model/)
   baselines/           committed baseline snapshots (current.json, slim results)
   regression/          latest baseline-comparison output (gitignored)
 ```
@@ -54,9 +59,11 @@ evals/
 ```bash
 npm run evals                        # full suite, mock provider, exit 1 on failure
 npm run evals -- --cases nextjs      # only cases matching "nextjs" (id, category, or skill)
+npm run evals -- --cases-file <path> # only the case ids listed in a JSON file
+npm run evals -- --out <dir>         # write reports to <dir> instead of evals/reports/
 npm run evals -- --report-only       # always exit 0 (reporting mode)
 npm run evals -- --provider model    # model provider (needs EVAL_PROVIDER_* env vars)
-npm run evals -- --save-baseline     # save this run as the new baseline
+npm run evals -- --save-baseline     # save this run as the new baseline (mock only)
 node evals/datasets/generate-discovery-cases.mjs   # regenerate generated cases
 ```
 
@@ -66,7 +73,11 @@ exit code 2). Results go to `evals/reports/latest.json` (machine
 readable) and `evals/reports/latest.md` (human readable). When a
 baseline exists, the runner also writes a regression comparison to
 `evals/regression/latest.json` listing regressions, fixes, new, and
-removed cases.
+removed cases. Model-provider runs write to `evals/reports/model/`
+instead and are never compared to the baseline. `--out` redirects
+both reports (and the regression comparison, as `regression.json`)
+to the given directory — use it for throwaway runs so a partial run
+never clobbers the full report.
 
 ## Case schema
 
@@ -171,8 +182,9 @@ Each case scores 0–100 as the share of its checks passed, but reports
 never present a single percentage as proof of quality. Reports show:
 pass rate, failure rate, **critical failures** (any failing
 `security-compliance` case, or any unrefused unsafe request),
-regression count vs the baseline, and coverage (skills touched by at
-least one case). Generated discovery cases are reported separately
+regression count vs the baseline, and coverage (skills the agent
+actually selected in at least one case — not the case's declared
+skill field). Generated discovery cases are reported separately
 from hand-written cases.
 
 ## Baselines and regressions
@@ -190,7 +202,9 @@ so history is visible.
 - The mock provider evaluates the library, not an LLM's reasoning.
 - Content checks are substring matches on grounded answers; they prove
   guidance is present, not that it is complete or that a model would
-  apply it.
+  apply it. The `grounded-in` check verifies the evaluated skill was
+  selected, but does not prove the must-include phrase was surfaced
+  by the task rather than present anywhere in the skill file.
 - Tool-use is evaluated at the plan level (workflow steps), not by
   executing tools.
 - Code checks prove compilation for JavaScript blocks (and fixture

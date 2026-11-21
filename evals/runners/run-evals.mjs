@@ -11,9 +11,22 @@
 //
 // Usage:
 //   npm run evals [-- --provider mock|model] [--cases <filter>]
+//                 [--cases-file <path>] [--out <dir>]
 //                 [--save-baseline] [--no-compare] [--report-only] [--json]
 // Exit code 1 if any case fails (unless --report-only), 0 otherwise.
 // Exit code 2 on a framework error (bad case file, unknown skill, ...).
+//
+// Report locations (never mixed):
+//   mock  (default) -> evals/reports/latest.json + latest.md
+//   model           -> evals/reports/model/latest.json + latest.md
+//   --out <dir>     -> <dir>/latest.json + latest.md (both providers;
+//                      use this for throwaway runs, e.g. the npm test
+//                      smoke test, so the committed report is never
+//                      clobbered by a partial run)
+// Baselines are mock-only: --save-baseline with --provider model is
+// refused, and model runs are never compared against the mock
+// baseline. A model run and a mock run answer different questions;
+// comparing them as regressions would be meaningless.
 
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
@@ -48,6 +61,8 @@ function flagValue(name) {
 }
 const PROVIDER_NAME = flagValue('--provider') || 'mock';
 const CASE_FILTER = flagValue('--cases');
+const CASES_FILE = flagValue('--cases-file');
+const OUT_DIR = flagValue('--out');
 const SAVE_BASELINE = args.includes('--save-baseline');
 const NO_COMPARE = args.includes('--no-compare');
 const REPORT_ONLY = args.includes('--report-only');
@@ -69,7 +84,10 @@ async function loadCases() {
   return cases;
 }
 
-function validateCases(cases, registry) {
+// Exported for unit tests (test/evals.test.mjs exercises the
+// unknown-skill rejection path directly; importing this module does
+// not run the suite — main() only runs when invoked as a script).
+export function validateCases(cases, registry) {
   const errors = [];
   const seen = new Set();
   const skillNames = new Set(registry.skills.map((s) => s.name));
@@ -150,7 +168,10 @@ function summarize(results, cases, registry) {
     const src = bySource[r.source] || bySource['hand-written'];
     src.total++;
     if (r.pass) src.passed++;
-    if (r.skill) covered.add(r.skill);
+    // Coverage counts skills the agent actually selected, not the
+    // case's declared skill field: adding r.skill here made 277/277
+    // follow from case authorship even if the agent selected nothing
+    // (A-17). A skill counts as covered only when some run selected it.
     for (const s of r.selectedSkills || []) covered.add(s);
   }
   const passed = results.filter((r) => r.pass).length;
@@ -189,14 +210,25 @@ function compareToBaseline(results, baseline) {
 
 function toMarkdown(report) {
   const s = report.summary;
+  const isModel = report.providerKind === 'model';
   const lines = [];
-  lines.push('# Eval Report');
+  lines.push(isModel ? '# Eval Report — REAL-MODEL RUN' : '# Eval Report');
   lines.push('');
+  if (isModel) {
+    lines.push('> **Real-model results — NOT comparable to the mock baseline.** This run used a live');
+    lines.push('> model provider. Pass rates here measure that model\'s behavior, not the library\'s');
+    lines.push('> regression state; do not mix these numbers into mock-baseline reporting.');
+    lines.push('');
+  }
   lines.push(`- Generated: ${report.generated}`);
-  lines.push(`- Provider: ${report.provider}`);
+  lines.push(`- Provider: ${report.provider}${isModel && report.providerMeta ? ` (endpoint ${report.providerMeta.endpoint}, timeout ${report.providerMeta.timeoutMs}ms, max retries ${report.providerMeta.maxRetries})` : ''}`);
   lines.push(`- Cases: ${s.total} total, ${s.passed} passed, ${s.failed} failed (pass rate ${(s.passRate * 100).toFixed(1)}%)`);
   lines.push(`- Critical failures: ${s.criticalFailures}`);
-  lines.push(`- Coverage: ${s.coverage.skillsCovered}/${s.coverage.skillsTotal} skills touched (${(s.coverage.coverageRate * 100).toFixed(1)}%)`);
+  lines.push(`- Coverage: ${s.coverage.skillsCovered}/${s.coverage.skillsTotal} skills selected (${(s.coverage.coverageRate * 100).toFixed(1)}%)`);
+  if (report.usage) {
+    const u = report.usage;
+    lines.push(`- Usage: ${u.requests} request(s), ${u.attempts} attempt(s), ${u.retries} retries, ${u.errors} error(s); ${u.promptTokens} prompt + ${u.completionTokens} completion tokens (${u.totalTokens} total)${u.estimatedCostUsd !== null && u.estimatedCostUsd !== undefined ? `; estimated cost $${u.estimatedCostUsd}` : ' (no prices configured, cost not estimated)'}`);
+  }
   if (report.comparison) {
     lines.push(`- vs baseline (${report.comparison.baselineGenerated || 'unknown'}): ${report.comparison.regressions.length} regression(s), ${report.comparison.fixes.length} fix(es), ${report.comparison.added.length} new case(s), ${report.comparison.removed.length} removed case(s)`);
   }
@@ -236,22 +268,60 @@ function toMarkdown(report) {
   lines.push('');
   lines.push('## Limitations');
   lines.push('');
-  lines.push('- The mock provider evaluates the library (discoverability, content, trigger discrimination), not an LLM\'s reasoning. Model-provider runs are needed to say anything about a specific model.');
-  lines.push('- Content checks are substring matches on grounded answers; they prove the guidance is present, not that it is complete or that a model would apply it.');
+  if (isModel) {
+    lines.push('- This run measures one model at one point in time (temperature 0, but providers are not perfectly deterministic). Re-running may give different results.');
+    lines.push('- The model was asked to self-report its skill selection as JSON; a model can select a skill and fail to report it, or report one it would not actually load.');
+    lines.push('- Content checks are substring matches on the model\'s answer; they prove the guidance is present in the answer, not that it is complete or correctly applied.');
+    lines.push('- Grounding checks verify the evaluated skill was among the selected skills; they do not prove the answer was derived from that skill\'s text.');
+  } else {
+    lines.push('- The mock provider evaluates the library (discoverability, content, trigger discrimination), not an LLM\'s reasoning. Model-provider runs are needed to say anything about a specific model.');
+    lines.push('- Content checks are substring matches on grounded answers; they prove the guidance is present, not that it is complete or that a model would apply it.');
+    lines.push('- Grounding checks verify the evaluated skill was among the selected skills; they do not prove the must-include phrase was surfaced by the task rather than present anywhere in the skill file.');
+  }
   lines.push('- Code checks prove compilation (and fixture behavior where fixtures exist), not general correctness.');
   lines.push('');
   return lines.join('\n');
 }
 
+// Load a --cases-file: a JSON array of case ids, or an object with an
+// `ids` array or a `cases` array of ids (or { id } objects). Used by
+// docs/REAL-MODEL-EVALUATION.md's representative subset.
+async function loadCasesFile(file) {
+  const abs = path.isAbsolute(file) ? file : path.join(ROOT, file);
+  let data;
+  try {
+    data = JSON.parse(await readFile(abs, 'utf8'));
+  } catch (e) {
+    throw new Error(`cannot read --cases-file "${file}": ${e.message}`);
+  }
+  const raw = Array.isArray(data) ? data : (data.ids || data.cases || null);
+  if (!Array.isArray(raw)) {
+    throw new Error(`--cases-file "${file}" must be a JSON array of case ids or an object with "ids" or "cases"`);
+  }
+  const ids = raw.map((c) => (typeof c === 'string' ? c : c.id)).filter((id) => typeof id === 'string');
+  if (ids.length === 0) throw new Error(`--cases-file "${file}" contains no case ids`);
+  return new Set(ids);
+}
+
 async function main() {
   const registry = JSON.parse(await readFile(path.join(ROOT, 'registry', 'skills.json'), 'utf8'));
   let cases = await loadCases();
+  if (CASES_FILE) {
+    let wanted;
+    try {
+      wanted = await loadCasesFile(CASES_FILE);
+    } catch (e) {
+      console.error(e.message);
+      process.exit(2);
+    }
+    cases = cases.filter((c) => wanted.has(c.id));
+  }
   if (CASE_FILTER) {
     cases = cases.filter((c) => c.id.includes(CASE_FILTER) || c.category.includes(CASE_FILTER) || (c.skill || '').includes(CASE_FILTER));
   }
   cases.sort((a, b) => a.id.localeCompare(b.id));
   if (cases.length === 0) {
-    console.error('No cases found' + (CASE_FILTER ? ` for filter "${CASE_FILTER}"` : '') + '.');
+    console.error('No cases found' + (CASE_FILTER ? ` for filter "${CASE_FILTER}"` : '') + (CASES_FILE ? ` in cases file "${CASES_FILE}"` : '') + '.');
     process.exit(2);
   }
   const errors = validateCases(cases, registry);
@@ -266,6 +336,13 @@ async function main() {
     provider = await createProvider(PROVIDER_NAME);
   } catch (e) {
     console.error(`Provider error: ${e.message}`);
+    process.exit(2);
+  }
+  const providerKind = provider.meta?.kind || (PROVIDER_NAME === 'model' ? 'model' : 'mock');
+  if (SAVE_BASELINE && providerKind !== 'mock') {
+    // Baselines are mock-only: a model run measures a model, not the
+    // library's regression state. Refuse before any API call is made.
+    console.error('Cannot --save-baseline with a non-mock provider: baselines are mock-only.');
     process.exit(2);
   }
 
@@ -293,21 +370,40 @@ async function main() {
       selectedSkills: observation.selectedSkills || [],
       checks: scored.checks,
     };
+    // Per-case token usage, only when the provider reported it (model
+    // runs). Mock results keep exactly their old shape.
+    if (observation.usage) result.usage = observation.usage;
     result.critical = isCritical(c, result);
     results.push(result);
   }
 
   const summary = summarize(results, cases, registry);
+  // Baseline comparison is mock-only: the baseline is a mock run, and
+  // a model run is not a regression (or a fix) relative to it.
   let comparison = null;
-  if (!NO_COMPARE && existsSync(CURRENT_BASELINE) && !SAVE_BASELINE) {
+  if (providerKind === 'mock' && !NO_COMPARE && existsSync(CURRENT_BASELINE) && !SAVE_BASELINE) {
     const baseline = JSON.parse(await readFile(CURRENT_BASELINE, 'utf8'));
     comparison = compareToBaseline(results, baseline);
   }
-  const report = { generated: timestamp, provider: provider.name, summary, comparison, results };
+  const usage = typeof provider.getUsage === 'function' ? provider.getUsage() : null;
+  const report = {
+    generated: timestamp,
+    provider: provider.name,
+    providerKind,
+    providerMeta: provider.meta || null,
+    usage,
+    summary, comparison, results,
+  };
 
-  await mkdir(REPORTS_DIR, { recursive: true });
-  await writeFile(path.join(REPORTS_DIR, 'latest.json'), JSON.stringify(report, null, 2) + '\n', 'utf8');
-  await writeFile(path.join(REPORTS_DIR, 'latest.md'), toMarkdown(report), 'utf8');
+  // Report location: --out wins; otherwise mock and model reports live
+  // in separate directories so a model run can never overwrite the
+  // mock report (and vice versa).
+  const reportDir = OUT_DIR
+    ? (path.isAbsolute(OUT_DIR) ? OUT_DIR : path.join(ROOT, OUT_DIR))
+    : (providerKind === 'model' ? path.join(REPORTS_DIR, 'model') : REPORTS_DIR);
+  await mkdir(reportDir, { recursive: true });
+  await writeFile(path.join(reportDir, 'latest.json'), JSON.stringify(report, null, 2) + '\n', 'utf8');
+  await writeFile(path.join(reportDir, 'latest.md'), toMarkdown(report), 'utf8');
   if (SAVE_BASELINE) {
     // Baselines store slim results (id/pass/score/critical only): the
     // comparison needs pass/fail per id, and the full report already
@@ -329,28 +425,43 @@ async function main() {
     console.log(`Baseline saved to evals/baselines/current.json (snapshot baseline-${stamp}.json).`);
   }
   if (comparison && !NO_COMPARE) {
-    await mkdir(path.join(EVALS_DIR, 'regression'), { recursive: true });
-    await writeFile(path.join(EVALS_DIR, 'regression', 'latest.json'), JSON.stringify({ generated: timestamp, ...comparison }, null, 2) + '\n', 'utf8');
+    // With --out, the regression comparison lives next to the report
+    // instead of clobbering evals/regression/latest.json.
+    const regressionDir = OUT_DIR ? reportDir : path.join(EVALS_DIR, 'regression');
+    const regressionFile = OUT_DIR ? 'regression.json' : 'latest.json';
+    await mkdir(regressionDir, { recursive: true });
+    await writeFile(path.join(regressionDir, regressionFile), JSON.stringify({ generated: timestamp, ...comparison }, null, 2) + '\n', 'utf8');
   }
 
+  // Display path: relative when the report lives inside the repo
+  // (the usual case), absolute when --out points elsewhere.
+  const relDir = path.relative(ROOT, reportDir);
+  const reportRel = relDir && !relDir.startsWith('..') ? relDir : reportDir;
   if (JSON_OUT) {
-    console.log(JSON.stringify({ generated: timestamp, provider: provider.name, summary, comparison }, null, 2));
+    console.log(JSON.stringify({ generated: timestamp, provider: provider.name, providerKind, summary, comparison, usage }, null, 2));
   } else {
     console.log(`Evals (${provider.name}): ${summary.passed}/${summary.total} passed (${(summary.passRate * 100).toFixed(1)}%), ${summary.failed} failed, ${summary.criticalFailures} critical.`);
-    console.log(`Coverage: ${summary.coverage.skillsCovered}/${summary.coverage.skillsTotal} skills.`);
+    console.log(`Coverage: ${summary.coverage.skillsCovered}/${summary.coverage.skillsTotal} skills selected.`);
     if (comparison) console.log(`vs baseline: ${comparison.regressions.length} regression(s), ${comparison.fixes.length} fix(es), ${comparison.added.length} new, ${comparison.removed.length} removed.`);
+    if (usage) console.log(`Usage: ${usage.totalTokens} tokens (${usage.promptTokens} prompt + ${usage.completionTokens} completion), ${usage.retries} retries, ${usage.errors} errors${usage.estimatedCostUsd !== null && usage.estimatedCostUsd !== undefined ? `, estimated cost $${usage.estimatedCostUsd}` : ''}.`);
     const failures = results.filter((r) => !r.pass);
     for (const f of failures.slice(0, 30)) {
       console.log(`  FAIL ${f.id} [${f.category}]${f.critical ? ' CRITICAL' : ''}: ${f.failureReason}`);
     }
-    if (failures.length > 30) console.log(`  ... and ${failures.length - 30} more (see evals/reports/latest.md)`);
-    console.log('Report: evals/reports/latest.json, evals/reports/latest.md');
+    if (failures.length > 30) console.log(`  ... and ${failures.length - 30} more (see ${reportRel}/latest.md)`);
+    console.log(`Report: ${reportRel}/latest.json, ${reportRel}/latest.md`);
   }
 
   process.exit(summary.failed > 0 && !REPORT_ONLY ? 1 : 0);
 }
 
-main().catch((e) => {
-  console.error(`Eval runner failed: ${e.message}`);
-  process.exit(2);
-});
+// Only run when invoked as a script: unit tests import validateCases
+// from this module and must not trigger a full eval run.
+const invokedAsScript = process.argv[1]
+  && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (invokedAsScript) {
+  main().catch((e) => {
+    console.error(`Eval runner failed: ${e.message}`);
+    process.exit(2);
+  });
+}
