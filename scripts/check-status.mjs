@@ -141,6 +141,12 @@ async function main() {
   // 8. Verification commit: warn (do not fail) when HEAD has moved past the
   // commit the numbers were verified at. The counts above are the hard
   // signal; this is the reminder to re-verify after code changes.
+  // Schema convention (see PROJECT-STATUS.json `note`): the top-level
+  // `commit` and the per-section `commit` fields are current-state
+  // "last verified at" pointers, not history — they move forward when
+  // the battery re-runs at a newer commit; previous values live in git
+  // history. Narrative fields (e.g. auditFindings.status) are
+  // historical records and are never rewritten.
   try {
     const { stdout } = await execFileAsync('git', ['rev-parse', 'HEAD'], { cwd: ROOT });
     const head = stdout.trim();
