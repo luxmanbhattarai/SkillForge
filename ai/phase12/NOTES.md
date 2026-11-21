@@ -56,6 +56,7 @@ later refined three of them — see
   accurate for the working tree at scan time, before the
   report/results files existed; no committed tree scans 1,032.
 - **A-01:** fix-up commit `2f1460b` itself added a new unexcepted
-  `rejectUnauthorized: false` quote in `ai/PROJECT-STATUS.md`,
-  so the security scan was failing at the Phase 12 head; fixed
-  in Stage B with narrow exceptions (commit `c5d2be6`).
+  quote of the insecure TLS workaround (audit S-11) in
+  `ai/PROJECT-STATUS.md`, so the security scan was failing at
+  the Phase 12 head; fixed in Stage B with narrow exceptions
+  (commit `c5d2be6`).

@@ -164,7 +164,9 @@ export async function checkUrl(url, opts = {}) {
  * Verify every unique external URL in `external` (a Map of url ->
  * [referencing files]), applying the example-domain and EXCEPTIONS
  * skips and pausing REQUEST_DELAY_MS between requests. Returns
- * { errors, skipped }; the error strings keep the historical format.
+ * { errors, skipped, fetched }; the error strings keep the historical
+ * format. `fetched` counts URLs actually requested (A-24: the summary
+ * line must not count skipped URLs as verified).
  */
 export async function verifyExternalUrls(external, {
   log = () => {},
@@ -188,7 +190,7 @@ export async function verifyExternalUrls(external, {
       errors.push(`${url}: unreachable (${e.cause?.code || e.message}) (referenced from ${files[0]})`);
     }
   }
-  return { errors, skipped };
+  return { errors, skipped, fetched };
 }
 
 async function main() {
@@ -220,14 +222,20 @@ async function main() {
   }
 
   let skipped = 0;
+  let fetched = 0;
   if (ONLINE) {
     console.log(`Checking ${external.size} unique external URLs (HEAD requests)...`);
     const result = await verifyExternalUrls(external, { log: (m) => console.log(m) });
     errors.push(...result.errors);
     skipped = result.skipped;
+    fetched = result.fetched;
   }
 
-  console.log(`Checked ${checked} internal links; ${external.size} unique external URLs ${ONLINE ? `verified (${skipped} skipped: example domains / documented exceptions)` : 'listed (use --online to verify)'}.`);
+  // A-24: only URLs actually requested count as checked live; skipped
+  // URLs (example domains / documented exceptions) are enumerated, not
+  // verified by this run. Previous wording counted all of them as
+  // "verified".
+  console.log(`Checked ${checked} internal links; ${external.size} unique external URLs ${ONLINE ? `(${fetched} checked live, ${skipped} skipped: example domains / documented exceptions)` : 'listed (use --online to verify)'}.`);
   for (const e of errors) console.log(`  ERROR ${e}`);
   console.log(errors.length ? `FAIL: ${errors.length} error(s).` : 'PASS.');
   process.exit(errors.length ? 1 : 0);
