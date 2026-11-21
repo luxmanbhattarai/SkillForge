@@ -233,7 +233,9 @@ async function main() {
     );
   }
   // Monitoring, not gating: exit 0 even when upstreams have moved.
-  process.exit(0);
+  // exitCode, not process.exit(): a hard exit discards pending piped
+  // stdout. Natural exit flushes it first (see validate-registry.mjs).
+  process.exitCode = 0;
 }
 
 // Main guard (same idiom as check-links.mjs): importing this module

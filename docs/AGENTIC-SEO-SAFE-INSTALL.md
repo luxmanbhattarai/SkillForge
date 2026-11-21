@@ -140,9 +140,9 @@ policy forbids — so the mitigation is documentation plus a warning,
 not a code fix:
 
 1. **This document** — the warning above.
-2. **A doctor warning** when the `seo` skill is installed (planned;
-   see the specification in the Stage B report — the installer warns
-   at install time that `broken_links.py` disables TLS verification).
+2. **A doctor warning** when the `seo` skill is installed (implemented;
+   the installer warns at install time and `doctor` warns on installed
+   items that `broken_links.py` disables TLS verification).
 3. **Upstream follow-up** — raise the issue upstream at the next
    update cycle; the fix is a one-line change (`verify=False` →
    default verification, matching `fetch_page.py`).

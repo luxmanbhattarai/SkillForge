@@ -75,11 +75,11 @@ jobs:
     # Registry at runtime. A hash-pinned requirements file was
     # deliberately NOT added: pip-tools is not available in the
     # dev environment, and a lockfile must be generated against
-    # the runner's Python version to be portable — this job has
-    # never run in CI yet (A4-01), so that version is
-    # unconfirmed. Follow-up once the job's first run lands:
-    # generate the lockfile (pip-tools, --generate-hashes) and
-    # pin the ruleset version. Bounding the risk meanwhile: this
+    # the runner's Python version to be portable. The job has now
+    # run in CI (PR #4 runs 44942929351, 44944634176, 44944906367),
+    # so the follow-up is unblocked: generate the lockfile
+    # (pip-tools, --generate-hashes) and pin the ruleset version.
+    # Bounding the risk meanwhile: this
     # job runs workflow code from the PR branch, so a
     # compromised or withdrawn release breaks the run loudly (a
     # failed check) rather than passing silently — a
