@@ -1,10 +1,12 @@
 name: Security audit
 
-# Local security scan (scripts/security-scan.mjs) plus a dependency
-# audit. Runs on every push/PR and weekly, so newly disclosed issues
-# surface even without code changes. CodeQL runs in its own workflow
-# (codeql.yml); GitHub secret scanning and Dependabot alerts are repo
-# settings, not workflow steps — see ai/phase10/NOTES.md.
+# Local security scan (scripts/security-scan.mjs), Semgrep SAST, plus
+# a dependency audit. Runs on every push/PR and weekly, so newly
+# disclosed issues surface even without code changes. The custom
+# scanner is a pattern-based smoke screen, not SAST — the Semgrep
+# job is the real SAST. CodeQL runs in its own workflow
+# (codeql.yml); GitHub secret scanning and Dependabot alerts are
+# repo settings, not workflow steps — see ai/phase10/NOTES.md.
 
 on:
   push:
@@ -35,7 +37,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
-      - name: Set up Node.js 20
+      - name: Set up Node.js 24
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "24"
@@ -56,3 +58,21 @@ jobs:
             echo "No package-lock.json: zero dependencies, nothing to audit."
             echo "(npm audit would fail with ENOLOCK; see ai/phase10/NOTES.md.)"
           fi
+
+  semgrep:
+    # Real SAST: the custom scanner (security-audit job) is a
+    # pattern-based smoke screen, not SAST. Semgrep ran clean
+    # once locally in Stage D (1.186.0, p/javascript over
+    # scripts/test/evals); this job keeps it in CI. Pinned to
+    # the Stage D version so results are reproducible.
+    name: Semgrep (SAST)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Install Semgrep 1.186.0
+        run: python3 -m pip install semgrep==1.186.0
+
+      - name: Run Semgrep (p/javascript)
+        run: semgrep --config p/javascript --error scripts/ test/ evals/

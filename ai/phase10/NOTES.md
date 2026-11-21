@@ -198,11 +198,13 @@ they are branch-independent):
    merging (these are the check *names* GitHub shows — the jobs'
    display `name:` values with matrix values expanded, not the
    job ids; requiring `validate` would never match a check run):
-   `Validate (Node 24)`, `Registry`, `Behavioral evals`, `lint`, and
-   `security-audit` (plus `Analyze (javascript-typescript)` for
-   CodeQL, recommended). Do NOT require `Windows (Node 24)` until
-   the Windows leg is promoted from advisory (Stage D). The
-   workflows exist; protection is what makes them gating.
+   `Validate (Node 24)`, `Registry`, `Behavioral evals`, `lint`,
+   `security-audit`, `Windows (Node 24)`, and `Semgrep (SAST)`
+   (plus `Analyze (javascript-typescript)` for CodeQL,
+   recommended). The Windows leg was promoted from advisory to
+   gating on 2026-11-21 after going green on a real runner
+   (PR #1, run 44933250315). The workflows exist; protection
+   is what makes them gating.
 
 ## Coordinator follow-up (2026-11-20)
 
@@ -231,6 +233,9 @@ commits behind, as reported above). Full results in
   permissions, and script references were verified locally, but
   no workflow run exists yet. The first PR/push after merge is
   the real test; watch the Actions tab.
+  Update (2026-11-21): superseded — all 6 workflows plus the
+  Windows leg have run on PR #1 and pass (run 44933250315;
+  Windows 250/255, 0 fail, 5 POSIX-only skipped).
 - **The three contract scripts** (above) have now landed — see
   the coordinator follow-up above. The `registry`,
   `stale-verification`, and `upstream` jobs can pass once the

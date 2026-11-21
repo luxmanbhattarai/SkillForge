@@ -598,6 +598,20 @@ report itself, recording:
    layer built, no real-model run executed (L-Model); Prisma
    8 still an RC (L-Prisma).
 9. What is still open (see §11).
+10. Post-PR update (2026-11-21): L-CI closed — all 6 workflows
+    plus the Windows leg ran on PR #1 and pass (run
+    44933250315; Windows 250/255, 0 fail, 5 POSIX-only
+    skipped); the Windows leg was promoted from advisory to
+    gating. L-Win closed — the junction fallback (W-4) is
+    proven on a real Windows runner, as are the W-1/W-2/W-3
+    normalizations; the first real runs exposed and fixed a
+    validator Windows path bug plus 7 Windows-only test
+    failures (atomic-write rename retry with exponential
+    backoff). L-Model still open — no real-model eval run
+    (needs EVAL_PROVIDER_* credentials). S-08/S-09/S-11 still
+    open upstream. Secret scanning (with push protection) and
+    Dependabot security updates are enabled on the repo;
+    branch protection is not yet enabled.
 
 ## 9. Documentation and consistency
 

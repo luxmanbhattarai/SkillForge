@@ -54,16 +54,17 @@ format and quality rules: [`docs/SKILL-STANDARDS.md`](docs/SKILL-STANDARDS.md).
 ## Verification status
 
 Not every skill carries the same assurance. Each skill's status comes from
-`sources/verification-status.json` (Phase 3 technical-accuracy audit) and
-is surfaced in the registry — a skill with no audit entry is
-`unverified`, never silently `verified`.
+`sources/verification-status.json` (Phase 3 technical-accuracy audit plus
+the Stage C audit of the 51 Phase 4 skills) and is surfaced in the
+registry — a skill with no audit entry is `unverified`, never silently
+`verified`.
 
 | Status | Skills | Meaning |
 | --- | --- | --- |
-| `verified` | 204 | Audited against official docs; guidance confirmed. |
-| `verified-with-limitations` | 16 | Audited; known limits recorded (e.g. docs unavailable, RC software). |
+| `verified` | 254 | Audited against official docs; guidance confirmed. |
+| `verified-with-limitations` | 17 | Audited; known limits recorded (e.g. docs unavailable, RC software). |
 | `needs-correction` | 6 | Known errors — all upstream; fixes belong upstream, never edited here. |
-| `unverified` | 51 | Written against official docs; no formal audit yet (Phase 4 skills). |
+| `unverified` | 0 | No unaudited skills remain; the 51 Phase 4 skills were audited in Stage C (2026-11-20). |
 
 Check a skill before relying on version-specific claims:
 `npm run query -- show <skill>` prints its status and `last_verified`
@@ -233,11 +234,16 @@ what is and is not defended against.
   only when they agree with official documentation, and never execute
   an imported script without reading it first.
 
-Known limits: Semgrep, Gitleaks, TruffleHog, and CodeQL are not
-installed locally (CodeQL runs only via the GitHub workflow); GitHub
-secret scanning, Dependabot alerts, and branch protection are manual
-repo settings that still need enabling (see `ai/phase10/NOTES.md`).
-No workflow has run on GitHub yet.
+Known limits: the custom security scanner is a pattern-based smoke
+screen, not SAST (see `docs/SECURITY-SCANNING.md`); real SAST runs in
+CI via the Semgrep job in the security-audit workflow
+(`p/javascript` over `scripts/`, `test/`, `evals/`), and
+Gitleaks/TruffleHog ran clean once in Stage D (2026-11-20) but are
+not in CI. GitHub secret scanning (with push protection) and
+Dependabot security updates are enabled; branch protection is not
+yet enabled (see `ai/phase10/NOTES.md` for the recommended checks).
+All 6 workflows plus the Windows leg have run on GitHub and pass
+(PR #1, run 44933250315, 2026-11-21).
 
 ## Documentation
 

@@ -78,7 +78,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
-      - name: Set up Node.js 20
+      - name: Set up Node.js 24
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "24"
@@ -110,7 +110,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
-      - name: Set up Node.js 20
+      - name: Set up Node.js 24
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "24"
@@ -126,42 +126,30 @@ jobs:
     # resolution, line endings), so Windows runs the full
     # regression suite plus the validators that are Windows-safe.
     #
-    # ADVISORY, not gating (continue-on-error): the suite is not
-    # yet green on Windows. Three known gaps, all outside this
-    # file — see ai/remediation/stage-d/ci-validation.md:
-    #   W-1  test-support/helpers.mjs runCli sets HOME only; the installer
-    #        resolves home via os.homedir(), which reads
-    #        USERPROFILE on Windows, so user-scope installer tests
-    #        fail and write into the real runner profile.
-    #   W-2  scripts/security-scan.mjs compares backslash
-    #        relative paths against POSIX exception/skip prefixes,
-    #        so no exception matches on Windows (check:security
-    #        and scanner.test.mjs fail there).
-    #   W-3  scripts/generate-registry.mjs and
-    #        scripts/validate-registry.mjs emit/compare native
-    #        relative paths, so registry tests fail on Windows.
-    #   W-4  Link-mode install/backup on Windows depends on the
-    #        junction fallback in scripts/install/links.mjs (A-11):
-    #        a directory symlink needs Developer Mode or admin
-    #        rights, a junction needs neither. Whether that module
-    #        is present and correct is verified by the --link tests
-    #        themselves on the first run; Developer Mode status on
-    #        the runner image is unverified from here.
-    # Remove continue-on-error (and add this job to the required
-    # branch-protection checks) once the leg is green for real.
-    # Until then, do NOT require the "Windows (Node 24)" check.
+    # GATING (promoted 2026-11-21): the leg went green on a real
+    # Windows runner (PR #1, run 44933250315: 250/255 pass,
+    # 0 fail, 5 POSIX-only skipped). The gaps that made it
+    # advisory are closed: W-1/W-2/W-3 were fixed in Stage D
+    # (USERPROFILE sandboxing, POSIX path normalization in the
+    # scanner, registry generator/validator, link checker, and
+    # scorer), W-4 (junction fallback) is proven by the --link
+    # tests passing on the real runner, and the validator's
+    # Windows path bug plus 7 Windows-only test failures were
+    # fixed from the first real runs (see ai/PROJECT-STATUS.md).
+    # The leg is a required branch-protection check
+    # (ai/phase10/NOTES.md).
     #
-    # Deliberately NOT run here: check:security (W-2),
-    # check:links (the upstream exclusion is a POSIX-prefix match
-    # and silently stops excluding on Windows), score (the
-    # category fallback splits on '/'), check:registry and the
-    # registry diff (W-3), evals (covered on Ubuntu; the mock
-    # provider adds no Windows signal). All are covered by the
-    # Ubuntu jobs in this workflow.
+    # Deliberately NOT run here: check:security, check:links,
+    # score, check:registry and the registry diff, evals. All are
+    # covered by the Ubuntu jobs in this workflow; Windows runs
+    # the platform-sensitive surface (validate, frontmatter, the
+    # full regression suite). The Windows path bugs that once
+    # excluded these checks (W-2, POSIX-prefix matching) were
+    # fixed in Stage D.
+    #
     name: Windows (Node 24)
     runs-on: windows-latest
     timeout-minutes: 20
-    continue-on-error: true
     defaults:
       run:
         # Git Bash ships on windows-latest; bash keeps step
@@ -178,7 +166,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
-      - name: Set up Node.js 20
+      - name: Set up Node.js 24
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "24"
