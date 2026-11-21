@@ -11,7 +11,7 @@ import { appendFile, cp, mkdtemp, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { parseFrontmatter } from '../scripts/lib/frontmatter.mjs';
-import { REPO_ROOT } from './helpers.mjs';
+import { REPO_ROOT } from '../test-support/helpers.mjs';
 
 const VALIDATOR = path.join(REPO_ROOT, 'scripts', 'validate-skills.mjs');
 

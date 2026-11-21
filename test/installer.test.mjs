@@ -20,7 +20,7 @@ import {
   readJson,
   runCli,
   runCliPty,
-} from './helpers.mjs';
+} from '../test-support/helpers.mjs';
 
 const CLAUDE = ['--target', 'claude-code', '--scope', 'project'];
 

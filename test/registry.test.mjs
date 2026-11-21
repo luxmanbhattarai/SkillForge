@@ -15,7 +15,7 @@ import { createHash } from 'node:crypto';
 import os from 'node:os';
 import path from 'node:path';
 import { validateAgainstSchema } from '../scripts/lib/schema-validate.mjs';
-import { REPO_ROOT } from './helpers.mjs';
+import { REPO_ROOT } from '../test-support/helpers.mjs';
 
 const VALIDATE_REGISTRY = path.join(REPO_ROOT, 'scripts', 'validate-registry.mjs');
 const QUERY = path.join(REPO_ROOT, 'scripts', 'query-skills.mjs');

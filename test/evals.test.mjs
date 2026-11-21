@@ -21,7 +21,7 @@ import { scoreSelection } from '../evals/scorers/selection.mjs';
 import { scoreContent } from '../evals/scorers/content.mjs';
 import { scoreRefusal } from '../evals/scorers/refusal.mjs';
 import { tsStructure } from '../evals/scorers/code.mjs';
-import { REPO_ROOT } from './helpers.mjs';
+import { REPO_ROOT } from '../test-support/helpers.mjs';
 
 const FAKE_REGISTRY = {
   skills: [

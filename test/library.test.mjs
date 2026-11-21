@@ -7,7 +7,7 @@ import { readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { loadLibrary, resolveSelection, deriveDescription, toMarkdownAgent, toTomlAgent, splitList, installedFileName } from '../scripts/install/library.mjs';
 import { TARGETS } from '../scripts/install/targets.mjs';
-import { REPO_ROOT, makeFixtureLibrary, makeSandbox } from './helpers.mjs';
+import { REPO_ROOT, makeFixtureLibrary, makeSandbox } from '../test-support/helpers.mjs';
 
 // Expected counts are derived from disk, not hardcoded: the registry must
 // match the skills/agents/workflows actually present, and hardcoded counts

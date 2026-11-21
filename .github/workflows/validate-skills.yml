@@ -130,7 +130,7 @@ jobs:
     # ADVISORY, not gating (continue-on-error): the suite is not
     # yet green on Windows. Three known gaps, all outside this
     # file — see ai/remediation/stage-d/ci-validation.md:
-    #   W-1  test/helpers.mjs runCli sets HOME only; the installer
+    #   W-1  test-support/helpers.mjs runCli sets HOME only; the installer
     #        resolves home via os.homedir(), which reads
     #        USERPROFILE on Windows, so user-scope installer tests
     #        fail and write into the real runner profile.

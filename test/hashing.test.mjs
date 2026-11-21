@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { mkdir, writeFile, symlink } from 'node:fs/promises';
 import path from 'node:path';
 import { hashFile, hashTree, treeFingerprint, diffFileMaps, sha256Hex } from '../scripts/install/hashing.mjs';
-import { makeSandbox } from './helpers.mjs';
+import { makeSandbox } from '../test-support/helpers.mjs';
 
 test('hashFile is stable and prefixed', async () => {
   const { base } = await makeSandbox();
