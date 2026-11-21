@@ -12,6 +12,7 @@
 - **ID prefixes:** `A-` = new Stage A findings; `S-` = Phase 7 security findings
   carried forward; `L-` = report §18 limitations carried forward.
 - **Stage B (2026-11-20):** all 21 Stage B issues were addressed — see `ai/remediation/STAGE-B-RESULTS.md`. Each Stage B issue below carries a Stage B status line.
+- **Stage D (2026-11-20):** all 8 Stage D issues were addressed — see `ai/remediation/STAGE-D-RESULTS.md`. Each Stage D issue below carries a Stage D status line.
 
 ## Summary by severity
 
@@ -180,6 +181,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-11 — Low — Windows `--link`: no junction fallback (Stage D)
 
+- **Stage D status (2026-11-20):** **Fixed** — new `scripts/install/links.mjs`: `createLink()` retries a denied directory symlink as a junction on Windows (no privilege needed); `sameLinkTarget()` for NT-prefix/case-tolerant comparison; Windows lock hints + rm retries. 17 new installer tests (fault-injected fallback, simulated Windows paths). Real Windows execution still Blocked (no runner) — see `ai/remediation/stage-d/windows-link-analysis.md` §9 checklist. Commits `103dcc1`, `43f3c99`.
 - **Evidence:** `stageItem` (`installer.mjs:403-434`) uses symlink type `'dir'`; the
   only Windows handling is an EPERM→clear-error branch (`:420`). Node `'junction'`
   symlinks need no privilege on Windows and are not tried, so `--link` fails outright
@@ -302,6 +304,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-23 — Low — Link checker has no retry, delay, or concurrency control (Stage D/E)
 
+- **Stage D status (2026-11-20):** **Fixed** — extraction strips fenced code blocks + inline code spans (the Stage B lesson); online path retries 403/429 + network errors with exponential backoff (3 attempts) and a 200ms inter-request delay; validation rules unchanged. 14 hermetic regression tests (`test/links.test.mjs`). Offline external count 610 → 604 (6 example.com placeholders in one fenced block). Commit `0c64a2c`.
 - **Evidence:** `scripts/check-links.mjs` runs a strictly sequential HEAD burst, single
   GET fallback only on 405/403/429, no backoff, no retry on timeouts/network errors.
   This is the mechanism behind the report's transient `cursor.com` 403 and makes
@@ -342,6 +345,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-27 — Low — Vercel upstream 4 commits behind (Stage D/E)
 
+- **Stage D status (2026-11-20):** **Fixed** — re-imported verbatim to `5a37a632` (`web-design-guidelines` 1.0.0 → 1.1.0 + new `references/command.md`); baseline 259/259 byte-identical at the old pin, imported files verified byte-identical at the new pin; registry regen diff is the version bump only. Commit `0c64a2c`. (A `check:upstream` re-run to confirm 6/0/0 was Blocked by the API rate limit — see STAGE-D-RESULTS.md §8; the git-protocol hash verification stands.)
 - **Evidence:** `npm run check:upstream` + GitHub compare API: pinned `1a2c79d4…`,
   head `5a37a632…` (2026-11-20). All 4 commits are `web-design-guidelines` changes,
   including a fix to bundle guidelines instead of fetching from `main` — a genuine
@@ -360,6 +364,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-29 — Informational — Paths with spaces/unicode untested (Stage D)
 
+- **Stage D status (2026-11-20):** **Fixed** — 3 new CLI tests: >260-char `--dest`, spaced project dir + spaced `--dest`, Unicode paths; all pass. Commit `103dcc1`.
 - **Evidence:** the installer does no shelling (pure `fs` ops), so spaces/unicode
   should work, but no test exercises them. (Test-only note: the permission test builds
   a single-quoted shell command, `test/installer.test.mjs` ~:560.)
@@ -551,6 +556,7 @@ supply-chain verification reproduced (claim 15).
 
 ### L-CI — Medium — No CI workflow has run on GitHub yet (Stage D)
 
+- **Stage D status (2026-11-20):** **Open (cannot close from here)** — all 6 workflows + dependabot validated locally (123 checks, 0 fail; SHA pins re-verified via `git ls-remote`); concurrency controls added; advisory Windows leg added. No workflow has run on GitHub — remote execution stays UNVERIFIED until the first push/PR after merge. Commit `e1fc528`.
 - **Evidence:** report §18. All 6 workflows + dependabot.yml were verified locally
   only (YAML parse, SHA pins, permissions, script references). The first push/PR after
   merge is the real test. Stage D validates locally (no push permitted) and reports the
@@ -558,12 +564,14 @@ supply-chain verification reproduced (claim 15).
 
 ### L-Node — Low — Node 18/22 matrix legs unexercised locally (Stage D)
 
+- **Stage D status (2026-11-20):** **Exercised locally** — official Node 18.20.8 + 22.23.5 tarballs, clean archive copy of HEAD: `npm test` 196/196 + `npm run validate` exit 0 on both. `engines >= 18` is evidence-backed. The CI matrix legs still need their first remote run (L-CI).
 - **Evidence:** local Node is v24.22.1; `engines` claims `>= 18`; the CI matrix
   (18/20/22) exists to exercise the spread. Stage D to test locally where feasible
   (e.g. via nvm/volta if available) or record as Blocked.
 
 ### L-Scan — Low — Semgrep/Gitleaks/TruffleHog/CodeQL never ran locally (Stage D)
 
+- **Stage D status (2026-11-20):** **Partially closed** — Gitleaks 8.30.1 (5 findings, 0 real), TruffleHog 3.100.0 (0 verified), Semgrep 1.186.0 (`p/javascript`, 0 findings) all ran clean. CodeQL local run Blocked (bundle size + DB build; runs via `codeql.yml` in CI); `act` Blocked (Docker not installed).
 - **Evidence:** report §18 / security audit "Tools checked — and honestly not run"
   table: all Blocked (not installed). CodeQL runs only via the GitHub workflow.
   Stage D to run what is installable locally and report the rest as Blocked.
@@ -576,6 +584,7 @@ supply-chain verification reproduced (claim 15).
 
 ### L-Win — Low — Windows `--link` EPERM path untested (Stage D)
 
+- **Stage D status (2026-11-20):** **Partially closed** — junction fallback implemented (A-11), W-1/W-2/W-3 fixed, advisory Windows CI leg added, `.gitattributes` pins LF. Real Windows execution still Blocked (no runner); the first PR run + the fragment §9 checklist are the acceptance test. Commits `e1fc528`, `103dcc1`, `43f3c99`.
 - **Evidence:** report §18; no Windows runner available locally. The permission-error
   test skips on Windows. Stage D: static inspection + simulated tests only unless CI
   provides a Windows leg; never claim real Windows execution without it. See also A-11.
