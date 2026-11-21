@@ -136,9 +136,12 @@ function allowedRootsFor(target, scope, skillsDir) {
  * '../..') or lands on any other directory name — is rejected,
  * so the worst a crafted root can do is point at an
  * agents/workflows directory, a location the installer legitimately
- * writes to anyway.
+ * writes to anyway. When the entry kind is known, the terminal
+ * directory must match it: agents end in 'agents', workflows in
+ * 'workflows' or 'global_workflows' — an agent entry pointing at a
+ * workflows directory (or vice versa) is never legitimate.
  */
-function validateRootShape(root) {
+function validateRootShape(root, kind = null) {
   const segs = root.split(/[\\/]+/);
   let i = 0;
   while (i < segs.length && segs[i] === '..') i++;
@@ -149,13 +152,25 @@ function validateRootShape(root) {
     return `root ${JSON.stringify(root)} has an empty, '.' or '..' segment after the leading '..' segments`;
   }
   const last = down[down.length - 1];
-  if (!INSTALL_ROOT_NAMES.has(last)) {
-    return `root ${JSON.stringify(root)} does not resolve to an agents/workflows directory`;
+  const allowed =
+    kind === 'agent'
+      ? ['agents']
+      : kind === 'workflow'
+        ? ['workflows', 'global_workflows']
+        : [...INSTALL_ROOT_NAMES];
+  if (!allowed.includes(last)) {
+    const kindLabel =
+      kind === 'agent'
+        ? 'an agent directory'
+        : kind === 'workflow'
+          ? 'a workflow directory'
+          : 'an agents/workflows directory';
+    return `root ${JSON.stringify(root)} does not resolve to ${kindLabel}`;
   }
   return null;
 }
 
-function validateEntryRoot(root, { skillsDir = null, target = null, scope = null } = {}) {
+function validateEntryRoot(root, { skillsDir = null, target = null, scope = null, kind = null } = {}) {
   // A missing root means '.' — entryRoot's long-standing default.
   if (root === undefined || root === null || root === '') return null;
   if (typeof root !== 'string') return `root must be a string, got ${typeof root}`;
@@ -164,6 +179,13 @@ function validateEntryRoot(root, { skillsDir = null, target = null, scope = null
     return `root ${JSON.stringify(root)} must be relative`;
   }
   if (root === '.') return null;
+  // Skills always install into the skills dir itself (computePlanned
+  // uses locations.skillsDir for every skill), so a skill entry with
+  // any other root is never legitimate — whatever the tier-1/tier-2
+  // checks would say about the shape.
+  if (kind === 'skill') {
+    return `root ${JSON.stringify(root)} is not '.' for a skill entry (skills always install into the skills directory)`;
+  }
   if (skillsDir && target && scope) {
     const exact = allowedRootsFor(target, scope, skillsDir);
     if (exact) {
@@ -172,7 +194,7 @@ function validateEntryRoot(root, { skillsDir = null, target = null, scope = null
       return `root ${JSON.stringify(root)} is not an install location for target '${target}' (${scope})`;
     }
   }
-  return validateRootShape(root);
+  return validateRootShape(root, kind);
 }
 
 /**
@@ -180,6 +202,9 @@ function validateEntryRoot(root, { skillsDir = null, target = null, scope = null
  * entryRoot/entryDest as a defensive guard and by backup-item
  * validation, where the entry may be partial (restore builds an
  * effective entry from a backup record's root/destName fields).
+ * The entry kind (from the entry itself, or opts.kind) threads
+ * through to the root check: skill entries must have root '.',
+ * and agent/workflow roots must end in the matching directory.
  */
 export function validateEntryPaths(entry, opts = {}) {
   if (!entry || typeof entry !== 'object' || Array.isArray(entry)) return 'entry is not an object';
@@ -188,7 +213,7 @@ export function validateEntryPaths(entry, opts = {}) {
   if (entry.destName.startsWith('.')) {
     return `destName ${JSON.stringify(entry.destName)} must not start with '.'`;
   }
-  return validateEntryRoot(entry.root, opts);
+  return validateEntryRoot(entry.root, { ...opts, kind: entry.kind || opts.kind || null });
 }
 
 /**

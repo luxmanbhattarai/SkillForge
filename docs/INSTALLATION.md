@@ -245,23 +245,39 @@ The current rules:
 - **Restore is reversible.** Restoring over current content backs
   the current content up first (reason `pre-restore`), so a
   restore can always be undone by restoring the newer backup.
+  Restored content is verified against the backup's stored hash;
+  on a mismatch the restore rolls back from the pre-restore
+  backup and reports failed. If `backup.json` is corrupt or
+  missing, `restore` reconstructs the backup from its `items/`
+  directory (agents/workflows need `--target` to locate their
+  directories); a backup whose record fails validation is
+  rejected, never recovered. `restore` also creates or repairs
+  the manifest when it is missing or corrupt, so restored items
+  do not become orphans.
 - **Two-rename swap (not atomic).** Each item is staged in a
-  temporary directory next to its destination and swapped in with
-  two renames: the old content moves aside to a trash directory,
-  then the staged content moves into place. Each rename is atomic,
-  but the pair is not — a kill between the two renames leaves the
+  temporary directory next to its destination, hash-verified
+  against the library *before* the swap, and swapped in with two
+  renames: the old content moves aside to a trash directory, then
+  the staged content moves into place. Each rename is atomic, but
+  the pair is not — a kill between the two renames leaves the
   destination missing. The old content survives in the
-  `.skillforge-tmp-old-*` trash directory until the next run's
-  cleanup, and every replacement is backed up first, so the item
-  is recoverable via `restore`. If the second rename fails, the
+  `.skillforge-tmp-old-*` trash directory until you remove it (the
+  installer never deletes trash directories; `doctor` reports
+  them), and every replacement is backed up first, so the item is
+  recoverable via `restore`. If the second rename fails, the
   installer puts the old content back; if that rollback fails too,
   it reports both errors and deletes neither copy, leaving the
-  trash and staged paths in the message for manual recovery. A
-  failure mid-copy leaves no half-installed skill: the staging
-  directory is removed and the previous content (if any) is
-  untouched. Leftover staging directories from a killed run are
-  named `.skillforge-tmp-*`; the installer cleans them up on the
-  next run and `doctor` reports them.
+  trash and staged paths in the message for manual recovery. The
+  installed content is verified again after the swap; if that
+  check fails, the previous content is restored from the backup
+  (or the bad install is removed, for a fresh install) and the
+  item reports failed — unverified content never stays live with
+  stale manifest hashes. A failure mid-copy leaves no
+  half-installed skill: the staging directory is removed and the
+  previous content (if any) is untouched. Leftover staging
+  directories from a killed run are named `.skillforge-tmp-*`;
+  the installer cleans them up on the next install, update,
+  uninstall, or restore run and `doctor` reports them.
 - **Partial failure is reported, not hidden.** One bad item never
   aborts the run; the summary lists what was installed, updated,
   skipped, refused, and failed, and the exit code is non-zero
@@ -272,7 +288,11 @@ The current rules:
   records (or, with `--force`, foreign content after a backup).
   Modified content is refused without `--force`, and
   `uninstall --all` needs an interactive confirmation or
-  `--force` in non-interactive runs.
+  `--force` in non-interactive runs. Content that matches the
+  manifest is removed without a backup — it is identical to the
+  library, so reinstalling restores it — except items no longer
+  in the library, which are backed up first: the installed copy
+  may be the only one left.
 
 ### The manifest
 
@@ -292,7 +312,16 @@ manifest means "nothing installed through this tool here":
 `uninstall` say so. A corrupt manifest is reported by `doctor`
 and refused by `update` / `uninstall`; `install` quarantines the
 corrupt file (renamed with a `.corrupt-<timestamp>` suffix, never
-deleted) and writes a fresh one.
+deleted) and writes a fresh one. When a manifest is repaired,
+entries for installed items identical to the library are rebuilt
+from a disk scan, so items outside the current run do not become
+orphans; items that differ from the library are not rebuilt
+(`doctor` reports them as orphans — re-run `install` to adopt or
+resolve them), and rebuilt entries lose their original install
+dates. If the corrupt file cannot be moved aside, `install`
+refuses to overwrite it: move or delete it manually and re-run.
+The manifest is written after each successful item during a run,
+so a kill mid-run leaves the items installed so far recorded.
 
 ## Option 2 — Skills CLI
 
@@ -351,7 +380,10 @@ install script from the submodule). Update with
   changed, with the same safety rules as `install`.
 - **Installed with `--link`:** pull the latest library; the links
   pick up the changes immediately. `update` reports linked items
-  as up to date (and repairs broken links).
+  as up to date. A link that points somewhere else — a deliberate
+  repoint, e.g. at your own fork — is a conflict: `update`
+  refuses it without `--force`, and with `--force` backs the old
+  link up before repointing it.
 - **Submodule:** `git submodule update --remote`, then run
   `update` if you installed from the submodule.
 - **Skills CLI:** re-run the add command (per the Skills CLI docs).

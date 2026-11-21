@@ -5,7 +5,7 @@
 // failure, 2 usage error via UsageError). All output goes through
 // ctx.out / ctx.err so tests can capture it.
 
-import { cp, mkdir, readFile, readdir, readlink, rename, rm, symlink } from 'node:fs/promises';
+import { mkdir, readFile, readdir, readlink, rename, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { hashFile, hashTree, treeFingerprint, diffFileMaps } from './hashing.mjs';
 import {
@@ -16,14 +16,24 @@ import {
   newManifest,
   readManifest,
   sortedEntries,
-  validatePathSegment,
   writeManifest,
 } from './manifest.mjs';
-import { createBackup, listBackups, readBackup, backupsDir, InvalidBackupError } from './backups.mjs';
-import { withLock } from './lock.mjs';
+import {
+  backupItemPaths,
+  createBackup,
+  listBackups,
+  readBackup,
+  recoverBackupRecord,
+  stageBackupItem,
+  backupsDir,
+  CorruptBackupError,
+  InvalidBackupError,
+} from './backups.mjs';
+import { withLock, LOCK_NAME } from './lock.mjs';
 import { resolveSelection, splitList } from './library.mjs';
 import { splitFrontmatter, parseFrontmatter } from '../lib/frontmatter.mjs';
 import {
+  InstallerError,
   UsageError,
   allLocations,
   backupReplacements,
@@ -38,11 +48,14 @@ import {
   lstatOrNull,
   mapsEqual,
   nowIso,
+  relativeRoot,
   resolveLocations,
+  rollbackFromBackup,
   scanFiles,
   scanSkillDirs,
   stageItem,
   swapIn,
+  verifyStaged,
 } from './installer.mjs';
 
 function label(kind, name) {
@@ -52,6 +65,31 @@ function label(kind, name) {
 function hasSelectors(ctx) {
   return [ctx.skills, ctx.categories, ctx.agents, ctx.workflows].some((v) => v && v.length);
 }
+
+// Agentic-SEO warnings (findings S-08/S-09, specified by the Stage
+// B security review). The 'seo' skill is an upstream import whose
+// own docs/scripts are unsafe in two ways the installer cannot fix
+// (upstream is verbatim): its README and install.sh document a
+// curl-piped-to-shell install, and its broken_links.py disables
+// TLS verification. Detection is by the item/entry `source`
+// prefix (the upstream vendor), not by the name 'seo' alone.
+const AGENTIC_SEO_SOURCE_PREFIX = 'skills/upstream/agentic-seo/';
+
+export function isAgenticSeoSource(source) {
+  return typeof source === 'string' && source.startsWith(AGENTIC_SEO_SOURCE_PREFIX);
+}
+
+// The S-08 text quotes the upstream curl-pipe command as the thing
+// to avoid — the quote IS the warning, so the line carries the
+// scanner's line-level ignore (the same treatment as the exception
+// for docs/AGENTIC-SEO-SAFE-INSTALL.md, which quotes the same
+// command). Keep the S-08 text on ONE line: the ignore applies
+// per line, and a line break inside the quote would also trip the
+// scanner's multi-line curl-pipe pattern.
+export const AGENTIC_SEO_WARNINGS = [
+  `WARNING: the 'seo' skill (upstream: agentic-seo) documents an unsafe install method — a curl-piped-to-shell install from the main branch — in its README and install.sh. This install used SkillForge's vendored copy and is safe. Never run the upstream 'curl | bash' command. See docs/AGENTIC-SEO-SAFE-INSTALL.md (finding S-08).`, // security-scan:ignore CMD-01
+  `WARNING: the 'seo' skill's broken_links.py script disables TLS certificate verification on its link checks. A 'healthy' verdict does not prove the real host answered — treat external-link results as advisory and re-check important links with a verifying client. See docs/AGENTIC-SEO-SAFE-INSTALL.md (finding S-09).`,
+];
 
 // Mutating commands run under the install lock (lock.mjs) so two
 // concurrent runs cannot lose manifest entries or delete each
@@ -80,41 +118,99 @@ async function withInstallLock(ctx, locations, command, fn) {
 
 // Read the manifest for a mutating command. A missing manifest
 // starts fresh; a corrupt one is quarantined (renamed aside, never
-// deleted) and started fresh, with a loud warning.
+// deleted) and started fresh, with a loud warning — and entries
+// for installed items identical to the library are rebuilt from a
+// disk scan, so items outside this run do not become orphans
+// (A-09b). If the corrupt original cannot be moved aside, the run
+// fails closed (A-09a): a fresh manifest must never overwrite the
+// corrupt original in place.
 async function loadManifestForWrite(locations, ctx) {
   const { manifest, error } = await readManifest(locations.skillsDir);
   if (manifest) return { manifest, wasCorrupt: false };
+  const fresh = () =>
+    newManifest({
+      target: locations.targetDef ? locations.targetDef.id : null,
+      scope: locations.scope,
+      toolVersion: ctx.library.version,
+    });
   if (error === 'missing') {
-    return {
-      manifest: newManifest({
-        target: locations.targetDef ? locations.targetDef.id : null,
-        scope: locations.scope,
-        toolVersion: ctx.library.version,
-      }),
-      wasCorrupt: false,
-    };
+    return { manifest: fresh(), wasCorrupt: false };
   }
   const bad = manifestPath(locations.skillsDir);
   const quarantine = `${bad}.corrupt-${Date.now()}`;
   try {
     await rename(bad, quarantine);
-    ctx.err(
-      `warning: the manifest at ${bad} is ${error}; it was moved to ${quarantine} and a fresh manifest will be written. ` +
-        'Previously installed items are still on disk; re-running install adopts them.',
-    );
-  } catch {
-    ctx.err(
-      `warning: the manifest at ${bad} is ${error} and could not be moved aside; a fresh manifest will be written.`,
+  } catch (err) {
+    throw new InstallerError(
+      `the manifest at ${bad} is ${error} and could not be moved aside (${err.message}); ` +
+        'refusing to overwrite it. Move or delete it manually and re-run.',
     );
   }
-  return {
-    manifest: newManifest({
-      target: locations.targetDef ? locations.targetDef.id : null,
-      scope: locations.scope,
-      toolVersion: ctx.library.version,
-    }),
-    wasCorrupt: true,
+  const rebuilt = fresh();
+  const adopted = await rebuildEntriesFromDisk(ctx.library, locations);
+  for (const [key, entry] of adopted) rebuilt.items[key] = entry;
+  ctx.err(
+    `warning: the manifest at ${bad} is ${error}; it was moved to ${quarantine} and a fresh manifest will be written` +
+      (adopted.size
+        ? ` (rebuilt ${adopted.size} entr${adopted.size === 1 ? 'y' : 'ies'} from installed content identical to the library; items that differ from the library are not in the new manifest).`
+        : '. Previously installed items are still on disk; re-running install adopts them.'),
+  );
+  return { manifest: rebuilt, wasCorrupt: true };
+}
+
+/**
+ * Rebuild manifest entries by scanning the disk (A-09b): for every
+ * installed item identical to the library, build the entry the
+ * adopt path would build. Items that differ from the library, are
+ * not in the library, or cannot be verified are skipped, never
+ * guessed. Returns a Map of manifest key → entry.
+ */
+async function rebuildEntriesFromDisk(library, locations) {
+  const out = new Map();
+  const adopt = async (item, planned) => {
+    try {
+      if (planned.method === 'link') {
+        if (!(await linkPointsAtSource(planned))) return;
+        out.set(entryKey(item.kind, item.name), await buildEntry(planned, { files: new Map() }));
+        return;
+      }
+      const current = await hashInstalled(planned);
+      if (current && mapsEqual(current, planned.plannedFiles)) {
+        out.set(entryKey(item.kind, item.name), await buildEntry(planned, { files: current }));
+      }
+    } catch {
+      // Unverifiable (unreadable, wrong shape): skip, never guess.
+    }
   };
+  for (const s of await scanSkillDirs(locations.skillsDir)) {
+    const item = library.skills.get(s.name);
+    if (!item) continue;
+    try {
+      const planned = await computePlanned(library, item, locations, { link: s.isSymlink });
+      await adopt(item, planned);
+    } catch {
+      // No planned form (e.g. unreadable library source): skip.
+    }
+  }
+  for (const [dir, byKind] of [
+    [locations.agentsDir, library.agents],
+    [locations.workflowsDir, library.workflows],
+  ]) {
+    if (!dir) continue;
+    for (const f of await scanFiles(dir)) {
+      const name = f.name.replace(/\.(md|toml)$/, '');
+      const item = byKind.get(name);
+      if (!item) continue;
+      try {
+        const planned = await computePlanned(library, item, locations, { link: false });
+        await adopt(item, planned);
+      } catch {
+        // No location for this kind on this target, or unreadable
+        // source: skip.
+      }
+    }
+  }
+  return out;
 }
 
 // Resolve every 'conflict' action: --force/--backup overwrite (after
@@ -204,22 +300,31 @@ function printSummary(ctx, results) {
   ctx.out(parts.length ? `Summary: ${parts.join(', ')}.` : 'Summary: nothing to do.');
 }
 
+// Clean stale staging leftovers for every root of this install
+// location (A-30): skills, agents, and workflows — not just the
+// roots of items being written, and on uninstall/restore as well
+// as install/update, even when there is nothing to write. Only
+// staged leftovers are removed; trash dirs
+// (`.skillforge-tmp-old-*`) are never deleted (see
+// cleanStaleStaging). Runs only under the lock: without it,
+// another live run's staging could be deleted.
+async function cleanAllStaleStaging(ctx, locations) {
+  if (ctx.dryRun || ctx.lockHeld === false) return;
+  for (const root of [locations.skillsDir, locations.agentsDir, locations.workflowsDir]) {
+    if (!root) continue;
+    const cleaned = await cleanStaleStaging(root);
+    for (const name of cleaned) ctx.err(`note: removed leftover staging directory ${name} from an interrupted run`);
+  }
+}
+
 // Execute install/update/overwrite actions: one backup for all
 // replacements, then per-item atomic install with verification.
 // Mutates the manifest (caller writes it when dirty). Returns results.
-async function executeInstallRun(ctx, locations, plannedItems, manifest, { command }) {
+async function executeInstallRun(ctx, locations, plannedItems, manifest, { command, manifestDirty: initialDirty = false }) {
   const results = { installed: [], updated: [], already: [], skipped: [], refused: [], failed: [] };
   const toWrite = plannedItems.filter((p) => ['install', 'update', 'overwrite'].includes(p.action));
 
-  // Stale cleanup only under the lock: without it, another live
-  // run's staging could be deleted (see withInstallLock).
-  if (ctx.lockHeld !== false) {
-    const roots = [...new Set(toWrite.map((p) => p.rootDir))];
-    for (const root of roots) {
-      const cleaned = await cleanStaleStaging(root);
-      for (const name of cleaned) ctx.err(`note: removed leftover staging directory ${name} from an interrupted run`);
-    }
-  }
+  await cleanAllStaleStaging(ctx, locations);
 
   let executable = toWrite;
   const replacements = toWrite.filter((p) => p.action !== 'install');
@@ -242,27 +347,64 @@ async function executeInstallRun(ctx, locations, plannedItems, manifest, { comma
     }
   }
 
-  let manifestDirty = false;
+  // A repaired manifest (quarantined + rebuilt from disk) starts
+  // dirty: the run must write it even when every item is already
+  // installed, or the quarantine would leave no manifest at all.
+  let manifestDirty = initialDirty;
+  // Agentic-SEO warnings (S-08/S-09): emitted once per run, when
+  // the first item from that upstream vendor is installed/updated.
+  let warnedAgenticSeo = false;
+  // Persist incrementally (A-09): a kill mid-run leaves the items
+  // installed so far recorded, instead of losing the whole run.
+  // Best-effort — a failed incremental write only warns; the final
+  // write below is authoritative and still reports failures.
+  const persistManifest = async () => {
+    try {
+      await mkdir(locations.skillsDir, { recursive: true });
+      await writeManifest(locations.skillsDir, manifest);
+    } catch (err) {
+      ctx.err(`warning: could not write the manifest yet (${err.message}); it will be retried at the end of the run`);
+    }
+  };
   for (const p of executable) {
     const verb = p.action === 'install' ? 'installed' : 'updated';
     try {
       const staged = await stageItem(p);
-      await swapIn(staged, p.destAbs);
-      let files;
-      if (p.method === 'link') {
-        if (!(await linkPointsAtSource(p))) {
-          throw new InstallerError('symlink verification failed after install');
-        }
-        files = new Map();
-      } else {
-        const installed = await hashInstalled(p);
-        if (!installed || !mapsEqual(installed, p.plannedFiles)) {
-          throw new InstallerError('installed content does not match the library (copy verification failed)');
-        }
-        files = installed;
+      // Verify BEFORE the swap (A-06): a copy that differs from
+      // the library must never reach the destination.
+      const preProblem = await verifyStaged(p, staged);
+      if (preProblem) {
+        await rm(staged, { recursive: true, force: true }).catch(() => {});
+        throw new InstallerError(`staged content failed verification (${preProblem}); nothing was installed`);
       }
-      manifest.items[entryKey(p.kind, p.name)] = await buildEntry(p, { files });
+      await swapIn(staged, p.destAbs);
+      // Post-swap verification stays as a second layer; on
+      // mismatch, roll back (restore from the pre-replacement
+      // backup, or remove a fresh install) — never leave
+      // unverified content live with stale manifest hashes.
+      const postProblem = await verifyStaged(p, p.destAbs);
+      if (postProblem) {
+        let rollbackNote;
+        try {
+          rollbackNote = await rollbackFromBackup(p, backup);
+        } catch (rollbackErr) {
+          throw new InstallerError(
+            `installed content failed verification after install (${postProblem}); rollback also failed (${rollbackErr.message})` +
+              (backup ? `; restore backup ${backup.id} manually` : ''),
+          );
+        }
+        throw new InstallerError(
+          `installed content failed verification after install (${postProblem}); ${rollbackNote}`,
+        );
+      }
+      const files = p.method === 'link' ? new Map() : await hashInstalled(p);
+      manifest.items[entryKey(p.kind, p.name)] = await buildEntry(p, { files: files || new Map() });
       manifestDirty = true;
+      await persistManifest();
+      if (!warnedAgenticSeo && isAgenticSeoSource(p.item.source)) {
+        warnedAgenticSeo = true;
+        for (const w of AGENTIC_SEO_WARNINGS) ctx.err(w);
+      }
       results[p.action === 'install' ? 'installed' : 'updated'].push(label(p.kind, p.name));
       ctx.out(`${verb} ${label(p.kind, p.name)} → ${p.destAbs}${p.method === 'link' ? ' (symlink)' : ''}`);
     } catch (err) {
@@ -278,6 +420,7 @@ async function executeInstallRun(ctx, locations, plannedItems, manifest, { comma
           const files = p.method === 'link' ? new Map() : await hashInstalled(p);
           manifest.items[entryKey(p.kind, p.name)] = await buildEntry(p, { files: files || new Map() });
           manifestDirty = true;
+          await persistManifest();
           ctx.out(`already installed: ${label(p.kind, p.name)} (adopted into the manifest)`);
         } catch (err) {
           ctx.err(`warning: could not adopt ${label(p.kind, p.name)} into the manifest: ${err.message}`);
@@ -346,7 +489,25 @@ async function runInstall(ctx, locations) {
   for (const item of items) {
     plannedItems.push(await computePlanned(ctx.library, item, locations, ctx));
   }
-  const { manifest } = await loadManifestForWrite(locations, ctx);
+  // Dry runs change nothing (A-08): classify against a read-only
+  // manifest read. A corrupt manifest is reported, not quarantined
+  // — quarantining renames the file, which is a mutation.
+  // (update/uninstall/restore dry runs already read the manifest
+  // read-only; verified, not assumed.)
+  let manifest;
+  let wasCorrupt = false;
+  if (ctx.dryRun) {
+    const read = await readManifest(locations.skillsDir);
+    manifest = read.manifest;
+    if (!manifest && read.error !== 'missing') {
+      ctx.err(
+        `note: the manifest at ${manifestPath(locations.skillsDir)} is ${read.error}; ` +
+          'dry run proceeds as if no manifest existed',
+      );
+    }
+  } else {
+    ({ manifest, wasCorrupt } = await loadManifestForWrite(locations, ctx));
+  }
   for (const p of plannedItems) {
     const c = await classifyInstall(p, manifest);
     p.action = c.action;
@@ -358,7 +519,7 @@ async function runInstall(ctx, locations) {
     printPlan(ctx, plannedItems, locations);
     return 0;
   }
-  const results = await executeInstallRun(ctx, locations, plannedItems, manifest, { command: 'install' });
+  const results = await executeInstallRun(ctx, locations, plannedItems, manifest, { command: 'install', manifestDirty: wasCorrupt });
   printSummary(ctx, results);
   if (results.installed.length || results.updated.length) {
     ctx.out('Restart the agent (or reload the project) so it picks up the new skills.');
@@ -570,9 +731,23 @@ async function checkLocation(ctx, locations) {
     dirEntries = await readdir(skillsDir);
   } catch { /* ignore */ }
   for (const name of dirEntries) {
-    if (name.startsWith('.skillforge-tmp-')) {
+    if (name.startsWith('.skillforge-tmp-old-')) {
+      // Trash, not staging: it may hold the only copy of replaced
+      // content, so it is reported, never auto-deleted (A-30).
+      problems.push({ level: 'warn', message: `leftover trash directory ${name} from an interrupted install; it may hold the only copy of replaced content — check before deleting (the installer never deletes it)` });
+    } else if (name.startsWith('.skillforge-tmp-')) {
       problems.push({ level: 'warn', message: `leftover staging directory ${name} from an interrupted install; safe to delete` });
     }
+  }
+
+  // A lingering lock file: a previous run may have been killed
+  // (doctor takes no lock itself, so any lock file here is either
+  // a concurrent run's or a stale one).
+  if (dirEntries.includes(LOCK_NAME)) {
+    problems.push({
+      level: 'warn',
+      message: `installer lock file ${LOCK_NAME} is present (another run may be in progress, or a previous run was killed; mutating commands refuse to run until it is gone or stale enough to take over)`,
+    });
   }
 
   const { manifest, error } = await readManifest(skillsDir);
@@ -602,6 +777,12 @@ async function checkLocation(ctx, locations) {
       if (!st) {
         problems.push({ level: 'fail', message: `stale: ${what} is in the manifest but missing on disk (${dest})` });
         continue;
+      }
+      // Agentic-SEO warnings (S-08/S-09): an installed item from
+      // the agentic-seo upstream vendor carries the unsafe-install
+      // docs and the TLS-blind link checker.
+      if (isAgenticSeoSource(entry.source)) {
+        for (const w of AGENTIC_SEO_WARNINGS) problems.push({ level: 'warn', message: w });
       }
       if (entry.method === 'link') {
         if (!st.isSymbolicLink()) {
@@ -931,6 +1112,11 @@ async function runUninstall(ctx, locations) {
   }
 
   // Classify each target: absent | remove | modified | foreign.
+  const inLibrary = (kind, name) => {
+    const byKind =
+      kind === 'skill' ? ctx.library.skills : kind === 'agent' ? ctx.library.agents : ctx.library.workflows;
+    return byKind.has(name);
+  };
   const planned = [];
   for (const t of targets) {
     let destAbs;
@@ -958,13 +1144,23 @@ async function runUninstall(ctx, locations) {
       continue;
     }
     if (t.entry.method === 'link') {
-      planned.push({ ...t, destAbs, action: 'remove', reason: 'symlink recorded in the manifest' });
+      planned.push({ ...t, destAbs, action: 'remove', reason: 'symlink recorded in the manifest', notInLibrary: !inLibrary(t.kind, t.name) });
       continue;
     }
     const current = await hashInstalled({ kind: t.kind, name: t.name, destAbs, destName: t.entry.destName });
     const recorded = new Map(Object.entries(t.entry.files || {}));
     if (current && mapsEqual(current, recorded)) {
-      planned.push({ ...t, destAbs, action: 'remove', reason: 'matches the manifest' });
+      // An item no longer in the library is backed up before
+      // removal (A-14): the installed copy may be the only one
+      // left, and without a backup it would be gone for good.
+      const gone = !inLibrary(t.kind, t.name);
+      planned.push({
+        ...t,
+        destAbs,
+        action: 'remove',
+        reason: gone ? 'matches the manifest; no longer in the library (a backup is made first)' : 'matches the manifest',
+        notInLibrary: gone,
+      });
     } else {
       planned.push({ ...t, destAbs, action: 'modified', reason: 'installed content differs from the manifest (may contain your edits)' });
     }
@@ -1029,10 +1225,12 @@ async function runUninstall(ctx, locations) {
     return 0;
   }
 
+  await cleanAllStaleStaging(ctx, locations);
+
   const results = { removed: [], skipped: [], refused: [], failed: [], installed: [], updated: [], already: [] };
   const toRemove = planned.filter((p) => p.action === 'remove');
   const needBackup = planned.filter(
-    (p) => p.action === 'remove' && (p.reason.includes('differs') || p.reason.includes('not recorded')),
+    (p) => p.action === 'remove' && (p.reason.includes('differs') || p.reason.includes('not recorded') || p.notInLibrary),
   );
   if (needBackup.length) {
     try {
@@ -1088,20 +1286,6 @@ async function runUninstall(ctx, locations) {
 
 // ---------------------------------------------------------------- restore
 
-function backupItemPaths(record, item) {
-  // Defensive guard (readBackup already validated the record):
-  // storedAs/fileName come from backup.json, so they must be
-  // single segments before being joined under the backup dir.
-  const storedProblem = validatePathSegment(item.storedAs, 'storedAs');
-  if (storedProblem) throw new InvalidBackupError(`Backup item '${item.name}': ${storedProblem}.`);
-  const storedDir = path.join(record.dir, 'items', item.storedAs);
-  if (item.fileName) {
-    const fileProblem = validatePathSegment(item.fileName, 'fileName');
-    if (fileProblem) throw new InvalidBackupError(`Backup item '${item.name}': ${fileProblem}.`);
-  }
-  return { storedDir, storedFile: item.fileName ? path.join(storedDir, item.fileName) : storedDir };
-}
-
 async function hashBackupContent(item, paths) {
   if (item.isSymlink) {
     try {
@@ -1150,7 +1334,7 @@ async function runRestore(ctx, locations) {
     }
     for (const b of backups) {
       if (b.corrupt) {
-        ctx.out(`  ${b.id}  (corrupt backup directory — backup.json unreadable)`);
+        ctx.out(`  ${b.id}  (corrupt backup directory — backup.json unreadable; restore will attempt recovery from items/)`);
         continue;
       }
       const names = b.items.map((i) => label(i.kind, i.name)).join(', ');
@@ -1168,11 +1352,55 @@ async function runRestore(ctx, locations) {
     // Invalid input (a traversal id or a crafted backup.json) gets
     // its own message; anything else means "no such backup".
     if (err instanceof InvalidBackupError) throw new UsageError(err.message);
-    const available = backups.map((b) => b.id);
-    throw new UsageError(
-      `No backup '${id}' in ${backupsDir(locations.skillsDir)}.` +
-        (available.length ? ` Available: ${available.join(', ')}` : ' There are no backups here.'),
-    );
+    if (err instanceof CorruptBackupError) {
+      // backup.json is corrupt or missing, but the items/ content
+      // may still be intact: reconstruct the record from the
+      // items/ directory names (A-16c).
+      record = await recoverBackupRecord(locations.skillsDir, id);
+      if (!record || !record.items.length) {
+        throw new UsageError(
+          `Backup '${id}' is corrupt (${err.message}) and nothing could be recovered from its items/ directory.`,
+        );
+      }
+      // Fill in restore destinations for the recovered items:
+      // skills go to the skills dir; agents/workflows to the
+      // target's locations — unknown without --target, so those
+      // items are skipped with a warning.
+      const unplaced = [];
+      for (const item of record.items) {
+        if (item.kind === 'skill') {
+          item.root = '.';
+          item.destName = item.name;
+        } else if (item.kind === 'agent' && locations.agentsDir) {
+          item.root = relativeRoot(locations.skillsDir, locations.agentsDir);
+          item.destName = item.fileName || `${item.name}.md`;
+        } else if (item.kind === 'workflow' && locations.workflowsDir) {
+          item.root = relativeRoot(locations.skillsDir, locations.workflowsDir);
+          item.destName = item.fileName || `${item.name}.md`;
+        } else {
+          unplaced.push(item);
+        }
+      }
+      record.items = record.items.filter((i) => !unplaced.includes(i));
+      if (!record.items.length) {
+        throw new UsageError(
+          `Backup '${id}' is corrupt (${err.message}); its items could be recovered from items/ but none can be placed ` +
+            '(agents/workflows need --target to locate their directories).',
+        );
+      }
+      ctx.err(
+        `warning: backup '${id}' is corrupt (${err.message}); recovered ${record.items.length} item(s) from its items/ directory` +
+          (unplaced.length
+            ? `; skipped ${unplaced.map((i) => label(i.kind, i.name)).join(', ')} (no location known without --target).`
+            : '.'),
+      );
+    } else {
+      const available = backups.map((b) => b.id);
+      throw new UsageError(
+        `No backup '${id}' in ${backupsDir(locations.skillsDir)}.` +
+          (available.length ? ` Available: ${available.join(', ')}` : ' There are no backups here.'),
+      );
+    }
   }
 
   let items = record.items;
@@ -1208,13 +1436,13 @@ async function runRestore(ctx, locations) {
     const paths = backupItemPaths(record, item);
     const storedHash = await hashBackupContent(item, paths);
     const liveHash = await hashLiveContent(item, destAbs);
-    if (liveHash === null) planned.push({ item, entry, destAbs, paths, action: 'restore', reason: 'not present' });
-    else if (storedHash !== null && storedHash === liveHash) planned.push({ item, entry, destAbs, paths, action: 'already', reason: 'already matches the backup' });
-    else planned.push({ item, entry, destAbs, paths, action: 'replace', reason: 'current content differs from the backup' });
+    if (liveHash === null) planned.push({ item, entry, destAbs, paths, storedHash, action: 'restore', reason: 'not present' });
+    else if (storedHash !== null && storedHash === liveHash) planned.push({ item, entry, destAbs, paths, storedHash, action: 'already', reason: 'already matches the backup' });
+    else planned.push({ item, entry, destAbs, paths, storedHash, action: 'replace', reason: 'current content differs from the backup' });
   }
 
   if (ctx.dryRun) {
-    ctx.out(`Dry run — nothing will change. Backup: ${record.id} (${record.created})`);
+    ctx.out(`Dry run — nothing will change. Backup: ${record.id} (${record.created || 'date unknown'})`);
     for (const p of planned) {
       if (p.action === 'restore') ctx.out(`would restore ${label(p.item.kind, p.item.name)} → ${p.destAbs}`);
       else if (p.action === 'replace') ctx.out(`would restore ${label(p.item.kind, p.item.name)} → ${p.destAbs} (current content is backed up first)`);
@@ -1223,20 +1451,24 @@ async function runRestore(ctx, locations) {
     return 0;
   }
 
+  await cleanAllStaleStaging(ctx, locations);
+
   const results = { restored: [], already: [], skipped: [], refused: [], failed: [], installed: [], updated: [], removed: [] };
   const toReplace = planned.filter((p) => p.action === 'replace');
+  let preBackup = null;
   if (toReplace.length) {
     // Restoring over current content backs the current content up
-    // first, so a restore is always reversible.
+    // first, so a restore is always reversible — and so a failed
+    // post-swap verification can roll back to it (A-16a).
     try {
-      const pre = await createBackup(locations.skillsDir, {
+      preBackup = await createBackup(locations.skillsDir, {
         target: locations.targetDef ? locations.targetDef.id : null,
         scope: locations.scope,
         reason: 'pre-restore',
         command: 'restore',
         items: toReplace.map((p) => ({ kind: p.item.kind, name: p.item.name, destAbs: p.destAbs, entry: p.entry })),
       });
-      if (pre) ctx.out(`Current content backed up as ${pre.id} before restoring.`);
+      if (preBackup) ctx.out(`Current content backed up as ${preBackup.id} before restoring.`);
     } catch (err) {
       ctx.err(`Backup failed (${err.message}); refusing to restore over current content.`);
       for (const p of toReplace) {
@@ -1246,8 +1478,21 @@ async function runRestore(ctx, locations) {
     }
   }
 
-  const { manifest } = await readManifest(locations.skillsDir);
+  // Create/repair the manifest (A-16b): restored items must not
+  // become orphans. A quarantined manifest must be replaced even
+  // if the loop below adds nothing, so a repaired manifest starts
+  // dirty. If the manifest cannot be repaired (quarantine failed),
+  // restore the content anyway and leave the items unrecorded —
+  // doctor reports them as orphans.
+  let manifest = null;
   let manifestDirty = false;
+  try {
+    const loaded = await loadManifestForWrite(locations, ctx);
+    manifest = loaded.manifest;
+    manifestDirty = loaded.wasCorrupt;
+  } catch (err) {
+    ctx.err(`warning: could not repair the manifest (${err.message}); restored items will not be recorded in it.`);
+  }
   for (const p of planned) {
     if (p.action === 'already') {
       results.already.push(label(p.item.kind, p.item.name));
@@ -1261,31 +1506,71 @@ async function runRestore(ctx, locations) {
         path.dirname(p.destAbs),
         `.skillforge-tmp-restore-${p.entry.destName}-${process.pid}-${Math.random().toString(36).slice(2, 8)}`,
       );
-      try {
-        if (p.item.isSymlink) {
-          await symlink(await readlink(p.paths.storedDir), staged);
-        } else if (p.item.isDirectory) {
-          await cp(p.paths.storedDir, staged, { recursive: true });
-        } else {
-          await cp(p.paths.storedFile, staged);
-        }
-      } catch (err) {
-        await rm(staged, { recursive: true, force: true }).catch(() => {});
-        throw err;
-      }
+      await stageBackupItem(record, p.item, staged);
       await swapIn(staged, p.destAbs);
-      // Refresh the manifest entry from the backup's record.
-      if (manifest && p.item.entry) {
-        const entry = { ...p.item.entry, updated: nowIso() };
-        const restored = await hashInstalled({
-          kind: p.item.kind,
-          name: p.item.name,
-          destAbs: p.destAbs,
-          destName: p.entry.destName,
-        });
-        if (restored) entry.files = Object.fromEntries(restored);
-        manifest.items[entryKey(p.item.kind, p.item.name)] = entry;
-        manifestDirty = true;
+      // Post-swap verification (A-16a): the restored content must
+      // match the backup's stored hash. On mismatch, roll back
+      // from the pre-restore backup (or remove a fresh restore)
+      // and report failed — never leave bad content live.
+      const liveHash = await hashLiveContent(p.item, p.destAbs);
+      if (p.storedHash !== null && liveHash !== p.storedHash) {
+        let rollbackNote;
+        try {
+          rollbackNote = await rollbackFromBackup(
+            { kind: p.item.kind, name: p.item.name, destAbs: p.destAbs },
+            preBackup,
+          );
+        } catch (rollbackErr) {
+          throw new InstallerError(
+            `restored content does not match the backup (verification failed); rollback also failed (${rollbackErr.message})` +
+              (preBackup ? `; restore backup ${preBackup.id} manually` : ''),
+          );
+        }
+        throw new InstallerError(
+          `restored content does not match the backup (verification failed); ${rollbackNote}`,
+        );
+      }
+      // Refresh the manifest entry from the backup's record, or
+      // build one from the library when the backup has none
+      // (e.g. a recovered backup).
+      if (manifest) {
+        if (p.item.entry) {
+          const entry = { ...p.item.entry, updated: nowIso() };
+          const restored = await hashInstalled({
+            kind: p.item.kind,
+            name: p.item.name,
+            destAbs: p.destAbs,
+            destName: p.entry.destName,
+          });
+          if (restored) entry.files = Object.fromEntries(restored);
+          manifest.items[entryKey(p.item.kind, p.item.name)] = entry;
+          manifestDirty = true;
+        } else {
+          const byKind =
+            p.item.kind === 'skill' ? ctx.library.skills : p.item.kind === 'agent' ? ctx.library.agents : ctx.library.workflows;
+          const libItem = byKind.get(p.item.name);
+          if (!libItem) {
+            ctx.err(
+              `warning: ${label(p.item.kind, p.item.name)} is not in the library and its backup has no manifest entry; ` +
+                'it is restored but not recorded in the manifest',
+            );
+          } else {
+            try {
+              const plannedEntry = await computePlannedFromEntry(ctx.library, libItem, p.entry, locations.skillsDir);
+              if (p.item.isSymlink) plannedEntry.method = 'link';
+              const restored = plannedEntry.method === 'link' ? new Map() : await hashInstalled(plannedEntry);
+              manifest.items[entryKey(p.item.kind, p.item.name)] = await buildEntry(plannedEntry, {
+                files: restored || new Map(),
+              });
+              manifestDirty = true;
+            } catch (entryErr) {
+              ctx.err(
+                `warning: could not record ${label(p.item.kind, p.item.name)} in the manifest (${entryErr.message}); ` +
+                  'it is restored but unrecorded',
+              );
+            }
+          }
+        }
       }
       results.restored.push(label(p.item.kind, p.item.name));
       ctx.out(`restored ${label(p.item.kind, p.item.name)} → ${p.destAbs}`);

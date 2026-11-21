@@ -27,7 +27,7 @@ import path from 'node:path';
 import { resolveTarget } from './targets.mjs';
 import { hashFile, hashTree, treeFingerprint, sha256Hex, hashPrefix } from './hashing.mjs';
 import { entryKey, entryRoot } from './manifest.mjs';
-import { createBackup } from './backups.mjs';
+import { createBackup, stageBackupItem } from './backups.mjs';
 import { installedFileName, renderInstallable, toMarkdownAgent, toTomlAgent } from './library.mjs';
 
 export class UsageError extends Error {}
@@ -341,7 +341,13 @@ export async function classifyUpdate(planned, entry) {
     if (st.isSymbolicLink() && (await linkPointsAtSource(planned))) {
       return { action: 'already', reason: 'linked; links track the library' };
     }
-    if (st.isSymbolicLink()) return { action: 'install', reason: 'link is broken or points elsewhere' };
+    if (st.isSymbolicLink()) {
+      // A diverged link is a conflict, matching classifyInstall:
+      // the user may have deliberately repointed it (e.g. at their
+      // own fork), and silently repointing it would destroy that
+      // choice. --force repoints it after backing the old link up.
+      return { action: 'conflict', reason: 'a symlink already exists here pointing somewhere else' };
+    }
     return { action: 'conflict', reason: 'a copied file or directory replaced the link' };
   }
   if (st.isSymbolicLink()) {
@@ -361,11 +367,16 @@ export async function classifyUpdate(planned, entry) {
 // ---------------------------------------------------------------- atomic writes
 
 /**
- * Remove leftover staging/trash dirs from interrupted runs.
+ * Remove leftover STAGED dirs from interrupted runs.
  * Callers hold the install lock (see lock.mjs), so no other live
  * run has staging here: anything matching the prefix belongs to a
- * dead or interrupted run and is safe to remove. Runs that could
- * not acquire the lock skip this cleanup (see commands.mjs).
+ * dead or interrupted run. Trash dirs (`.skillforge-tmp-old-*`)
+ * are NEVER removed (A-30): after a kill between the two renames
+ * of swapIn, the trash dir may hold the ONLY copy of the old
+ * content — it survives until the user removes it (doctor reports
+ * it). Only staged leftovers are deleted, and those are
+ * reproducible from the library. Runs that could not acquire the
+ * lock skip this cleanup (see commands.mjs).
  */
 export async function cleanStaleStaging(dir) {
   let entries;
@@ -378,6 +389,7 @@ export async function cleanStaleStaging(dir) {
   const removed = [];
   for (const entry of entries) {
     if (!entry.name.startsWith(STALE_PREFIX)) continue;
+    if (entry.name.startsWith(`${STALE_PREFIX}old-`)) continue; // trash: never auto-deleted
     await rm(path.join(dir, entry.name), { recursive: true, force: true });
     removed.push(entry.name);
   }
@@ -428,6 +440,84 @@ export async function swapIn(stagedAbs, destAbs, fsOps = { rename, rm }) {
     throw err;
   }
   await fsOps.rm(trash, { recursive: true, force: true }).catch(() => {});
+}
+
+/**
+ * Verify staged (or installed) content against what was planned
+ * (A-06). Called BEFORE the swap, so a copy that differs from the
+ * library never reaches the destination, and again after the swap
+ * as a second layer. For link mode the symlink must point at the
+ * library source; for copies the staged tree/file hashes must
+ * match plannedFiles. `planned` needs { kind, name, destName,
+ * method, sourceAbs, plannedFiles }. Returns null when the
+ * content matches, else a human-readable problem. Exported so
+ * tests can check it against crafted staged directories.
+ */
+export async function verifyStaged(planned, absPath) {
+  if (planned.method === 'link') {
+    let target;
+    try {
+      target = await readlink(absPath);
+    } catch (err) {
+      return `expected a symlink at ${absPath} (${err.message})`;
+    }
+    if (path.resolve(path.dirname(absPath), target) !== planned.sourceAbs) {
+      return `symlink at ${absPath} points at ${target}, not the library source`;
+    }
+    return null;
+  }
+  if (planned.kind === 'skill') {
+    let tree;
+    try {
+      tree = await hashTree(absPath);
+    } catch (err) {
+      return `cannot hash staged content at ${absPath} (${err.message})`;
+    }
+    const staged = new Map([...tree.entries()].map(([p, h]) => [`${planned.name}/${p}`, h]));
+    if (!mapsEqual(staged, planned.plannedFiles || new Map())) {
+      return 'staged content does not match the library';
+    }
+    return null;
+  }
+  let hash;
+  try {
+    hash = await hashFile(absPath);
+  } catch (err) {
+    return `cannot hash staged file at ${absPath} (${err.message})`;
+  }
+  if (hash !== (planned.plannedFiles && planned.plannedFiles.get(planned.destName))) {
+    return 'staged content does not match the library';
+  }
+  return null;
+}
+
+/**
+ * Roll back a failed install/update/restore (A-06, A-16a): when a
+ * post-swap verification fails, the bad content must not stay live
+ * with stale manifest hashes. When the run's pre-replacement
+ * backup holds this item, its content is staged and swapped back
+ * in; otherwise (a fresh install, or a restore of a missing item)
+ * the bad install is removed. Returns a note describing what
+ * happened. Throws when the rollback itself fails — the caller
+ * reports both errors and the backup id for manual recovery.
+ * `item` needs { kind, name, destAbs }; `backupRecord` is a
+ * createBackup record (or null).
+ */
+export async function rollbackFromBackup(item, backupRecord) {
+  const backedUp = backupRecord
+    ? backupRecord.items.find((i) => i.kind === item.kind && i.name === item.name)
+    : null;
+  if (!backedUp) {
+    await rm(item.destAbs, { recursive: true, force: true });
+    return 'the bad install was removed (there was no previous content to restore)';
+  }
+  const staged = path.join(
+    path.dirname(item.destAbs),
+    `${STALE_PREFIX}rollback-${path.basename(item.destAbs)}-${process.pid}-${rand()}`,
+  );
+  await stageBackupItem(backupRecord, backedUp, staged);
+  await swapIn(staged, item.destAbs);
+  return 'the previous content was restored from the backup';
 }
 
 /** Stage an item's content next to its destination; returns the staged path. */

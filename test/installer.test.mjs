@@ -6,7 +6,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFile, spawnSync } from 'node:child_process';
-import { access, appendFile, chmod, cp, lstat, mkdir, readFile, readlink, rename, rm, utimes, writeFile } from 'node:fs/promises';
+import { access, appendFile, chmod, cp, lstat, mkdir, readFile, readlink, rename, rm, symlink, utimes, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import {
   INSTALLER,
@@ -995,4 +995,562 @@ test('A-05: swapIn with a failed rollback reports both errors and deletes neithe
   assert.ok(err.message.includes(stagedAbs), 'error names the staged path');
   assert.equal(await readFile(path.join(stagedAbs, 'new.txt'), 'utf8'), 'NEW\n');
   assert.equal(await exists(destAbs), false);
+});
+
+// ---------------------------------------------------------------- A-02/A-03 hardening follow-ups
+
+test("A-02 follow-up: a skill entry with a non-'.' root is corrupt", async () => {
+  const { base, home, proj } = await makeSandbox();
+  const { env, manifestFile } = await installFixtureSkill(base, home, proj);
+  // These roots are shape-valid for agents/workflows — but skills
+  // always install into the skills dir itself, so none of them is
+  // ever legitimate for a skill entry.
+  for (const root of ['../agents', '../workflows', '../../.codex/agents']) {
+    const manifest = await readJson(manifestFile);
+    manifest.items['skill:fixture-one'].root = root;
+    await writeFile(manifestFile, JSON.stringify(manifest, null, 2));
+    const update = await runCli(['update', '--dest', 'out'], { home, proj, env });
+    assert.equal(update.code, 1, 'root=' + root);
+    assert.match(update.stderr, /corrupt: invalid manifest entry/, 'root=' + root);
+    assert.match(update.stderr, /not '.' for a skill entry/, 'root=' + root);
+  }
+});
+
+test('A-02 follow-up: agent/workflow roots must end in the matching directory (tier-2)', async () => {
+  const { home, proj } = await makeSandbox();
+  // Agent installed with --dest + --target: root '../.claude/agents'
+  // (tier-2 shape — the skills dir is not the target's own path).
+  const a = await runCli(['install', '--target', 'claude-code', '--scope', 'project', '--dest', 'custom-skills', '--agent', 'seo-specialist'], { home, proj });
+  assert.equal(a.code, 0, a.stderr);
+  const manifestFile = path.join(proj, 'custom-skills', '.skillforge-manifest.json');
+  const manifest = await readJson(manifestFile);
+  assert.equal(manifest.items['agent:seo-specialist'].root, '../.claude/agents');
+  // A matching root validates (update is a no-op).
+  const ok = await runCli(['update', '--dest', 'custom-skills'], { home, proj });
+  assert.equal(ok.code, 0, ok.stderr);
+  // An agent entry pointing at a workflows directory does not.
+  manifest.items['agent:seo-specialist'].root = '../.claude/workflows';
+  await writeFile(manifestFile, JSON.stringify(manifest, null, 2));
+  const bad = await runCli(['update', '--dest', 'custom-skills'], { home, proj });
+  assert.equal(bad.code, 1);
+  assert.match(bad.stderr, /corrupt: invalid manifest entry/);
+  assert.match(bad.stderr, /does not resolve to an agent directory/);
+
+  // Workflow installed with --dest + --target: root '../.agents/workflows'.
+  const w = await runCli(['install', '--target', 'antigravity', '--scope', 'project', '--dest', 'custom-skills-2', '--workflow', 'seo-audit'], { home, proj });
+  assert.equal(w.code, 0, w.stderr);
+  const manifestFile2 = path.join(proj, 'custom-skills-2', '.skillforge-manifest.json');
+  const manifest2 = await readJson(manifestFile2);
+  assert.equal(manifest2.items['workflow:seo-audit'].root, '../.agents/workflows');
+  manifest2.items['workflow:seo-audit'].root = '../.agents/agents';
+  await writeFile(manifestFile2, JSON.stringify(manifest2, null, 2));
+  const bad2 = await runCli(['update', '--dest', 'custom-skills-2'], { home, proj });
+  assert.equal(bad2.code, 1);
+  assert.match(bad2.stderr, /corrupt: invalid manifest entry/);
+  assert.match(bad2.stderr, /does not resolve to a workflow directory/);
+});
+
+test('A-03 follow-up: backup record with a mismatched embedded entry or destName is rejected', async () => {
+  const { home, proj } = await makeSandbox();
+  const skillsDir = path.join(proj, 'out');
+  const backupsBase = path.join(proj, '.skillforge-backups');
+  await mkdir(skillsDir, { recursive: true });
+
+  const baseItem = {
+    kind: 'skill', name: 'victim', storedAs: '0-skill-victim',
+    isSymlink: false, isDirectory: true, fileName: null,
+    root: '.', destName: 'victim',
+    entry: { kind: 'skill', name: 'victim', root: '.', destName: 'victim', method: 'copy' },
+  };
+  const cases = [
+    { name: 'embedded entry for a different item', patch: { entry: { kind: 'skill', name: 'other', root: '.', destName: 'other', method: 'copy' } } },
+    { name: 'embedded entry kind mismatch', patch: { entry: { kind: 'agent', name: 'victim', root: '.', destName: 'victim.md', method: 'copy' } } },
+    { name: 'destName does not match the item name (no embedded entry)', patch: { destName: 'other', entry: null } },
+    { name: 'skill item with an agents root', patch: { root: '../agents', entry: { kind: 'skill', name: 'victim', root: '../agents', destName: 'victim', method: 'copy' } } },
+    {
+      name: 'agent item with a skill-style destName',
+      patch: {
+        kind: 'agent', storedAs: '0-agent-victim', isDirectory: false, fileName: 'victim.md',
+        destName: 'victim',
+        entry: { kind: 'agent', name: 'victim', root: '.', destName: 'victim', method: 'copy' },
+      },
+    },
+  ];
+  for (let i = 0; i < cases.length; i++) {
+    const c = cases[i];
+    const id = `mismatch-${i}`;
+    const item = { ...baseItem, ...c.patch };
+    const dir = path.join(backupsBase, id, 'items', item.storedAs);
+    await mkdir(dir, { recursive: true });
+    await writeFile(path.join(dir, item.fileName || 'SKILL.md'), '# victim\n');
+    const record = {
+      id, created: '2026-01-01T00:00:00.000Z', tool: 'skillforge-installer',
+      target: null, scope: 'project', reason: 'test', command: 'install',
+      items: [item],
+    };
+    await writeFile(path.join(backupsBase, id, 'backup.json'), JSON.stringify(record, null, 2));
+    const r = await runCli(['restore', id, '--dest', 'out'], { home, proj });
+    assert.equal(r.code, 2, `${c.name}: ${r.stdout}${r.stderr}`);
+    assert.match(r.stderr, /is invalid: backup item/, `${c.name}: ${r.stderr}`);
+  }
+});
+
+// ---------------------------------------------------------------- A-06: pre-swap verification + rollback
+
+test('A-06: verifyStaged accepts matching content and rejects tampered, missing, or extra content (unit)', async () => {
+  const { verifyStaged } = await import('../scripts/install/installer.mjs');
+  const { hashFile, hashTree } = await import('../scripts/install/hashing.mjs');
+  const { base } = await makeSandbox();
+  const expectProblem = async (planned, absPath) => {
+    const problem = await verifyStaged(planned, absPath);
+    assert.ok(problem, `expected a verification problem for ${absPath}`);
+    assert.match(problem, /does not match the library|points at .* not the library source|expected a symlink/);
+  };
+
+  // Skill (copy mode): the staged tree must match plannedFiles exactly.
+  const src = path.join(base, 'src');
+  await mkdir(path.join(src, 'references'), { recursive: true });
+  await writeFile(path.join(src, 'SKILL.md'), '# Skill\n');
+  await writeFile(path.join(src, 'references', 'a.md'), 'A\n');
+  const tree = await hashTree(src);
+  const plannedFiles = new Map([...tree.entries()].map(([p, h]) => [`myskill/${p}`, h]));
+  const planned = { kind: 'skill', name: 'myskill', destName: 'myskill', method: 'copy', sourceAbs: src, plannedFiles };
+  const staged = path.join(base, 'staged');
+  await cp(src, staged, { recursive: true });
+  assert.equal(await verifyStaged(planned, staged), null);
+  await writeFile(path.join(staged, 'SKILL.md'), '# Tampered\n');
+  await expectProblem(planned, staged);
+  await writeFile(path.join(staged, 'SKILL.md'), '# Skill\n');
+  await rm(path.join(staged, 'references', 'a.md'));
+  await expectProblem(planned, staged);
+  await writeFile(path.join(staged, 'references', 'a.md'), 'A\n');
+  await writeFile(path.join(staged, 'extra.txt'), 'extra\n');
+  await expectProblem(planned, staged);
+
+  // Agent (single file): the staged file hash must match.
+  const rendered = path.join(base, 'rendered.md');
+  await writeFile(rendered, '# Agent\n');
+  const agentPlanned = {
+    kind: 'agent', name: 'myagent', destName: 'myagent.md', method: 'copy',
+    sourceAbs: rendered,
+    plannedFiles: new Map([['myagent.md', await hashFile(rendered)]]),
+  };
+  const stagedAgent = path.join(base, 'staged-agent.md');
+  await writeFile(stagedAgent, '# Agent\n');
+  assert.equal(await verifyStaged(agentPlanned, stagedAgent), null);
+  await writeFile(stagedAgent, '# Different\n');
+  await expectProblem(agentPlanned, stagedAgent);
+
+  // Link mode: the staged symlink must point at the library source.
+  const linkPlanned = { kind: 'skill', name: 'myskill', destName: 'myskill', method: 'link', sourceAbs: src, plannedFiles: null };
+  const stagedLink = path.join(base, 'staged-link');
+  await symlink(src, stagedLink, 'dir');
+  assert.equal(await verifyStaged(linkPlanned, stagedLink), null);
+  await rm(stagedLink);
+  await symlink(path.join(base, 'elsewhere'), stagedLink, 'dir');
+  await expectProblem(linkPlanned, stagedLink);
+  await rm(stagedLink);
+  await writeFile(stagedLink, 'not a link');
+  await expectProblem(linkPlanned, stagedLink);
+});
+
+test('A-06/A-16a: rollbackFromBackup restores from the backup, or removes a fresh bad install (unit)', async () => {
+  const { rollbackFromBackup } = await import('../scripts/install/installer.mjs');
+  const { createBackup } = await import('../scripts/install/backups.mjs');
+  const { base } = await makeSandbox();
+  const skillsDir = path.join(base, 'skills');
+  const itemDir = path.join(skillsDir, 'myitem');
+  await mkdir(itemDir, { recursive: true });
+  await writeFile(path.join(itemDir, 'SKILL.md'), 'OLD\n');
+  const backup = await createBackup(skillsDir, {
+    target: null, scope: 'project', reason: 'test', command: 'test',
+    items: [{ kind: 'skill', name: 'myitem', destAbs: itemDir, entry: null }],
+  });
+  assert.ok(backup);
+
+  // Bad content replaced the good: rollback restores the backup.
+  await rm(itemDir, { recursive: true });
+  await mkdir(itemDir, { recursive: true });
+  await writeFile(path.join(itemDir, 'SKILL.md'), 'BAD\n');
+  const note = await rollbackFromBackup({ kind: 'skill', name: 'myitem', destAbs: itemDir }, backup);
+  assert.match(note, /restored from the backup/);
+  assert.equal(await readFile(path.join(itemDir, 'SKILL.md'), 'utf8'), 'OLD\n');
+
+  // No backup (a fresh install): rollback removes the bad install.
+  await writeFile(path.join(itemDir, 'SKILL.md'), 'BAD2\n');
+  const note2 = await rollbackFromBackup({ kind: 'skill', name: 'myitem', destAbs: itemDir }, null);
+  assert.match(note2, /removed/);
+  assert.equal(await exists(itemDir), false);
+});
+
+// ---------------------------------------------------------------- A-07: diverged link update
+
+test('A-07: update refuses a diverged link without --force; --force backs up and repoints', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  const dest = ['--dest', 'out'];
+  await runCli(['install', ...dest, '--skill', 'fixture-one', '--link'], { home, proj, env });
+  const linkPath = path.join(proj, 'out', 'fixture-one');
+  assert.equal(await readlink(linkPath), path.join(fixture.root, 'skills', 'alpha', 'fixture-one'));
+
+  // The user deliberately repoints the link at their own fork.
+  const fork = path.join(base, 'my-fork');
+  await mkdir(fork, { recursive: true });
+  await writeFile(path.join(fork, 'SKILL.md'), '# My fork\n');
+  await rm(linkPath);
+  await symlink(fork, linkPath, 'dir');
+
+  const refused = await runCli(['update', ...dest], { home, proj, env });
+  assert.equal(refused.code, 1);
+  assert.match(refused.stderr, /refused: fixture-one/);
+  assert.match(refused.stderr, /symlink already exists here pointing somewhere else/);
+  assert.equal(await readlink(linkPath), fork);
+
+  const forced = await runCli(['update', ...dest, '--force'], { home, proj, env });
+  assert.equal(forced.code, 0, forced.stderr);
+  assert.match(forced.stdout, /Backup created: (\S+)/);
+  const backupId = forced.stdout.match(/Backup created: (\S+)/)[1];
+  assert.equal(await readlink(linkPath), path.join(fixture.root, 'skills', 'alpha', 'fixture-one'));
+  // The old link was backed up (as a link to the fork), not destroyed.
+  const backupDir = path.join(proj, '.skillforge-backups', backupId, 'items', '0-skill-fixture-one');
+  assert.equal((await lstat(backupDir)).isSymbolicLink(), true);
+  assert.equal(await readlink(backupDir), fork);
+});
+
+// ---------------------------------------------------------------- A-08: dry-run purity
+
+test('A-08: dry-run with a corrupt manifest changes nothing', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const { env, manifestFile } = await installFixtureSkill(base, home, proj);
+  const skillsDir = path.join(proj, 'out');
+  const corrupt = '{ this is not json';
+  await writeFile(manifestFile, corrupt);
+  const namesBefore = await listNames(skillsDir);
+
+  const install = await runCli(['install', '--dest', 'out', '--skill', 'fixture-one', '--dry-run'], { home, proj, env });
+  assert.equal(install.code, 0, install.stderr);
+  assert.match(install.stderr, /manifest.*corrupt/);
+  assert.equal(await readFile(manifestFile, 'utf8'), corrupt);
+  assert.deepEqual(await listNames(skillsDir), namesBefore);
+
+  // update refuses a corrupt manifest, but changes nothing.
+  const update = await runCli(['update', '--dest', 'out', '--dry-run'], { home, proj, env });
+  assert.equal(update.code, 1);
+  assert.equal(await readFile(manifestFile, 'utf8'), corrupt);
+
+  const uninstall = await runCli(['uninstall', '--dest', 'out', '--skill', 'fixture-one', '--force', '--dry-run'], { home, proj, env });
+  assert.equal(uninstall.code, 0, uninstall.stderr);
+  assert.equal(await readFile(manifestFile, 'utf8'), corrupt);
+  assert.deepEqual(await listNames(skillsDir), namesBefore);
+  // No quarantine file was created by any of the dry runs.
+  assert.equal((await listNames(skillsDir)).filter((n) => n.startsWith('.skillforge-manifest.json.corrupt-')).length, 0);
+});
+
+// ---------------------------------------------------------------- A-09: manifest repair
+
+test('A-09a: quarantine failure fails closed — the corrupt manifest is never overwritten', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const { env, manifestFile } = await installFixtureSkill(base, home, proj);
+  // Pin Date.now in the child CLI so the quarantine name is
+  // deterministic, then block it with a non-empty directory: the
+  // quarantine rename fails and the run must refuse to overwrite
+  // the corrupt original.
+  const pinDate = path.join(base, 'pin-date.mjs');
+  await writeFile(pinDate, 'Date.now = () => 1780000000000;\n');
+  const blocked = path.join(proj, 'out', '.skillforge-manifest.json.corrupt-1780000000000');
+  await mkdir(blocked, { recursive: true });
+  await writeFile(path.join(blocked, 'keep.txt'), 'KEEP\n');
+  const corrupt = '{ this is not json';
+  await writeFile(manifestFile, corrupt);
+  const r = await runCli(['install', '--dest', 'out', '--skill', 'fixture-one'], {
+    home,
+    proj,
+    env: { ...env, NODE_OPTIONS: `--import ${pinDate}` },
+  });
+  assert.equal(r.code, 1, r.stdout + r.stderr);
+  assert.match(r.stderr, /could not be moved aside/);
+  assert.match(r.stderr, /refusing to overwrite it/);
+  assert.equal(await readFile(manifestFile, 'utf8'), corrupt);
+  assert.equal(await readFile(path.join(blocked, 'keep.txt'), 'utf8'), 'KEEP\n');
+});
+
+test('A-09b: repair rebuilds entries for installed items not in the run', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  const dest = ['--dest', 'out'];
+  const installed = await runCli(['install', ...dest, '--skill', 'fixture-one,fixture-two'], { home, proj, env });
+  assert.equal(installed.code, 0, installed.stderr);
+  const manifestFile = path.join(proj, 'out', '.skillforge-manifest.json');
+  await writeFile(manifestFile, '{ this is not json');
+  // Only fixture-one is in this run; fixture-two must be rebuilt
+  // from the disk scan, not orphaned.
+  const r = await runCli(['install', ...dest, '--skill', 'fixture-one'], { home, proj, env });
+  assert.equal(r.code, 0, r.stderr);
+  assert.match(r.stderr, /rebuilt 2 entries/);
+  const manifest = await readJson(manifestFile);
+  assert.ok(manifest.items['skill:fixture-one']);
+  assert.ok(manifest.items['skill:fixture-two']);
+  assert.ok(manifest.items['skill:fixture-two'].files['fixture-two/SKILL.md'].startsWith('sha256:'));
+  // And fixture-two is still a healthy install, not an orphan.
+  const doctor = await runCli(['doctor', '--dest', 'out'], { home, proj, env });
+  assert.equal(doctor.code, 0, doctor.stdout);
+  assert.doesNotMatch(doctor.stdout, /orphan/);
+});
+
+test('A-09b: repair does not rebuild modified items', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  const dest = ['--dest', 'out'];
+  await runCli(['install', ...dest, '--skill', 'fixture-one,fixture-two'], { home, proj, env });
+  await appendFile(path.join(proj, 'out', 'fixture-two', 'SKILL.md'), '\nMY EDIT\n');
+  const manifestFile = path.join(proj, 'out', '.skillforge-manifest.json');
+  await writeFile(manifestFile, '{ this is not json');
+  const r = await runCli(['install', ...dest, '--skill', 'fixture-one'], { home, proj, env });
+  assert.equal(r.code, 0, r.stderr);
+  const manifest = await readJson(manifestFile);
+  assert.ok(manifest.items['skill:fixture-one']);
+  assert.equal(manifest.items['skill:fixture-two'], undefined);
+  // The modified content is still on disk, reported as an orphan.
+  assert.match(await readFile(path.join(proj, 'out', 'fixture-two', 'SKILL.md'), 'utf8'), /MY EDIT/);
+  const doctor = await runCli(['doctor', '--dest', 'out'], { home, proj, env });
+  assert.match(doctor.stdout, /orphan skill directory fixture-two/);
+});
+
+// ---------------------------------------------------------------- A-14: uninstall backup
+
+test('A-14: uninstall backs up an item no longer in the library', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  const dest = ['--dest', 'out'];
+  await runCli(['install', ...dest, '--skill', 'fixture-one'], { home, proj, env });
+  // Remove fixture-one from the library: the installed copy is now
+  // the only one left.
+  const registryFile = path.join(fixture.root, 'registry', 'skills.json');
+  const registry = await readJson(registryFile);
+  registry.skills = registry.skills.filter((s) => s.name !== 'fixture-one');
+  registry.total_skills = registry.skills.length;
+  await writeFile(registryFile, JSON.stringify(registry, null, 2));
+  await rm(path.join(fixture.root, 'skills', 'alpha', 'fixture-one'), { recursive: true });
+
+  const r = await runCli(['uninstall', ...dest, '--skill', 'fixture-one'], { home, proj, env });
+  assert.equal(r.code, 0, r.stderr);
+  assert.match(r.stdout, /Backup created: (\S+)/);
+  assert.match(r.stdout, /removed fixture-one/);
+  assert.equal(await exists(path.join(proj, 'out', 'fixture-one')), false);
+  const backupId = r.stdout.match(/Backup created: (\S+)/)[1];
+  const backup = await readJson(path.join(proj, '.skillforge-backups', backupId, 'backup.json'));
+  assert.equal(backup.items[0].name, 'fixture-one');
+  assert.match(
+    await readFile(path.join(proj, '.skillforge-backups', backupId, 'items', '0-skill-fixture-one', 'SKILL.md'), 'utf8'),
+    /Version one body/,
+  );
+});
+
+// ---------------------------------------------------------------- A-16: restore gaps
+
+test('A-16b: restore creates the manifest when it is missing', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  const dest = ['--dest', 'out'];
+  await runCli(['install', ...dest, '--skill', 'fixture-one'], { home, proj, env });
+  await appendFile(path.join(proj, 'out', 'fixture-one', 'SKILL.md'), '\nMY EDIT\n');
+  const forced = await runCli(['install', ...dest, '--skill', 'fixture-one', '--force'], { home, proj, env });
+  assert.equal(forced.code, 0, forced.stderr);
+  const backupId = forced.stdout.match(/Backup created: (\S+)/)[1];
+  // The manifest is gone entirely (deleted outside the installer).
+  await rm(path.join(proj, 'out', '.skillforge-manifest.json'));
+  const restored = await runCli(['restore', backupId, ...dest], { home, proj, env });
+  assert.equal(restored.code, 0, restored.stderr);
+  assert.match(restored.stdout, /restored fixture-one/);
+  assert.match(await readFile(path.join(proj, 'out', 'fixture-one', 'SKILL.md'), 'utf8'), /MY EDIT/);
+  // The manifest was recreated with the restored item's entry.
+  const manifest = await readJson(path.join(proj, 'out', '.skillforge-manifest.json'));
+  assert.ok(manifest.items['skill:fixture-one']);
+  const doctor = await runCli(['doctor', '--dest', 'out'], { home, proj, env });
+  assert.doesNotMatch(doctor.stdout, /orphan/);
+});
+
+test('A-16b: restore repairs a corrupt manifest', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  const dest = ['--dest', 'out'];
+  await runCli(['install', ...dest, '--skill', 'fixture-one'], { home, proj, env });
+  await appendFile(path.join(proj, 'out', 'fixture-one', 'SKILL.md'), '\nMY EDIT\n');
+  const forced = await runCli(['install', ...dest, '--skill', 'fixture-one', '--force'], { home, proj, env });
+  assert.equal(forced.code, 0, forced.stderr);
+  const backupId = forced.stdout.match(/Backup created: (\S+)/)[1];
+  const manifestFile = path.join(proj, 'out', '.skillforge-manifest.json');
+  await writeFile(manifestFile, '{ this is not json');
+  const restored = await runCli(['restore', backupId, ...dest], { home, proj, env });
+  assert.equal(restored.code, 0, restored.stderr);
+  assert.match(restored.stderr, /manifest.*corrupt/);
+  assert.match(await readFile(path.join(proj, 'out', 'fixture-one', 'SKILL.md'), 'utf8'), /MY EDIT/);
+  const quarantined = (await listNames(path.join(proj, 'out'))).filter((n) => n.startsWith('.skillforge-manifest.json.corrupt-'));
+  assert.equal(quarantined.length, 1);
+  const manifest = await readJson(manifestFile);
+  assert.ok(manifest.items['skill:fixture-one']);
+});
+
+test('A-16c: restore recovers from a corrupt or missing backup.json', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  const dest = ['--dest', 'out'];
+  await runCli(['install', ...dest, '--skill', 'fixture-one'], { home, proj, env });
+  await appendFile(path.join(proj, 'out', 'fixture-one', 'SKILL.md'), '\nEDIT ONE\n');
+  const f1 = await runCli(['install', ...dest, '--skill', 'fixture-one', '--force'], { home, proj, env });
+  const backupOne = f1.stdout.match(/Backup created: (\S+)/)[1];
+  await appendFile(path.join(proj, 'out', 'fixture-one', 'SKILL.md'), '\nEDIT TWO\n');
+  const f2 = await runCli(['install', ...dest, '--skill', 'fixture-one', '--force'], { home, proj, env });
+  const backupTwo = f2.stdout.match(/Backup created: (\S+)/)[1];
+  const backupsBase = path.join(proj, '.skillforge-backups');
+
+  // Corrupt backup.json (unparseable): recovery from items/.
+  await writeFile(path.join(backupsBase, backupOne, 'backup.json'), '{ nope');
+  const r1 = await runCli(['restore', backupOne, ...dest], { home, proj, env });
+  assert.equal(r1.code, 0, r1.stderr);
+  assert.match(r1.stderr, /is corrupt/);
+  assert.match(r1.stderr, /recovered 1 item/);
+  assert.match(r1.stdout, /restored fixture-one/);
+  assert.match(await readFile(path.join(proj, 'out', 'fixture-one', 'SKILL.md'), 'utf8'), /EDIT ONE/);
+
+  // Missing backup.json: same recovery.
+  await rm(path.join(backupsBase, backupTwo, 'backup.json'));
+  const r2 = await runCli(['restore', backupTwo, ...dest], { home, proj, env });
+  assert.equal(r2.code, 0, r2.stderr);
+  assert.match(r2.stderr, /recovered 1 item/);
+  assert.match(await readFile(path.join(proj, 'out', 'fixture-one', 'SKILL.md'), 'utf8'), /EDIT TWO/);
+
+  // Corrupt backup.json with no recoverable items: a clear error.
+  const emptyId = 'empty-corrupt';
+  await mkdir(path.join(backupsBase, emptyId, 'items'), { recursive: true });
+  await writeFile(path.join(backupsBase, emptyId, 'backup.json'), '{ nope');
+  const r3 = await runCli(['restore', emptyId, ...dest], { home, proj, env });
+  assert.equal(r3.code, 2);
+  assert.match(r3.stderr, /is corrupt/);
+  assert.match(r3.stderr, /nothing could be recovered/);
+});
+
+test('A-16d: a failed createBackup leaves no partial backup directory (unit)', async () => {
+  const { createServer } = await import('node:net');
+  const { createBackup } = await import('../scripts/install/backups.mjs');
+  const { base } = await makeSandbox();
+  const skillsDir = path.join(base, 'skills');
+  const good = path.join(skillsDir, 'good');
+  await mkdir(good, { recursive: true });
+  await writeFile(path.join(good, 'SKILL.md'), '# good\n');
+  // A directory containing a socket file: cp fails on it, after the
+  // first item has already been copied.
+  const bad = path.join(skillsDir, 'bad');
+  await mkdir(bad, { recursive: true });
+  await writeFile(path.join(bad, 'SKILL.md'), '# bad\n');
+  const sockPath = path.join(bad, 's.sock');
+  const server = createServer(() => {});
+  await new Promise((resolve, reject) => server.listen(sockPath, (err) => (err ? reject(err) : resolve())));
+  try {
+    await assert.rejects(() => createBackup(skillsDir, {
+      reason: 'test', command: 'test',
+      items: [
+        { kind: 'skill', name: 'good', destAbs: good, entry: null },
+        { kind: 'skill', name: 'bad', destAbs: bad, entry: null },
+      ],
+    }));
+    // No partial backup directory lingers.
+    assert.deepEqual(await listNames(path.join(base, '.skillforge-backups')), []);
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
+});
+
+// ---------------------------------------------------------------- A-30: stale-staging cleanup
+
+test('A-30: install cleans staged leftovers when everything is already; trash survives and doctor reports it', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  const dest = ['--dest', 'out'];
+  await runCli(['install', ...dest, '--skill', 'fixture-one,fixture-two'], { home, proj, env });
+  const skillsDir = path.join(proj, 'out');
+  const staged = path.join(skillsDir, '.skillforge-tmp-stale-123');
+  await mkdir(staged, { recursive: true });
+  await writeFile(path.join(staged, 'junk.txt'), 'junk\n');
+  const trash = path.join(skillsDir, '.skillforge-tmp-old-fixture-one-456');
+  await mkdir(trash, { recursive: true });
+  await writeFile(path.join(trash, 'SKILL.md'), '# Old content — the only copy\n');
+
+  // Everything is already installed: cleanup still runs.
+  const r = await runCli(['install', ...dest, '--skill', 'fixture-one'], { home, proj, env });
+  assert.equal(r.code, 0, r.stderr);
+  assert.match(r.stderr, /removed leftover staging directory .skillforge-tmp-stale-123/);
+  assert.equal(await exists(staged), false);
+  assert.equal(await readFile(path.join(trash, 'SKILL.md'), 'utf8'), '# Old content — the only copy\n');
+
+  // Uninstall cleans staged leftovers too, and still spares trash.
+  const staged2 = path.join(skillsDir, '.skillforge-tmp-stale-789');
+  await mkdir(staged2, { recursive: true });
+  const u = await runCli(['uninstall', ...dest, '--skill', 'fixture-two'], { home, proj, env });
+  assert.equal(u.code, 0, u.stderr);
+  assert.equal(await exists(staged2), false);
+  assert.equal(await exists(trash), true);
+
+  // Doctor reports the surviving trash dir (as trash, not staging).
+  const doctor = await runCli(['doctor', '--dest', 'out'], { home, proj, env });
+  assert.equal(doctor.code, 0, doctor.stdout);
+  assert.match(doctor.stdout, /leftover trash directory .skillforge-tmp-old-fixture-one-456/);
+  assert.match(doctor.stdout, /may hold the only copy/);
+});
+
+// ---------------------------------------------------------------- S-08/S-09: agentic-seo warnings
+
+test('S-08/S-09: installing the seo skill warns about the upstream install docs and TLS-blind link checker', async () => {
+  const { home, proj } = await makeSandbox();
+  // A non-agentic skill warns about nothing.
+  const control = await runCli(['install', ...CLAUDE, '--skill', 'astro'], { home, proj });
+  assert.equal(control.code, 0, control.stderr);
+  assert.doesNotMatch(control.stderr, /finding S-08/);
+  assert.doesNotMatch(control.stderr, /finding S-09/);
+
+  const r = await runCli(['install', ...CLAUDE, '--skill', 'seo'], { home, proj });
+  assert.equal(r.code, 0, r.stderr);
+  assert.match(r.stderr, /documents an unsafe install method/);
+  assert.match(r.stderr, /disables TLS certificate verification/);
+  assert.match(r.stderr, /finding S-08/);
+  assert.match(r.stderr, /finding S-09/);
+  // Once per run, not once per warning site.
+  assert.equal((r.stderr.match(/finding S-08/g) || []).length, 1);
+  assert.equal((r.stderr.match(/finding S-09/g) || []).length, 1);
+});
+
+test('S-08/S-09: doctor warns about an installed seo skill', async () => {
+  const { home, proj } = await makeSandbox();
+  const r = await runCli(['install', ...CLAUDE, '--skill', 'seo'], { home, proj });
+  assert.equal(r.code, 0, r.stderr);
+  const doctor = await runCli(['doctor', ...CLAUDE], { home, proj });
+  assert.equal(doctor.code, 0, doctor.stdout); // warnings, not failures
+  assert.match(doctor.stdout, /finding S-08/);
+  assert.match(doctor.stdout, /finding S-09/);
+  const json = await runCli(['doctor', ...CLAUDE, '--json'], { home, proj });
+  const data = JSON.parse(json.stdout);
+  assert.equal(data.ok, true);
+  const warns = data.locations[0].problems.filter((p) => p.level === 'warn').map((p) => p.message);
+  assert.ok(warns.some((m) => m.includes('(finding S-08)')));
+  assert.ok(warns.some((m) => m.includes('(finding S-09)')));
+});
+
+// ---------------------------------------------------------------- doctor: stale lock
+
+test('doctor reports a lingering lock file', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const { env } = await installFixtureSkill(base, home, proj);
+  const lockFile = path.join(proj, 'out', '.skillforge-lock');
+  await writeFile(lockFile, JSON.stringify({ pid: 999999, startedAt: new Date().toISOString(), command: 'install', token: 'stale' }) + '\n');
+  const doctor = await runCli(['doctor', '--dest', 'out'], { home, proj, env });
+  assert.equal(doctor.code, 0, doctor.stdout); // a warning, not a failure
+  assert.match(doctor.stdout, /installer lock file .skillforge-lock is present/);
 });
