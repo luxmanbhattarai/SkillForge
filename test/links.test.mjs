@@ -5,13 +5,18 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { execFile } from 'node:child_process';
+import { cp, mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import http from 'node:http';
+import os from 'node:os';
+import path from 'node:path';
 import {
   extractLinks,
   stripCode,
   checkUrl,
   verifyExternalUrls,
 } from '../scripts/check-links.mjs';
+import { REPO_ROOT } from '../test-support/helpers.mjs';
 
 // --- Extraction: code is not links ---------------------------------------
 
@@ -239,6 +244,29 @@ test('verifyExternalUrls skips example domains and documented exceptions without
   }
 });
 
+test('verifyExternalUrls reports fetched separately from skipped (A-24)', async () => {
+  // A-24: the online summary used to count every enumerated URL as
+  // "verified", including the ones never fetched (example domains and
+  // documented exceptions). verifyExternalUrls now returns `fetched`,
+  // and only requested URLs count toward it.
+  const stub = await startStub();
+  try {
+    const external = new Map([
+      ['https://example.com/placeholder', ['a.md']],
+      ['https://www.npmjs.com/package/never-fetched', ['b.md']],
+      [`${stub.base}/ok?a=1`, ['c.md']],
+      [`${stub.base}/ok?a=2`, ['d.md']],
+    ]);
+    const { errors, skipped, fetched } = await verifyExternalUrls(external, FAST);
+    assert.deepEqual(errors, []);
+    assert.equal(skipped, 2);
+    assert.equal(fetched, 2);
+    assert.equal(fetched + skipped, external.size);
+  } finally {
+    await stub.close();
+  }
+});
+
 test('verifyExternalUrls reports a broken URL with its referencing file', async () => {
   const stub = await startStub();
   try {
@@ -250,5 +278,62 @@ test('verifyExternalUrls reports a broken URL with its referencing file', async 
     assert.match(errors[0], /docs\/guide\.md/);
   } finally {
     await stub.close();
+  }
+});
+
+// --- Script-level acceptance (Stage E, area 13) ---------------------------
+// The tests above cover the extraction and online-verification
+// machinery. These two cover the script's offline run — the check CI
+// runs (lint.yml) — which had no test: the real repo must pass, and
+// a broken internal link in a fixture repo must fail.
+
+function runNode(script, args = []) {
+  return new Promise((resolve) => {
+    execFile(process.execPath, [script, ...args], { timeout: 120000 }, (err, stdout, stderr) => {
+      resolve({ code: err ? err.code : 0, stdout: stdout || '', stderr: stderr || '' });
+    });
+  });
+}
+
+test('check-links (offline) passes on the real repo', async () => {
+  // Offline mode checks internal links only and lists external ones;
+  // no network is used. The counts must be non-zero: a scan that
+  // silently found nothing would also print PASS.
+  const r = await runNode(path.join(REPO_ROOT, 'scripts', 'check-links.mjs'));
+  assert.equal(r.code, 0, r.stdout + r.stderr);
+  const m = r.stdout.match(/Checked (\d+) internal links; (\d+) unique external URLs listed/);
+  assert.ok(m, `unexpected summary line: ${r.stdout}`);
+  assert.ok(Number(m[1]) > 0, 'expected at least one internal link to be checked');
+  assert.ok(Number(m[2]) > 0, 'expected at least one external URL to be listed');
+  assert.match(r.stdout, /^PASS\./m);
+  assert.doesNotMatch(r.stdout, /ERROR/);
+});
+
+test('check-links flags a broken internal link (fixture)', async () => {
+  // Fixture repo: the real script (fresh copy) plus its local lib
+  // import, with one good link and one broken one.
+  const root = await mkdtemp(path.join(os.tmpdir(), 'skillforge-links-test-'));
+  try {
+    await mkdir(path.join(root, 'scripts', 'lib'), { recursive: true });
+    await mkdir(path.join(root, 'docs'), { recursive: true });
+    await cp(
+      path.join(REPO_ROOT, 'scripts', 'check-links.mjs'),
+      path.join(root, 'scripts', 'check-links.mjs'),
+    );
+    await cp(
+      path.join(REPO_ROOT, 'scripts', 'lib', 'paths.mjs'),
+      path.join(root, 'scripts', 'lib', 'paths.mjs'),
+    );
+    await writeFile(
+      path.join(root, 'docs', 'guide.md'),
+      '# Guide\n\nSee [other](other.md) and [missing](nope.md).\n',
+    );
+    await writeFile(path.join(root, 'docs', 'other.md'), '# Other\n');
+    const r = await runNode(path.join(root, 'scripts', 'check-links.mjs'));
+    assert.equal(r.code, 1, `a broken internal link must fail the check: ${r.stdout}`);
+    assert.match(r.stdout, /docs\/guide\.md: broken internal link: nope\.md/);
+    assert.doesNotMatch(r.stdout, /other\.md: broken|broken internal link: other\.md/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
   }
 });
