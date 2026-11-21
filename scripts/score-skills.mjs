@@ -246,4 +246,6 @@ if (JSON_OUT) {
   console.log('\nNote: the accuracy dimension scores checkable proxies only (no placeholders, no broken relative links, https links). It does not verify technical accuracy.');
 }
 
-process.exit(critical.length > 0 ? 1 : 0);
+// exitCode, not process.exit(): a hard exit discards pending piped
+// stdout. Natural exit flushes it first (see validate-registry.mjs).
+process.exitCode = critical.length > 0 ? 1 : 0;

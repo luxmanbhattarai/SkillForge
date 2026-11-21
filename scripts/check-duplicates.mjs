@@ -48,4 +48,6 @@ console.log(`Compared ${skills.length} skills (threshold ${THRESHOLD}).`);
 for (const w of warnings) console.log(`  WARN  ${w}`);
 for (const e of errors) console.log(`  ERROR ${e}`);
 console.log(errors.length ? `FAIL: ${errors.length} error(s).` : warnings.length ? `PASS with ${warnings.length} warning(s).` : 'PASS.');
-process.exit(errors.length ? 1 : 0);
+// exitCode, not process.exit(): a hard exit discards pending piped
+// stdout. Natural exit flushes it first (see validate-registry.mjs).
+process.exitCode = errors.length ? 1 : 0;

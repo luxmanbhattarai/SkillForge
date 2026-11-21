@@ -71,7 +71,9 @@ async function main() {
   for (const w of warnings) console.log(`  WARN  ${w}`);
   for (const e of errors) console.log(`  ERROR ${e}`);
   console.log(errors.length ? `FAIL: ${errors.length} error(s), ${warnings.length} warning(s).` : `PASS with ${warnings.length} warning(s).`);
-  process.exit(errors.length ? 1 : 0);
+  // exitCode, not process.exit(): a hard exit discards pending piped
+  // stdout. Natural exit flushes it first (see validate-registry.mjs).
+  process.exitCode = errors.length ? 1 : 0;
 }
 
 // Main guard (same idiom as check-links.mjs): importing this module

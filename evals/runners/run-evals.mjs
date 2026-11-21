@@ -461,7 +461,9 @@ async function main() {
     console.log(`Report: ${reportRel}/latest.json, ${reportRel}/latest.md`);
   }
 
-  process.exit(summary.failed > 0 && !REPORT_ONLY ? 1 : 0);
+  // exitCode, not process.exit(): a hard exit discards pending piped
+  // stdout. Natural exit flushes it first (see validate-registry.mjs).
+  process.exitCode = summary.failed > 0 && !REPORT_ONLY ? 1 : 0;
 }
 
 // Only run when invoked as a script: unit tests import validateCases

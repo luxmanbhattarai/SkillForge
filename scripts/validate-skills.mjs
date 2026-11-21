@@ -200,7 +200,9 @@ async function main() {
       ? `PASS with ${totalWarnings} warning(s)${upstreamWarnings.length ? ` (${upstreamWarnings.length} upstream, informational)` : ''}.`
       : 'PASS: all skills valid.')
     : `FAIL: ${errors.length} error(s), ${totalWarnings} warning(s).`);
-  process.exit(failed ? 1 : 0);
+  // exitCode, not process.exit(): a hard exit discards pending piped
+  // stdout. Natural exit flushes it first (see validate-registry.mjs).
+  process.exitCode = failed ? 1 : 0;
 }
 
 // Main guard (same idiom as evals/runners/run-evals.mjs): importing

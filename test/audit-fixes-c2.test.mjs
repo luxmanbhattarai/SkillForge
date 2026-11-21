@@ -12,7 +12,7 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { execFile } from 'node:child_process';
+import { execFile, spawn } from 'node:child_process';
 import {
   cp, lstat, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile,
 } from 'node:fs/promises';
@@ -100,6 +100,66 @@ test('A2-02: missing verification statuses map is a clean FAIL, not a TypeError 
     assert.equal(r.code, 1, r.stdout + r.stderr);
     assert.match(r.stdout, /FAIL: \d+ error\(s\)/);
     assert.doesNotMatch(r.stdout + r.stderr, /TypeError/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+// --- E-01: the FAIL summary must survive a slow-draining pipe ---
+//
+// PR #4 run 44942929343: the "missing skills array" test failed on the
+// GitHub runner because validate-registry printed 706 errors (~70 KiB)
+// and then called process.exit(1) — which discards pending piped stdout.
+// The FAIL summary, the last write, was lost (output truncated at the
+// 64 KiB pipe buffer). The fix sets process.exitCode and lets the
+// process exit naturally, which flushes stdout first. This test pins
+// that behavior: stdout stays paused until the child either exits or
+// 5 s pass, so a hard exit truncates the summary (fail) while a natural
+// exit waits for the drain (pass).
+//
+// The error list is deliberately inflated (agents.json duplicated 30x,
+// ~2 MB of output): with only the 706-error list the parent's single
+// pre-pause read drains enough of the 64 KiB pipe buffer for the tail
+// to survive even a hard exit, so the test would pass on broken code.
+
+test('E-01: validate-registry FAIL summary survives a slow-draining pipe', async () => {
+  const root = await copyRepo();
+  try {
+    await mutateJson(path.join(root, 'registry', 'skills.json'), (doc) => {
+      delete doc.skills;
+    });
+    await mutateJson(path.join(root, 'registry', 'agents.json'), (doc) => {
+      const base = doc.agents;
+      const inflated = [...base];
+      for (let i = 0; i < 30; i++) {
+        for (const a of base) inflated.push({ ...a, name: `${a.name}-dup-${i}` });
+      }
+      doc.agents = inflated;
+    });
+    const child = spawn(process.execPath, [VALIDATE_REGISTRY, '--root', root], { cwd: REPO_ROOT });
+    // Pause stdout: the child fills the 64 KiB pipe buffer and then
+    // must wait for the reader. Attach the 'data' listener BEFORE
+    // pausing — adding a 'data' handler switches the stream to flowing
+    // mode and would undo an earlier pause(). stderr is small; drain
+    // it so it can never block the child.
+    const chunks = [];
+    child.stdout.on('data', (c) => chunks.push(c));
+    child.stdout.pause();
+    let stderr = '';
+    child.stderr.on('data', (c) => { stderr += c; });
+    const exited = new Promise((resolve) => child.on('exit', (code) => resolve(code)));
+    const ended = new Promise((resolve) => child.stdout.on('end', resolve));
+    const timedOut = new Promise((resolve) => setTimeout(() => resolve('timeout'), 5000));
+    const first = await Promise.race([exited, timedOut]);
+    // A hard-exit build exits before the timeout with truncated output;
+    // a natural-exit build is still alive, blocked on the flush.
+    child.stdout.resume();
+    const code = first === 'timeout' ? await exited : first;
+    await ended;
+    const stdout = Buffer.concat(chunks).toString('utf8');
+    assert.equal(code, 1, stdout + stderr);
+    assert.match(stdout, /FAIL: \d+ error\(s\)/);
+    assert.doesNotMatch(stdout + stderr, /TypeError/);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

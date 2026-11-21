@@ -500,4 +500,6 @@ if (JSON_OUT) {
     console.log('PASS: no findings.');
   }
 }
-process.exit(findings.length > 0 ? 1 : 0);
+// exitCode, not process.exit(): a hard exit discards pending piped
+// stdout. Natural exit flushes it first (see validate-registry.mjs).
+process.exitCode = findings.length > 0 ? 1 : 0;

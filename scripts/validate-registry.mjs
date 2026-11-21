@@ -339,6 +339,10 @@ const checked = skillsDoc ? `${skillNames.size} skills, ${agentNames.size} agent
 console.log(`Checked ${checked} (schema + references + verification coverage).`);
 if (errors.length > 0) {
   console.log(`FAIL: ${errors.length} error(s), ${warnings.length} warning(s).`);
-  process.exit(1);
+  // exitCode, not process.exit(): a hard exit discards pending piped
+  // stdout — with 706 errors the FAIL summary is the last write and
+  // was lost on CI (PR #4 run 44942929343). Natural exit flushes first.
+  process.exitCode = 1;
+} else {
+  console.log(warnings.length > 0 ? `PASS with ${warnings.length} warning(s).` : 'PASS.');
 }
-console.log(warnings.length > 0 ? `PASS with ${warnings.length} warning(s).` : 'PASS.');

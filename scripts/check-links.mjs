@@ -412,7 +412,9 @@ async function main() {
   console.log(`Checked ${checked} internal links; ${external.size} unique external URLs ${ONLINE ? `(${fetched} checked live, ${skipped} skipped: example domains / documented exceptions)` : 'listed (use --online to verify)'}.`);
   for (const e of errors) console.log(`  ERROR ${e}`);
   console.log(errors.length ? `FAIL: ${errors.length} error(s).` : 'PASS.');
-  process.exit(errors.length ? 1 : 0);
+  // exitCode, not process.exit(): a hard exit discards pending piped
+  // stdout. Natural exit flushes it first (see validate-registry.mjs).
+  process.exitCode = errors.length ? 1 : 0;
 }
 
 // Only run when invoked as a script: unit tests import the helpers

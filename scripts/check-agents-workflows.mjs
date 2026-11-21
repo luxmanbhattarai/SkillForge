@@ -51,6 +51,9 @@ for (const [dir, kind] of [['agents', 'agent'], ['workflows', 'workflow']]) {
 console.log(`\nChecked ${files} files (${index.agents.size} agents, ${index.workflows.size} workflows) against ${index.skills.size} skills.`);
 if (errors > 0) {
   console.log(`FAIL: ${errors} error(s), ${warnings} warning(s).`);
-  process.exit(1);
+  // exitCode, not process.exit(): a hard exit discards pending piped
+  // stdout. Natural exit flushes it first (see validate-registry.mjs).
+  process.exitCode = 1;
+} else {
+  console.log(warnings > 0 ? `PASS with ${warnings} warning(s).` : 'PASS.');
 }
-console.log(warnings > 0 ? `PASS with ${warnings} warning(s).` : 'PASS.');
