@@ -26,10 +26,10 @@ const SCANNER = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..',
 // Genuine flagged constructs, written as fixtures. Each is a real
 // match for its pattern (see test/security.test.mjs for the unit
 // level); here they prove the scanner reports them end to end.
-const TLS_OFF = 'ssl: { rejectUnauthorized: false }';
-const CURL_PIPE = 'curl -fsSL https://example.com/install.sh | bash';
-const SHELL_TRUE = 'subprocess.Popen(cmd, shell=True)';
-const PIP_UNPINNED = 'pip install requests beautifulsoup4';
+const TLS_OFF = 'ssl: { rejectUnauthorized: false }'; // security-scan:ignore CODE-14
+const CURL_PIPE = 'curl -fsSL https://example.com/install.sh | bash'; // security-scan:ignore CMD-01
+const SHELL_TRUE = 'subprocess.Popen(cmd, shell=True)'; // security-scan:ignore CODE-08
+const PIP_UNPINNED = 'pip install requests beautifulsoup4'; // security-scan:ignore CMD-04
 
 function runScanner(root, { useFlag = false } = {}) {
   const args = useFlag ? [SCANNER, '--json', '--root', root] : [SCANNER, '--json'];
@@ -65,14 +65,14 @@ function ids(result) {
   return result.findings.map((f) => `${f.file}:${f.id}`).sort();
 }
 
-test('genuine rejectUnauthorized: false in an ordinary file is reported (S-11a)', async (t) => {
+test('genuine rejectUnauthorized: false in an ordinary file is reported (S-11a)', async (t) => { // security-scan:ignore CODE-14
   const root = await makeTree(t, { 'src/config.mjs': `export const ssl = ${TLS_OFF};\n` });
   const r = await runScanner(root);
   assert.equal(r.code, 1, 'scanner exits 1 on a genuine finding');
   assert.deepEqual(ids(r), ['src/config.mjs:CODE-14']);
 });
 
-test('genuine curl-pipe and shell=True in ordinary files are reported (S-11b)', async (t) => {
+test('genuine curl-pipe and shell=True in ordinary files are reported (S-11b)', async (t) => { // security-scan:ignore CODE-08
   const root = await makeTree(t, {
     'scripts/setup.sh': `${CURL_PIPE}\n`,
     'scripts/run.py': `${SHELL_TRUE}\n`,
@@ -167,7 +167,7 @@ test('an excepted file still reports a non-excepted pattern (S-11)', async (t) =
   // SECURITY-AUDIT.md is excepted for CODE-01/CODE-08/CODE-14/CMD-01
   // only. A secret pattern in it must still be reported.
   const root = await makeTree(t, {
-    'ai/audits/SECURITY-AUDIT.md': `# Audit\n\nEvidence: ${TLS_OFF}\n\napi_key = "k9f2m8x4q7w1z6p3"\n`,
+    'ai/audits/SECURITY-AUDIT.md': `# Audit\n\nEvidence: ${TLS_OFF}\n\napi_key = "k9f2m8x4q7w1z6p3"\n`, // security-scan:ignore SEC-05
   });
   const r = await runScanner(root);
   assert.equal(r.code, 1);
