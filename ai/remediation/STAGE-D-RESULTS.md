@@ -193,6 +193,6 @@ No failures, no skipped tests in the final battery (other than the pre-existing 
 | `103dcc1` | Windows `--link` junction fallback + prompt streams injection (A-11, A-29, L-Win) |
 | `0c64a2c` | Link-checker hardening + Vercel re-import (A-23, A-27) |
 | `43f3c99` | Windows path normalization + test hygiene (W-1/W-2/W-3) |
-| (closing) | This results file, issue-register updates, execution-log entry |
+| `74c9ced` | This results file, issue-register updates, execution-log entry |
 
 Stage D started at head `ccfb4d1` (Stage C done). All 36 new tests (17 installer + 14 links + 5 paths) pass; the full battery is green at the final HEAD, run after the last edit.
