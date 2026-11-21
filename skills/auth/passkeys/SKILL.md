@@ -61,7 +61,8 @@ codes, MFA policy), see `mfa`.
 - HTTPS on every environment (WebAuthn requires a secure context;
   `localhost` is exempt for development).
 - A maintained WebAuthn library for the stack — for TypeScript,
-  `@simplewebauthn/server` and `@simplewebauthn/browser`. Never implement
+  `@simplewebauthn/server` and `@simplewebauthn/browser` (v13 current
+  as of 2026-11-20; v13 requires Node 22+). Never implement
   the ceremonies by hand: challenge handling, CBOR parsing, and signature
   verification have subtle failure modes.
 - A server that can hold short-lived challenges (database row or cache

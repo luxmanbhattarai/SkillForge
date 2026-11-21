@@ -273,8 +273,8 @@ import { redirect } from "next/navigation";
 
 const supabase = await createClient();
 // getClaims() verifies the JWT; getSession() would not.
-const { data: claims } = await supabase.auth.getClaims();
-if (!claims) redirect("/login");
+const { data, error } = await supabase.auth.getClaims();
+if (error || !data?.claims) redirect("/login");
 ```
 
 Row Level Security policy (user-scoped reads):

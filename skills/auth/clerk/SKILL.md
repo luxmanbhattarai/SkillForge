@@ -92,16 +92,20 @@ at each resource — see `authorization` and `rbac` for the concepts.
    16+, `middleware.ts` on 15 and below. Its contents are the same: a call
    to `clerkMiddleware()` from `@clerk/nextjs/server`.
 5. Protect resources, not just routes: every protected page, Route Handler,
-   and Server Action starts with `await auth()` and calls
-   `auth.protect()` — optionally with `role`, `permission`, or `has` — before
-   doing work. Middleware alone is not sufficient protection, because
-   Server Actions are called by ID, not by path.
+   and Server Action starts with `await auth.protect()` — optionally with
+   `role`, `permission`, or `has` — before doing work. Middleware alone is
+   not sufficient protection, because Server Actions are called by ID, not
+   by path.
 6. Configure sign-in methods in the Dashboard (email/password, social
    connections, MFA, passkeys) and the session token's custom claims if the
    app needs role or plan data without an extra API call.
 7. If Organizations are needed, enable them (the CLI supports
    `npx -y clerk@latest enable orgs`), add the `OrganizationSwitcher`, and
-   check `orgId` / `orgRole` from `auth()` at each resource.
+   check `orgId` / `orgRole` from `auth()` at each resource. Pick the
+   membership mode deliberately: `Membership required` is the default
+   (for instances created after 2025-08-22) and routes every signed-in
+   user through organization selection, disabling Personal Accounts —
+   choose `Membership optional` if the app also serves individuals.
 8. If the app keeps its own user table, add a webhook endpoint that
    verifies the Svix signature, handles `user.created`, `user.updated`,
    and `user.deleted` (and organization events), and upserts idempotently.
@@ -115,11 +119,12 @@ at each resource — see `authorization` and `rbac` for the concepts.
   It returns the lightweight auth state (`userId`, `sessionId`, `orgId`,
   `orgRole`, `has()`); use `currentUser()` only when the full user object
   is needed, because it makes an API call.
-- `auth.protect()` is the protection primitive: with no arguments it
-  requires a signed-in user (redirecting to sign-in otherwise); with
-  `role`, `permission`, or `has` it additionally requires authorization
-  (returning 404 when the user is signed in but not authorized). Call it
-  at the top of every protected resource.
+- `auth.protect()` is the protection primitive: call it directly on the
+  `auth` helper (`await auth.protect()`), not on the result of `auth()`.
+  With no arguments it requires a signed-in user (redirecting to sign-in
+  otherwise); with `role`, `permission`, or `has` it additionally
+  requires authorization (returning 404 when the user is signed in but
+  not authorized). Call it at the top of every protected resource.
 - Core 3 component model: a single `Show` component replaces `SignedIn`,
   `SignedOut`, and `Protect`. Package renames: `@clerk/clerk-react` is now
   `@clerk/react`, `@clerk/clerk-expo` is now `@clerk/expo`. Use
@@ -138,8 +143,9 @@ at each resource — see `authorization` and `rbac` for the concepts.
   do not build a parallel API-key system unless the product needs one.
 - Webhook handlers verify the Svix signature on the raw body before doing
   anything else, using Clerk's documented `verifyWebhook` helper (from
-  `@clerk/backend/webhooks`) or the `svix` package, with the endpoint
-  secret from the environment. Unverified webhook requests are rejected.
+  `@clerk/backend/webhooks`, which reads the signing secret from
+  `CLERK_WEBHOOK_SIGNING_SECRET`) or the `svix` package. Unverified
+  webhook requests are rejected.
 
 ### Testing Strategy
 
@@ -181,8 +187,10 @@ at each resource — see `authorization` and `rbac` for the concepts.
 - Create test users with the CLI (`npx -y clerk@latest users create`)
   instead of signing up through automated browsers, where bot protection
   can block sign-ups. For Playwright, use `@clerk/testing`.
-- When using shadcn/ui, install `@clerk/ui` and apply the `shadcn` theme
-  to `<ClerkProvider>` rather than restyling components by hand.
+- When using shadcn/ui, install `@clerk/ui`, import the theme CSS in the
+  global stylesheet (`@import '@clerk/ui/themes/shadcn.css';`), and apply
+  the `shadcn` theme to `<ClerkProvider>` rather than restyling
+  components by hand.
 
 ## Security Considerations
 
@@ -222,6 +230,9 @@ at each resource — see `authorization` and `rbac` for the concepts.
   Server Actions unguarded — protect each resource with `auth.protect()`.
 - Using Core 2 patterns in a Core 3 app — `SignedIn`/`SignedOut`,
   `@clerk/clerk-react`, or `createRouteMatcher` gating as the only check.
+- Calling `protect()` on the result of `auth()` — in Core 3, `protect`
+  lives on the `auth` helper itself: `await auth.protect()`, not
+  `(await auth()).protect()`.
 - Forgetting `await` on `auth()` — it returns a promise, and an un-awaited
   auth object is truthy even when the user is signed out.
 - Reading request data (including `auth()`) outside `<Suspense>` in a
@@ -266,7 +277,7 @@ Or, with the `protect()` primitive:
 import { auth } from "@clerk/nextjs/server";
 
 export default async function BillingPage() {
-  const { userId } = await (await auth()).protect();
+  const { userId } = await auth.protect();
   // userId is guaranteed present here; unauthenticated users are redirected.
   return <main>Billing for {userId}</main>;
 }
@@ -279,9 +290,14 @@ Webhook handler with signature verification:
 import { verifyWebhook } from "@clerk/backend/webhooks";
 
 export async function POST(request: Request) {
-  const event = await verifyWebhook(request, {
-    secret: process.env.CLERK_WEBHOOK_SECRET ?? "",
-  });
+  let event;
+  try {
+    // verifyWebhook reads the signing secret from
+    // CLERK_WEBHOOK_SIGNING_SECRET; it throws on a bad signature.
+    event = await verifyWebhook(request);
+  } catch {
+    return new Response("Invalid signature", { status: 400 });
+  }
   // event.type is e.g. "user.created"; upsert by event.data.id and
   // dedupe on the Svix message id — deliveries are at-least-once.
   return new Response("ok");

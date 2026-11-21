@@ -46,7 +46,7 @@ This skill guides the design, implementation, and operation of ClickHouse for on
 
 - A running ClickHouse server (self-managed or ClickHouse Cloud) with `clickhouse-client` or HTTP access, and Keeper (or ZooKeeper) for any replicated deployment.
 - Knowledge of the analytical questions the data must answer, the expected ingest rate, and the retention period.
-- Supported versions as of 2026-11-20: ClickHouse 26.10 is the current stable release (26.10.7.24, released 2026-11-19). ClickHouse ships monthly releases with calendar versioning (`YY.M.Patch.Build`); the long-term support (LTS) lines are 26.8 (supported until 2027-08-27) and 26.3 (supported until 2027-03-26). New production deployments should use the latest stable or the latest LTS; do not stay on an expired monthly line.
+- Supported versions as of 2026-11-20: ClickHouse 26.10 is the current stable release (26.10.8.34, released 2026-11-20). ClickHouse ships monthly releases with calendar versioning (`YY.M.Patch.Build`); the long-term support (LTS) lines are 26.8 (supported until 2027-08-27) and 26.3 (supported until 2027-03-26). New production deployments should use the latest stable or the latest LTS; do not stay on an expired monthly line.
 - The native protocol ports are 9000 (plain) and 9440 (TLS); the HTTP interface listens on 8123 (plain) and 8443 (TLS) by default. Confirm the ports in the server configuration before connecting.
 - ClickHouse is Apache 2.0 licensed open source; ClickHouse Cloud is the vendor-managed offering.
 
@@ -119,7 +119,7 @@ This skill guides the design, implementation, and operation of ClickHouse for on
 
 - The ordering key decides everything: a query that filters on the first ordering-key column prunes granules and reads a fraction of the data; a query that filters on a non-key column scans the whole table. Design the key from the query log, not from the schema diagram.
 - Partition pruning: a `WHERE` clause on the partition expression skips whole partitions. Queries that never filter on time should still filter on the partition column where possible.
-- Memory: analytical queries can use a lot of RAM (hash tables for GROUP BY and JOIN). Set `max_memory_usage` per user or per query, and `max_bytes_before_external_group_by` / `max_bytes_before_external_sort` so large operations spill to disk instead of failing. 26.10 halves hash-table memory for large GROUP BY operations.
+- Memory: analytical queries can use a lot of RAM (hash tables for GROUP BY and JOIN). Set `max_memory_usage` per user or per query, and `max_bytes_before_external_group_by` / `max_bytes_before_external_sort` so large operations spill to disk instead of failing. 26.10 also speeds up GROUP BY queries (dynamic filtering extended to GROUP BY, with granule skipping through the primary index).
 - Concurrency: ClickHouse parallelizes one query across cores; many concurrent heavy queries contend for CPU and memory. Use workload scheduling and quotas to protect interactive queries from batch jobs.
 - Inserts: a single insert of 100k rows is far cheaper than 100k inserts of one row. Use `async_insert` (with `async_insert_busy_timeout_ms`) for streaming ingest, or a buffer table for bursty producers.
 - Merges are background work that competes with queries: monitor `system.merges`, keep part counts low with large inserts, and avoid `OPTIMIZE TABLE ... FINAL` on large tables in production hours.
@@ -211,13 +211,16 @@ ALTER TABLE analytics.events
 ```
 
 ```sql
--- Example: backup to S3 and restore (credentials belong in a named
--- collection in production; shown inline here only for clarity of syntax).
+-- Example: backup to an S3-backed disk and restore. The disk is configured
+-- in server config (credentials live there), so no secrets appear in the
+-- query — inline S3 keys would land in system.query_log. The S3-endpoint
+-- form (BACKUP ... TO S3(...)) accepts a named collection for the same
+-- reason; never put keys inline.
 BACKUP TABLE analytics.events
-  TO S3('https://backups.example.com/clickhouse/events/', 'YOUR_S3_ACCESS_KEY', 'YOUR_S3_SECRET_KEY');
+  TO Disk('s3_backups', 'events/');
 
 RESTORE TABLE analytics.events
-  FROM S3('https://backups.example.com/clickhouse/events/', 'YOUR_S3_ACCESS_KEY', 'YOUR_S3_SECRET_KEY');
+  FROM Disk('s3_backups', 'events/');
 ```
 
 ```sql

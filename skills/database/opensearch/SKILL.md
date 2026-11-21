@@ -136,7 +136,7 @@ OpenSearch began in 2021 as a fork of Elasticsearch 7.10.2 and Kibana 7.10.2, af
 - Indexing throughput: bulk requests, a raised refresh interval during loads, and enough indexing threads matter more than node count. Watch indexing pressure and merge times.
 - Force-merge read-only indices to one segment (`POST /<index>/_forcemerge?max_num_segments=1`) only after they stop receiving writes; force-merging a live index wastes I/O. ISM can force-merge as a lifecycle action.
 - Disk watermarks matter: when a node passes the low watermark it stops allocating new shards, and past the flood-stage watermark indices go read-only. Monitor disk usage per node and plan retention accordingly.
-- Vector search (k-NN) is memory-sensitive: `knn_vector` fields with HNSW graphs consume memory proportional to vector count and dimensions. Use quantization (including 1-bit scalar quantization, the default in 3.6+) to reduce the footprint, and test recall at production scale.
+- Vector search (k-NN) is memory-sensitive: `knn_vector` fields with HNSW graphs consume memory proportional to vector count and dimensions. Use quantization to reduce the footprint (1-bit scalar quantization, `compression_level: 32x`, is available since 3.6 for Faiss/Lucene HNSW; the `flat` exact-search method defaults to 1-bit), and test recall at production scale.
 - Use the `_cat` APIs (`_cat/health`, `_cat/nodes`, `_cat/indices`, `_cat/shards`) and node stats for quick diagnosis; use the Performance Analyzer plugin and Dashboards for trends.
 
 ## Common Mistakes
