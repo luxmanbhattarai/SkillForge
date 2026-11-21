@@ -17,6 +17,14 @@ on:
 permissions:
   contents: read
 
+# Serialize maintenance runs (never cancel): the weekly online link
+# check fires a 600+ URL burst, and two overlapping bursts would
+# double the rate-limit pressure on checked hosts. A manual dispatch
+# while a run is in flight queues behind it instead of killing it.
+concurrency:
+  group: scheduled-maintenance
+  cancel-in-progress: false
+
 jobs:
   online-links:
     # Online documentation link verification (audit finding L-11):

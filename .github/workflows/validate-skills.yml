@@ -17,6 +17,13 @@ on:
 permissions:
   contents: read
 
+# One run per ref at a time: a new push to a PR cancels the stale run
+# (fast feedback, no queue pile-up), but runs on main are never
+# cancelled — the main-branch signal must always complete.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   validate:
     # The main validation job runs on Node 18, 20, and 22: package.json
@@ -113,3 +120,77 @@ jobs:
 
       - name: Run behavioral evals (mock provider)
         run: npm run evals
+
+  windows:
+    # Windows leg (Stage D, L-Win): the installer is the
+    # platform-sensitive surface (symlinks, home-directory
+    # resolution, line endings), so Windows runs the full
+    # regression suite plus the validators that are Windows-safe.
+    #
+    # ADVISORY, not gating (continue-on-error): the suite is not
+    # yet green on Windows. Three known gaps, all outside this
+    # file — see ai/remediation/stage-d/ci-validation.md:
+    #   W-1  test/helpers.mjs runCli sets HOME only; the installer
+    #        resolves home via os.homedir(), which reads
+    #        USERPROFILE on Windows, so user-scope installer tests
+    #        fail and write into the real runner profile.
+    #   W-2  scripts/security-scan.mjs compares backslash
+    #        relative paths against POSIX exception/skip prefixes,
+    #        so no exception matches on Windows (check:security
+    #        and scanner.test.mjs fail there).
+    #   W-3  scripts/generate-registry.mjs and
+    #        scripts/validate-registry.mjs emit/compare native
+    #        relative paths, so registry tests fail on Windows.
+    #   W-4  Link-mode install/backup on Windows depends on the
+    #        junction fallback in scripts/install/links.mjs (A-11):
+    #        a directory symlink needs Developer Mode or admin
+    #        rights, a junction needs neither. Whether that module
+    #        is present and correct is verified by the --link tests
+    #        themselves on the first run; Developer Mode status on
+    #        the runner image is unverified from here.
+    # Remove continue-on-error (and add this job to the required
+    # branch-protection checks) once the leg is green for real.
+    # Until then, do NOT require the "Windows (Node 20)" check.
+    #
+    # Deliberately NOT run here: check:security (W-2),
+    # check:links (the upstream exclusion is a POSIX-prefix match
+    # and silently stops excluding on Windows), score (the
+    # category fallback splits on '/'), check:registry and the
+    # registry diff (W-3), evals (covered on Ubuntu; the mock
+    # provider adds no Windows signal). All are covered by the
+    # Ubuntu jobs in this workflow.
+    name: Windows (Node 20)
+    runs-on: windows-latest
+    timeout-minutes: 20
+    continue-on-error: true
+    defaults:
+      run:
+        # Git Bash ships on windows-latest; bash keeps step
+        # behavior identical to the Ubuntu jobs.
+        shell: bash
+    steps:
+      # Git for Windows defaults core.autocrlf to true, which
+      # would check out CRLF line endings. The frontmatter parser
+      # tolerates CRLF, but checking out LF removes the whole
+      # class of line-ending divergence from this leg.
+      - name: Disable CRLF conversion for this checkout
+        run: git config --global core.autocrlf false
+
+      - name: Check out repository
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "20"
+          # No cache: this repo has zero dependencies and no lockfile,
+          # so there is nothing to cache.
+
+      - name: Validate skill frontmatter and structure
+        run: npm run validate
+
+      - name: Check frontmatter completeness
+        run: npm run check:frontmatter
+
+      - name: Run regression tests
+        run: npm test

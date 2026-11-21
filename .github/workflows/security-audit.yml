@@ -21,6 +21,13 @@ on:
 permissions:
   contents: read
 
+# One run per ref at a time: a new push to a PR cancels the stale run,
+# but runs on main are never cancelled (the weekly schedule also runs
+# on main, so it is never cancelled either).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   security-audit:
     runs-on: ubuntu-latest

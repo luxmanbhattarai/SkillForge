@@ -13,6 +13,9 @@ on:
 permissions:
   contents: read
 
+# No concurrency block on purpose: each run validates one immutable
+# tag, tag validations are read-only and never interfere, and
+# cancelling or serializing them would only delay a release signal.
 jobs:
   release-validation:
     runs-on: ubuntu-latest
