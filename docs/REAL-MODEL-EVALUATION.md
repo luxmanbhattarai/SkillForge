@@ -96,8 +96,8 @@ provider integration works and the failure modes are understood.
 export EVAL_PROVIDER_URL="https://api.openai.com/v1/chat/completions"
 export EVAL_PROVIDER_KEY="<key>"              # never commit this; never paste it into a report
 export EVAL_PROVIDER_MODEL="gpt-5-mini"
-export EVAL_PROVIDER_PRICE_INPUT_PER_1K="3"   # optional; enables cost estimates
-export EVAL_PROVIDER_PRICE_OUTPUT_PER_1K="15" # optional; use the provider's actual prices
+export EVAL_PROVIDER_PRICE_INPUT_PER_1K="0.003"   # optional; enables cost estimates
+export EVAL_PROVIDER_PRICE_OUTPUT_PER_1K="0.015" # optional; use the provider's actual prices
 
 npm run evals -- --provider model --cases-file evals/datasets/real-model-subset.json
 ```

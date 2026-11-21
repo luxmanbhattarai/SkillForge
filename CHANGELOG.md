@@ -127,10 +127,12 @@ plus the 2026-11-21 PR #1 run and audit fixes):
 
 ### Known limitations
 
-- 4 of 6 workflows have run on GitHub (PR #1, 2026-11-21: Validate,
-  Lint, Security audit, CodeQL); `scheduled-maintenance` and
-  `release` have never run. Secret scanning (with push protection)
-  and Dependabot security updates are enabled; branch protection is
+- 4 of 6 workflows have run on GitHub (Validate, Lint, Security
+  audit, CodeQL — PR #1 and draft PR #4, 2026-11-21, 9/9 checks
+  green on the current head; 326 unit tests, 325 pass, 0 fail,
+  1 skipped on Linux); `scheduled-maintenance` and `release`
+  have never run. Secret scanning (with push protection) and
+  Dependabot security updates are enabled; branch protection is
   still not enabled (user decision — it would block direct pushes
   to `main`). CodeQL uses the workflow (advanced setup) — default
   setup must NOT also be enabled.
@@ -140,7 +142,11 @@ plus the 2026-11-21 PR #1 run and audit fixes):
   needs-correction (all upstream, fixes belong upstream).
 - Prisma 8 still RC (3 skills); X/Twitter docs unavailable (3 skills).
 - Windows `--link` junction fallback proven on a real Windows
-  runner (PR #1, 2026-11-21; 250/255 tests pass, 0 fail).
+  runner (PR #1, 2026-11-21; 250/255 tests pass, 0 fail) and the
+  junction-removal safety test passes on the real runner (draft
+  PR #4, 330 tests, 325 pass, 0 fail, 5 POSIX-only skipped);
+  junction *creation* via the fallback on an unprivileged machine
+  is still unproven (see `ai/audits/CI-VALIDATION-REPORT.md`).
 - Model-based eval provider untested without credentials.
 - NestJS pins TS 6.x (`nest build` lacks TS 7 support).
 - Upstream drift (live 2026-11-20, Stage E): all 6 vendors

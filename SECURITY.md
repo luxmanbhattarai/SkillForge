@@ -74,12 +74,14 @@ Security here is layered; no single check is the whole story. See
   (`npm run check:upstream`).
 - **CI scanning:** CodeQL runs via a workflow
   (`.github/workflows/codeql.yml`, advanced setup) and has run on
-  GitHub (PR #1, 2026-11-21; 5 open alerts, all in upstream code —
-  triaged in `ai/audits/SECURITY-STATUS.md`). GitHub secret
-  scanning (with push protection) and Dependabot security updates
-  are enabled; branch protection is not yet enabled (user
-  decision). 4 of 6 workflows have run on GitHub; see
-  `ai/phase10/NOTES.md` for the current state.
+  GitHub (PR #1 and draft PR #4, 2026-11-21; 0 open alerts — the
+  5 alerts found, all in upstream code, were triaged and dismissed,
+  see `ai/audits/SECURITY-STATUS.md`). Semgrep SAST also runs in
+  CI (`p/javascript`, 0 findings). GitHub secret scanning (with
+  push protection) and Dependabot security updates are enabled;
+  branch protection is not yet enabled (user decision). 4 of 6
+  workflows have run on GitHub; see `ai/phase10/NOTES.md` for the
+  current state.
 - **Manual review:** imported executable code (scripts, installers) is
   read before it is trusted; the audit report records what was
   reviewed, what was found, and what remains an accepted upstream risk.

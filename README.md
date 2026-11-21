@@ -235,19 +235,18 @@ what is and is not defended against.
   an imported script without reading it first.
 
 Known limits: the custom security scanner is a pattern-based smoke
-screen, not SAST (see `docs/SECURITY-SCANNING.md`); real SAST is
-configured in CI via the Semgrep job in the security-audit workflow
-(`p/javascript` over `scripts/`, `test/`, `evals/`), added in
-b619388 and awaiting its first run on GitHub (it ran clean locally
-in Stage D, 0 findings, 68 rules), and
+screen, not SAST (see `docs/SECURITY-SCANNING.md`); real SAST runs
+in CI via the Semgrep job in the security-audit workflow
+(`p/javascript` over `scripts/`, `test/`, `evals/`), 0 findings on
+GitHub (draft PR #4, run 44946197886) and locally (68 rules), and
 Gitleaks/TruffleHog ran clean once in Stage D (2026-11-20) but are
 not in CI. GitHub secret scanning (with push protection) and
 Dependabot security updates are enabled; branch protection is not
 yet enabled (see `ai/phase10/NOTES.md` for the recommended checks).
-4 of 6 workflows ran on PR #1 and pass (Validate, Lint, Security
-audit, CodeQL; run 44933250315, 2026-11-21), including the Windows
-leg (250/255, 0 fail, 5 POSIX-only skipped).
-`scheduled-maintenance` and `release` have never run.
+All 9 CI checks pass on draft PR #4 (2026-11-21), including the
+Windows leg (330 tests, 325 pass, 0 fail, 5 POSIX-only skipped)
+and the first gating Windows runs.
+`scheduled-maintenance` and `release` have never run on GitHub.
 
 ## Documentation
 
