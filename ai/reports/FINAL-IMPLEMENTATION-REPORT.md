@@ -755,3 +755,115 @@ none hidden:
 `feat/skillforge-production-upgrade`. Status tracker:
 `ai/PROJECT-STATUS.md`. Machine-readable results:
 `ai/test-results/phase12-final-results.json`.*
+---
+
+## Addendum — Final production readiness audit & remediation (Stage E, 2026-11-20)
+
+This addendum is appended to the report; the body above is a
+historical snapshot at its commit (`2f1460b`) and was NOT silently
+rewritten. After the 12-phase upgrade, a 5-stage final production
+readiness audit & remediation (Stages A–E) ran on the same branch,
+local only — nothing pushed, merged, or PR'd. Full account:
+`ai/reports/FINAL-REMEDIATION-REPORT.md`. Head at remediation
+completion: `{{FINAL:HEAD}}` (74 commits ahead of
+`main`, 475 files changed, +89,111/−1,234).
+
+### Reconciled figures at the remediation HEAD
+
+| Metric | As reported (§2/§9/§13) | Reconciled |
+| --- | --- | --- |
+| Files changed vs `main` | 429 (+70,236/−1,165 at `d58d6b4`; +70,240 at `2f1460b`) | 475 files changed, +89,111/−1,234 |
+| Tracked files | 1,069 | 1,115 |
+| Unit tests | 129/129 pass | 128 real at report time (`test/helpers.mjs` was miscounted as a test — A-18); 249 real at the remediation HEAD, printed == counted after the helpers move to `test-support/` |
+| Eval cases | 449/449 | 463/463 (+14 non-circular discovery cases, A-33) |
+| Verification split | 204 / 16 / 6 / 51 | 254 / 17 / 6 / 0 — all 51 Phase 4 skills formally audited (Stage C); 0 unverified |
+| Security scan files | 1,032 text + 4 binary | 1,078 text + 4 binary at the remediation HEAD (see A-28 below) |
+| External URLs (online) | 609 verified | 604 enumerated; 559 checked live, 45 skipped (see A-24 below) |
+| Installer tests | 43 | 97 |
+| Upstream drift | Vercel 4 behind | 6 up-to-date, 0 behind (Vercel re-imported, A-27; confirmed in Stage E) |
+
+### Corrections to specific report statements
+
+- **A-21 (§5, Phase 3 line count).** The +1,715/−507 figure is the
+  whole Phase 3 commit, including +22/−22 of registry JSON
+  regenerated in the same commit. Skill files alone:
+  **+1,693/−485**.
+- **A-28 (§9/§13, scan file count 1,032).** 1,032 was accurate for
+  the working tree at scan time, but no committed tree scans
+  1,032 (1,029 at `6b0a79e`, 1,034 at `01a7173`): the scan ran
+  while the tree was still changing. The count grows with the
+  tree; it is a point-in-time figure, not a regression signal.
+- **A-24 (§15, "609 verified").** Only 558 URLs were HTTP-checked
+  in the Phase 12 online run; 43 documented-exception + 8
+  example-domain URLs were enumerated but never fetched, and
+  the script's summary line counted all of them as "verified".
+  The script now reports checked-live and skipped separately
+  (Stage E online re-run: 604 enumerated, 559 checked live,
+  45 skipped, 0 errors on the confirming run; the first run
+  had one transient Discord-docs timeout, verified real by an
+  independent fetch).
+- **A-31 remainder (§7, "Atomic installs with rollback").** The
+  swap is two renames, each atomic, the pair not; a kill
+  mid-swap is still not testable at CLI level, and the
+  post-swap verification branches are covered at unit level
+  only. The installer now verifies content before the swap
+  (Stage B, A-06) and the rollback path is guarded (A-05).
+  Installer tests: 43 → 97.
+- **A-32 (§5, "No upstream skill was edited").** True for skill
+  *content*. Two project-maintained vendor ATTRIBUTION.md
+  files were extended additively in `caf1f32` (marketingskills
+  tools import). The policy is clarified in
+  `sources/imported-skills.md` rule 2: the verbatim policy
+  covers upstream skill content; ATTRIBUTION.md files are
+  project-maintained.
+- **§20 item 2 (required checks).** The names listed
+  (`validate`/`registry`/`evals`) are workflow job ids, not
+  the check names GitHub shows. The correct required-check
+  names are recorded in `ai/phase10/NOTES.md`: `Validate (Node
+  18/20/22)`, `Registry`, `Behavioral evals`, `lint`,
+  `security-audit`, plus `Analyze (javascript-typescript)`
+  recommended. Do NOT require `Windows (Node 20)` until the
+  advisory Windows leg is promoted after a green real PR run.
+- **§2/§9 (test count 129/129).** The true count at report time
+  was 128 (see the table above). The discrepancy is the
+  helpers-file miscount (A-18), not a missing test.
+
+### What changed since the report
+
+- All 51 Phase 4 skills audited (Stage C): 19 PASS, 32 FIXED,
+  60 findings (0 Critical, 3 High, 11 Medium, 38 Low, 8
+  Informational), 54 fixed, 0 unresolved. The largest
+  remaining gap named in §20 item 4 is closed.
+- Installer hardened (Stage B): manifest path-traversal closed
+  (A-02/A-03), lockfile concurrency control, guarded rollback,
+  pre-swap verification, dry-run truly read-only, fail-closed
+  manifest repair (Stage C: 145 corrected skills
+  regression-reviewed, 5 findings fixed; Stage D: Windows
+  `--link` junction fallback, POSIX path normalization).
+- Security: S-01–S-06 and S-15 fixed and re-verified; S-07,
+  S-10, S-12, S-13 accepted with documented rationale; S-08,
+  S-09, S-11 mitigated in-repo (safe-install guide + warnings)
+  but still open upstream; S-14 MONITOR stands. External
+  scanners ran clean (Gitleaks 8.30.1, TruffleHog 3.100.0,
+  Semgrep 1.186.0). Full status: `ai/audits/SECURITY-STATUS.md`.
+- CI validated locally (123 checks, 0 fail; action SHAs
+  re-verified; concurrency controls added; advisory Windows
+  leg). Node 18.20.8 + 22.23.5 exercised locally.
+- The link-checker hardening suggested in §20 item 5 was
+  implemented (Stage D, A-23): code stripping, retry/backoff,
+  inter-request delay.
+
+### What is still open (see FINAL-REMEDIATION-REPORT.md §11)
+
+No workflow has run on GitHub (L-CI); no real Windows execution
+has happened (L-Win — junction removal safety unproven);
+S-08/S-09/S-11 still open upstream; CodeQL never run anywhere;
+no real-model eval run executed (L-Model); branch protection and
+secret scanning are manual post-merge settings (L-Settings).
+
+### Production verdict (Stage E)
+
+**READY FOR PULL REQUEST REVIEW** — not higher, because the
+open items above can only be closed by the first PR run, a real
+Windows run, and upstream fixes. Evidence and acceptance
+criteria: `ai/reports/PRODUCTION-ACCEPTANCE-CHECKLIST.md`.

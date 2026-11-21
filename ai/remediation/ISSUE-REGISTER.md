@@ -13,6 +13,10 @@
   carried forward; `L-` = report §18 limitations carried forward.
 - **Stage B (2026-11-20):** all 21 Stage B issues were addressed — see `ai/remediation/STAGE-B-RESULTS.md`. Each Stage B issue below carries a Stage B status line.
 - **Stage D (2026-11-20):** all 8 Stage D issues were addressed — see `ai/remediation/STAGE-D-RESULTS.md`. Each Stage D issue below carries a Stage D status line.
+- **Stage E (2026-11-20):** all 14 Stage E issues were addressed — see
+  `ai/reports/FINAL-REMEDIATION-REPORT.md`. Each Stage E issue below
+  carries a Stage E status line. Three new Low findings were raised in
+  Stage E: A-36 (carried forward), A-37 and A-38 (fixed).
 
 ## Summary by severity
 
@@ -21,9 +25,9 @@
 | Critical | 0 | — |
 | High | 3 | A-01, A-02, S-08 |
 | Medium | 15 | A-03–A-10, S-07, S-09, S-10, S-11, S-14, L-51, L-CI |
-| Low | 26 | A-11–A-28, S-12, S-13, L-Node, L-Scan, L-Settings, L-Win, L-Model, L-Prisma |
+| Low | 29 | A-11–A-28, A-36–A-38, S-12, S-13, L-Node, L-Scan, L-Settings, L-Win, L-Model, L-Prisma |
 | Informational | 8 | A-29–A-35, L-02/L-03 |
-| **Total** | **52** | |
+| **Total** | **55** | |
 
 ## Summary by stage
 
@@ -32,10 +36,10 @@
 | B (high-risk fixes) | 21 | A-01–A-09, A-14, A-16, A-20, A-30, S-07–S-14 |
 | C (quality) | 12 | A-10, A-12, A-13, A-15, A-17, A-19, A-31, A-33, A-34, L-51, L-Model, L-Prisma |
 | D (platform & CI) | 8 | A-11, A-23, A-27, A-29, L-CI, L-Node, L-Scan, L-Win |
-| E (final verification) | 11 | A-18, A-21, A-22, A-24–A-26, A-28, A-32, A-35, L-Settings, L-02/L-03 |
+| E (final verification) | 14 | A-18, A-21, A-22, A-24–A-26, A-28, A-32, A-35, A-36–A-38, L-Settings, L-02/L-03 |
 
 Note: A-23 (link-checker hardening) and A-27 (Vercel re-import decision) are listed
-under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
+under D with E involvement. Counts sum to 55 (21 + 12 + 8 + 14).
 
 ---
 
@@ -259,6 +263,12 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-18 — Low — Test count: 129 printed vs 128 real tests (Stage E)
 
+- **Stage E status (2026-11-20):** **Fixed** — `test/helpers.mjs` moved to
+  `test-support/helpers.mjs` (same depth, so REPO_ROOT still resolves); 6
+  imports + the workflow comment updated. A glob-scoped test script was
+  rejected (breaks the Windows CI leg: Node 20 + cmd.exe cannot expand
+  globs). `npm test` now prints exactly the real count (249 pass, 0 fail;
+  249 `test()` calls counted). Commit `39c1c17`.
 - **Evidence:** per-file `test()` counts sum to 128; the 129th "test" is
   `test/helpers.mjs` itself, executed as a test file with 0 tests because it lives
   under `test/` (visible as `✔ test/helpers.mjs` in `npm test` output).
@@ -286,6 +296,11 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-21 — Low — Phase 3 line-count figure includes registry JSON (Stage E)
 
+- **Stage E status (2026-11-20):** **Fixed** — clarified in the report
+  addendum (FINAL-IMPLEMENTATION-REPORT.md) and the PROJECT-STATUS Phase
+  3 row: skill files +1,693/−485; the +22/−22 delta is registry JSON in
+  the same commit.
+
 - **Evidence:** report §5 and PROJECT-STATUS Phase 3 row present +1,715/−507 as the
   skill-correction figure; skill files alone are +1,693/−485 (commit `cabb9cf`
   numstat). The +22/−22 delta is registry regeneration in the same commit.
@@ -294,6 +309,12 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 - **Fix:** clarify wording (see matrix claim 5).
 
 ### A-22 — Low — Thin per-phase evidence packaging (Stage E)
+
+- **Stage E status (2026-11-20):** **Fixed** — backfilled with pointers,
+  not invented numbers: NOTES.md in each empty `ai/phaseN/` dir + two
+  phase results summaries (`phase4-expansion-summary.md`,
+  `phase8-agents-workflows-summary.md`). All 22 cited commit SHAs
+  verified to exist with matching subjects. Commit `baee775`.
 
 - **Evidence:** 8 of 12 `ai/phaseN/` directories are empty (0 tracked files:
   phase1, 2, 5, 6, 7, 8, 9, 12); `ai/test-results/` has no `phase4-*` or `phase8-*`
@@ -314,6 +335,11 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-24 — Low — "609 verified" counts 51 skipped URLs (Stage E)
 
+- **Stage E status (2026-11-20):** **Fixed** — `verifyExternalUrls` now
+  returns `fetched`; the online summary reports "(N checked live, M
+  skipped)". Stage E online re-run: 604 enumerated, 559 checked live, 45
+  skipped, 0 errors on the confirming run. Regression test added
+  (`test/links.test.mjs`, A-24). Commits `fad76e0`, `b623017`.
 - **Evidence:** only 558 URLs were HTTP-checked; 43 exception + 8 example-domain URLs
   were never fetched in the run, but the script's summary line (mirrored verbatim by
   the report) counts all 609 enumerated URLs as "verified".
@@ -322,6 +348,14 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 - **Fix:** report "609 unique external URLs (558 checked live, 51 skipped)".
 
 ### A-25 — Low — No LICENSE file preserved in 3 of 6 upstream imports (Stage E)
+
+- **Stage E status (2026-11-20):** **Decision recorded** — dated note in
+  `sources/licenses.md`: all three LICENSEs exist upstream at the pins
+  (Superpowers MIT ©2025 Jesse Vincent; Prisma MIT ©2025 Prisma;
+  MarketingSkills MIT ©2025 Corey Haines); Vercel has none (README-only
+  MIT). At the next re-import of each vendor, copy the LICENSE verbatim
+  into the vendor directory. No file added under `skills/upstream/` in
+  this stage. Commit `baee775`.
 
 - **Evidence:** superpowers, prisma, marketingskills ship no license file in the
   imported copy (only ATTRIBUTION.md records holder + license); Vercel has no LICENSE
@@ -335,6 +369,13 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
   the decision.
 
 ### A-26 — Low — Agentic-seo second copyright holder unrecorded (Stage E)
+
+- **Stage E status (2026-11-20):** **Fixed** — both copyright holders
+  recorded in `sources/licenses.md` and
+  `skills/upstream/agentic-seo/ATTRIBUTION.md` (one line each; the
+  ATTRIBUTION.md edit is to a project-maintained file, see A-32).
+  Upstream LICENSE verified byte-identical to the local copy (SHA-256
+  `aa3532d279e8…`). Commit `baee775`.
 
 - **Evidence:** upstream `LICENSE` (byte-identical to the local copy) lists
   `Copyright (c) 2026 Bhanu Namikaze` **and** `Copyright (c) 2026 agricidaniel`;
@@ -354,6 +395,11 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 - **Fix:** re-import decision at the next update cycle (per `docs/UPDATE-PROCESS.md`).
 
 ### A-28 — Low — Report §9/§13 file count (1,032) is stale (Stage E)
+
+- **Stage E status (2026-11-20):** **Fixed** — timing explanation in the
+  report addendum: 1,032 was accurate for the working tree at scan time;
+  no committed tree scans 1,032 (1,029 at `6b0a79e`, 1,034 at
+  `01a7173`).
 
 - **Evidence:** 1,032 was accurate for the working tree at scan time (see matrix
   §0.3), but no committed tree scans 1,032 (1,029 at `6b0a79e`, 1,034 at `01a7173`,
@@ -398,6 +444,12 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-32 — Informational — Two upstream ATTRIBUTION.md files modified (Stage E)
 
+- **Stage E status (2026-11-20):** **Fixed** — policy clarified in
+  `sources/imported-skills.md` rule 2: the verbatim policy covers
+  upstream skill *content*; vendor ATTRIBUTION.md files are
+  project-maintained and may carry additive project documentation
+  (`caf1f32` precedent named). Commit `baee775`.
+
 - **Evidence:** report §5 says "No upstream skill was edited at any point" — true for
   skill *content* (0 upstream SKILL.md files modified in `main...HEAD`), but 2
   upstream files were modified: `skills/upstream/marketingskills/ATTRIBUTION.md` and
@@ -433,6 +485,11 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-35 — Informational — PDF report not in repo; no PDF-generation process (Stage E)
 
+- **Stage E status (2026-11-20):** **Recorded** — Markdown remains the
+  source of truth per mission brief §13.5; no PDF dependency introduced.
+  The user-supplied PDF is content-equivalent to the Markdown (Stage A
+  §0.1). See FINAL-REMEDIATION-REPORT.md §9.
+
 - **Evidence:** the only PDF in the repo is the upstream
   `skills/upstream/anthropic/theme-factory/theme-showcase.pdf`. No pandoc/wkhtmltopdf/
   puppeteer tooling, no `pdf` script in `package.json`, no PDF step in any workflow.
@@ -442,6 +499,70 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
   source of truth; do not introduce a PDF dependency.
 - **Affected files:** n/a (recorded limitation).
 - **Fix:** none — record in the final remediation report.
+
+### A-36 — Low — Link checker never enumerates bare URLs (Stage E, carried forward)
+
+- **Stage E status (2026-11-20):** **Carried forward** — not fixed in
+  this stage (changing the extractor would change the enumerated count
+  and require a fresh online run at the last stage). Extend the
+  extractor to bare URLs at the next link-checker pass; re-run the
+  online check after the change.
+- **Evidence:** `LINK_RE` in `scripts/check-links.mjs` matches only
+  Markdown-style `[text](url)` links. 88 bare URLs exist in the tree
+  (mostly evidence citations in `ai/` audit reports; the 3 license URLs
+  in `sources/licenses.md` among them). The enumerated 604-URL set is
+  identical at `ccfb4d1` and at the Stage E head (verified by diffing
+  the two enumerations produced with the checker's own extractor).
+  Skill content is unaffected — skills use Markdown links. The 3
+  license URLs were verified manually via upstream fetch (A-25).
+- **Affected files:** `scripts/check-links.mjs` (LINK_RE).
+- **Fix:** extend extraction to bare `http(s)://` URLs (excluding code,
+  as now); re-run the online check; expect the enumerated count to rise
+  by the bare-URL count.
+
+### A-37 — Low — Registry generator writes non-atomically (Stage E)
+
+- **Stage E status (2026-11-20):** **Fixed** — writes are now
+  temp-file + rename (atomic on POSIX and Windows). Regression test
+  added (`test/registry.test.mjs`: 10 generator runs under a
+  concurrent reader, 0 partial reads — fails pre-fix with 5 partial
+  reads in 1,548 reads). Commit `182bc15`.
+- **Evidence:** `scripts/generate-registry.mjs` wrote registry files
+  with a plain `writeFile`. The suite runs the generator against the
+  real repo (determinism test) while other test files read the
+  registry in parallel; a race probe proved partial reads (20
+  SyntaxErrors in 30 generator runs under a concurrent reader; 0
+  after the fix). Found while investigating the intermittent suite
+  failure, but NOT the cause of the two observed failures — those
+  were A-38. Same non-atomic pattern exists in
+  `generate-report.mjs` and `run-evals.mjs`, but no concurrent readers
+  exist there — follow-up, not fixed here.
+- **Affected files:** `scripts/generate-registry.mjs`,
+  `test/registry.test.mjs`.
+
+### A-38 — Low — Evals test deletes a real-tree directory mid-suite; link checker crashes on ENOENT (Stage E)
+
+- **Stage E status (2026-11-20):** **Fixed** — the evals test now runs
+  against a temp copy of the repo; the checker and scanner tolerate
+  ENOENT on read. No deterministic regression test exists for the
+  ENOENT tolerance (it guards a race); the root-cause fix is covered
+  by the suite passing repeatedly and by inspection (no test writes
+  to the real tree). Commit `783392d`.
+- **Evidence:** the "model run without --out" evals test ran the
+  runner against the REAL repo and then `rm -rf`'d the
+  `evals/reports/model/` directory it created. While the directory
+  existed, the link checker's offline scan (parallel test file) could
+  list `evals/reports/model/latest.md` and then fail to open it after
+  the rm — ENOENT, exit 2. Identified from the saved log of a failing
+  run: `Link check failed: ENOENT …/evals/reports/model/latest.md`,
+  `2 !== 0`. This was the cause of both observed intermittent
+  failures (2 in 18 runs), not A-37. Same commit also added 6 narrow
+  per-file/per-pattern scan exceptions for the two Stage E docs
+  (SECURITY-STATUS.md, FINAL-REMEDIATION-REPORT.md), which quote
+  flagged constructs as evidence for S-08/S-09/S-10/S-11 (A-01
+  precedent).
+- **Affected files:** `test/evals.test.mjs`,
+  `scripts/check-links.mjs`, `scripts/security-scan.mjs`.
 
 ---
 
@@ -549,6 +670,14 @@ supply-chain verification reproduced (claim 15).
 ### L-51 — Medium — 51 Phase 4 skills are `unverified` (Stage C)
 
 - **Stage C status (2026-11-20):** **Fixed** — all 51 audited individually (see `ai/audits/SKILL-AUDIT-MATRIX.md`): 59 findings (0 Critical, 3 High, 10 Medium, 38 Low, 8 Informational), 53 fixed in place, 6 Informational needing no fix, 0 unresolved. 50 skills → `verified`, 1 (`platform-social-images`) → `verified-with-limitations`; 0 skills remain `unverified` (library split now 254/17/6/0). The 145 corrected skills were also regression-reviewed (5 findings, all fixed). Commits `3afb568`, `c8f6925`, `3504c26`, `7bdc7ca`, `a2309fd`, `8769a02`, `2a6af50`.
+- **Stage E correction (2026-11-20):** the Stage C finding total was
+  undercounted by one in the batch table: the matrix rows sum to **60
+  findings (0 Critical, 3 High, 11 Medium, 38 Low, 8 Informational), 54
+  fixed** — not 59 (10 Medium), 53 fixed. Root cause: batch 4
+  (infrastructure) undercounted by one (K-01, P-01, R-01 are each a
+  Medium). Row data and detailed findings sections were always
+  consistent at 60/54. Matrix summary + a dated correction note in
+  STAGE-C-RESULTS.md. Commit `3c9706c`.
 - **Evidence:** `sources/verification-status.json`: 51 skills `unverified` — written
   against official docs, no formal technical-accuracy audit yet. The largest remaining
   verification gap (report §18/§19, mission brief §3). Stage C audits all 51
@@ -578,6 +707,11 @@ supply-chain verification reproduced (claim 15).
 
 ### L-Settings — Low — Secret scanning, Dependabot alerts, branch protection are manual repo settings (Stage E / post-merge)
 
+- **Stage E status (2026-11-20):** **Carried forward (post-merge)** —
+  post-merge checklist documented in
+  `ai/reports/PRODUCTION-ACCEPTANCE-CHECKLIST.md` and
+  `ai/phase10/NOTES.md` (corrected check names from Stage D); do NOT
+  enable CodeQL default setup (conflicts with the workflow setup).
 - **Evidence:** report §18/§19 and `ai/phase10/NOTES.md`. Cannot be enabled from this
   environment. Stage E documents the post-merge checklist; do NOT enable CodeQL
   default setup (conflicts with the workflow setup).
@@ -609,6 +743,9 @@ supply-chain verification reproduced (claim 15).
 
 ### L-02/L-03 — Informational — Open by decision (no action)
 
+- **Stage E status (2026-11-20):** **No action** — confirmed open by
+  decision (two upstream Prisma pointer stubs, correct verbatim imports;
+  progressive disclosure deliberately not churned into original skills).
 - **Evidence:** L-02: two upstream Prisma skills are 14-line pointer stubs
   (informational; correct verbatim imports). L-03: progressive disclosure
   (`references/`, `examples/`, `scripts/`, `assets/`) specified but unused by original
