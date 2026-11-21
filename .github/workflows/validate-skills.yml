@@ -30,6 +30,7 @@ jobs:
     # engines >= 24, so CI exercises the supported floor.
     name: Validate (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -74,6 +75,7 @@ jobs:
     # is enough.
     name: Registry
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Check out repository
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
@@ -100,12 +102,28 @@ jobs:
             exit 1
           fi
 
+      - name: Regenerate audit report
+        run: npm run report
+
+      - name: Fail if audit report differs from generated output
+        # A2-11: report.json / AUDIT-REPORT.md are generated from
+        # the registry; without this gate they could go stale
+        # silently after a registry change.
+        run: |
+          if ! git diff --exit-code --quiet -- report.json AUDIT-REPORT.md; then
+            echo "::error::The committed audit report is out of date."
+            echo "Fix: run 'npm run report' locally and commit the result."
+            git diff --stat -- report.json AUDIT-REPORT.md
+            exit 1
+          fi
+
   evals:
     # Behavioral evaluation of the library with the deterministic mock
     # provider (the default: no LLM APIs, no keys, no network). A
     # model-provider run needs credentials and is not run in CI.
     name: Behavioral evals
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Check out repository
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
@@ -136,8 +154,12 @@ jobs:
     # tests passing on the real runner, and the validator's
     # Windows path bug plus 7 Windows-only test failures were
     # fixed from the first real runs (see ai/PROJECT-STATUS.md).
-    # The leg is a required branch-protection check
-    # (ai/phase10/NOTES.md).
+    # The leg is a RECOMMENDED required branch-protection check
+    # (ai/phase10/NOTES.md) — recommended, not in force: branch
+    # protection is NOT currently enabled on main (audit finding
+    # A4-02), so today the leg gates the run — a failure fails the
+    # run — but does not block merging. Enabling protection is an
+    # owner decision (it blocks direct pushes to main).
     #
     # Deliberately NOT run here: check:security, check:links,
     # score, check:registry and the registry diff, evals. All are

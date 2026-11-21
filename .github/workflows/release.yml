@@ -19,6 +19,7 @@ permissions:
 jobs:
   release-validation:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Check out repository
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
@@ -69,5 +70,20 @@ jobs:
             echo "::error::The committed registry is out of date."
             echo "Fix: run 'npm run registry' locally and commit the result."
             git diff --stat registry/
+            exit 1
+          fi
+
+      - name: Regenerate audit report
+        run: npm run report
+
+      - name: Fail if audit report differs from generated output
+        # A2-11: report.json / AUDIT-REPORT.md are generated from
+        # the registry; without this gate they could go stale
+        # silently after a registry change.
+        run: |
+          if ! git diff --exit-code --quiet -- report.json AUDIT-REPORT.md; then
+            echo "::error::The committed audit report is out of date."
+            echo "Fix: run 'npm run report' locally and commit the result."
+            git diff --stat -- report.json AUDIT-REPORT.md
             exit 1
           fi
