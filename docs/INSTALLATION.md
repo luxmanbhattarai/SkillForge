@@ -245,13 +245,23 @@ The current rules:
 - **Restore is reversible.** Restoring over current content backs
   the current content up first (reason `pre-restore`), so a
   restore can always be undone by restoring the newer backup.
-- **Atomic installs.** Each item is staged in a temporary
-  directory next to its destination and swapped in with renames.
-  A failure mid-copy leaves no half-installed skill: the staging
-  directory is removed and the previous content (if any) is put
-  back. Leftover staging directories from a killed run are named
-  `.skillforge-tmp-*`; the installer cleans them up on the next
-  run and `doctor` reports them.
+- **Two-rename swap (not atomic).** Each item is staged in a
+  temporary directory next to its destination and swapped in with
+  two renames: the old content moves aside to a trash directory,
+  then the staged content moves into place. Each rename is atomic,
+  but the pair is not — a kill between the two renames leaves the
+  destination missing. The old content survives in the
+  `.skillforge-tmp-old-*` trash directory until the next run's
+  cleanup, and every replacement is backed up first, so the item
+  is recoverable via `restore`. If the second rename fails, the
+  installer puts the old content back; if that rollback fails too,
+  it reports both errors and deletes neither copy, leaving the
+  trash and staged paths in the message for manual recovery. A
+  failure mid-copy leaves no half-installed skill: the staging
+  directory is removed and the previous content (if any) is
+  untouched. Leftover staging directories from a killed run are
+  named `.skillforge-tmp-*`; the installer cleans them up on the
+  next run and `doctor` reports them.
 - **Partial failure is reported, not hidden.** One bad item never
   aborts the run; the summary lists what was installed, updated,
   skipped, refused, and failed, and the exit code is non-zero

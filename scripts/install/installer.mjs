@@ -10,8 +10,13 @@
 //   * Backup before ANY replacement or removal of content that is
 //     not byte-identical to what the manifest records.
 //   * Never leave a half-copied item: stage in a temp directory next
-//     to the destination, then swap it in with renames (atomic on
-//     the same filesystem), with rollback if the swap fails.
+//     to the destination, then swap it in with two renames. Each
+//     rename is atomic on the same filesystem, but the pair is
+//     NOT atomic: a kill between the two renames leaves the
+//     destination missing (the old content survives in the trash
+//     directory and in the backup). If the second rename fails,
+//     the old content is put back; if that rollback fails too,
+//     both errors are reported and neither copy is deleted.
 //   * Idempotent: re-running an install with no changes is a no-op
 //     reporting "already installed".
 //   * Partial failure: one bad item never aborts the run; results
@@ -355,7 +360,13 @@ export async function classifyUpdate(planned, entry) {
 
 // ---------------------------------------------------------------- atomic writes
 
-/** Remove leftover staging/trash dirs from interrupted runs. */
+/**
+ * Remove leftover staging/trash dirs from interrupted runs.
+ * Callers hold the install lock (see lock.mjs), so no other live
+ * run has staging here: anything matching the prefix belongs to a
+ * dead or interrupted run and is safe to remove. Runs that could
+ * not acquire the lock skip this cleanup (see commands.mjs).
+ */
 export async function cleanStaleStaging(dir) {
   let entries;
   try {
@@ -374,29 +385,49 @@ export async function cleanStaleStaging(dir) {
 }
 
 /**
- * Atomically swap staged content into place. `stagedAbs` must be in
- * the same directory as `destAbs` (same filesystem, so renames are
- * atomic). If the destination exists it is moved aside first and
- * restored if the swap fails. Never leaves a half-written item.
+ * Swap staged content into place with two renames. `stagedAbs`
+ * must be in the same directory as `destAbs` (same filesystem, so
+ * each rename is atomic). This is NOT a single atomic operation:
+ * a kill between the two renames leaves the destination missing
+ * (the old content is in the trash directory, recoverable via
+ * backup). If the second rename fails, the old content is put
+ * back; if the rollback itself fails, both errors are reported
+ * and NEITHER copy is deleted — the trash and staged paths are in
+ * the message for manual recovery.
+ *
+ * `fsOps` (default: node:fs/promises rename/rm) exists so tests
+ * can fault-inject rename failures.
  */
-export async function swapIn(stagedAbs, destAbs) {
+export async function swapIn(stagedAbs, destAbs, fsOps = { rename, rm }) {
   const parent = path.dirname(destAbs);
   const trash = path.join(parent, `${STALE_PREFIX}old-${path.basename(destAbs)}-${process.pid}-${rand()}`);
   const destExists = (await lstatOrNull(destAbs)) !== null;
   if (!destExists) {
-    await rename(stagedAbs, destAbs);
+    await fsOps.rename(stagedAbs, destAbs);
     return;
   }
-  await rename(destAbs, trash);
+  await fsOps.rename(destAbs, trash);
   try {
-    await rename(stagedAbs, destAbs);
+    await fsOps.rename(stagedAbs, destAbs);
   } catch (err) {
-    // Roll back: put the old content back.
-    await rename(trash, destAbs);
-    await rm(stagedAbs, { recursive: true, force: true }).catch(() => {});
+    // Roll back: put the old content back. The rollback rename is
+    // guarded — if it fails too, the old content is in `trash`
+    // and the new content is still in `stagedAbs`, and either
+    // could be the only copy, so delete neither.
+    try {
+      await fsOps.rename(trash, destAbs);
+    } catch (rollbackErr) {
+      throw new InstallerError(
+        `swap failed for ${destAbs} (${err.message}) and the rollback also failed (${rollbackErr.message}); ` +
+          `the previous content is still in ${trash} and the new content is still in ${stagedAbs} — ` +
+          'neither was deleted, restore one of them manually (or restore from a backup)',
+        { cause: err },
+      );
+    }
+    await fsOps.rm(stagedAbs, { recursive: true, force: true }).catch(() => {});
     throw err;
   }
-  await rm(trash, { recursive: true, force: true }).catch(() => {});
+  await fsOps.rm(trash, { recursive: true, force: true }).catch(() => {});
 }
 
 /** Stage an item's content next to its destination; returns the staged path. */

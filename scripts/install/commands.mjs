@@ -16,9 +16,11 @@ import {
   newManifest,
   readManifest,
   sortedEntries,
+  validatePathSegment,
   writeManifest,
 } from './manifest.mjs';
-import { createBackup, listBackups, readBackup, backupsDir } from './backups.mjs';
+import { createBackup, listBackups, readBackup, backupsDir, InvalidBackupError } from './backups.mjs';
+import { withLock } from './lock.mjs';
 import { resolveSelection, splitList } from './library.mjs';
 import { splitFrontmatter, parseFrontmatter } from '../lib/frontmatter.mjs';
 import {
@@ -49,6 +51,31 @@ function label(kind, name) {
 
 function hasSelectors(ctx) {
   return [ctx.skills, ctx.categories, ctx.agents, ctx.workflows].some((v) => v && v.length);
+}
+
+// Mutating commands run under the install lock (lock.mjs) so two
+// concurrent runs cannot lose manifest entries or delete each
+// other's staging. Dry runs and restore --list take no lock: they
+// change nothing. When the lock file cannot be created at all
+// (e.g. a read-only skills dir), the run proceeds unheld with a
+// warning and ctx.lockHeld === false, which tells
+// executeInstallRun to skip stale-staging cleanup — without the
+// lock, another live run's staging could be deleted. Such a run
+// cannot write the manifest anyway, so it cannot corrupt shared
+// state; it fails at its first real write with the underlying
+// error, exactly as before.
+async function withInstallLock(ctx, locations, command, fn) {
+  if (ctx.dryRun || ctx.listBackups) return fn();
+  return withLock(locations.skillsDir, { command }, (lock) => {
+    ctx.lockHeld = lock.held;
+    if (!lock.held) {
+      ctx.err(
+        `warning: could not create the installer lock in ${locations.skillsDir} (${lock.error.message}); ` +
+          'proceeding without concurrency protection.',
+      );
+    }
+    return fn();
+  });
 }
 
 // Read the manifest for a mutating command. A missing manifest
@@ -184,10 +211,14 @@ async function executeInstallRun(ctx, locations, plannedItems, manifest, { comma
   const results = { installed: [], updated: [], already: [], skipped: [], refused: [], failed: [] };
   const toWrite = plannedItems.filter((p) => ['install', 'update', 'overwrite'].includes(p.action));
 
-  const roots = [...new Set(toWrite.map((p) => p.rootDir))];
-  for (const root of roots) {
-    const cleaned = await cleanStaleStaging(root);
-    for (const name of cleaned) ctx.err(`note: removed leftover staging directory ${name} from an interrupted run`);
+  // Stale cleanup only under the lock: without it, another live
+  // run's staging could be deleted (see withInstallLock).
+  if (ctx.lockHeld !== false) {
+    const roots = [...new Set(toWrite.map((p) => p.rootDir))];
+    for (const root of roots) {
+      const cleaned = await cleanStaleStaging(root);
+      for (const name of cleaned) ctx.err(`note: removed leftover staging directory ${name} from an interrupted run`);
+    }
   }
 
   let executable = toWrite;
@@ -297,6 +328,10 @@ function noteLinkScope(ctx, items) {
 
 export async function cmdInstall(ctx) {
   const locations = resolveLocations(ctx);
+  return withInstallLock(ctx, locations, 'install', () => runInstall(ctx, locations));
+}
+
+async function runInstall(ctx, locations) {
   const selection = hasSelectors(ctx) ? ctx : { ...ctx, skills: ['all'] };
   const { items, errors } = resolveSelection(ctx.library, selection);
   if (errors.length) throw new UsageError(errors.join('; '));
@@ -335,6 +370,10 @@ export async function cmdInstall(ctx) {
 
 export async function cmdUpdate(ctx) {
   const locations = resolveLocations(ctx);
+  return withInstallLock(ctx, locations, 'update', () => runUpdate(ctx, locations));
+}
+
+async function runUpdate(ctx, locations) {
   const { manifest, error } = await readManifest(locations.skillsDir);
   if (!manifest) {
     if (error === 'missing') {
@@ -822,6 +861,10 @@ export async function cmdValidate(ctx) {
 
 export async function cmdUninstall(ctx) {
   const locations = resolveLocations(ctx);
+  return withInstallLock(ctx, locations, 'uninstall', () => runUninstall(ctx, locations));
+}
+
+async function runUninstall(ctx, locations) {
   const { manifest, error } = await readManifest(locations.skillsDir);
   let manifestObj = manifest;
   if (!manifestObj) {
@@ -1046,7 +1089,16 @@ export async function cmdUninstall(ctx) {
 // ---------------------------------------------------------------- restore
 
 function backupItemPaths(record, item) {
+  // Defensive guard (readBackup already validated the record):
+  // storedAs/fileName come from backup.json, so they must be
+  // single segments before being joined under the backup dir.
+  const storedProblem = validatePathSegment(item.storedAs, 'storedAs');
+  if (storedProblem) throw new InvalidBackupError(`Backup item '${item.name}': ${storedProblem}.`);
   const storedDir = path.join(record.dir, 'items', item.storedAs);
+  if (item.fileName) {
+    const fileProblem = validatePathSegment(item.fileName, 'fileName');
+    if (fileProblem) throw new InvalidBackupError(`Backup item '${item.name}': ${fileProblem}.`);
+  }
   return { storedDir, storedFile: item.fileName ? path.join(storedDir, item.fileName) : storedDir };
 }
 
@@ -1080,6 +1132,10 @@ async function hashLiveContent(item, destAbs) {
 
 export async function cmdRestore(ctx) {
   const locations = resolveLocations(ctx);
+  return withInstallLock(ctx, locations, 'restore', () => runRestore(ctx, locations));
+}
+
+async function runRestore(ctx, locations) {
   const backups = await listBackups(locations.skillsDir);
 
   if (ctx.listBackups) {
@@ -1108,7 +1164,10 @@ export async function cmdRestore(ctx) {
   let record;
   try {
     record = await readBackup(locations.skillsDir, id);
-  } catch {
+  } catch (err) {
+    // Invalid input (a traversal id or a crafted backup.json) gets
+    // its own message; anything else means "no such backup".
+    if (err instanceof InvalidBackupError) throw new UsageError(err.message);
     const available = backups.map((b) => b.id);
     throw new UsageError(
       `No backup '${id}' in ${backupsDir(locations.skillsDir)}.` +
@@ -1133,9 +1192,17 @@ export async function cmdRestore(ctx) {
   }
 
   // Classify: missing on disk | identical | replace.
+  // The entry was validated by readBackup; entryRoot re-checks it
+  // defensively, so a crafted backup.json can never steer the
+  // restore destination outside the install locations.
   const planned = [];
   for (const item of items) {
-    const entry = item.entry || { root: item.root || '.', destName: item.destName || item.name };
+    const entry = item.entry || {
+      kind: item.kind,
+      name: item.name,
+      root: item.root || '.',
+      destName: item.destName || item.name,
+    };
     const rootDir = entryRoot(locations.skillsDir, entry);
     const destAbs = path.join(rootDir, entry.destName);
     const paths = backupItemPaths(record, item);

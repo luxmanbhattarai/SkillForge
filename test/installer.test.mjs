@@ -5,8 +5,8 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { execFile } from 'node:child_process';
-import { access, appendFile, chmod, cp, lstat, mkdir, readFile, readlink, rm, writeFile } from 'node:fs/promises';
+import { execFile, spawnSync } from 'node:child_process';
+import { access, appendFile, chmod, cp, lstat, mkdir, readFile, readlink, rename, rm, utimes, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import {
   INSTALLER,
@@ -657,4 +657,342 @@ test('help and version work', async () => {
   const v = await runCli(['--version'], { home, proj });
   assert.equal(v.code, 0);
   assert.match(v.stdout, /skillforge-installer \d+\.\d+\.\d+/);
+});
+
+// ---------------------------------------------------------------- A-02: manifest traversal
+
+/** Install fixture-one from a fixture library; returns its env + manifest path. */
+async function installFixtureSkill(base, home, proj) {
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  const r = await runCli(['install', '--dest', 'out', '--skill', 'fixture-one'], { home, proj, env });
+  assert.equal(r.code, 0, r.stderr);
+  return { env, manifestFile: path.join(proj, 'out', '.skillforge-manifest.json') };
+}
+
+test('A-02: manifest with an absolute root is corrupt; update/uninstall refuse, sentinel untouched', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const { env, manifestFile } = await installFixtureSkill(base, home, proj);
+  const sentinelDir = path.join(base, 'outside');
+  await mkdir(sentinelDir, { recursive: true });
+  const sentinel = path.join(sentinelDir, 'keep.txt');
+  await writeFile(sentinel, 'KEEP\n');
+
+  const manifest = await readJson(manifestFile);
+  manifest.items['skill:fixture-one'].root = sentinelDir; // absolute root
+  manifest.items['skill:fixture-one'].destName = 'keep.txt';
+  await writeFile(manifestFile, JSON.stringify(manifest, null, 2));
+
+  const dest = ['--dest', 'out'];
+  const update = await runCli(['update', ...dest], { home, proj, env });
+  assert.equal(update.code, 1);
+  assert.match(update.stderr, /corrupt: invalid manifest entry/);
+  const uninstall = await runCli(['uninstall', ...dest, '--skill', 'fixture-one'], { home, proj, env });
+  assert.equal(uninstall.code, 1);
+  assert.match(uninstall.stderr, /corrupt: invalid manifest entry/);
+  // Even --force uninstall must not follow the crafted entry: it
+  // falls back to the skills dir and leaves the sentinel alone.
+  const forced = await runCli(['uninstall', ...dest, '--skill', 'fixture-one', '--force'], { home, proj, env });
+  assert.equal(forced.code, 0, forced.stderr);
+  assert.equal(await readFile(sentinel, 'utf8'), 'KEEP\n');
+
+  // Install quarantines the malicious manifest instead of trusting it.
+  await writeFile(manifestFile, JSON.stringify(manifest, null, 2));
+  const reinstall = await runCli(['install', ...dest, '--skill', 'fixture-one'], { home, proj, env });
+  assert.equal(reinstall.code, 0, reinstall.stderr);
+  assert.match(reinstall.stderr, /corrupt: invalid manifest entry/);
+  const quarantined = (await listNames(path.join(proj, 'out'))).filter((n) => n.startsWith('.skillforge-manifest.json.corrupt-'));
+  assert.equal(quarantined.length, 1);
+  assert.equal(await readFile(sentinel, 'utf8'), 'KEEP\n');
+});
+
+test('A-02: relative root escape and destName traversal are corrupt', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const { env, manifestFile } = await installFixtureSkill(base, home, proj);
+  // Sentinel 1: reachable via a root escape from proj/out.
+  const outside = path.join(proj, 'outside');
+  await mkdir(path.join(outside, 'fixture-one'), { recursive: true });
+  const sentinel1 = path.join(outside, 'fixture-one', 'keep.txt');
+  await writeFile(sentinel1, 'KEEP\n');
+  // Sentinel 2: reachable via a destName escape from proj/out.
+  const sentinel2 = path.join(proj, 'keep.txt');
+  await writeFile(sentinel2, 'KEEP\n');
+
+  const cases = [
+    { root: '../outside', destName: 'fixture-one' }, // root escape (destName matches, so only the root check fires)
+    { root: '.', destName: '../keep.txt' }, // destName escape
+    { root: '.', destName: '../../keep.txt' },
+    { root: '.', destName: '/etc/passwd' }, // absolute destName
+    { root: '..', destName: 'fixture-one' }, // bare climb
+    { root: '../../etc', destName: 'fixture-one' },
+    { root: '.', destName: 'other-skill' }, // destName/name mismatch
+  ];
+  for (const c of cases) {
+    const manifest = await readJson(manifestFile);
+    manifest.items['skill:fixture-one'].root = c.root;
+    manifest.items['skill:fixture-one'].destName = c.destName;
+    await writeFile(manifestFile, JSON.stringify(manifest, null, 2));
+    const update = await runCli(['update', '--dest', 'out'], { home, proj, env });
+    assert.equal(update.code, 1, JSON.stringify(c));
+    assert.match(update.stderr, /corrupt: invalid manifest entry/, JSON.stringify(c));
+    const uninstall = await runCli(['uninstall', '--dest', 'out', '--skill', 'fixture-one'], { home, proj, env });
+    assert.equal(uninstall.code, 1, JSON.stringify(c));
+    assert.match(uninstall.stderr, /corrupt: invalid manifest entry/, JSON.stringify(c));
+  }
+  assert.equal(await readFile(sentinel1, 'utf8'), 'KEEP\n');
+  assert.equal(await readFile(sentinel2, 'utf8'), 'KEEP\n');
+});
+
+test('A-02: legitimate manifest roots validate (codex agent, claude agent, --dest agent)', async () => {
+  const { home, proj } = await makeSandbox();
+  // Codex agent: root '../../.codex/agents' — outside the skills
+  // dir's parent tree, but a root the installer itself produces.
+  const c = await runCli(['install', '--target', 'codex', '--scope', 'project', '--agent', 'security-specialist'], { home, proj });
+  assert.equal(c.code, 0, c.stderr);
+  const manifestC = await readJson(path.join(proj, '.agents', 'skills', '.skillforge-manifest.json'));
+  assert.equal(manifestC.items['agent:security-specialist'].root, '../../.codex/agents');
+  const cu = await runCli(['update', '--target', 'codex', '--scope', 'project'], { home, proj });
+  assert.equal(cu.code, 0, cu.stderr);
+  assert.match(cu.stdout, /already installed: security-specialist \(agent\)/);
+  const cd = await runCli(['doctor', '--target', 'codex', '--scope', 'project'], { home, proj });
+  assert.equal(cd.code, 0, cd.stdout);
+  const cr = await runCli(['uninstall', '--target', 'codex', '--scope', 'project', '--agent', 'security-specialist'], { home, proj });
+  assert.equal(cr.code, 0, cr.stderr);
+
+  // Claude Code agent: root '../agents'.
+  const a = await runCli(['install', ...CLAUDE, '--agent', 'frontend-specialist'], { home, proj });
+  assert.equal(a.code, 0, a.stderr);
+  const au = await runCli(['update', ...CLAUDE], { home, proj });
+  assert.equal(au.code, 0, au.stderr);
+
+  // --dest + --target agent: root '../.claude/agents' (tier-2 shape).
+  const d = await runCli(['install', '--target', 'claude-code', '--scope', 'project', '--dest', 'custom-skills', '--agent', 'seo-specialist'], { home, proj });
+  assert.equal(d.code, 0, d.stderr);
+  const manifestD = await readJson(path.join(proj, 'custom-skills', '.skillforge-manifest.json'));
+  assert.equal(manifestD.items['agent:seo-specialist'].root, '../.claude/agents');
+  const du = await runCli(['update', '--dest', 'custom-skills'], { home, proj });
+  assert.equal(du.code, 0, du.stderr);
+  assert.match(du.stdout, /already installed: seo-specialist \(agent\)/);
+});
+
+// ---------------------------------------------------------------- A-03: restore traversal
+
+test('A-03: restore rejects traversal backup ids', async () => {
+  const { base, home, proj } = await makeSandbox();
+  // A decoy backup.json outside the backups dir: a traversal id
+  // must never reach it.
+  const evilDir = path.join(base, 'evil');
+  await mkdir(evilDir, { recursive: true });
+  await writeFile(path.join(evilDir, 'backup.json'), JSON.stringify({
+    id: 'evil', created: '2026-01-01T00:00:00.000Z', items: [],
+  }));
+  for (const id of ['../../evil', '..', '/tmp/evil', 'a/b']) {
+    const r = await runCli(['restore', id, '--dest', 'out'], { home, proj });
+    assert.equal(r.code, 2, `id=${JSON.stringify(id)}: ${r.stdout}${r.stderr}`);
+    assert.match(r.stderr, /Invalid backup id/, `id=${JSON.stringify(id)}: ${r.stderr}`);
+  }
+});
+
+test('A-03: restore rejects crafted backup.json (storedAs / root / destName / fileName traversal)', async () => {
+  const { home, proj } = await makeSandbox();
+  const skillsDir = path.join(proj, 'out');
+  const backupsBase = path.join(proj, '.skillforge-backups');
+  await mkdir(skillsDir, { recursive: true });
+  // Sentinels a traversal would delete or overwrite.
+  const outside = path.join(proj, 'outside');
+  await mkdir(outside, { recursive: true });
+  await writeFile(path.join(outside, 'keep.txt'), 'KEEP\n');
+  await writeFile(path.join(proj, 'keep.txt'), 'KEEP\n');
+
+  const baseItem = {
+    kind: 'skill', name: 'victim', storedAs: '0-skill-victim',
+    isSymlink: false, isDirectory: true, fileName: null,
+    root: '.', destName: 'victim',
+    entry: { kind: 'skill', name: 'victim', root: '.', destName: 'victim', method: 'copy' },
+  };
+  const cases = [
+    { name: 'storedAs escape', patch: { storedAs: '../../outside' } },
+    { name: 'storedAs absolute', patch: { storedAs: '/etc/passwd' } },
+    {
+      name: 'entry root escape',
+      patch: {
+        root: '../outside',
+        destName: 'keep.txt',
+        entry: { kind: 'skill', name: 'victim', root: '../outside', destName: 'keep.txt', method: 'copy' },
+      },
+    },
+    {
+      name: 'destName escape',
+      patch: {
+        destName: '../keep.txt',
+        entry: { kind: 'skill', name: 'victim', root: '.', destName: '../keep.txt', method: 'copy' },
+      },
+    },
+    { name: 'fileName escape', patch: { isDirectory: false, fileName: '../../keep.txt' } },
+  ];
+  for (let i = 0; i < cases.length; i++) {
+    const c = cases[i];
+    const id = `crafted-${i}`;
+    const dir = path.join(backupsBase, id, 'items', '0-skill-victim');
+    await mkdir(dir, { recursive: true });
+    await writeFile(path.join(dir, 'SKILL.md'), '# victim\n');
+    const record = {
+      id, created: '2026-01-01T00:00:00.000Z', tool: 'skillforge-installer',
+      target: null, scope: 'project', reason: 'test', command: 'install',
+      items: [{ ...baseItem, ...c.patch }],
+    };
+    await writeFile(path.join(backupsBase, id, 'backup.json'), JSON.stringify(record, null, 2));
+    const r = await runCli(['restore', id, '--dest', 'out'], { home, proj });
+    assert.equal(r.code, 2, `${c.name}: ${r.stdout}${r.stderr}`);
+    assert.match(r.stderr, /is invalid: backup item/, `${c.name}: ${r.stderr}`);
+  }
+  assert.equal(await readFile(path.join(outside, 'keep.txt'), 'utf8'), 'KEEP\n');
+  assert.equal(await readFile(path.join(proj, 'keep.txt'), 'utf8'), 'KEEP\n');
+});
+
+// ---------------------------------------------------------------- A-04: concurrency
+
+test('A-04: two concurrent installs — one fails cleanly on the lock, manifest stays complete', async () => {
+  const { home, proj } = await makeSandbox();
+  const registry = await readJson(path.join(REPO_ROOT, 'registry', 'skills.json'));
+  const [a, b] = await Promise.all([
+    runCli(['install', '--dest', 'out'], { home, proj }),
+    runCli(['install', '--dest', 'out'], { home, proj }),
+  ]);
+  const codes = [a.code, b.code].sort();
+  assert.deepEqual(codes, [0, 1]);
+  const loser = a.code === 1 ? a : b;
+  assert.match(loser.stderr, /Another SkillForge installer run is already using/);
+  const manifest = await readJson(path.join(proj, 'out', '.skillforge-manifest.json'));
+  assert.equal(Object.keys(manifest.items).length, registry.total_skills);
+  // The lock is released when the winner exits.
+  assert.equal(await exists(path.join(proj, 'out', '.skillforge-lock')), false);
+});
+
+test('A-04: live lock blocks, stale lock (dead pid + old) is taken over, fresh dead-pid lock is not', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  const skillsDir = path.join(proj, 'out');
+  await mkdir(skillsDir, { recursive: true });
+  const lockFile = path.join(skillsDir, '.skillforge-lock');
+  const writeLock = async (pid, ageMs) => {
+    await writeFile(lockFile, JSON.stringify({
+      pid, startedAt: new Date(Date.now() - ageMs).toISOString(), command: 'install', token: 'test-token',
+    }) + '\n');
+    const t = new Date(Date.now() - ageMs);
+    await utimes(lockFile, t, t);
+  };
+  const install = () => runCli(['install', '--dest', 'out', '--skill', 'fixture-one'], { home, proj, env });
+
+  // Live pid (this test process): the run fails fast, installs nothing.
+  await writeLock(process.pid, 0);
+  const live = await install();
+  assert.equal(live.code, 1);
+  assert.match(live.stderr, /Another SkillForge installer run is already using/);
+  assert.match(live.stderr, new RegExp(`pid ${process.pid}`));
+  assert.equal(await exists(path.join(skillsDir, 'fixture-one')), false);
+
+  // Dead pid, but the lock is fresh: still refused (takeover needs
+  // a dead pid AND an old lock).
+  const dead = spawnSync(process.execPath, ['--version']);
+  assert.equal(dead.status, 0);
+  await writeLock(dead.pid, 0);
+  const fresh = await install();
+  assert.equal(fresh.code, 1);
+  assert.match(fresh.stderr, /Another SkillForge installer run is already using/);
+  assert.match(fresh.stderr, /looks stale/);
+  assert.equal(await exists(path.join(skillsDir, 'fixture-one')), false);
+
+  // Dead pid + old lock: taken over, install succeeds, lock released.
+  await writeLock(dead.pid, 60 * 60 * 1000);
+  const stale = await install();
+  assert.equal(stale.code, 0, stale.stderr);
+  assert.equal(await exists(path.join(skillsDir, 'fixture-one', 'SKILL.md')), true);
+  assert.equal(await exists(lockFile), false);
+});
+
+// ---------------------------------------------------------------- A-05: swap/rollback
+
+test('A-05: swapIn happy path replaces content and cleans up (unit)', async () => {
+  const { swapIn } = await import('../scripts/install/installer.mjs');
+  const { base } = await makeSandbox();
+  const parent = path.join(base, 'skills');
+  await mkdir(parent, { recursive: true });
+  const destAbs = path.join(parent, 'item');
+  const stagedAbs = path.join(parent, '.skillforge-tmp-item-test');
+  await mkdir(destAbs, { recursive: true });
+  await writeFile(path.join(destAbs, 'old.txt'), 'OLD\n');
+  await mkdir(stagedAbs, { recursive: true });
+  await writeFile(path.join(stagedAbs, 'new.txt'), 'NEW\n');
+  await swapIn(stagedAbs, destAbs);
+  assert.equal(await readFile(path.join(destAbs, 'new.txt'), 'utf8'), 'NEW\n');
+  assert.equal(await exists(path.join(destAbs, 'old.txt')), false);
+  assert.deepEqual(await listNames(parent), ['item']);
+  // No existing destination: single rename.
+  const dest2 = path.join(parent, 'item2');
+  const staged2 = path.join(parent, '.skillforge-tmp-item2-test');
+  await mkdir(staged2, { recursive: true });
+  await writeFile(path.join(staged2, 'x.txt'), 'X\n');
+  await swapIn(staged2, dest2);
+  assert.equal(await readFile(path.join(dest2, 'x.txt'), 'utf8'), 'X\n');
+});
+
+test('A-05: swapIn rolls back when the second rename fails (unit, fault-injected)', async () => {
+  const { swapIn } = await import('../scripts/install/installer.mjs');
+  const { base } = await makeSandbox();
+  const parent = path.join(base, 'skills');
+  await mkdir(parent, { recursive: true });
+  const destAbs = path.join(parent, 'item');
+  const stagedAbs = path.join(parent, '.skillforge-tmp-item-test');
+  await mkdir(destAbs, { recursive: true });
+  await writeFile(path.join(destAbs, 'old.txt'), 'OLD\n');
+  await mkdir(stagedAbs, { recursive: true });
+  await writeFile(path.join(stagedAbs, 'new.txt'), 'NEW\n');
+  const failingRename = async (from, to) => {
+    if (from === stagedAbs) throw new Error('INJECTED-SWAP-FAIL');
+    return rename(from, to);
+  };
+  await assert.rejects(() => swapIn(stagedAbs, destAbs, { rename: failingRename, rm }), /INJECTED-SWAP-FAIL/);
+  // Old content restored, staged removed, no trash left behind.
+  assert.equal(await readFile(path.join(destAbs, 'old.txt'), 'utf8'), 'OLD\n');
+  assert.equal(await exists(stagedAbs), false);
+  assert.deepEqual((await listNames(parent)).filter((n) => n.startsWith('.skillforge-tmp-')), []);
+});
+
+test('A-05: swapIn with a failed rollback reports both errors and deletes neither copy (unit)', async () => {
+  const { swapIn } = await import('../scripts/install/installer.mjs');
+  const { base } = await makeSandbox();
+  const parent = path.join(base, 'skills');
+  await mkdir(parent, { recursive: true });
+  const destAbs = path.join(parent, 'item');
+  const stagedAbs = path.join(parent, '.skillforge-tmp-item-test');
+  await mkdir(destAbs, { recursive: true });
+  await writeFile(path.join(destAbs, 'old.txt'), 'OLD\n');
+  await mkdir(stagedAbs, { recursive: true });
+  await writeFile(path.join(stagedAbs, 'new.txt'), 'NEW\n');
+  const failingRename = async (from, to) => {
+    if (from === stagedAbs) throw new Error('INJECTED-SWAP-FAIL');
+    if (from.includes('.skillforge-tmp-old-')) throw new Error('INJECTED-ROLLBACK-FAIL');
+    return rename(from, to);
+  };
+  let err;
+  try {
+    await swapIn(stagedAbs, destAbs, { rename: failingRename, rm });
+  } catch (e) {
+    err = e;
+  }
+  assert.ok(err, 'swapIn should throw');
+  assert.match(err.message, /INJECTED-SWAP-FAIL/);
+  assert.match(err.message, /INJECTED-ROLLBACK-FAIL/);
+  assert.match(err.message, /neither was deleted/);
+  // Both copies survive: old content in trash, new content staged.
+  const leftovers = (await listNames(parent)).filter((n) => n.startsWith('.skillforge-tmp-old-'));
+  assert.equal(leftovers.length, 1);
+  const trash = path.join(parent, leftovers[0]);
+  assert.ok(err.message.includes(trash), 'error names the trash path');
+  assert.equal(await readFile(path.join(trash, 'old.txt'), 'utf8'), 'OLD\n');
+  assert.ok(err.message.includes(stagedAbs), 'error names the staged path');
+  assert.equal(await readFile(path.join(stagedAbs, 'new.txt'), 'utf8'), 'NEW\n');
+  assert.equal(await exists(destAbs), false);
 });

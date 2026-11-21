@@ -23,8 +23,12 @@
 
 import { cp, mkdir, readdir, readFile, readlink, symlink, writeFile, lstat, rm } from 'node:fs/promises';
 import path from 'node:path';
+import { validateEntryPaths, validatePathSegment } from './manifest.mjs';
 
 export const BACKUPS_DIR_NAME = '.skillforge-backups';
+
+/** Thrown when a backup id or backup.json fails validation (A-03). */
+export class InvalidBackupError extends Error {}
 
 /** Backups live next to the skills directory, never inside it. */
 export function backupsDir(skillsDir) {
@@ -127,10 +131,65 @@ export async function listBackups(skillsDir) {
   return out;
 }
 
+/**
+ * Validate a parsed backup.json record. Backup directories travel
+ * via git like manifests, so every path-forming field is untrusted:
+ * storedAs/fileName must be single segments (they are joined under
+ * the backup dir) and each item's restore destination (root /
+ * destName, from the embedded manifest entry when present) must
+ * pass the same entry validation as a manifest entry. Returns null
+ * when valid, else a human-readable problem.
+ */
+export function validateBackupRecord(record) {
+  if (!record || typeof record !== 'object' || Array.isArray(record)) {
+    return 'backup record is not an object';
+  }
+  if (!Array.isArray(record.items)) return 'backup record has no items array';
+  for (const item of record.items) {
+    if (!item || typeof item !== 'object') return 'backup item is not an object';
+    const what = `backup item '${item.name || '?'}'`;
+    const storedProblem = validatePathSegment(item.storedAs, 'storedAs');
+    if (storedProblem) return `${what}: ${storedProblem}`;
+    if (item.fileName !== null && item.fileName !== undefined) {
+      const fileProblem = validatePathSegment(item.fileName, 'fileName');
+      if (fileProblem) return `${what}: ${fileProblem}`;
+    }
+    const entry = item.entry || { root: item.root || '.', destName: item.destName || item.name };
+    const entryProblem = validateEntryPaths(entry);
+    if (entryProblem) return `${what}: ${entryProblem}`;
+  }
+  return null;
+}
+
+/**
+ * Read one backup by id. The id is user-supplied, so it is
+ * validated as a single path segment and must match an existing
+ * backup DIRECTORY (lstat, so a planted symlink is rejected) —
+ * `restore ../../x` must never read a backup.json outside the
+ * backups dir. The record itself is validated before it is
+ * returned. Throws InvalidBackupError on invalid input and a
+ * plain Error when the backup does not exist.
+ */
 export async function readBackup(skillsDir, id) {
+  const idProblem = validatePathSegment(id, 'backup id');
+  if (idProblem) throw new InvalidBackupError(`Invalid backup id ${JSON.stringify(id)}: ${idProblem}.`);
   const dir = path.join(backupsDir(skillsDir), id);
+  let st;
+  try {
+    st = await lstat(dir);
+  } catch (err) {
+    if (err.code === 'ENOENT' || err.code === 'ENOTDIR') {
+      throw new Error(`No backup '${id}' in ${backupsDir(skillsDir)}.`);
+    }
+    throw err;
+  }
+  if (!st.isDirectory()) {
+    throw new InvalidBackupError(`Backup '${id}' is not a directory.`);
+  }
   const raw = await readFile(path.join(dir, 'backup.json'), 'utf8');
   const record = JSON.parse(raw);
+  const problem = validateBackupRecord(record);
+  if (problem) throw new InvalidBackupError(`Backup '${id}' is invalid: ${problem}.`);
   return { ...record, dir };
 }
 
