@@ -2,6 +2,12 @@
 // generate-registry.mjs — rebuilds registry/*.json from the skills on disk.
 // The registry is always generated, never hand-edited. Run after adding,
 // removing, or renaming any skill.
+//
+// Determinism: output depends only on the content on disk. The `generated`
+// date is the newest last_verified across all skills — NOT the wall-clock
+// date — so regenerating on a different day produces no diff. (CI fails
+// the build if regeneration differs; a wall-clock date broke that on the
+// first push after 2026-11-20.)
 // Usage: node scripts/generate-registry.mjs
 
 import { readdir, readFile, writeFile, mkdir } from 'node:fs/promises';
@@ -88,6 +94,10 @@ for (const file of (await findSkillFiles(path.join(ROOT, 'skills'))).sort()) {
 
 skills.sort((a, b) => a.name.localeCompare(b.name));
 
+// Determinism (see header): the generated date comes from content,
+// never the wall clock.
+const GENERATED = skills.map((s) => s.last_verified).filter(Boolean).sort().pop() || '2026-11-20';
+
 // categories.json
 const categories = {};
 for (const s of skills) {
@@ -113,7 +123,7 @@ for (const s of skills) {
 }
 
 // versions.json
-const versions = { registry_version: VERSION, generated: new Date().toISOString().slice(0, 10), skills: {} };
+const versions = { registry_version: VERSION, generated: GENERATED, skills: {} };
 for (const s of skills) versions.skills[s.name] = s.version;
 
 await mkdir(REGISTRY_DIR, { recursive: true });
@@ -121,7 +131,7 @@ const write = (name, obj) => writeFile(path.join(REGISTRY_DIR, name), JSON.strin
 await write('skills.json', {
   name: 'skillforge',
   version: VERSION,
-  generated: new Date().toISOString().slice(0, 10),
+  generated: GENERATED,
   categories: Object.keys(categories).sort(),
   total_skills: skills.length,
   skills,
