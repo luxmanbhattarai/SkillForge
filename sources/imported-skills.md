@@ -9,10 +9,16 @@ Total imported: **49 skills from 6 vendors**.
 1. **License first.** A skill is imported only if its license permits
    redistribution (MIT, Apache-2.0, or equivalent). The license text or
    reference is preserved with the import.
-2. **Verbatim.** Imported files are never edited. Fixes belong upstream.
-   The only permitted change is renaming a directory to match its
-   frontmatter `name`, as the Agent Skills specification requires
-   (documented in the vendor's `ATTRIBUTION.md` when it happens).
+2. **Verbatim.** Upstream skill *content* — `SKILL.md`, scripts,
+   references, examples, and other imported files — is never edited.
+   Fixes belong upstream. The only permitted change to imported
+   content is renaming a directory to match its frontmatter `name`,
+   as the Agent Skills specification requires (documented in the
+   vendor's `ATTRIBUTION.md` when it happens). The vendor
+   `ATTRIBUTION.md` files are project-maintained, not upstream
+   content: they may carry additive project documentation (e.g. the
+   tools-import and unimported-sibling sections added in commit
+   `caf1f32`).
 3. **Attribution.** Each vendor directory has an `ATTRIBUTION.md` with the
    source repository, license, imported commit, import date, and skill list.
 4. **No collisions.** An upstream skill whose name collides with an
