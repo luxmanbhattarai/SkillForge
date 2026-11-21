@@ -139,6 +139,18 @@ const EXCEPTIONS = [
   // flaw (so users understand S-09). The quotes ARE the warning.
   ['docs/AGENTIC-SEO-SAFE-INSTALL.md', 'CMD-01', 'safe-install guide quotes the upstream curl-pipe command as the thing to avoid (audit S-08)'],
   ['docs/AGENTIC-SEO-SAFE-INSTALL.md', 'CODE-14', 'safe-install guide quotes the upstream TLS-disable flaw it warns about (audit S-09)'],
+  // --- Triaged 2026-11-20 (Stage E). The Stage E security-status and
+  // remediation-report docs quote the same flagged constructs as
+  // evidence for S-08/S-09/S-10/S-11, same treatment as the audit
+  // report above. Each line was read in context; none is a live
+  // vulnerability. Per-file, per-pattern — never a directory
+  // exclusion. ---
+  ['ai/audits/SECURITY-STATUS.md', 'CMD-01', 'security-status doc quotes the flagged construct as evidence for audit S-08 (Stage E)'],
+  ['ai/audits/SECURITY-STATUS.md', 'CODE-14', 'security-status doc quotes the flagged construct as evidence for audit S-09/S-11 (Stage E)'],
+  ['ai/audits/SECURITY-STATUS.md', 'CODE-08', 'security-status doc quotes the flagged construct as evidence for audit S-10 (Stage E)'],
+  ['ai/reports/FINAL-REMEDIATION-REPORT.md', 'CMD-01', 'remediation report quotes the flagged construct as evidence for audit S-08 (Stage E)'],
+  ['ai/reports/FINAL-REMEDIATION-REPORT.md', 'CODE-14', 'remediation report quotes the flagged construct as evidence for audit S-09/S-11 (Stage E)'],
+  ['ai/reports/FINAL-REMEDIATION-REPORT.md', 'CODE-08', 'remediation report quotes the flagged construct as evidence for audit S-10 (Stage E)'],
 ];
 
 const JSON_OUT = process.argv.includes('--json');
@@ -195,8 +207,18 @@ for (const file of files) {
   if (SKIP_FILES.has(rel)) continue;
   if (SKIP_PREFIXES.some((p) => matchesPrefix(rel, p))) continue;
   if (TEXT_EXT.test(file)) {
+    let text;
+    try {
+      text = await readFile(file, 'utf8');
+    } catch (e) {
+      // A-38: same class as the link checker — a file deleted
+      // between the listing and the read is gone; skip it rather
+      // than failing the whole scan. The count only includes files
+      // actually read.
+      if (e.code === 'ENOENT') continue;
+      throw e;
+    }
     textFiles++;
-    const text = await readFile(file, 'utf8');
     const lines = text.split('\n');
     lines.forEach((line, idx) => {
       const ignored = ignoredPatterns(line);
@@ -216,8 +238,15 @@ for (const file of files) {
       findings.push({ file: rel, line: lineNo, id: 'CMD-01', severity: 'high', label: 'curl-piped-to-shell command (multi-line)', match: m[0].replace(/\s+/g, ' ').slice(0, 80) });
     }
   } else if (BINARY_EXT.test(file)) {
+    let buf;
+    try {
+      buf = await readFile(file);
+    } catch (e) {
+      // A-38: see the text branch above.
+      if (e.code === 'ENOENT') continue;
+      throw e;
+    }
     binaryFiles++;
-    const buf = await readFile(file);
     const text = buf.toString('latin1');
     for (const p of SECRET_PATTERNS) {
       const m = text.match(p.re);

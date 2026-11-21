@@ -204,7 +204,17 @@ async function main() {
     // class as W-2). No-op on POSIX.
     const rel = toPosixPath(path.relative(ROOT, file));
     if (!INCLUDE_UPSTREAM && rel.startsWith('skills/upstream/')) continue;
-    const text = await readFile(file, 'utf8');
+    let text;
+    try {
+      text = await readFile(file, 'utf8');
+    } catch (e) {
+      // A-38: a file deleted between the directory listing and the
+      // read (e.g. a concurrent process cleaning up a report) has no
+      // links to check — skip it instead of failing the whole check
+      // with exit 2. Any other read error still throws.
+      if (e.code === 'ENOENT') continue;
+      throw e;
+    }
     for (const href of extractLinks(text)) {
       if (href.startsWith('#') || href.startsWith('mailto:')) continue;
       if (/^https?:\/\//.test(href)) {

@@ -6,7 +6,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
@@ -547,6 +547,16 @@ test('runner: model run writes a separated report and never touches the mock rep
 });
 
 test('runner: model run without --out goes to evals/reports/model/', async (t) => {
+  // A-38: this test used to run the model runner against the REAL repo
+  // (no --out) and then rm -rf the evals/reports/model/ directory it
+  // created. While the directory existed, the link checker's offline
+  // scan (running in parallel in another test file) could list
+  // evals/reports/model/latest.md and then fail to open it after the
+  // rm — ENOENT, exit 2, intermittent suite failure (2 in 18 runs
+  // before the fix). The test now runs against a temp copy of the
+  // repo: the runner resolves its root from its own location, so the
+  // default path is exercised identically, and nothing in the real
+  // tree is created or deleted.
   const { server, url } = await startStub((req, res) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(chatCompletion(JSON.stringify({
@@ -555,23 +565,28 @@ test('runner: model run without --out goes to evals/reports/model/', async (t) =
     })));
   });
   t.after(() => server.close());
-  const modelDir = path.join(REPO_ROOT, 'evals', 'reports', 'model');
-  const latestJson = path.join(REPO_ROOT, 'evals', 'reports', 'latest.json');
-  const before = existsSync(latestJson) ? readFileSync(latestJson, 'utf8') : null;
+  const root = mkdtempSync(path.join(os.tmpdir(), 'skillforge-eval-model-default-'));
   try {
+    cpSync(REPO_ROOT, root, {
+      recursive: true,
+      filter: (src) => !src.includes(`${path.sep}.git`),
+    });
+    const modelDir = path.join(root, 'evals', 'reports', 'model');
+    const latestJson = path.join(root, 'evals', 'reports', 'latest.json');
+    const before = existsSync(latestJson) ? readFileSync(latestJson, 'utf8') : null;
     const res = await spawnAsync(process.execPath, [
       'evals/runners/run-evals.mjs', '--provider', 'model',
       '--cases', 'GEN-disc-nextjs', '--no-compare',
-    ], { cwd: REPO_ROOT, encoding: 'utf8', env: stubModelEnv(url) });
+    ], { cwd: root, encoding: 'utf8', env: stubModelEnv(url) });
     assert.equal(res.status, 0, res.stdout + res.stderr);
     assert.ok(existsSync(path.join(modelDir, 'latest.json')), 'model report in its own directory');
     const report = JSON.parse(readFileSync(path.join(modelDir, 'latest.json'), 'utf8'));
     assert.equal(report.providerKind, 'model');
+    const after = existsSync(latestJson) ? readFileSync(latestJson, 'utf8') : null;
+    assert.equal(after, before, 'the default model report dir must not touch the mock report');
   } finally {
-    rmSync(modelDir, { recursive: true, force: true });
+    rmSync(root, { recursive: true, force: true });
   }
-  const after = existsSync(latestJson) ? readFileSync(latestJson, 'utf8') : null;
-  assert.equal(after, before, 'the default model report dir must not touch the mock report');
 });
 
 test('runner: --save-baseline is refused for the model provider', async (t) => {
