@@ -303,7 +303,7 @@ Page                     Clicks     Impressions  Diagnosis
                                                  shopping unit above
                                                  organic results.
 /starter-ratio/          falling     falling      Cannibalization:
-/starter-ratio/ vs.                          /sourdough-starter/
+                                                 /sourdough-starter/
                                                  also ranks for
                                                  "starter ratio".
 /bread-history/          falling     falling      Demand decline;

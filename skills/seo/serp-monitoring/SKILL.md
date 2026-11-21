@@ -149,8 +149,8 @@ source. Nothing here promises a ranking position or a time frame.
    core-updates guidance:
    - Small move (for example, position 2 to 4): note it, take no
      drastic action.
-   - Large move (for example, out of the top 10 to position 29,
-     or a wide range of terms at once): investigate — check the
+   - Large move (for example, position 4 to 29, or a wide range
+     of terms at once): investigate — check the
      dashboard for an update, check indexing and technical
      reports, then diagnose per page (see `content-decay`).
    - Site-wide move: stop and use `seo-audit`; it is not a

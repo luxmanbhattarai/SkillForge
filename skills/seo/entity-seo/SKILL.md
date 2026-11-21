@@ -94,6 +94,9 @@ ranking, or an AI citation.
   ranking factor.
 - [Knowledge Graph Search API](https://developers.google.com/knowledge-graph) —
   Google's API for looking up entities in the Knowledge Graph.
+  Note: Google's Cloud docs point new projects to Cloud
+  Enterprise Knowledge Graph; the kgsearch API remains available
+  for ad-hoc lookups.
 - [How Search works](https://developers.google.com/search/docs/fundamentals/how-search-works) —
   Google's explanation of crawling, indexing, and serving.
 - [Schema.org](https://schema.org/) — the vocabulary reference for
