@@ -11,6 +11,7 @@
   hygiene, test gaps, doc precision; Informational = noted, no fix required.
 - **ID prefixes:** `A-` = new Stage A findings; `S-` = Phase 7 security findings
   carried forward; `L-` = report §18 limitations carried forward.
+- **Stage B (2026-11-20):** all 21 Stage B issues were addressed — see `ai/remediation/STAGE-B-RESULTS.md`. Each Stage B issue below carries a Stage B status line.
 
 ## Summary by severity
 
@@ -41,6 +42,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-01 — High — Security scan FAILS at HEAD; report's "green battery" claim is false (Stage B)
 
+- **Stage B status (2026-11-20):** **Fixed** — 8 narrow per-file/per-pattern exceptions (each with a reason); scan passes, exit 0. See STAGE-B-RESULTS.md. Commit `c5d2be6`.
 - **Evidence:** `npm run check:security` at `0c8bd48` exits 1: `MEDIUM
   ai/PROJECT-STATUS.md:49 [CODE-14] TLS verification disabled`. `git blame` puts line
   49 in fix-up commit `2f1460b` — the commit that excepted the final report's CODE-14
@@ -57,6 +59,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-02 — High — Installer manifest path traversal / arbitrary delete+write (Stage B)
 
+- **Stage B status (2026-11-20):** **Fixed** — entry validation on read (fail-closed: invalid entry = corrupt manifest) + defensive guards in entryRoot/entryDest; two-tier root rule (exact vs shape). Hardening: skill entries must have root `.`; tier-2 terminal dir must match the kind. Residual: tier-2 agent/workflow roots can point at an arbitrary agents/workflows-named dir (bounded; recorded in STAGE-B-RESULTS.md). Commits `19e4f53`, `19a57e8`.
 - **Evidence:** `entry.root`/`entry.destName` are used unsanitized: `entryRoot`
   accepts absolute roots (`scripts/install/manifest.mjs:108-113`), `entryDest` joins
   without containment (`:115-117`), and `readManifest` (`:69-94`) validates only the
@@ -73,6 +76,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-03 — Medium — `restore` id + `backup.json` traversal (Stage B)
 
+- **Stage B status (2026-11-20):** **Fixed** — restore id validated as a single segment matching an existing backup directory (planted symlinks rejected); whole backup record validated before use. Hardening: effective entry destName must match the backup item name. Commits `19e4f53`, `19a57e8`.
 - **Evidence:** `readBackup` (`scripts/install/backups.mjs:130-135`) does
   `path.join(backupsDir, id)` with the user-supplied positional id — `restore ../../x`
   reads any `backup.json` on disk. `backupItemPaths` (`commands.mjs:1048-1050`) joins
@@ -86,6 +90,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-04 — Medium — No concurrency control in the installer (Stage B)
 
+- **Stage B status (2026-11-20):** **Fixed** — lockfile `.skillforge-lock` (atomic create, pid + timestamp + token); fail-fast on contention; stale takeover only when pid is dead AND lock is older than 10 min. Commit `19e4f53`.
 - **Evidence:** no lockfile/mutex anywhere (grep: none). Two concurrent runs:
   `cleanStaleStaging` (`installer.mjs:359-379`) deletes **all** `.skillforge-tmp-*`
   entries including another live run's staging/trash (names carry pid+rand but cleanup
@@ -98,6 +103,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-05 — Medium — "Atomic swap" is two renames, not atomic; rollback unguarded and untested (Stage B)
 
+- **Stage B status (2026-11-20):** **Fixed** — rollback rename guarded (both errors reported, neither copy deleted on double failure); swapIn takes injectable fs ops for fault-injection tests; docs now say "two-rename swap (not atomic)". Commit `19e4f53`. (`install-skills.mjs` header wording remains A-31, Stage C.)
 - **Evidence:** `swapIn` (`installer.mjs:382-401`) renames dest→trash then staged→dest;
   a kill between them leaves the destination missing (old content only in
   `.skillforge-tmp-old-*`, deleted by the next run's cleanup; recoverable only via
@@ -112,6 +118,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-06 — Medium — Post-swap verification failure leaves replaced content live, no rollback (Stage B)
 
+- **Stage B status (2026-11-20):** **Fixed** — pre-swap verification (staged content hash-checked before it can reach the destination); post-swap check kept as a second layer with rollback from the pre-replacement backup (or removal of a fresh bad install). Post-swap branch covered at unit level only (unreachable via CLI after a passing pre-swap check). Commit `19a57e8`.
 - **Evidence:** `executeInstallRun` swaps in, then hash-verifies
   (`commands.mjs:218-231`); on mismatch the item reports `failed` but new content is
   installed and the manifest still records old hashes, so the next run sees a conflict.
@@ -121,6 +128,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-07 — Medium — `update` silently repoints a diverged symlink, no backup/prompt (Stage B)
 
+- **Stage B status (2026-11-20):** **Fixed** — diverged link-method symlink is now a conflict (matching classifyInstall); goes through refuse/prompt/force-with-backup. Commit `19a57e8`.
 - **Evidence:** `classifyUpdate` (`installer.mjs:339`) returns action `install` ("link
   is broken or points elsewhere") for a link-method item whose symlink points
   elsewhere. `install` actions are excluded from backups (`commands.mjs:196`), so a
@@ -135,6 +143,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-08 — Medium — `install --dry-run` mutates state with a corrupt manifest (Stage B)
 
+- **Stage B status (2026-11-20):** **Fixed** — dry-run classifies against a read-only manifest read; a corrupt manifest is noted, not quarantined. Other dry-run paths verified read-only. Commit `19a57e8`.
 - **Evidence:** `loadManifestForWrite` runs at `commands.mjs:314`, before the dry-run
   check at `:322`, and quarantines (renames) a corrupt manifest. Contradicts "change
   nothing" in `docs/INSTALLATION.md` and `install-skills.mjs:107`.
@@ -144,6 +153,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-09 — Medium — Manifest repair is partial and can lose the corrupt original (Stage B)
 
+- **Stage B status (2026-11-20):** **Fixed** — quarantine failure fails closed (never overwrites the corrupt original); entries for library-identical items rebuilt from a disk scan; incremental manifest writes after each item. Commit `19a57e8`.
 - **Evidence:** `loadManifestForWrite` (`commands.mjs:57-94`) quarantines a corrupt
   manifest and starts fresh — only items in that run regain entries. Other installed
   items lose entries and become orphans; modified ones then classify as "unrelated
@@ -198,6 +208,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-14 — Low — Uninstall removes manifest-matching content with no backup (Stage B)
 
+- **Stage B status (2026-11-20):** **Fixed** — items no longer in the library are backed up before uninstall. Commit `19a57e8`.
 - **Evidence:** `commands.mjs:991-992` — `needBackup` only covers modified/foreign
   items. If the skill was since removed from the library, the only copy is gone
   (recoverable only from git history). By design, but undocumented.
@@ -215,6 +226,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-16 — Low — Restore gaps (Stage B)
 
+- **Stage B status (2026-11-20):** **Fixed** — post-swap verification on restore with rollback; manifest created/repaired on restore; corrupt backup.json recovered from items/ (crafted records still rejected); partial backup dirs cleaned up on failure. Commit `19a57e8`.
 - **Evidence:** no post-swap verification (unlike install, `commands.mjs:225-231`);
   manifest repair only happens if a manifest exists **and** the backup item has an
   entry (`:1211`) — if the manifest is missing/corrupt, restored items become
@@ -258,6 +270,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-20 — Low — Pattern count not pinned by tests (Stage B)
 
+- **Stage B status (2026-11-20):** **Fixed** — exact counts asserted: 34 total, 29 scan, 11 score, 9 input. Commit `c5d2be6`.
 - **Evidence:** `test/security.test.mjs:29` asserts only `PATTERNS.length >= 25`; line
   46 asserts a relational invariant, not == 29/34. Count drift wouldn't fail tests.
 - **Affected files:** `test/security.test.mjs:29,46`.
@@ -349,6 +362,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-30 — Informational — Stale-staging cleanup is narrow (Stage B)
 
+- **Stage B status (2026-11-20):** **Fixed** — cleanup widened (all roots, install/update/uninstall/restore, even when everything is already); trash dirs never auto-deleted; doctor distinguishes trash from staging. Commit `19a57e8`.
 - **Evidence:** only runs in `executeInstallRun` for roots of items being written
   (`commands.mjs:187-192`); a run where everything is `already` leaves leftovers, and
   `restore`/`uninstall` never clean them (`doctor` only reports). Also deletes
@@ -426,6 +440,7 @@ re-confirmed during claim 15 verification.
 
 ### S-08 — High — Agentic SEO documents a curl-pipe-to-shell install (UNRESOLVED upstream; Stage B)
 
+- **Stage B status (2026-11-20):** **Mitigated, still OPEN upstream** — safe-install guide (`docs/AGENTIC-SEO-SAFE-INSTALL.md`) + install/doctor warnings; upstream still documents the unsafe install. NOT marked fixed.
 - **Evidence:** `skills/upstream/agentic-seo/seo/README.md` and `install.sh` usage text
   document `curl … | bash`. Directly conflicts with this repo's security guidance.
   Cannot edit upstream. Mitigation in place: this repo's own docs never recommend
@@ -437,6 +452,7 @@ re-confirmed during claim 15 verification.
 
 ### S-09 — Medium — Agentic SEO `broken_links.py` disables TLS verification (UNRESOLVED upstream; Stage B)
 
+- **Stage B status (2026-11-20):** **Mitigated, still OPEN upstream** — docs warning + install/doctor warnings; vendored script still disables verification. NOT marked fixed.
 - **Evidence:** `skills/upstream/agentic-seo/seo/scripts/broken_links.py` uses
   `verify=False` on both HEAD and GET requests, silently. Sibling `fetch_page.py`
   keeps verification on — the inconsistency suggests an oversight. Cannot edit upstream.
@@ -446,6 +462,7 @@ re-confirmed during claim 15 verification.
 
 ### S-11 — Medium — Prisma upgrade guide recommends `rejectUnauthorized: false` (UNRESOLVED upstream; Stage B)
 
+- **Stage B status (2026-11-20):** **Mitigated** — Prisma exceptions confirmed per-file; exception matcher hardened (exact file match vs directory prefix); 10 scanner integration tests prove genuine findings are still detected. Upstream text unchanged.
 - **Evidence:** `skills/upstream/prisma/prisma-upgrade-v7/` recommends the insecure
   workaround first, though the same doc also recommends proper CA configuration
   (`NODE_EXTRA_CA_CERTS`). Scanner exceptions for the upstream files exist
@@ -459,6 +476,7 @@ re-confirmed during claim 15 verification.
 
 ### S-14 — Medium — Agentic-seo import points at a dormant fork (OPEN; Stage B)
 
+- **Stage B status (2026-11-20):** **Confirmed, MONITOR stands** — re-verified via GitHub API (fork of the author's repo, exactly 50 commits behind the pin). Monitoring gap documented: the weekly drift check watches the dormant fork.
 - **Evidence (re-confirmed in Stage A via the GitHub API):** the import source
   `pwg-projects/agentic-seo-skill` is a fork of the author's repo, last push
   2026-03-03, head = pinned commit. The author's repo
@@ -471,12 +489,14 @@ re-confirmed during claim 15 verification.
 
 ### S-07 — Medium — Agentic SEO documents unpinned `pip install` commands (ACCEPTED upstream; Stage B)
 
+- **Stage B status (2026-11-20):** **Confirmed ACCEPTED** — 32 unpinned occurrences re-verified; directory CMD-04 exception regression-tested.
 - **Evidence:** ~30 occurrences across scripts, README, SKILL.md, `install.sh`.
   Unpinned installs can pull a compromised future release. Scanner exception documents
   it. Stage B confirms the accepted status and whether local mitigation is possible.
 
 ### S-10 — Medium — Anthropic `with_server.py` runs user commands with `shell=True` (ACCEPTED upstream; Stage B)
 
+- **Stage B status (2026-11-20):** **Confirmed ACCEPTED (wording corrected)** — commands come from the invoking user's `--server` CLI args, not a config file (no config file is read); scanner reason corrected and a dated note added to `ai/audits/SECURITY-AUDIT.md`.
 - **Evidence:** `skills/upstream/anthropic/webapp-testing/scripts/with_server.py`.
   Trust boundary is the user's own local config file (commands come from a file the
   user wrote, not untrusted input). Accepted as a deliberate design choice; scanner
@@ -484,6 +504,7 @@ re-confirmed during claim 15 verification.
 
 ### S-12 — Low — Agentic SEO `install.sh` runs `rm -rf` on variable paths (ACCEPTED upstream; Stage B)
 
+- **Stage B status (2026-11-20):** **Confirmed ACCEPTED** — temp-dir guard and destination guards re-verified in `install.sh`.
 - **Evidence:** `TEMP_DIR` (mktemp-created, guarded by non-empty + is-directory check)
   and `dest` (built from validated `--target` + user `--project-dir`, only with
   `--force`). Both guarded. A `--skill-name` containing `../` could traverse — but the
@@ -492,6 +513,7 @@ re-confirmed during claim 15 verification.
 
 ### S-13 — Low — Agentic SEO `fetch_page.py` SSRF guard has a DNS-rebinding TOCTOU (ACCEPTED upstream; Stage B)
 
+- **Stage B status (2026-11-20):** **Confirmed ACCEPTED** — SSRF guard and DNS-rebinding TOCTOU re-verified in `fetch_page.py`.
 - **Evidence:** the guard resolves DNS once for the check and `requests` resolves
   again for the fetch, so DNS rebinding could theoretically bypass it. Stops the naive
   SSRF case. Stage B confirms.
