@@ -44,6 +44,7 @@
 import { readFile, writeFile, rename, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { TARGETS } from './targets.mjs';
+import { isWindowsLockError, lockErrorMessage } from './links.mjs';
 
 export const MANIFEST_NAME = '.skillforge-manifest.json';
 export const MANIFEST_FORMAT = 1;
@@ -301,6 +302,12 @@ export async function writeManifest(skillsDir, manifest) {
   try {
     await writeFile(tmp, JSON.stringify(manifest, null, 2) + '\n', 'utf8');
     await rename(tmp, file);
+  } catch (err) {
+    // On Windows, a manifest held open by another program fails
+    // the rename with EBUSY/EPERM — say so instead of surfacing
+    // the bare errno (Stage D).
+    if (isWindowsLockError(err)) throw new Error(lockErrorMessage(err, `replacing the manifest at ${file}`));
+    throw err;
   } finally {
     await rm(tmp, { force: true }).catch(() => {});
   }

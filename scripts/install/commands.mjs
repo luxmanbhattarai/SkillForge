@@ -56,7 +56,9 @@ import {
   stageItem,
   swapIn,
   verifyStaged,
+  withLockHint,
 } from './installer.mjs';
+import { rmRecursiveOptions, sameLinkTarget } from './links.mjs';
 
 function label(kind, name) {
   return kind === 'skill' ? name : `${name} (${kind})`;
@@ -142,7 +144,7 @@ async function loadManifestForWrite(locations, ctx) {
     await rename(bad, quarantine);
   } catch (err) {
     throw new InstallerError(
-      `the manifest at ${bad} is ${error} and could not be moved aside (${err.message}); ` +
+      `the manifest at ${bad} is ${error} and could not be moved aside (${withLockHint(err, 'moving the corrupt manifest aside').message}); ` +
         'refusing to overwrite it. Move or delete it manually and re-run.',
     );
   }
@@ -312,8 +314,15 @@ async function cleanAllStaleStaging(ctx, locations) {
   if (ctx.dryRun || ctx.lockHeld === false) return;
   for (const root of [locations.skillsDir, locations.agentsDir, locations.workflowsDir]) {
     if (!root) continue;
-    const cleaned = await cleanStaleStaging(root);
-    for (const name of cleaned) ctx.err(`note: removed leftover staging directory ${name} from an interrupted run`);
+    const { removed, skipped } = await cleanStaleStaging(root);
+    for (const name of removed) ctx.err(`note: removed leftover staging directory ${name} from an interrupted run`);
+    // Skipped leftovers failed with a Windows file-lock error
+    // (Stage D): harmless, and the next run retries them.
+    for (const s of skipped) {
+      ctx.err(
+        `note: could not remove leftover staging directory ${s.name} (${s.error}); it will be retried on the next run`,
+      );
+    }
   }
 }
 
@@ -406,7 +415,12 @@ async function executeInstallRun(ctx, locations, plannedItems, manifest, { comma
         for (const w of AGENTIC_SEO_WARNINGS) ctx.err(w);
       }
       results[p.action === 'install' ? 'installed' : 'updated'].push(label(p.kind, p.name));
-      ctx.out(`${verb} ${label(p.kind, p.name)} → ${p.destAbs}${p.method === 'link' ? ' (symlink)' : ''}`);
+      // In link mode, say which form was actually created: on
+      // Windows without symlink privilege it is a junction, not a
+      // symlink (A-11); stageItem records it on the planned item.
+      const linkNote =
+        p.method === 'link' ? (p.linkType === 'junction' ? ' (junction)' : ' (symlink)') : '';
+      ctx.out(`${verb} ${label(p.kind, p.name)} → ${p.destAbs}${linkNote}`);
     } catch (err) {
       results.failed.push({ label: label(p.kind, p.name), error: err.message });
       ctx.err(`failed: ${label(p.kind, p.name)} — ${err.message}`);
@@ -799,7 +813,7 @@ async function checkLocation(ctx, locations) {
         const resolved = path.resolve(path.dirname(dest), target);
         if ((await lstatOrNull(resolved)) === null) {
           problems.push({ level: 'fail', message: `${what}: broken symlink → ${target}` });
-        } else if (resolved !== path.join(ctx.library.root, entry.source)) {
+        } else if (!sameLinkTarget(resolved, path.join(ctx.library.root, entry.source))) {
           problems.push({ level: 'warn', message: `${what}: symlink points at ${target}, not the library` });
         }
         continue;
@@ -1266,14 +1280,15 @@ async function runUninstall(ctx, locations) {
   for (const p of toRemove) {
     if (p.action !== 'remove') continue;
     try {
-      await rm(p.destAbs, { recursive: true, force: true });
+      await rm(p.destAbs, rmRecursiveOptions());
       delete manifestObj.items[entryKey(p.kind, p.name)];
       manifestDirty = true;
       results.removed.push(label(p.kind, p.name));
       ctx.out(`removed ${label(p.kind, p.name)}`);
     } catch (err) {
-      results.failed.push({ label: label(p.kind, p.name), error: err.message });
-      ctx.err(`failed: ${label(p.kind, p.name)} — ${err.message}`);
+      const hinted = withLockHint(err, `removing ${label(p.kind, p.name)}`);
+      results.failed.push({ label: label(p.kind, p.name), error: hinted.message });
+      ctx.err(`failed: ${label(p.kind, p.name)} — ${hinted.message}`);
     }
   }
   for (const p of planned) {

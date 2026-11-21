@@ -22,16 +22,36 @@
 //   * Partial failure: one bad item never aborts the run; results
 //     are tracked per item and summarized at the end.
 
-import { cp, lstat, mkdir, readFile, readlink, rename, rm, symlink, writeFile, readdir } from 'node:fs/promises';
+import { cp, lstat, mkdir, readFile, readlink, rename, rm, writeFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { resolveTarget } from './targets.mjs';
 import { hashFile, hashTree, treeFingerprint, sha256Hex, hashPrefix } from './hashing.mjs';
 import { entryKey, entryRoot } from './manifest.mjs';
 import { createBackup, stageBackupItem } from './backups.mjs';
 import { installedFileName, renderInstallable, toMarkdownAgent, toTomlAgent } from './library.mjs';
+import {
+  LinkError,
+  createLink,
+  isWindowsLockError,
+  lockErrorMessage,
+  rmRecursiveOptions,
+  sameLinkTarget,
+} from './links.mjs';
 
 export class UsageError extends Error {}
 export class InstallerError extends Error {}
+
+/**
+ * Attach a Windows file-lock explanation to an error when it is
+ * one (EBUSY/EPERM on rename/rm — another program holds a file
+ * open). Returns the error unchanged otherwise, so POSIX behavior
+ * and non-lock errors are untouched. `platform` is injectable so
+ * the Windows wording is unit-testable on any platform.
+ */
+export function withLockHint(err, action, platform = process.platform) {
+  if (!isWindowsLockError(err, platform)) return err;
+  return new InstallerError(lockErrorMessage(err, action), { cause: err });
+}
 
 export const STALE_PREFIX = '.skillforge-tmp-';
 
@@ -122,11 +142,19 @@ export function allLocations(ctx) {
   return out;
 }
 
-/** Root directory (relative to the skills dir) for a manifest entry. */
+/**
+ * Root directory (relative to the skills dir) for a manifest entry.
+ * Stored with forward slashes: path.relative uses the platform
+ * separator (a backslash on Windows), but manifest roots travel
+ * via git and must resolve on every platform — and Windows path
+ * functions accept forward slashes, so '/' is the portable form
+ * (Stage D). On POSIX this is a no-op.
+ */
 export function relativeRoot(skillsDir, rootDir) {
   if (rootDir === skillsDir) return '.';
   const rel = path.relative(skillsDir, rootDir);
-  return rel === '' ? '.' : rel;
+  if (rel === '') return '.';
+  return rel.split(path.sep).join('/');
 }
 
 // ---------------------------------------------------------------- planning
@@ -278,7 +306,10 @@ export async function computePlannedFromEntry(library, item, entry, skillsDir) {
 export async function linkPointsAtSource(planned) {
   try {
     const target = await readlink(planned.destAbs);
-    return path.resolve(path.dirname(planned.destAbs), target) === planned.sourceAbs;
+    // sameLinkTarget, not ===: on Windows a junction's readlink
+    // result can carry an NT namespace prefix or differ in case
+    // from the computed source path (see links.mjs).
+    return sameLinkTarget(path.resolve(path.dirname(planned.destAbs), target), planned.sourceAbs);
   } catch {
     return false;
   }
@@ -377,23 +408,38 @@ export async function classifyUpdate(planned, entry) {
  * it). Only staged leftovers are deleted, and those are
  * reproducible from the library. Runs that could not acquire the
  * lock skip this cleanup (see commands.mjs).
+ *
+ * Returns { removed, skipped }: `skipped` holds leftovers whose
+ * removal failed with a Windows file-lock error (EBUSY/EPERM) —
+ * a locked leftover is harmless and the next run retries it, so
+ * it must not abort the run (Stage D). Any other removal failure
+ * still throws. On POSIX `skipped` is always empty.
  */
 export async function cleanStaleStaging(dir) {
   let entries;
   try {
     entries = await readdir(dir, { withFileTypes: true });
   } catch (err) {
-    if (err.code === 'ENOENT' || err.code === 'ENOTDIR') return [];
+    if (err.code === 'ENOENT' || err.code === 'ENOTDIR') return { removed: [], skipped: [] };
     throw err;
   }
   const removed = [];
+  const skipped = [];
   for (const entry of entries) {
     if (!entry.name.startsWith(STALE_PREFIX)) continue;
     if (entry.name.startsWith(`${STALE_PREFIX}old-`)) continue; // trash: never auto-deleted
-    await rm(path.join(dir, entry.name), { recursive: true, force: true });
-    removed.push(entry.name);
+    try {
+      await rm(path.join(dir, entry.name), rmRecursiveOptions());
+      removed.push(entry.name);
+    } catch (err) {
+      if (isWindowsLockError(err)) {
+        skipped.push({ name: entry.name, error: err.message });
+        continue;
+      }
+      throw err;
+    }
   }
-  return removed;
+  return { removed, skipped };
 }
 
 /**
@@ -415,10 +461,18 @@ export async function swapIn(stagedAbs, destAbs, fsOps = { rename, rm }) {
   const trash = path.join(parent, `${STALE_PREFIX}old-${path.basename(destAbs)}-${process.pid}-${rand()}`);
   const destExists = (await lstatOrNull(destAbs)) !== null;
   if (!destExists) {
-    await fsOps.rename(stagedAbs, destAbs);
+    try {
+      await fsOps.rename(stagedAbs, destAbs);
+    } catch (err) {
+      throw withLockHint(err, `moving the staged install into place at ${destAbs}`);
+    }
     return;
   }
-  await fsOps.rename(destAbs, trash);
+  try {
+    await fsOps.rename(destAbs, trash);
+  } catch (err) {
+    throw withLockHint(err, `moving the existing install at ${destAbs} aside`);
+  }
   try {
     await fsOps.rename(stagedAbs, destAbs);
   } catch (err) {
@@ -430,16 +484,16 @@ export async function swapIn(stagedAbs, destAbs, fsOps = { rename, rm }) {
       await fsOps.rename(trash, destAbs);
     } catch (rollbackErr) {
       throw new InstallerError(
-        `swap failed for ${destAbs} (${err.message}) and the rollback also failed (${rollbackErr.message}); ` +
+        `swap failed for ${destAbs} (${withLockHint(err, 'moving the staged install into place').message}) and the rollback also failed (${withLockHint(rollbackErr, 'moving the previous install back').message}); ` +
           `the previous content is still in ${trash} and the new content is still in ${stagedAbs} — ` +
           'neither was deleted, restore one of them manually (or restore from a backup)',
         { cause: err },
       );
     }
-    await fsOps.rm(stagedAbs, { recursive: true, force: true }).catch(() => {});
-    throw err;
+    await fsOps.rm(stagedAbs, rmRecursiveOptions()).catch(() => {});
+    throw withLockHint(err, `moving the staged install into place at ${destAbs}`);
   }
-  await fsOps.rm(trash, { recursive: true, force: true }).catch(() => {});
+  await fsOps.rm(trash, rmRecursiveOptions()).catch(() => {});
 }
 
 /**
@@ -461,7 +515,10 @@ export async function verifyStaged(planned, absPath) {
     } catch (err) {
       return `expected a symlink at ${absPath} (${err.message})`;
     }
-    if (path.resolve(path.dirname(absPath), target) !== planned.sourceAbs) {
+    // sameLinkTarget, not === (see linkPointsAtSource): a
+    // junction's readlink result can carry an NT namespace prefix
+    // or differ in case from the computed source path on Windows.
+    if (!sameLinkTarget(path.resolve(path.dirname(absPath), target), planned.sourceAbs)) {
       return `symlink at ${absPath} points at ${target}, not the library source`;
     }
     return null;
@@ -508,7 +565,7 @@ export async function rollbackFromBackup(item, backupRecord) {
     ? backupRecord.items.find((i) => i.kind === item.kind && i.name === item.name)
     : null;
   if (!backedUp) {
-    await rm(item.destAbs, { recursive: true, force: true });
+    await rm(item.destAbs, rmRecursiveOptions());
     return 'the bad install was removed (there was no previous content to restore)';
   }
   const staged = path.join(
@@ -520,8 +577,16 @@ export async function rollbackFromBackup(item, backupRecord) {
   return 'the previous content was restored from the backup';
 }
 
-/** Stage an item's content next to its destination; returns the staged path. */
-export async function stageItem(planned) {
+/**
+ * Stage an item's content next to its destination; returns the staged path.
+ * `fsOps` (default: the real fs calls) exists so tests can
+ * fault-inject the link creation (see swapIn's fsOps pattern):
+ * `{ symlink, platform }` are passed through to createLink, so the
+ * Windows junction fallback is drivable on any platform.
+ * On success in link mode, `planned.linkType` records which form
+ * was actually created ('symlink' | 'junction') for the run log.
+ */
+export async function stageItem(planned, fsOps = {}) {
   await mkdir(planned.rootDir, { recursive: true });
   const staged = path.join(
     planned.rootDir,
@@ -529,20 +594,29 @@ export async function stageItem(planned) {
   );
   try {
     if (planned.method === 'link') {
-      const type = planned.kind === 'skill' ? 'dir' : 'file';
-      await symlink(planned.sourceAbs, staged, type);
+      // Junction fallback (A-11): on Windows, a directory symlink
+      // needs Developer Mode or administrator privileges; when it
+      // fails with EPERM, createLink retries as a junction, which
+      // needs no privilege. File links cannot be junctions, so
+      // they keep the clear privilege error.
+      planned.linkType = await createLink(planned.sourceAbs, staged, {
+        kind: planned.kind,
+        platform: fsOps.platform,
+        symlinkFn: fsOps.symlink,
+      });
     } else if (planned.kind === 'skill') {
       await cp(planned.sourceAbs, staged, { recursive: true });
     } else {
       await writeFile(staged, planned.rendered, 'utf8');
     }
   } catch (err) {
-    await rm(staged, { recursive: true, force: true }).catch(() => {});
-    if (err.code === 'EPERM' && planned.method === 'link' && process.platform === 'win32') {
-      throw new InstallerError(
-        'cannot create a symlink on Windows: directory symlinks need Developer Mode or ' +
-          'administrator privileges. Install without --link to copy instead.',
-      );
+    await rm(staged, rmRecursiveOptions()).catch(() => {});
+    if (err instanceof LinkError) {
+      // The link error already explains what was tried and why it
+      // failed; add the way out (copy instead of linking).
+      throw new InstallerError(`${err.message}. Install without --link to copy instead.`, {
+        cause: err,
+      });
     }
     throw err;
   }

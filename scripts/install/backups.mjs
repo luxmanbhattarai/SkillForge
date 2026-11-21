@@ -21,9 +21,10 @@
 // first backs the current content up (reason 'pre-restore'), so a
 // restore can always be undone by restoring the newer backup.
 
-import { cp, mkdir, readdir, readFile, readlink, symlink, writeFile, lstat, rm } from 'node:fs/promises';
+import { cp, mkdir, readdir, readFile, readlink, writeFile, lstat, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { validateEntryPaths, validatePathSegment } from './manifest.mjs';
+import { createLink, rmRecursiveOptions } from './links.mjs';
 
 export const BACKUPS_DIR_NAME = '.skillforge-backups';
 
@@ -56,8 +57,10 @@ export function backupId(date = new Date()) {
  * is the absolute path of the existing content and entry (optional)
  * is its manifest entry. Returns the backup record, or null when
  * there was nothing to back up.
+ * `fsOps` ({ symlink, platform }) is passed through to link
+ * creation so tests can fault-inject the Windows junction fallback.
  */
-export async function createBackup(skillsDir, { target, scope, reason, command, items }) {
+export async function createBackup(skillsDir, { target, scope, reason, command, items }, fsOps = {}) {
   const existing = [];
   for (const item of items) {
     try {
@@ -83,7 +86,20 @@ export async function createBackup(skillsDir, { target, scope, reason, command, 
       const st = await lstat(item.destAbs);
       if (st.isSymbolicLink()) {
         // Back up a symlink by recreating it (a copy would resolve it).
-        await symlink(await readlink(item.destAbs), dst);
+        // The link type comes from the item kind — skills are
+        // directories, agents/workflows are files. Passing no type
+        // would make Node guess from the target, which defaults to
+        // a file link when the target is missing or unreadable (a
+        // broken directory link would be backed up as a broken file
+        // link) and can never produce a junction; createLink also
+        // retries a denied directory link as a junction on Windows
+        // (A-11), so backing up a link install works without
+        // symlink privilege.
+        await createLink(await readlink(item.destAbs), dst, {
+          kind: item.kind,
+          platform: fsOps.platform,
+          symlinkFn: fsOps.symlink,
+        });
       } else if (st.isDirectory()) {
         await cp(item.destAbs, dst, { recursive: true });
       } else {
@@ -119,7 +135,7 @@ export async function createBackup(skillsDir, { target, scope, reason, command, 
     // (A-16d): it would linger as a "corrupt" backup entry. The
     // directory is freshly created with a unique id, so removing
     // it can never touch another backup.
-    await rm(dir, { recursive: true, force: true }).catch(() => {});
+    await rm(dir, rmRecursiveOptions()).catch(() => {});
     throw err;
   }
 }
@@ -344,7 +360,7 @@ export async function recoverBackupRecord(skillsDir, id) {
 
 /** Remove a whole backup directory (used to roll back a failed restore). */
 export async function removeBackupDir(dir) {
-  await rm(dir, { recursive: true, force: true });
+  await rm(dir, rmRecursiveOptions());
 }
 
 /**
@@ -370,19 +386,25 @@ export function backupItemPaths(record, item) {
  * recreated, directories copied, single files copied. Used by
  * restore and by rollback-from-backup. On failure the partial
  * staging path is removed and the error propagates.
+ * `fsOps` ({ symlink, platform }) is passed through to link
+ * creation so tests can fault-inject the Windows junction fallback.
  */
-export async function stageBackupItem(record, item, stagedAbs) {
+export async function stageBackupItem(record, item, stagedAbs, fsOps = {}) {
   const { storedDir, storedFile } = backupItemPaths(record, item);
   try {
     if (item.isSymlink) {
-      await symlink(await readlink(storedDir), stagedAbs);
+      await createLink(await readlink(storedDir), stagedAbs, {
+        kind: item.kind,
+        platform: fsOps.platform,
+        symlinkFn: fsOps.symlink,
+      });
     } else if (item.isDirectory) {
       await cp(storedDir, stagedAbs, { recursive: true });
     } else {
       await cp(storedFile, stagedAbs);
     }
   } catch (err) {
-    await rm(stagedAbs, { recursive: true, force: true }).catch(() => {});
+    await rm(stagedAbs, rmRecursiveOptions()).catch(() => {});
     throw err;
   }
 }

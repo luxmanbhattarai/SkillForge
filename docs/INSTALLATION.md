@@ -112,10 +112,14 @@ manifest, and `uninstall` needs `--all` (or a selector) to act.
   are reflected immediately. Agents and workflows are always copied:
   their installed form is a target-format conversion of the library
   file (see below), which a symlink cannot represent. On Windows,
-  directory symlinks need Developer Mode or administrator
-  privileges; if symlink creation fails, the installer reports it
-  clearly and installs nothing — it never silently falls back to
-  copying.
+  creating a directory symlink needs Developer Mode or administrator
+  privileges; if that fails, the installer retries as a directory
+  junction instead — junctions need no privilege and behave the same
+  way for a linked skill (the run log says `(junction)` instead of
+  `(symlink)` when the fallback is used). Only if the junction also
+  fails does the install report an error. The installer never
+  silently falls back to copying: `--link` always links, or fails
+  with a clear error.
 - `--dry-run` — print exactly what would happen; change nothing.
 - `--force` — overwrite conflicts without prompting. A backup is
   still made first. Never the default.
@@ -428,8 +432,13 @@ page (both verified against vendor docs on 2026-11-20).
   the agent or reload the project; confirm the path with
   `doctor`; confirm the skill is well-formed with `validate`.
 - **Symlink creation fails on Windows** — directory symlinks need
-  Developer Mode or administrator privileges. Install without
-  `--link` to copy instead.
+  Developer Mode or administrator privileges. Without them, the
+  installer uses a directory junction instead (no privilege needed),
+  so `--link` works on a stock Windows install. If both the symlink
+  and the junction fail, install without `--link` to copy instead.
+  Note that junctions only work for directories on local drives:
+  if your library lives on a network drive, `--link` needs a real
+  symlink (Developer Mode or administrator) or a copy install.
 
 ## Developing the installer
 

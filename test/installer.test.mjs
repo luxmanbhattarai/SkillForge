@@ -6,8 +6,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFile, spawnSync } from 'node:child_process';
-import { access, appendFile, chmod, cp, lstat, mkdir, readFile, readlink, rename, rm, symlink, utimes, writeFile } from 'node:fs/promises';
+import { access, appendFile, chmod, cp, lstat, mkdir, mkdtemp, readFile, readlink, rename, rm, symlink, utimes, writeFile } from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
+import { PassThrough } from 'node:stream';
 import {
   INSTALLER,
   REPO_ROOT,
@@ -1860,4 +1862,746 @@ test('A-15: uninstall backs up modified and foreign content, but not unmodified 
     await readFile(path.join(backupsBase, backupId, 'items', byName.seo.storedAs, 'SKILL.md'), 'utf8'),
     await readFile(path.join(REPO_ROOT, seoPath, 'SKILL.md'), 'utf8'),
   );
+});
+
+// ---------------------------------------------------------------- Stage D: A-11 junction fallback
+//
+// These are SIMULATED Windows tests: they run on POSIX and prove
+// what POSIX execution can prove — the fallback logic, driven by
+// fault injection with platform 'win32' — not real Windows
+// execution. A junction is a Windows-only object; no test here
+// creates one. What still needs a real Windows run is listed in
+// ai/remediation/stage-d/windows-link-analysis.md.
+
+test('A-11: createLink falls back to a junction when a directory symlink fails with EPERM on Windows (unit, fault-injected)', async () => {
+  const { createLink } = await import('../scripts/install/links.mjs');
+  const calls = [];
+  const failingSymlink = async (target, linkPath, type) => {
+    calls.push(type);
+    if (type === 'dir') {
+      const err = new Error('EPERM: operation not permitted, symlink');
+      err.code = 'EPERM';
+      throw err;
+    }
+    // The junction attempt succeeds.
+  };
+  const result = await createLink('C:\\lib\\skill', 'C:\\dest\\skill', {
+    kind: 'skill',
+    platform: 'win32',
+    symlinkFn: failingSymlink,
+  });
+  assert.equal(result, 'junction');
+  assert.deepEqual(calls, ['dir', 'junction']);
+});
+
+test('A-11: createLink does not retry as a junction for file links, non-EPERM errors, or non-Windows platforms (unit)', async () => {
+  const { LinkError, createLink } = await import('../scripts/install/links.mjs');
+  const eperm = () => {
+    const err = new Error('EPERM: operation not permitted, symlink');
+    err.code = 'EPERM';
+    return err;
+  };
+  const recorder = (throwErr) => {
+    const calls = [];
+    const fn = async (target, linkPath, type) => {
+      calls.push(type);
+      throw throwErr();
+    };
+    return { calls, fn };
+  };
+
+  // File links (agents/workflows) cannot be junctions: one attempt,
+  // then a clear privilege error.
+  {
+    const { calls, fn } = recorder(eperm);
+    const err = await createLink('C:\\lib\\agent.md', 'C:\\dest\\agent.md', {
+      kind: 'agent',
+      platform: 'win32',
+      symlinkFn: fn,
+    }).then(
+      () => null,
+      (e) => e,
+    );
+    assert.ok(err instanceof LinkError, 'expected a LinkError');
+    assert.deepEqual(calls, ['file']);
+    assert.deepEqual(err.attempts, ['symlink']);
+    assert.match(err.message, /cannot create a file symlink on Windows/);
+    assert.match(err.message, /cannot fall back to a junction/);
+  }
+
+  // A non-EPERM failure is not a privilege problem: the raw error
+  // propagates, with no junction retry to hide it.
+  {
+    const { calls, fn } = recorder(() => {
+      const err = new Error('ENOENT: no such file or directory');
+      err.code = 'ENOENT';
+      return err;
+    });
+    const err = await createLink('C:\\lib\\skill', 'C:\\dest\\skill', {
+      kind: 'skill',
+      platform: 'win32',
+      symlinkFn: fn,
+    }).then(
+      () => null,
+      (e) => e,
+    );
+    assert.ok(!(err instanceof LinkError), 'a non-EPERM error must not become a LinkError');
+    assert.equal(err.code, 'ENOENT');
+    assert.deepEqual(calls, ['dir']);
+  }
+
+  // On POSIX there is no junction fallback at all: EPERM propagates raw.
+  {
+    const { calls, fn } = recorder(eperm);
+    const err = await createLink('/lib/skill', '/dest/skill', {
+      kind: 'skill',
+      platform: 'linux',
+      symlinkFn: fn,
+    }).then(
+      () => null,
+      (e) => e,
+    );
+    assert.ok(!(err instanceof LinkError), 'a POSIX EPERM must not become a LinkError');
+    assert.equal(err.code, 'EPERM');
+    assert.deepEqual(calls, ['dir']);
+  }
+
+  // When the junction retry fails too, the error says both were tried.
+  {
+    const { calls, fn } = recorder(eperm);
+    const err = await createLink('C:\\lib\\skill', 'C:\\dest\\skill', {
+      kind: 'skill',
+      platform: 'win32',
+      symlinkFn: fn,
+    }).then(
+      () => null,
+      (e) => e,
+    );
+    assert.ok(err instanceof LinkError, 'expected a LinkError');
+    assert.deepEqual(calls, ['dir', 'junction']);
+    assert.deepEqual(err.attempts, ['symlink', 'junction']);
+    assert.match(err.message, /junction fallback also failed/);
+  }
+});
+
+test('A-11: createLink resolves a relative target against the link parent before the junction retry (unit)', async () => {
+  const { createLink } = await import('../scripts/install/links.mjs');
+  const calls = [];
+  const failingSymlink = async (target, linkPath, type) => {
+    calls.push([type, target]);
+    if (type === 'dir') {
+      const err = new Error('EPERM: operation not permitted, symlink');
+      err.code = 'EPERM';
+      throw err;
+    }
+  };
+  // Junctions store absolute targets. Node would resolve a
+  // relative target against the process cwd — the wrong base for
+  // a link target — so createLink resolves it against the link's
+  // parent directory. (path.resolve is the platform-native one:
+  // POSIX here, win32 on Windows; the resolution rule is the same.)
+  await createLink('../lib/skill', '/x/dest/skill', {
+    kind: 'skill',
+    platform: 'win32',
+    symlinkFn: failingSymlink,
+  });
+  assert.deepEqual(calls, [
+    ['dir', '../lib/skill'],
+    ['junction', '/x/lib/skill'],
+  ]);
+});
+
+test('A-11: stageItem records a junction link type when the fallback is used, and cleans up when both attempts fail (unit, fault-injected)', async () => {
+  const { stageItem } = await import('../scripts/install/installer.mjs');
+  const { base } = await makeSandbox();
+  const src = path.join(base, 'src');
+  await mkdir(src, { recursive: true });
+  await writeFile(path.join(src, 'SKILL.md'), '# test\n');
+  const rootDir = path.join(base, 'skills');
+  const planned = {
+    kind: 'skill',
+    name: 'myskill',
+    rootDir,
+    destName: 'myskill',
+    destAbs: path.join(rootDir, 'myskill'),
+    sourceAbs: src,
+    method: 'link',
+    rendered: null,
+  };
+  // EPERM on 'dir', then a real symlink for the junction attempt
+  // (the type argument is ignored on POSIX, so this creates a
+  // normal symlink — the point is the call sequence, not a real
+  // junction).
+  const calls = [];
+  const failingSymlink = async (target, linkPath, type) => {
+    calls.push(type);
+    if (type === 'dir') {
+      const err = new Error('EPERM: operation not permitted, symlink');
+      err.code = 'EPERM';
+      throw err;
+    }
+    return symlink(target, linkPath, type);
+  };
+  const staged = await stageItem(planned, { platform: 'win32', symlink: failingSymlink });
+  assert.deepEqual(calls, ['dir', 'junction']);
+  assert.equal(planned.linkType, 'junction');
+  assert.equal((await lstat(staged)).isSymbolicLink(), true);
+  assert.equal(await readlink(staged), src);
+  await rm(staged);
+
+  // Both attempts fail: an InstallerError naming the way out, and
+  // no staging directory left behind.
+  const alwaysFailing = async () => {
+    const err = new Error('EPERM: operation not permitted, symlink');
+    err.code = 'EPERM';
+    throw err;
+  };
+  const planned2 = { ...planned, linkType: undefined };
+  await assert.rejects(() => stageItem(planned2, { platform: 'win32', symlink: alwaysFailing }), (err) => {
+    assert.match(err.message, /cannot create a directory link on Windows/);
+    assert.match(err.message, /junction fallback also failed/);
+    assert.match(err.message, /Install without --link to copy instead/);
+    return true;
+  });
+  assert.deepEqual(await listNames(rootDir), []);
+});
+
+test('A-11: createBackup and stageBackupItem recreate directory links with the junction fallback (unit, fault-injected)', async () => {
+  const { createBackup, stageBackupItem } = await import('../scripts/install/backups.mjs');
+  const { base } = await makeSandbox();
+  const src = path.join(base, 'src');
+  await mkdir(src, { recursive: true });
+  await writeFile(path.join(src, 'SKILL.md'), '# test\n');
+  const skillsDir = path.join(base, 'skills');
+  await mkdir(skillsDir, { recursive: true });
+  const linkPath = path.join(skillsDir, 'linked');
+  await symlink(src, linkPath, 'dir');
+
+  // EPERM on 'dir', real symlink for the junction attempt.
+  const calls = [];
+  const failingSymlink = async (target, linkPathArg, type) => {
+    calls.push(type);
+    if (type === 'dir') {
+      const err = new Error('EPERM: operation not permitted, symlink');
+      err.code = 'EPERM';
+      throw err;
+    }
+    return symlink(target, linkPathArg, type);
+  };
+  const fsOps = { platform: 'win32', symlink: failingSymlink };
+
+  // Backing up a linked skill recreates the link (not a copy of
+  // the target), via the junction fallback.
+  const record = await createBackup(
+    skillsDir,
+    {
+      target: null,
+      scope: 'project',
+      reason: 'test',
+      command: 'install',
+      items: [{ kind: 'skill', name: 'linked', destAbs: linkPath, entry: null }],
+    },
+    fsOps,
+  );
+  assert.ok(record, 'expected a backup record');
+  assert.deepEqual(calls, ['dir', 'junction']);
+  assert.equal(record.items.length, 1);
+  assert.equal(record.items[0].isSymlink, true);
+  const stored = path.join(record.dir, 'items', record.items[0].storedAs);
+  assert.equal((await lstat(stored)).isSymbolicLink(), true);
+  assert.equal(await readlink(stored), src);
+
+  // Restoring the backed-up link recreates it the same way.
+  calls.length = 0;
+  const stagedAbs = path.join(skillsDir, 'staged-link');
+  await stageBackupItem(record, record.items[0], stagedAbs, fsOps);
+  assert.deepEqual(calls, ['dir', 'junction']);
+  assert.equal((await lstat(stagedAbs)).isSymbolicLink(), true);
+  assert.equal(await readlink(stagedAbs), src);
+});
+
+test('A-11: sameLinkTarget compares link targets across NT prefixes and Windows case differences (unit)', async () => {
+  const { sameLinkTarget } = await import('../scripts/install/links.mjs');
+  // Windows: case-insensitive, NT namespace prefixes stripped,
+  // trailing separators ignored.
+  assert.equal(sameLinkTarget('C:\\Lib\\Skill', 'c:\\lib\\skill', 'win32'), true);
+  assert.equal(sameLinkTarget('\\??\\C:\\Lib\\Skill', 'C:\\Lib\\Skill', 'win32'), true);
+  assert.equal(sameLinkTarget('\\\\?\\C:\\Lib\\Skill', 'C:\\Lib\\Skill', 'win32'), true);
+  assert.equal(sameLinkTarget('C:\\Lib\\Skill\\', 'C:\\LIB\\SKILL', 'win32'), true);
+  assert.equal(sameLinkTarget('C:\\Lib\\.\\Skill', 'C:\\Lib\\Skill', 'win32'), true);
+  assert.equal(sameLinkTarget('C:\\Lib\\Skill', 'C:\\Lib\\Other', 'win32'), false);
+  assert.equal(sameLinkTarget('C:\\', 'C:\\', 'win32'), true);
+  // POSIX: case-sensitive, no prefix or case folding.
+  assert.equal(sameLinkTarget('/lib/Skill', '/lib/skill', 'linux'), false);
+  assert.equal(sameLinkTarget('/lib/skill/', '/lib/skill', 'linux'), true);
+  assert.equal(sameLinkTarget('/lib/skill', '/lib/other', 'linux'), false);
+});
+
+// ---------------------------------------------------------------- Stage D: simulated Windows paths (A-29)
+//
+// These tests prove what POSIX execution CAN prove about Windows
+// paths: the platform-independent validation rules (which treat
+// backslashes as separators and reject Windows absolute roots),
+// and the installer's behavior on long, spaced, and Unicode paths
+// (the installer does no shelling, so these must work). What they
+// cannot prove — real win32 path resolution, long-path OS support,
+// junction behavior — is listed as Blocked in
+// ai/remediation/stage-d/windows-link-analysis.md.
+
+test('Stage D (simulated Windows): manifest validation treats backslashes as separators and rejects Windows absolute roots (unit)', async () => {
+  const { validateEntry, validateEntryPaths, validatePathSegment } = await import('../scripts/install/manifest.mjs');
+  // A destName with a backslash is two segments, not one.
+  assert.notEqual(validatePathSegment('a\\b', 'destName'), null);
+  // A root written with Windows separators has the tier-2 shape
+  // (climbs, then descends to an agents directory).
+  assert.equal(
+    validateEntryPaths({ kind: 'agent', root: '..\\agents', destName: 'x.md' }),
+    null,
+  );
+  // ...but a skill entry still must have root '.'.
+  assert.notEqual(
+    validateEntryPaths({ kind: 'skill', root: '..\\agents', destName: 'x' }),
+    null,
+  );
+  // Windows absolute and UNC roots are rejected (built with
+  // path.win32 so the test inputs are real Windows paths).
+  const winAbs = path.win32.join('C:\\', 'Users', 'x', '.claude', 'agents');
+  assert.match(
+    validateEntryPaths({ kind: 'agent', root: winAbs, destName: 'x.md' }) || '',
+    /must be relative/,
+  );
+  assert.match(
+    validateEntryPaths({ kind: 'agent', root: '\\\\server\\share\\agents', destName: 'x.md' }) || '',
+    /must be relative/,
+  );
+  // Tier-1 (exact roots) cannot apply to a Windows-style skills
+  // dir on POSIX — it degrades to the tier-2 shape check instead
+  // of crashing or wrongly accepting: a shape-valid root passes,
+  // a shape-invalid one is still rejected.
+  const winSkillsDir = path.win32.join('C:\\', 'proj', '.claude', 'skills');
+  assert.equal(
+    validateEntry(
+      { kind: 'agent', name: 'x', root: '../agents', destName: 'x.md' },
+      { key: 'agent:x', skillsDir: winSkillsDir, target: 'claude-code', scope: 'project' },
+    ),
+    null,
+  );
+  assert.notEqual(
+    validateEntry(
+      { kind: 'agent', name: 'x', root: '../other', destName: 'x.md' },
+      { key: 'agent:x', skillsDir: winSkillsDir, target: 'claude-code', scope: 'project' },
+    ),
+    null,
+  );
+});
+
+test('Stage D (simulated Windows): relativeRoot stores manifest roots with forward slashes (unit)', async () => {
+  const { relativeRoot } = await import('../scripts/install/installer.mjs');
+  // Manifest roots travel via git, so they must resolve on every
+  // platform: a root stored with backslashes (what path.relative
+  // produces on Windows) would resolve as a single literal
+  // directory name on POSIX. relativeRoot normalizes to '/'.
+  // On POSIX this is a no-op — the Windows behavior is the point,
+  // and it needs a real Windows run to observe (Blocked).
+  assert.equal(relativeRoot('/proj/.claude/skills', '/proj/.claude/skills'), '.');
+  assert.equal(relativeRoot('/proj/.claude/skills', '/proj/.claude/agents'), '../agents');
+  assert.equal(relativeRoot('/proj/out', '/proj/.codex/agents'), '../.codex/agents');
+  // The stored form resolves back through entryRoot on this platform.
+  const { entryRoot } = await import('../scripts/install/manifest.mjs');
+  assert.equal(
+    entryRoot('/proj/.claude/skills', { kind: 'agent', root: '../agents', destName: 'x.md' }),
+    '/proj/.claude/agents',
+  );
+});
+
+test('Stage D: withLockHint passes errors through on POSIX and adds a lock note on Windows; rm retries are Windows-only (unit)', async () => {
+  const { InstallerError, withLockHint } = await import('../scripts/install/installer.mjs');
+  const { isWindowsLockError, rmRecursiveOptions } = await import('../scripts/install/links.mjs');
+  const busy = new Error('EBUSY: resource busy or locked, rename');
+  busy.code = 'EBUSY';
+  // POSIX: the error object passes through untouched.
+  assert.equal(withLockHint(busy, 'removing x', 'linux'), busy);
+  assert.equal(isWindowsLockError(busy, 'linux'), false);
+  // Windows: the same error becomes an InstallerError naming the
+  // likely cause (another program holding a file open).
+  const hinted = withLockHint(busy, 'removing x', 'win32');
+  assert.ok(hinted instanceof InstallerError);
+  assert.match(hinted.message, /removing x failed/);
+  assert.match(hinted.message, /in use by another program/);
+  assert.equal(hinted.cause, busy);
+  // A non-lock error passes through on Windows too.
+  const missing = new Error('ENOENT: no such file or directory');
+  missing.code = 'ENOENT';
+  assert.equal(withLockHint(missing, 'removing x', 'win32'), missing);
+  assert.equal(isWindowsLockError(missing, 'win32'), false);
+  // rm options: retries only on Windows; POSIX gets exactly the
+  // options the installer always used.
+  assert.deepEqual(rmRecursiveOptions('win32'), { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+  assert.deepEqual(rmRecursiveOptions('linux'), { recursive: true, force: true });
+});
+
+test('Stage D: cleanStaleStaging returns { removed, skipped } and never deletes trash (unit)', async () => {
+  const { cleanStaleStaging } = await import('../scripts/install/installer.mjs');
+  const { base } = await makeSandbox();
+  const dir = path.join(base, 'skills');
+  await mkdir(path.join(dir, '.skillforge-tmp-staged-123'), { recursive: true });
+  await writeFile(path.join(dir, '.skillforge-tmp-staged-123', 'x.txt'), 'X\n');
+  await mkdir(path.join(dir, '.skillforge-tmp-old-item-123'), { recursive: true });
+  await writeFile(path.join(dir, '.skillforge-tmp-old-item-123', 'old.txt'), 'OLD\n');
+  await mkdir(path.join(dir, 'keep'), { recursive: true });
+  const result = await cleanStaleStaging(dir);
+  assert.deepEqual(result, { removed: ['.skillforge-tmp-staged-123'], skipped: [] });
+  assert.equal(await exists(path.join(dir, '.skillforge-tmp-staged-123')), false);
+  // Trash survives (it may hold the only copy of replaced content).
+  assert.equal(await readFile(path.join(dir, '.skillforge-tmp-old-item-123', 'old.txt'), 'utf8'), 'OLD\n');
+  assert.equal(await exists(path.join(dir, 'keep')), true);
+  // A missing directory is an empty result, not an error.
+  assert.deepEqual(await cleanStaleStaging(path.join(base, 'no-such-dir')), { removed: [], skipped: [] });
+});
+
+test('A-29: install works with a destination path longer than 260 characters (CLI)', async () => {
+  // The installer imposes no path-length limit of its own; this
+  // proves it on POSIX. On Windows, paths over 260 characters
+  // additionally depend on OS long-path support — see the Stage D
+  // analysis fragment (Blocked: needs a real Windows run).
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const deep = Array.from({ length: 6 }, () => 'a'.repeat(50)).join('/');
+  const destAbs = path.join(proj, deep);
+  assert.ok(destAbs.length > 260, `expected a >260-char path, got ${destAbs.length}`);
+  const r = await runCli(['install', '--dest', deep, '--skill', 'fixture-one'], {
+    home,
+    proj,
+    env: { SKILLFORGE_ROOT: fixture.root },
+  });
+  assert.equal(r.code, 0, r.stderr);
+  assert.equal(await exists(path.join(destAbs, 'fixture-one', 'SKILL.md')), true);
+  const manifest = await readJson(path.join(destAbs, '.skillforge-manifest.json'));
+  assert.equal(manifest.items['skill:fixture-one'].destName, 'fixture-one');
+});
+
+test('A-29: install works when the project and destination paths contain spaces (CLI)', async () => {
+  // The installer does no shelling (pure fs ops via execFile), so
+  // spaces must be inert. (The A-29 note about single-quoted shell
+  // commands concerns runCliPty's `script -c` string, not runCli.)
+  const base = await mkdtemp(path.join(os.tmpdir(), 'skillforge test spaces-'));
+  const home = path.join(base, 'home dir');
+  const proj = path.join(base, 'my project');
+  await mkdir(home, { recursive: true });
+  await mkdir(proj, { recursive: true });
+  const fixture = await makeFixtureLibrary(base);
+  const r = await runCli(['install', '--dest', 'my skills', '--skill', 'fixture-one'], {
+    home,
+    proj,
+    env: { SKILLFORGE_ROOT: fixture.root },
+  });
+  assert.equal(r.code, 0, r.stderr);
+  assert.equal(await exists(path.join(proj, 'my skills', 'fixture-one', 'SKILL.md')), true);
+  const manifest = await readJson(path.join(proj, 'my skills', '.skillforge-manifest.json'));
+  assert.equal(manifest.items['skill:fixture-one'].destName, 'fixture-one');
+});
+
+test('A-29: install works with Unicode characters in the destination path (CLI)', async () => {
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const dest = 'skïlls-üñïcödé-日本語';
+  const r = await runCli(['install', '--dest', dest, '--skill', 'fixture-one'], {
+    home,
+    proj,
+    env: { SKILLFORGE_ROOT: fixture.root },
+  });
+  assert.equal(r.code, 0, r.stderr);
+  assert.equal(await exists(path.join(proj, dest, 'fixture-one', 'SKILL.md')), true);
+  // The manifest round-trips through JSON with the Unicode path intact.
+  const manifest = await readJson(path.join(proj, dest, '.skillforge-manifest.json'));
+  assert.equal(manifest.items['skill:fixture-one'].destName, 'fixture-one');
+});
+
+// ---------------------------------------------------------------- Stage D: prompts without a PTY (node-pty decision, option c)
+//
+// The prompt streams are injectable (prompt.mjs setPromptStreams),
+// so the prompt paths run on every platform — including Windows,
+// where there is no `script` binary for the PTY tests. These tests
+// drive the REAL askChoice through the REAL command functions
+// in-process (no child process, no PTY), mirroring the PTY tests
+// in the A-13 section. The PTY tests remain as the real-TTY
+// integration layer on Unix CI.
+//
+// Readline drops lines written before the question is asked, so
+// answers are written in response to the question: every question
+// is written to the injected output stream ending with ': ', and
+// the driver feeds the next scripted answer when one appears.
+
+function drivePromptAnswers(input, output, answers) {
+  let buf = '';
+  let i = 0;
+  output.on('data', (chunk) => {
+    buf += chunk.toString();
+    while (i < answers.length && buf.endsWith(': ')) {
+      input.write(answers[i++]);
+      buf = '';
+    }
+  });
+}
+
+// Build a ctx for calling a command function in-process: the real
+// command code, the real askChoice, captured output.
+function makeInProcessCtx({ library, home, proj, ask, out, err, ...overrides }) {
+  return {
+    library,
+    home,
+    cwd: proj,
+    target: 'claude-code',
+    scope: 'project',
+    dest: null,
+    skills: [],
+    categories: [],
+    agents: [],
+    workflows: [],
+    link: false,
+    dryRun: false,
+    force: false,
+    backup: false,
+    all: false,
+    json: false,
+    listBackups: false,
+    positional: [],
+    interactive: true,
+    ask,
+    out: (m) => out.push(m),
+    err: (m) => err.push(m),
+    ...overrides,
+  };
+}
+
+test('Stage D (no PTY): askChoice parses keys, labels, and EOF from an injected stream (unit)', async () => {
+  const { askChoice, setPromptStreams, resetPromptStreams } = await import('../scripts/install/prompt.mjs');
+  const choices = [
+    { key: 'o', label: 'overwrite' },
+    { key: 's', label: 'skip' },
+    { key: 'a', label: 'abort' },
+  ];
+  try {
+    // A key, typed lowercase.
+    {
+      const input = new PassThrough();
+      const output = new PassThrough();
+      let outText = '';
+      output.on('data', (d) => { outText += d.toString(); });
+      setPromptStreams({ input, output });
+      const p = askChoice('Overwrite it?', choices);
+      input.write('o\n');
+      assert.equal(await p, 'o');
+      assert.match(outText, /Overwrite it\? \[o\]verwrite \[s\]kip \[a\]bort: /);
+    }
+    // A full label, typed in any case.
+    {
+      const input = new PassThrough();
+      const output = new PassThrough();
+      setPromptStreams({ input, output });
+      const p = askChoice('Overwrite it?', choices);
+      input.write('ABORT\n');
+      assert.equal(await p, 'a');
+    }
+    // Empty input and an unrecognized answer both mean "no choice".
+    {
+      const input = new PassThrough();
+      const output = new PassThrough();
+      setPromptStreams({ input, output });
+      const p = askChoice('Overwrite it?', choices);
+      input.write('\n');
+      assert.equal(await p, null);
+    }
+    {
+      const input = new PassThrough();
+      const output = new PassThrough();
+      setPromptStreams({ input, output });
+      const p = askChoice('Overwrite it?', choices);
+      input.write('zzz\n');
+      assert.equal(await p, null);
+    }
+    // EOF resolves null, and a fresh stream afterwards still works
+    // (no stale "stdin ended" state leaks into the next prompt).
+    {
+      const input = new PassThrough();
+      const output = new PassThrough();
+      setPromptStreams({ input, output });
+      const p = askChoice('Overwrite it?', choices);
+      input.end();
+      assert.equal(await p, null);
+    }
+    {
+      const input = new PassThrough();
+      const output = new PassThrough();
+      setPromptStreams({ input, output });
+      const p = askChoice('Overwrite it?', choices);
+      input.write('s\n');
+      assert.equal(await p, 's');
+    }
+  } finally {
+    resetPromptStreams();
+  }
+});
+
+test('Stage D (no PTY): interactive conflict prompt abort stops the run and changes nothing (in-process)', async () => {
+  const { cmdInstall } = await import('../scripts/install/commands.mjs');
+  const { loadLibrary } = await import('../scripts/install/library.mjs');
+  const { askChoice, setPromptStreams, resetPromptStreams } = await import('../scripts/install/prompt.mjs');
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  await runCli(['install', ...CLAUDE, '--skill', 'fixture-one,fixture-two'], { home, proj, env });
+  const skillsDir = path.join(proj, '.claude', 'skills');
+  await appendFile(path.join(skillsDir, 'fixture-one', 'SKILL.md'), '\nMY EDIT\n');
+  await appendFile(path.join(skillsDir, 'fixture-two', 'SKILL.md'), '\nMY EDIT\n');
+  const manifestBefore = await readFile(path.join(skillsDir, '.skillforge-manifest.json'), 'utf8');
+
+  const library = await loadLibrary(fixture.root);
+  const out = [];
+  const err = [];
+  const input = new PassThrough();
+  const output = new PassThrough();
+  drivePromptAnswers(input, output, ['a\n']);
+  setPromptStreams({ input, output });
+  let code;
+  try {
+    code = await cmdInstall(
+      makeInProcessCtx({ library, home, proj, ask: askChoice, out, err, skills: ['fixture-one', 'fixture-two'] }),
+    );
+  } finally {
+    resetPromptStreams();
+  }
+  assert.equal(code, 0, err.join('\n'));
+  // Only the first item was ever asked about: abort short-circuits.
+  assert.ok(out.some((l) => l.includes('skipped: fixture-one (skipped (run aborted))')));
+  assert.ok(out.some((l) => l.includes('skipped: fixture-two (skipped (run aborted))')));
+  // Nothing was written: both edits intact, no backup, manifest untouched.
+  assert.match(await readFile(path.join(skillsDir, 'fixture-one', 'SKILL.md'), 'utf8'), /MY EDIT/);
+  assert.match(await readFile(path.join(skillsDir, 'fixture-two', 'SKILL.md'), 'utf8'), /MY EDIT/);
+  assert.equal(await exists(path.join(proj, '.claude', '.skillforge-backups')), false);
+  assert.equal(await readFile(path.join(skillsDir, '.skillforge-manifest.json'), 'utf8'), manifestBefore);
+});
+
+test('Stage D (no PTY): interactive uninstall --all prompt: no aborts, yes removes everything (in-process)', async () => {
+  const { cmdUninstall } = await import('../scripts/install/commands.mjs');
+  const { loadLibrary } = await import('../scripts/install/library.mjs');
+  const { askChoice, setPromptStreams, resetPromptStreams } = await import('../scripts/install/prompt.mjs');
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  await runCli(['install', ...CLAUDE, '--skill', 'fixture-one,fixture-two'], { home, proj, env });
+  const skillsDir = path.join(proj, '.claude', 'skills');
+  const library = await loadLibrary(fixture.root);
+
+  // 'no' aborts: nothing removed, no backup, manifest untouched.
+  const manifestBefore = await readFile(path.join(skillsDir, '.skillforge-manifest.json'), 'utf8');
+  {
+    const out = [];
+    const err = [];
+    const input = new PassThrough();
+    const output = new PassThrough();
+    drivePromptAnswers(input, output, ['n\n']);
+    setPromptStreams({ input, output });
+    let code;
+    try {
+      code = await cmdUninstall(makeInProcessCtx({ library, home, proj, ask: askChoice, out, err, all: true }));
+    } finally {
+      resetPromptStreams();
+    }
+    assert.equal(code, 0, err.join('\n'));
+    assert.ok(out.some((l) => l.includes('Aborted; nothing removed.')));
+    assert.equal(await exists(path.join(skillsDir, 'fixture-one', 'SKILL.md')), true);
+    assert.equal(await exists(path.join(skillsDir, 'fixture-two', 'SKILL.md')), true);
+    assert.equal(await exists(path.join(proj, '.claude', '.skillforge-backups')), false);
+    assert.equal(await readFile(path.join(skillsDir, '.skillforge-manifest.json'), 'utf8'), manifestBefore);
+  }
+
+  // 'yes' removes everything (both items are unmodified, so no
+  // per-item prompt follows and no backup is made).
+  {
+    const out = [];
+    const err = [];
+    const input = new PassThrough();
+    const output = new PassThrough();
+    drivePromptAnswers(input, output, ['y\n']);
+    setPromptStreams({ input, output });
+    let code;
+    try {
+      code = await cmdUninstall(makeInProcessCtx({ library, home, proj, ask: askChoice, out, err, all: true }));
+    } finally {
+      resetPromptStreams();
+    }
+    assert.equal(code, 0, err.join('\n'));
+    assert.ok(out.some((l) => l.includes('removed fixture-one')));
+    assert.ok(out.some((l) => l.includes('removed fixture-two')));
+    assert.equal(await exists(path.join(skillsDir, 'fixture-one')), false);
+    assert.equal(await exists(path.join(skillsDir, 'fixture-two')), false);
+    assert.equal(await exists(path.join(proj, '.claude', '.skillforge-backups')), false);
+    const manifest = await readJson(path.join(skillsDir, '.skillforge-manifest.json'));
+    assert.deepEqual(manifest.items, {});
+  }
+});
+
+test('Stage D (no PTY): interactive uninstall prompt for modified content: no skips, yes removes with a backup (in-process)', async () => {
+  const { cmdUninstall } = await import('../scripts/install/commands.mjs');
+  const { loadLibrary } = await import('../scripts/install/library.mjs');
+  const { askChoice, setPromptStreams, resetPromptStreams } = await import('../scripts/install/prompt.mjs');
+  const { base, home, proj } = await makeSandbox();
+  const fixture = await makeFixtureLibrary(base);
+  const env = { SKILLFORGE_ROOT: fixture.root };
+  await runCli(['install', ...CLAUDE, '--skill', 'fixture-one'], { home, proj, env });
+  const skillsDir = path.join(proj, '.claude', 'skills');
+  const backupsBase = path.join(proj, '.claude', '.skillforge-backups');
+  await appendFile(path.join(skillsDir, 'fixture-one', 'SKILL.md'), '\nMY EDIT\n');
+  const library = await loadLibrary(fixture.root);
+
+  // 'no' skips: the content survives, no backup is made.
+  {
+    const out = [];
+    const err = [];
+    const input = new PassThrough();
+    const output = new PassThrough();
+    drivePromptAnswers(input, output, ['n\n']);
+    setPromptStreams({ input, output });
+    let code;
+    try {
+      code = await cmdUninstall(
+        makeInProcessCtx({ library, home, proj, ask: askChoice, out, err, skills: ['fixture-one'] }),
+      );
+    } finally {
+      resetPromptStreams();
+    }
+    assert.equal(code, 0, err.join('\n'));
+    assert.ok(out.some((l) => l.includes('skipped: fixture-one (skipped by user)')));
+    assert.match(await readFile(path.join(skillsDir, 'fixture-one', 'SKILL.md'), 'utf8'), /MY EDIT/);
+    assert.equal(await exists(backupsBase), false);
+  }
+
+  // 'yes' removes it — backed up first, with the edit in the backup.
+  {
+    const out = [];
+    const err = [];
+    const input = new PassThrough();
+    const output = new PassThrough();
+    drivePromptAnswers(input, output, ['y\n']);
+    setPromptStreams({ input, output });
+    let code;
+    try {
+      code = await cmdUninstall(
+        makeInProcessCtx({ library, home, proj, ask: askChoice, out, err, skills: ['fixture-one'] }),
+      );
+    } finally {
+      resetPromptStreams();
+    }
+    assert.equal(code, 0, err.join('\n'));
+    const joined = out.join('\n');
+    assert.match(joined, /Backup created: (\S+)/);
+    assert.match(joined, /removed fixture-one/);
+    assert.equal(await exists(path.join(skillsDir, 'fixture-one')), false);
+    const backupId = joined.match(/Backup created: (\S+)/)[1];
+    assert.match(
+      await readFile(path.join(backupsBase, backupId, 'items', '0-skill-fixture-one', 'SKILL.md'), 'utf8'),
+      /MY EDIT/,
+    );
+  }
 });

@@ -10,6 +10,15 @@
 // had already buffered (a user answering two prompts quickly would
 // lose the second answer). The entry point closes the interface
 // when the run finishes so the process can exit.
+//
+// The prompt streams are injectable (setPromptStreams) so the
+// prompt paths are unit-testable without a PTY: on Windows there
+// is no `script` binary for the PTY tests to use, and the repo's
+// zero-dependency policy rules out node-pty (see
+// ai/remediation/stage-d/windows-link-analysis.md §node-pty).
+// Production code never calls setPromptStreams; the defaults are
+// the process streams, and behavior is unchanged when it is not
+// called.
 
 import readline from 'node:readline';
 
@@ -20,11 +29,38 @@ export function isInteractive() {
 let rl = null;
 let stdinEnded = false;
 let pendingResolve = null;
+let promptInput = process.stdin;
+let promptOutput = process.stdout;
+
+/**
+ * Drive askChoice from injected streams instead of the terminal.
+ * Test hook only — production code never calls this. Resets all
+ * prompt state (closes any open interface, clears the ended flag)
+ * so each test starts clean. Pass `{}` (or call
+ * resetPromptStreams) to restore the process streams.
+ */
+export function setPromptStreams({ input, output } = {}) {
+  closePrompt();
+  stdinEnded = false;
+  pendingResolve = null;
+  promptInput = input || process.stdin;
+  promptOutput = output || process.stdout;
+}
+
+/** Restore the default (process) prompt streams and reset state. */
+export function resetPromptStreams() {
+  setPromptStreams({});
+}
 
 function getInterface() {
   if (rl) return rl;
-  rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  rl = readline.createInterface({ input: promptInput, output: promptOutput });
+  const iface = rl;
   rl.on('close', () => {
+    // Ignore closes from a superseded interface: setPromptStreams
+    // closes the old interface, and its late 'close' event must
+    // not mark the NEW stream as ended.
+    if (rl !== iface) return;
     stdinEnded = true;
     if (pendingResolve) {
       const resolve = pendingResolve;

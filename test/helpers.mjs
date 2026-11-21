@@ -5,13 +5,30 @@
 // or any real agent directory.
 
 import { execFile, spawn } from 'node:child_process';
-import { mkdtemp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { after } from 'node:test';
 
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const INSTALLER = path.join(REPO_ROOT, 'scripts', 'install-skills.mjs');
+
+// Sandboxes are removed when the importing test file finishes.
+// Before Stage D nothing ever cleaned them up: /tmp accumulated
+// thousands of stale skillforge-installer-test-* directories
+// (443 MB at audit time) until the tmpfs filled and broke other
+// work. The hook is registered at import time, so it runs once per
+// test file that imports this helper (node --test runs each file in
+// its own process). Failures are ignored — a leftover sandbox is
+// untidy, not a test failure.
+const SANDBOX_BASES = new Set();
+after(async () => {
+  for (const base of SANDBOX_BASES) {
+    await rm(base, { recursive: true, force: true }).catch(() => {});
+  }
+  SANDBOX_BASES.clear();
+});
 
 /** Create an isolated sandbox: { base, home, proj }. */
 export async function makeSandbox() {
@@ -20,7 +37,21 @@ export async function makeSandbox() {
   const proj = path.join(base, 'proj');
   await mkdir(home, { recursive: true });
   await mkdir(proj, { recursive: true });
+  SANDBOX_BASES.add(base);
   return { base, home, proj };
+}
+
+/**
+ * Environment for a sandboxed CLI run: HOME always, plus
+ * USERPROFILE on Windows — the installer resolves home via
+ * os.homedir(), which reads USERPROFILE there, not HOME (Stage D,
+ * W-1). Without it, user-scope tests on Windows would install
+ * into the real runner profile instead of the sandbox.
+ */
+function sandboxEnv(home, env) {
+  const out = { ...process.env, HOME: home, ...env };
+  if (process.platform === 'win32') out.USERPROFILE = home;
+  return out;
 }
 
 /**
@@ -36,7 +67,7 @@ export function runCli(args, { home, proj, env = {} } = {}) {
       {
         cwd: proj,
         timeout: 60000,
-        env: { ...process.env, HOME: home, ...env },
+        env: sandboxEnv(home, env),
       },
       (err, stdout, stderr) => {
         resolve({ code: err ? err.code : 0, stdout: stdout || '', stderr: stderr || '' });
@@ -77,8 +108,14 @@ async function findOnPath(name) {
  * (node-pty) or a second runtime (python3 -c 'pty...'), so a
  * clear skip with a reason is the honest fallback on systems
  * without `script` (notably Windows, which has no `script` at
- * all); the prompt paths are still covered on every Unix CI
- * runner, where `script` is standard.
+ * all). The prompt paths are still covered everywhere: the
+ * Stage D node-pty decision (option c — see
+ * ai/remediation/stage-d/windows-link-analysis.md) made the
+ * prompt streams injectable, so the same abort / uninstall --all /
+ * modified-content paths run without a PTY (search
+ * test/installer.test.mjs for "no PTY"). These PTY tests remain
+ * as the real-TTY integration layer on Unix CI runners, where
+ * `script` is standard.
  */
 export async function runCliPty(args, { home, proj, input, delayMs = 800, env = {} } = {}) {
   const scriptPath = await findOnPath('script');
@@ -89,7 +126,7 @@ export async function runCliPty(args, { home, proj, input, delayMs = 800, env = 
   return new Promise((resolve) => {
     const child = spawn(scriptPath, ['-qec', cmd, '/dev/null'], {
       cwd: proj,
-      env: { ...process.env, HOME: home, ...env },
+      env: sandboxEnv(home, env),
     });
     let output = '';
     child.stdout.on('data', (d) => { output += d.toString(); });
