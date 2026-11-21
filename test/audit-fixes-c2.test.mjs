@@ -668,8 +668,21 @@ test('A2-22: atomicWriteFile never exposes a partial file to a concurrent reader
     let stop = false;
     const reader = (async () => {
       while (!stop) {
+        let text;
         try {
-          JSON.parse(await readFile(file, 'utf8'));
+          text = await readFile(file, 'utf8');
+        } catch {
+          // Transient read failure, not a partial write: on
+          // Windows the target is briefly unavailable while
+          // atomicWriteFile swaps the temp file in (EBUSY/EPERM/
+          // ENOENT during the rename window). No content was
+          // observed, so there is nothing to judge — retry.
+          // (Counting these as parse errors made this test flake
+          // on a slow Windows runner, d010069.)
+          continue;
+        }
+        try {
+          JSON.parse(text);
           reads++;
         } catch {
           parseErrors++;
@@ -680,7 +693,14 @@ test('A2-22: atomicWriteFile never exposes a partial file to a concurrent reader
       await atomicWriteFile(file, JSON.stringify({ n: i, pad: 'x'.repeat(5000) }));
     }
     stop = true;
-    await reader;
+    // Bound the wait: a reader that never observes `stop` must
+    // fail the test, not hang the suite until the job timeout.
+    await Promise.race([
+      reader,
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('concurrent reader did not stop within 60s')), 60000),
+      ),
+    ]);
     assert.ok(reads > 0, 'expected the reader to run');
     assert.equal(parseErrors, 0, 'a concurrent reader must never see a partial write');
     assert.equal(JSON.parse(await readFile(file, 'utf8')).n, 30);

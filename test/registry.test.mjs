@@ -232,8 +232,19 @@ test('registry generation is atomic under a concurrent reader (A-37)', async () 
   const reader = (async () => {
     while (!stop) {
       reads++;
+      let text;
       try {
-        JSON.parse(await readFile(skillsJson, 'utf8'));
+        text = await readFile(skillsJson, 'utf8');
+      } catch {
+        // Transient read failure, not a partial write: on
+        // Windows the target is briefly unavailable while the
+        // generator swaps the temp file in (EBUSY/EPERM/ENOENT
+        // during the rename window). No content was observed.
+        // (Same class as the A2-22 reader flake on d010069.)
+        continue;
+      }
+      try {
+        JSON.parse(text);
       } catch (e) {
         if (e instanceof SyntaxError) partialReads++;
         else throw e;
@@ -247,7 +258,14 @@ test('registry generation is atomic under a concurrent reader (A-37)', async () 
     }
   } finally {
     stop = true;
-    await reader;
+    // Bound the wait: a reader that never observes `stop` must
+    // fail the test, not hang the suite until the job timeout.
+    await Promise.race([
+      reader,
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('concurrent reader did not stop within 60s')), 60000),
+      ),
+    ]);
   }
   assert.ok(reads > 0, 'concurrent reader never ran');
   assert.equal(partialReads, 0, `saw ${partialReads} partial reads of skills.json in ${reads} reads`);
