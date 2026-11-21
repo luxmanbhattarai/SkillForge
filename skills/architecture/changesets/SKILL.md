@@ -124,7 +124,7 @@ and prereleases, and CI release automation.
 - A malicious changeset file is a supply-chain vector: its summary lands in the changelog and its bump type drives a publish. Review changeset files in pull requests, especially from external contributors, and do not auto-merge the Version Packages pull request.
 - `changeset publish` creates git tags; tags are part of the release's integrity story, so protect tags in the repository settings where the platform supports it.
 - Snapshot releases publish real packages to the registry under a tag; use a clearly non-`latest` tag (for example `snapshot` or `next`) so a test build is never installed by default, and clean up stale snapshot versions.
-- Keep the CLI and the action on matching, current majors: CLI 2.x misreads npm 12's `npm info --json` output and can attempt to republish existing versions; v3 is the supported line.
+- Keep the CLI and the action on matching, current majors: CLI v3 is the supported line and pairs with `changesets/action@v2`; upgrade v2-era setups rather than mixing majors.
 
 ## Performance Considerations
 
@@ -187,6 +187,9 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v7
         with:

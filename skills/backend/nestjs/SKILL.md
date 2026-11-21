@@ -14,7 +14,7 @@ metadata:
   maintainer: skills-library
   source: original
   last_verified: "2026-11-20"
-compatibility: Requires Node.js v20.19+ or v22.12+ (NestJS 12); TypeScript 6.x (TypeScript 7 not yet supported by nest build).
+compatibility: Requires Node.js v20.19+ or v22.12+ (NestJS 12; CLI generators need 22.22.3+/24.15+/26+); TypeScript 6.x (TypeScript 7 not yet supported by nest build).
 ---
 
 # NestJS
@@ -54,7 +54,8 @@ and ready for production.
 ## Prerequisites
 
 - Node.js v20.19+ or v22.12+ installed (required by NestJS 12; the
-  latest active LTS is recommended).
+  latest active LTS is recommended). The CLI's generators and
+  schematics need a higher floor: Node 22.22.3+, 24.15+, or 26+.
 - Familiarity with TypeScript and decorators, and HTTP fundamentals.
 - A project scaffolded with the Nest CLI (`nest new`) or an existing
   NestJS app.
@@ -143,9 +144,13 @@ and ready for production.
 - Use `@nestjs/config`'s `ConfigService` (or typed `registerAs`
   configuration) for all environment access; never read
   `process.env` directly in feature code.
-- Prefer the default Express adapter unless there is a measured
-  reason to switch to Fastify (`FastifyAdapter`) or `node:http`
-  (`NodeAdapter`); switching adapters changes available middleware.
+- Prefer the `node:http` adapter (`NodeAdapter`) for new projects:
+  the official docs recommend it from NestJS 12.3 as the fastest of
+  the three adapters, and it becomes the default in v13. Use
+  `FastifyAdapter` only when you need Fastify-specific plugins or
+  hooks, and the default Express adapter only when existing Express
+  middleware cannot move; switching adapters changes available
+  middleware.
 - Enable shutdown hooks (`app.enableShutdownHooks()`) so in-flight
   requests and database connections close cleanly.
 - Follow the CLI's naming conventions (`*.controller.ts`,

@@ -354,8 +354,10 @@ mechanics belong to the framework skill:
    response against the key.
 3. A retry with the same key and body returns the stored response
    with the original status code; the operation does not run again.
-4. A retry with the same key but a different body returns `409`
-   Conflict, because the key is already bound to another request.
+4. A retry with the same key but a different body returns `422`
+   Unprocessable Content, because the key is already bound to
+   another request. A retry that arrives while the original request
+   is still in progress returns `409` Conflict instead.
 5. Keys expire after a documented window (for example 24 hours),
    after which the same key may be reused for a new request.
 

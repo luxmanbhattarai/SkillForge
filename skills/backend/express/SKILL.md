@@ -177,9 +177,10 @@ service that is small, explicit, hardened, and ready for production.
   definitions or maintained alongside them (see
   `api-documentation`).
 - When migrating from Express 4, run the official migration guide
-  end to end and use the published codemod recipe for mechanical
-  changes; re-test every route, since path-to-regexp v8 changes
-  route matching.
+  end to end and use the published codemod recipe
+  (`npx codemod@latest @expressjs/v5-migration-recipe`) for
+  mechanical changes; re-test every route, since path-to-regexp v8
+  changes route matching.
 
 ## Security Considerations
 

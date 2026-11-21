@@ -59,7 +59,9 @@ API by construction, regenerated on every contract change.
   must be resolved first; most generators read one document.
 - The generator's runtime: OpenAPI Generator needs Java 11 or newer
   (or the npm wrapper, which downloads the JAR); the TypeScript
-  generators need Node.js 22.13 or newer.
+  generators need a current Node.js LTS — orval needs 22.18 or
+  newer, hey-api needs 22.13 or newer, and openapi-typescript
+  declares no minimum.
 - A decision on where generated code lives and whether it is
   committed to the repository (recommended for libraries and
   applications that ship it) or generated at build time.

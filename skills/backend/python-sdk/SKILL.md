@@ -91,7 +91,7 @@ Python tooling and packaging depth.
 - [pytest documentation](https://docs.pytest.org) — the test runner
   (pytest 9.2.0 is current).
 - [mypy documentation](https://mypy.readthedocs.io/en/stable/) —
-  the reference type checker (mypy 2.4.0 is current).
+  the reference type checker (mypy 2.4.1 is current).
 - [Pyright](https://github.com/microsoft/pyright) — Microsoft's type
   checker, also the engine behind Pylance in VS Code.
 - [ty documentation](https://docs.astral.sh/ty/) — Astral's fast
@@ -143,7 +143,7 @@ Python tooling and packaging depth.
 
   ```toml
   [build-system]
-  requires = ["hatchling >= 1.26"]
+  requires = ["hatchling >= 1.33"]
   build-backend = "hatchling.build"
   ```
 
@@ -320,7 +320,7 @@ A minimal `pyproject.toml` for a hatchling-based SDK:
 
 ```toml
 [build-system]
-requires = ["hatchling >= 1.26"]
+requires = ["hatchling >= 1.33"]
 build-backend = "hatchling.build"
 
 [project]
@@ -397,7 +397,15 @@ class OrdersClient:
             params: dict[str, object] = {"limit": limit}
             if cursor is not None:
                 params["cursor"] = cursor
-            page = self._client.get("/v1/orders", params=params).json()
+            response = self._client.get("/v1/orders", params=params)
+            if response.status_code >= 400:
+                raise OrdersError(
+                    f"Request failed with status {response.status_code}",
+                    status_code=response.status_code,
+                    code="request_failed",
+                    request_id=response.headers.get("x-request-id"),
+                )
+            page = response.json()
             yield from page["data"]
             cursor = page.get("next_cursor")
             if cursor is None:

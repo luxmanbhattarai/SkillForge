@@ -83,10 +83,10 @@ tooling and packaging depth.
 - [Migrate from tsup](https://tsdown.dev/guide/migrate-from-tsup) —
   the staged migration path: migrate on tsdown v0.22.14 first, resolve
   every deprecation warning, then upgrade to v0.23 or later.
-- [tsup repository](https://github.com/egoist/tsup) — tsup 8.5.1 is
-  the latest release, but the project README states it is no longer
-  actively maintained and points to tsdown. Keep tsup only for
-  existing builds that already work.
+- [tsup repository](https://github.com/egoist/tsup) — tsup 9.0.0 is
+  the latest release (14 October 2026), but the project README
+  states it is no longer actively maintained and points to tsdown.
+  Keep tsup only for existing builds that already work.
 - [publint](https://publint.dev) — lints whether a package is
   published correctly (exports map, files, metadata).
 - [Are The Types Wrong?](https://arethetypeswrong.github.io) —
