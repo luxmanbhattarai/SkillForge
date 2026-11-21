@@ -45,6 +45,7 @@ This skill covers database connection pooling: keeping a bounded, healthy set of
 - Knowledge of the deployment shape: number of application processes, replicas, workers, and serverless concurrency.
 - Access to the database's connection statistics (active, idle, waiting) and the application's pool metrics if available.
 - The driver or ORM's pool configuration for the project.
+- Supported versions as of 2026-11-20: PostgreSQL 15–19, MySQL 8.4/9.7 LTS (see the engine skills for version detail).
 
 ## Official Documentation
 
@@ -82,6 +83,7 @@ This skill covers database connection pooling: keeping a bounded, healthy set of
 - Prefer fewer, busier connections over many idle ones; idle connections still consume database resources.
 - Queue briefly rather than failing immediately when the pool is exhausted, but bound the queue with a timeout so a slow database does not hang requests forever.
 - Use an external pooler (PgBouncer) when the number of application processes is large or varies (autoscaling, serverless); it multiplexes many client connections onto few server connections.
+- Know the pooler's mode before choosing it: in PgBouncer's transaction pooling mode, a server connection is assigned only for the duration of a transaction, so session-level features — prepared statements, session variables set with `SET`, advisory locks, and `LISTEN`/`NOTIFY` — do not behave as they do on a direct connection. Use session pooling, or the driver's own pool, when the application depends on them.
 - Separate pools for different workloads where the driver supports it: a small pool for background jobs keeps a runaway job from starving interactive requests.
 - Log pool wait time and exhaustion events; a pool that is always full is a signal to fix the queries or the workload, not just to raise the size.
 - Test the pool under realistic concurrency, including a burst, before relying on it in production.

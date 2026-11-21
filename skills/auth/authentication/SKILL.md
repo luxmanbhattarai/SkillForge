@@ -49,7 +49,7 @@ maintained library, with secure password handling and sensible defaults.
 ## Official Documentation
 
 - [OWASP Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html) — current best practice for login flows.
-- [NIST SP 800-63B — Authentication and Lifecycle Management](https://pages.nist.gov/800-63-3/sp800-63b.html) — memorized-secret and authenticator guidance.
+- [NIST SP 800-63B-4 — Authentication and Authenticator Management](https://pages.nist.gov/800-63-4/sp800-63b.html) — memorized-secret and authenticator guidance. Final July 2025; it supersedes SP 800-63B-3 (withdrawn 1 August 2025). Do not cite the 800-63-3 edition for new work.
 - [Auth.js documentation](https://authjs.dev) — a maintained auth library for JavaScript frameworks.
 - [Better Auth documentation](https://www.better-auth.com/docs) — a maintained auth library for TypeScript apps.
 
@@ -70,8 +70,9 @@ maintained library, with secure password handling and sensible defaults.
 
 - Use a maintained auth library or hosted provider; never write custom password hashing, token generation, or session code.
 - Passwords are hashed with a modern adaptive hasher (Argon2id or bcrypt) via the library — never MD5, SHA-1, or plain SHA-256, and never stored in clear text.
-- Minimum password length of 8 characters; allow long passphrases (up to at least 64 characters) and do not impose arbitrary composition rules beyond length.
-- Check new passwords against a list of commonly breached passwords where the library or provider supports it.
+- Minimum password length is 15 characters when the password is the only factor (NIST SP 800-63B-4 §3.1.1.2); 8 characters is the floor only for passwords that are always used with a second factor. Support passwords of at least 64 characters so passphrases work, and do not impose composition rules (no required mix of character types).
+- Check every new password against a blocklist of commonly used, expected, or compromised passwords and require a different choice on a match — this is a NIST SP 800-63B-4 requirement, not an optional extra.
+- Never require periodic password rotation; force a password change only on evidence of compromise (NIST SP 800-63B-4). Allow password managers, autofill, and paste in password fields.
 - Sign-in errors are generic ("invalid email or password") so they do not reveal which accounts exist.
 - Verification and reset tokens are single-use, expire quickly (an hour or less for reset links), and are invalidated after use.
 - Sessions follow the `session-management` skill: httpOnly, secure, sameSite cookies.
@@ -155,7 +156,7 @@ async function signIn(email: string, password: string) {
 ## References
 
 - [OWASP Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html)
-- [NIST SP 800-63B](https://pages.nist.gov/800-63-3/sp800-63b.html)
+- [NIST SP 800-63B-4](https://pages.nist.gov/800-63-4/sp800-63b.html) — final July 2025; supersedes SP 800-63B-3.
 - [Auth.js documentation](https://authjs.dev)
 - [Better Auth documentation](https://www.better-auth.com/docs)
 - Related skills in this repository: `better-auth`, `oauth`, `session-management`, `mfa`, `auth-security`, `authorization`.

@@ -69,8 +69,16 @@ a version is missing.
 ## Official Documentation
 
 - [Google Search Central](https://developers.google.com/search) — Google's guidance on localized versions and hreflang.
+- [Localized versions of your pages](https://developers.google.com/search/docs/specialty/international/localized-versions) —
+  Google's hreflang guide: the three equivalent methods, return-tag
+  rules, and x-default.
+- [The International Targeting report is deprecated](https://support.google.com/webmasters/answer/12474899) —
+  Search Console Help: the International Targeting report and country
+  targeting were deprecated; hreflang itself is still supported.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — baseline for indexable, localized pages.
 - [Sitemaps.org](https://www.sitemaps.org/) — sitemap format for carrying hreflang in XML sitemaps.
+
+Guidance current as of 2026-11-20.
 
 ## Required Workflow
 
@@ -95,9 +103,13 @@ a version is missing.
 7. Validate. Check that every hreflang URL returns HTTP 200, that
    return tags are complete, and that codes are valid. Fix broken or
    one-way links before launch.
-8. Monitor. Check Search Console's international targeting reports
-   and spot-check search results for the wrong language over the
-   following weeks.
+8. Monitor. Check hreflang with a crawler or a dedicated hreflang
+   validation tool and spot-check search results for the wrong
+   language over the following weeks. Note: Google deprecated Search
+   Console's International Targeting report (and its country
+   targeting setting) in November 2022, so there is no Search
+   Console report that validates hreflang; use URL Inspection on
+   individual pages plus a crawl-based check instead.
 
 ## Implementation Standards
 
@@ -112,7 +124,13 @@ a version is missing.
 - Every hreflang cluster is fully bidirectional: each page lists all
   versions, including itself, and every listed URL lists it back.
 - `x-default` is included in every cluster and points to the fallback
-  page.
+  page. Google recommends x-default for unmatched languages; it is a
+  recommendation, not a requirement, but this skill treats it as a
+  standard so no user gets an arbitrary version.
+- Hreflang does not tell Google what language a page is in: Google
+  determines page language from the visible content using its own
+  algorithms, not from hreflang or the HTML `lang` attribute.
+  Hreflang only says which version to show which audience.
 - Hreflang URLs are absolute, canonical, HTTP 200 URLs. Never point
   hreflang at a redirect, a 404, or a noindex page.
 - Do not combine methods for the same pages in conflicting ways; if
@@ -215,8 +233,10 @@ The same cluster expressed in an XML sitemap entry:
 - [ ] Each version's canonical points to itself, not to another
       version.
 - [ ] HTML and sitemap hreflang agree where both are used.
-- [ ] Search Console shows no hreflang errors for the site after the
-      change has been live for several days.
+- [ ] A hreflang validation check (crawler or dedicated tool) shows
+      no errors for the site after the change has been live for
+      several days, and URL Inspection confirms the expected
+      canonical per version.
 
 ## Expected Deliverables
 
@@ -231,6 +251,8 @@ The same cluster expressed in an XML sitemap entry:
 ## References
 
 - [Google Search Central](https://developers.google.com/search) — localized versions and hreflang guidance.
+- [Localized versions of your pages](https://developers.google.com/search/docs/specialty/international/localized-versions) —
+  Google's hreflang guide.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — baseline for localized pages.
 - [Sitemaps.org](https://www.sitemaps.org/) — sitemap format for hreflang entries.
 - Related skills in this repository: `international-seo`, `canonical-management`, `sitemap-robots`, `search-console`.

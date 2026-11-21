@@ -1,0 +1,54 @@
+{
+  "$id": "https://github.com/luxmanbhattarai/SkillForge/schemas/verification-status.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "audit": {
+      "type": "string"
+    },
+    "derived": {
+      "type": "string"
+    },
+    "statuses": {
+      "additionalProperties": {
+        "additionalProperties": false,
+        "properties": {
+          "date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "note": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "verified",
+              "verified-with-limitations",
+              "needs-correction",
+              "unverified"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "date"
+        ],
+        "type": "object"
+      },
+      "type": "object"
+    },
+    "version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "version",
+    "audit",
+    "derived",
+    "statuses"
+  ],
+  "type": "object"
+}

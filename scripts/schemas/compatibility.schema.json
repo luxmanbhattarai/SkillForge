@@ -1,0 +1,24 @@
+{
+  "$id": "https://github.com/luxmanbhattarai/SkillForge/schemas/compatibility.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "compatibility": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "type": "object"
+    },
+    "version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "version",
+    "compatibility"
+  ],
+  "type": "object"
+}

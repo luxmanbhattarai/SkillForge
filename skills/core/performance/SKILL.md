@@ -62,7 +62,8 @@ here is driven by data and checked against a target.
 ## Required Workflow
 
 1. Define the target in numbers: for example, "p95 API latency under
-   200 ms" or "page interactive in under 2.5 seconds on a mid-range phone".
+   200 ms" or "Largest Contentful Paint under 2.5 seconds (p75, real
+   users) on a mid-range phone".
 2. Measure the baseline with a realistic workload and record it.
 3. Profile to find the bottleneck: CPU, memory, network, database, or
    rendering. Do not guess.
@@ -162,8 +163,12 @@ A performance budget stated as a checkable target:
 ```text
 Homepage budget:
   - Largest Contentful Paint under 2.5 s (p75, real users)
+  - Interaction to Next Paint under 200 ms (p75, real users)
   - Total JavaScript under 200 KB compressed
   - No more than 3 render-blocking requests
+
+Interaction to Next Paint (INP) replaced First Input Delay (FID) as a
+Core Web Vital in March 2024; do not set budgets against FID.
 ```
 
 Measuring with a simple timing wrapper:

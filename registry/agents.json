@@ -1,0 +1,858 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-11-20",
+  "total_agents": 24,
+  "agents": [
+    {
+      "name": "ai-engineer",
+      "title": "AI Engineer",
+      "description": "Builds AI features: LLM integrations, agents, RAG pipelines, and MCP servers.",
+      "path": "agents/ai-engineer.md",
+      "discover": [
+        "agent-evaluation",
+        "ai-agents",
+        "debugging",
+        "llm-integration",
+        "mcp-builder",
+        "mcp-development",
+        "mcp-security",
+        "observability",
+        "rag",
+        "verification-before-completion"
+      ],
+      "use": [
+        "agent-evaluation",
+        "ai-agents",
+        "llm-integration",
+        "mcp-security",
+        "rag"
+      ],
+      "references": {
+        "agents": [
+          "backend-specialist",
+          "database-specialist",
+          "qa-testing-specialist",
+          "security-specialist",
+          "technical-writer"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "article-writer",
+      "title": "Article Writer",
+      "description": "Writes publishable articles: researched, structured, and optimized for readers and search.",
+      "path": "agents/article-writer.md",
+      "discover": [
+        "article-writing",
+        "blog-featured-images",
+        "content-research",
+        "copy-editing",
+        "editorial-review",
+        "editorial-workflow",
+        "keyword-research",
+        "on-page-seo",
+        "schema-jsonld",
+        "serp-analysis",
+        "source-verification",
+        "writing-guidelines"
+      ],
+      "use": [
+        "article-writing",
+        "content-research",
+        "editorial-review",
+        "keyword-research",
+        "on-page-seo",
+        "schema-jsonld"
+      ],
+      "references": {
+        "agents": [
+          "content-strategist",
+          "keyword-research-specialist",
+          "media-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "backend-specialist",
+      "title": "Backend Specialist",
+      "description": "Builds server-side logic: APIs, services, background work, and integrations.",
+      "path": "agents/backend-specialist.md",
+      "discover": [
+        "advanced-api-architecture",
+        "api-client-generation",
+        "api-design",
+        "authentication",
+        "authjs",
+        "caching",
+        "clerk",
+        "database-design",
+        "debugging",
+        "express",
+        "fastify",
+        "mcp-builder",
+        "mcp-development",
+        "nestjs",
+        "nodejs",
+        "openapi",
+        "passkeys",
+        "queues",
+        "redis",
+        "rest-api",
+        "session-management",
+        "supabase-auth"
+      ],
+      "use": [
+        "api-design",
+        "authentication",
+        "caching",
+        "mcp-development",
+        "nodejs",
+        "queues",
+        "rest-api",
+        "session-management"
+      ],
+      "references": {
+        "agents": [
+          "database-specialist",
+          "engineering-architect",
+          "qa-testing-specialist",
+          "sdk-api-specialist",
+          "security-specialist",
+          "technical-writer"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "cloudflare-specialist",
+      "title": "Cloudflare Specialist",
+      "description": "Builds and deploys on Cloudflare: Workers, storage, and edge configuration.",
+      "path": "agents/cloudflare-specialist.md",
+      "discover": [
+        "cloudflare-d1",
+        "cloudflare-kv",
+        "cloudflare-r2",
+        "cloudflare-workers",
+        "deployment",
+        "nodejs",
+        "observability"
+      ],
+      "use": [
+        "cloudflare-d1",
+        "cloudflare-kv",
+        "cloudflare-r2",
+        "cloudflare-workers",
+        "deployment",
+        "observability"
+      ],
+      "references": {
+        "agents": [
+          "backend-specialist",
+          "database-specialist",
+          "security-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "code-review-specialist",
+      "title": "Code Review Specialist",
+      "description": "Reviews code for correctness, clarity, and maintainability — and helps authors improve it.",
+      "path": "agents/code-review-specialist.md",
+      "discover": [
+        "clean-code",
+        "code-review",
+        "debugging",
+        "owasp",
+        "receiving-code-review",
+        "requesting-code-review",
+        "tdd",
+        "verification-before-completion"
+      ],
+      "use": [
+        "clean-code",
+        "code-review",
+        "debugging",
+        "owasp",
+        "tdd"
+      ],
+      "references": {
+        "agents": [
+          "qa-testing-specialist",
+          "security-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "content-strategist",
+      "title": "Content Strategist",
+      "description": "Plans what content to create and why: topics, structure, calendars, and measurement.",
+      "path": "agents/content-strategist.md",
+      "discover": [
+        "analytics",
+        "competitor-profiling",
+        "content-decay",
+        "content-research",
+        "content-strategy",
+        "editorial-review",
+        "editorial-workflow",
+        "keyword-research",
+        "on-page-seo",
+        "serp-analysis",
+        "site-architecture",
+        "source-verification",
+        "topical-authority"
+      ],
+      "use": [
+        "content-research",
+        "content-strategy",
+        "editorial-review",
+        "keyword-research",
+        "site-architecture"
+      ],
+      "references": {
+        "agents": [
+          "article-writer",
+          "keyword-research-specialist",
+          "seo-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "database-specialist",
+      "title": "Database Specialist",
+      "description": "Designs schemas, writes migrations, and keeps data access correct and fast.",
+      "path": "agents/database-specialist.md",
+      "discover": [
+        "clickhouse",
+        "database-design",
+        "drizzle",
+        "elasticsearch",
+        "mongodb",
+        "mysql",
+        "opensearch",
+        "postgresql",
+        "prisma",
+        "prisma-client-api",
+        "prisma-database-setup",
+        "prisma-orm-setup",
+        "prisma-postgres",
+        "prisma-postgres-setup",
+        "redis",
+        "sqlite"
+      ],
+      "use": [
+        "database-design",
+        "drizzle",
+        "mongodb",
+        "mysql",
+        "postgresql",
+        "prisma",
+        "sqlite"
+      ],
+      "references": {
+        "agents": [
+          "backend-specialist",
+          "security-specialist",
+          "technical-writer"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "desktop-engineer",
+      "title": "Desktop Engineer",
+      "description": "Builds desktop apps with Tauri, Electron, or Rust.",
+      "path": "agents/desktop-engineer.md",
+      "discover": [
+        "accessibility",
+        "changelog-management",
+        "debugging",
+        "electron",
+        "package-development",
+        "rust",
+        "tauri",
+        "typescript",
+        "unit-testing"
+      ],
+      "use": [
+        "changelog-management",
+        "electron",
+        "package-development",
+        "rust",
+        "tauri",
+        "typescript"
+      ],
+      "references": {
+        "agents": [
+          "frontend-specialist",
+          "release-manager",
+          "security-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "devops-engineer",
+      "title": "DevOps Engineer",
+      "description": "Runs infrastructure and deployment: cloud platforms, containers, IaC, and CI/CD.",
+      "path": "agents/devops-engineer.md",
+      "discover": [
+        "aws",
+        "deployment",
+        "fly-io",
+        "gcp",
+        "kubernetes",
+        "observability",
+        "pulumi",
+        "railway",
+        "render",
+        "self-hosted-vps",
+        "terraform"
+      ],
+      "use": [
+        "deployment",
+        "observability",
+        "pulumi",
+        "terraform"
+      ],
+      "references": {
+        "agents": [
+          "backend-specialist",
+          "release-manager",
+          "security-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "engineering-architect",
+      "title": "Engineering Architect",
+      "description": "Designs system architecture for new projects and major refactors, and keeps existing architectures coherent as they grow.",
+      "path": "agents/engineering-architect.md",
+      "discover": [
+        "advanced-api-architecture",
+        "api-design",
+        "brainstorming",
+        "database-design",
+        "dependency-management",
+        "domain-driven-design",
+        "mcp-builder",
+        "mcp-development",
+        "microservices",
+        "monorepo",
+        "nx",
+        "package-boundaries",
+        "software-architecture",
+        "turborepo",
+        "writing-plans"
+      ],
+      "use": [
+        "api-design",
+        "database-design",
+        "domain-driven-design",
+        "microservices",
+        "monorepo",
+        "software-architecture",
+        "turborepo",
+        "writing-plans"
+      ],
+      "references": {
+        "agents": [
+          "database-specialist",
+          "monorepo-specialist",
+          "security-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "frontend-specialist",
+      "title": "Frontend Specialist",
+      "description": "Builds user interfaces with modern web frameworks, from component design through accessible, responsive pages.",
+      "path": "agents/frontend-specialist.md",
+      "discover": [
+        "accessibility",
+        "astro",
+        "expo",
+        "frontend-design",
+        "frontend-performance",
+        "hugo",
+        "nextjs",
+        "nuxt",
+        "react",
+        "react-native",
+        "shadcn-ui",
+        "sveltekit",
+        "tailwind-css",
+        "theme-factory",
+        "typescript",
+        "vercel-react-best-practices",
+        "vue",
+        "web-artifacts-builder",
+        "web-design-guidelines"
+      ],
+      "use": [
+        "accessibility",
+        "astro",
+        "frontend-performance",
+        "nextjs",
+        "react",
+        "shadcn-ui",
+        "tailwind-css",
+        "typescript"
+      ],
+      "references": {
+        "agents": [
+          "backend-specialist",
+          "media-specialist",
+          "performance-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "geo-aeo-specialist",
+      "title": "GEO & AEO Specialist",
+      "description": "Optimizes content for AI search and answer engines: citations, direct answers, and agent-readable pages.",
+      "path": "agents/geo-aeo-specialist.md",
+      "discover": [
+        "aeo-optimization",
+        "ai-seo",
+        "content-research",
+        "entity-seo",
+        "geo-optimization",
+        "llm-seo",
+        "schema-jsonld",
+        "technical-seo"
+      ],
+      "use": [
+        "aeo-optimization",
+        "ai-seo",
+        "content-research",
+        "geo-optimization",
+        "llm-seo",
+        "schema-jsonld"
+      ],
+      "references": {
+        "agents": [
+          "article-writer",
+          "content-strategist",
+          "frontend-specialist",
+          "seo-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "keyword-research-specialist",
+      "title": "Keyword Research Specialist",
+      "description": "Finds the queries a site should target: research, grouping, and intent analysis.",
+      "path": "agents/keyword-research-specialist.md",
+      "discover": [
+        "analytics",
+        "competitor-profiling",
+        "content-research",
+        "keyword-research",
+        "on-page-seo",
+        "serp-analysis",
+        "serp-monitoring"
+      ],
+      "use": [
+        "competitor-profiling",
+        "content-research",
+        "keyword-research",
+        "serp-analysis"
+      ],
+      "references": {
+        "agents": [
+          "content-strategist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "media-specialist",
+      "title": "Media Specialist",
+      "description": "Creates and optimizes visual assets: AI images, featured images, OG images, and thumbnails.",
+      "path": "agents/media-specialist.md",
+      "discover": [
+        "accessibility",
+        "ai-image-generation",
+        "blog-featured-images",
+        "brand-guidelines",
+        "frontend-performance",
+        "og-image-generation",
+        "open-graph",
+        "platform-social-images",
+        "resvg",
+        "satori",
+        "seo-metadata",
+        "sharp",
+        "theme-factory",
+        "youtube-thumbnails"
+      ],
+      "use": [
+        "accessibility",
+        "ai-image-generation",
+        "blog-featured-images",
+        "brand-guidelines",
+        "og-image-generation",
+        "open-graph",
+        "youtube-thumbnails"
+      ],
+      "references": {
+        "agents": [
+          "article-writer",
+          "content-strategist",
+          "frontend-specialist",
+          "performance-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "monorepo-specialist",
+      "title": "Monorepo Specialist",
+      "description": "Sets up and maintains monorepos: workspaces, build orchestration, package boundaries, and shared tooling.",
+      "path": "agents/monorepo-specialist.md",
+      "discover": [
+        "changesets",
+        "dependency-management",
+        "monorepo",
+        "nx",
+        "package-boundaries",
+        "package-development",
+        "pnpm-workspaces",
+        "software-architecture",
+        "turborepo"
+      ],
+      "use": [
+        "dependency-management",
+        "monorepo",
+        "package-boundaries",
+        "pnpm-workspaces",
+        "turborepo"
+      ],
+      "references": {
+        "agents": [
+          "engineering-architect",
+          "sdk-api-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "performance-specialist",
+      "title": "Performance Specialist",
+      "description": "Measures and improves speed: Core Web Vitals, Lighthouse, and rendering performance.",
+      "path": "agents/performance-specialist.md",
+      "discover": [
+        "caching",
+        "core-web-vitals",
+        "frontend-performance",
+        "lighthouse",
+        "observability",
+        "redis",
+        "vercel-optimize"
+      ],
+      "use": [
+        "caching",
+        "core-web-vitals",
+        "frontend-performance",
+        "lighthouse",
+        "observability"
+      ],
+      "references": {
+        "agents": [
+          "backend-specialist",
+          "cloudflare-specialist",
+          "frontend-specialist",
+          "vercel-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "qa-testing-specialist",
+      "title": "QA & Testing Specialist",
+      "description": "Designs test strategy and writes tests: unit, integration, end-to-end, and regression.",
+      "path": "agents/qa-testing-specialist.md",
+      "discover": [
+        "agent-evaluation",
+        "debugging",
+        "e2e-testing",
+        "integration-testing",
+        "playwright",
+        "regression-testing",
+        "tdd",
+        "unit-testing",
+        "verification-before-completion",
+        "vitest",
+        "webapp-testing"
+      ],
+      "use": [
+        "e2e-testing",
+        "integration-testing",
+        "playwright",
+        "regression-testing",
+        "tdd",
+        "unit-testing",
+        "vitest"
+      ],
+      "references": {
+        "agents": [
+          "backend-specialist",
+          "frontend-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "quality-auditor",
+      "title": "Quality Auditor",
+      "description": "Runs cross-cutting quality audits: code, SEO, performance, accessibility, and content — and produces a prioritized findings report.",
+      "path": "agents/quality-auditor.md",
+      "discover": [
+        "accessibility",
+        "clean-code",
+        "code-review",
+        "core-web-vitals",
+        "editorial-review",
+        "owasp",
+        "seo-audit",
+        "source-verification",
+        "technical-seo",
+        "verification-before-completion",
+        "webapp-testing"
+      ],
+      "use": [
+        "accessibility",
+        "code-review",
+        "core-web-vitals",
+        "editorial-review",
+        "seo-audit",
+        "verification-before-completion"
+      ],
+      "references": {
+        "agents": [],
+        "workflows": []
+      }
+    },
+    {
+      "name": "release-manager",
+      "title": "Release Manager",
+      "description": "Owns releases: versioning, changelogs, release coordination, and rollout.",
+      "path": "agents/release-manager.md",
+      "discover": [
+        "changelog-management",
+        "changesets",
+        "deployment",
+        "package-development",
+        "regression-testing",
+        "release-management",
+        "verification-before-completion"
+      ],
+      "use": [
+        "changelog-management",
+        "changesets",
+        "regression-testing",
+        "release-management"
+      ],
+      "references": {
+        "agents": [
+          "devops-engineer",
+          "engineering-architect",
+          "qa-testing-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "sdk-api-specialist",
+      "title": "SDK & API Specialist",
+      "description": "Designs public API surfaces and builds SDKs and publishable packages.",
+      "path": "agents/sdk-api-specialist.md",
+      "discover": [
+        "api-client-generation",
+        "api-design",
+        "changelog-management",
+        "mcp-builder",
+        "mcp-development",
+        "openapi",
+        "package-development",
+        "python-sdk",
+        "rest-api",
+        "sdk-development",
+        "technical-documentation",
+        "typescript",
+        "typescript-sdk"
+      ],
+      "use": [
+        "api-design",
+        "changelog-management",
+        "package-development",
+        "sdk-development",
+        "technical-documentation",
+        "typescript"
+      ],
+      "references": {
+        "agents": [
+          "backend-specialist",
+          "security-specialist",
+          "technical-writer"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "security-specialist",
+      "title": "Security Specialist",
+      "description": "Finds and fixes security weaknesses in code, configuration, and auth flows.",
+      "path": "agents/security-specialist.md",
+      "discover": [
+        "auth-security",
+        "authentication",
+        "better-auth",
+        "csrf-protection",
+        "jwt",
+        "mcp-security",
+        "mfa",
+        "oauth",
+        "owasp",
+        "passkeys",
+        "rbac",
+        "secrets-management",
+        "secure-headers",
+        "sql-injection-prevention",
+        "xss-prevention"
+      ],
+      "use": [
+        "auth-security",
+        "better-auth",
+        "csrf-protection",
+        "oauth",
+        "owasp",
+        "secrets-management",
+        "sql-injection-prevention",
+        "xss-prevention"
+      ],
+      "references": {
+        "agents": [
+          "backend-specialist",
+          "database-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "seo-specialist",
+      "title": "SEO Specialist",
+      "description": "Audits and improves search visibility: technical SEO, on-page SEO, structured data, and measurement.",
+      "path": "agents/seo-specialist.md",
+      "discover": [
+        "analytics",
+        "content-decay",
+        "core-web-vitals",
+        "entity-seo",
+        "keyword-research",
+        "link-building",
+        "on-page-seo",
+        "schema",
+        "schema-jsonld",
+        "search-console",
+        "seo",
+        "seo-audit",
+        "serp-analysis",
+        "serp-monitoring",
+        "site-architecture",
+        "technical-seo",
+        "topical-authority"
+      ],
+      "use": [
+        "keyword-research",
+        "on-page-seo",
+        "schema-jsonld",
+        "search-console",
+        "seo-audit",
+        "technical-seo"
+      ],
+      "references": {
+        "agents": [
+          "article-writer",
+          "content-strategist",
+          "frontend-specialist",
+          "geo-aeo-specialist",
+          "performance-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "technical-writer",
+      "title": "Technical Writer",
+      "description": "Writes documentation developers can use: guides, API references, and changelogs.",
+      "path": "agents/technical-writer.md",
+      "discover": [
+        "api-documentation",
+        "changelog-management",
+        "doc-coauthoring",
+        "openapi",
+        "sdk-development",
+        "technical-documentation",
+        "writing-guidelines"
+      ],
+      "use": [
+        "api-documentation",
+        "changelog-management",
+        "doc-coauthoring",
+        "technical-documentation"
+      ],
+      "references": {
+        "agents": [
+          "sdk-api-specialist"
+        ],
+        "workflows": []
+      }
+    },
+    {
+      "name": "vercel-specialist",
+      "title": "Vercel Specialist",
+      "description": "Deploys and optimizes projects on Vercel: hosting, previews, and edge behavior.",
+      "path": "agents/vercel-specialist.md",
+      "discover": [
+        "deploy-to-vercel",
+        "deployment",
+        "frontend-performance",
+        "nextjs",
+        "observability",
+        "vercel",
+        "vercel-cli-with-tokens",
+        "vercel-composition-patterns",
+        "vercel-optimize",
+        "vercel-react-best-practices",
+        "vercel-react-view-transitions"
+      ],
+      "use": [
+        "deploy-to-vercel",
+        "deployment",
+        "nextjs",
+        "vercel",
+        "vercel-cli-with-tokens",
+        "vercel-optimize"
+      ],
+      "references": {
+        "agents": [
+          "frontend-specialist",
+          "performance-specialist",
+          "security-specialist"
+        ],
+        "workflows": []
+      }
+    }
+  ]
+}

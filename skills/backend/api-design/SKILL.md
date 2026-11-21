@@ -60,8 +60,15 @@ build against without guessing.
   — the authoritative definition of methods, status codes, and headers.
 - [RFC 9457 — Problem Details for HTTP APIs](https://www.rfc-editor.org/rfc/rfc9457.html)
   — the standard error response format.
-- [OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0) — the
-  standard machine-readable API description format.
+- [OpenAPI Specification](https://spec.openapis.org/oas/v3.2.0.html) — the
+  standard machine-readable API description format. OpenAPI 3.2 is
+  current (3.2.1 is the latest patch, September 2026, editorial only);
+  3.2 adds streaming media types, the QUERY method, hierarchical tags,
+  and the OAuth2 device flow. Valid 3.1 documents remain usable, but
+  new contracts should target 3.2.
+- [RFC 9745 — The Deprecation HTTP Response Header Field](https://www.rfc-editor.org/rfc/rfc9745.html)
+  — the standard `Deprecation` header (a Structured Field date) and
+  its relationship to the `Sunset` header (RFC 8594).
 - [Stripe API reference](https://docs.stripe.com/api) — a widely regarded
   example of consistent, well-documented API design.
 
@@ -118,8 +125,12 @@ build against without guessing.
 - Timestamps use ISO 8601 in UTC. Money uses integer minor units with an
   explicit currency field. Identifiers are opaque strings.
 - Deprecate, never silently change: announce a deprecation with a
-  `Deprecation` header and a sunset date, and keep the old behavior
-  working until that date.
+  `Deprecation` header (RFC 9745: a Structured Field date, e.g.
+  `Deprecation: @1798761600`) and a `Sunset` header (RFC 8594) giving
+  the removal date — the Sunset date must not be earlier than the
+  Deprecation date — and keep the old behavior working until then.
+  Do not send `Deprecation: true` or an HTTP-date value; the header
+  value is a Unix timestamp prefixed with `@`.
 
 ## Best Practices
 
@@ -249,7 +260,8 @@ Content-Type: application/json
 
 - [RFC 9110 — HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html)
 - [RFC 9457 — Problem Details](https://www.rfc-editor.org/rfc/rfc9457.html)
-- [OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0)
+- [OpenAPI Specification](https://spec.openapis.org/oas/v3.2.0.html)
+- [RFC 9745 — Deprecation header](https://www.rfc-editor.org/rfc/rfc9745.html)
 - [Stripe API reference](https://docs.stripe.com/api)
 - Related skills in this repository: `rest-api`, `graphql`, `trpc`,
   `rate-limiting`, `sdk-development`.

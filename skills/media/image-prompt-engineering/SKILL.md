@@ -63,6 +63,12 @@ and prompt templates for consistent series of images.
   model prompting guidance for OpenAI image tools.
 - [Google AI for Developers](https://ai.google.dev/) — image prompting
   guidance for Gemini image tools.
+- Compatibility: image models and their prompt handling change with
+  every model release — wording, parameters, and negative-prompt support
+  that work on one model version may behave differently on the next. Do
+  not name a specific model version from memory; check the linked docs
+  for the current model, and always record the tool and model version a
+  prompt was written and tested for.
 
 ## Required Workflow
 

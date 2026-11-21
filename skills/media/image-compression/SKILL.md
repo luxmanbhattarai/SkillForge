@@ -62,6 +62,12 @@ before compressing, batch processing, and verifying the result.
   processing, including resize and quality settings.
 - [MDN: the img element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img)
   — responsive images and delivery.
+- Compatibility: code examples in this skill use the Sharp 0.35.x API
+  (current as of November 2026; the `.resize()`, `.jpeg()`, and `.png()`
+  calls shown are stable across Sharp 0.3x releases) and ImageMagick 7,
+  whose command is `magick`. ImageMagick 6 used `convert` for the same
+  operations — do not use `convert` on a system with ImageMagick 7
+  installed, where it is not available by default.
 
 ## Required Workflow
 

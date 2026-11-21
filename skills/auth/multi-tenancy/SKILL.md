@@ -43,7 +43,7 @@ another's data.
 
 - Authentication is in place; the server knows the current user.
 - The tenant model is decided: what a tenant is (organization, workspace) and how users belong to tenants.
-- A database that supports the chosen isolation strategy (PostgreSQL row-level security needs PostgreSQL).
+- A database that supports the chosen isolation strategy (PostgreSQL row-level security needs PostgreSQL 9.5 or newer; it is a stable, long-standing feature in all supported PostgreSQL versions).
 - The tenant resolution source is known: subdomain, path, header, or the user's membership.
 
 ## Official Documentation
@@ -140,8 +140,11 @@ PostgreSQL row-level security policy (defense in depth):
 ```sql
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 
+-- `missing_ok` (the second argument) makes a missing setting return NULL
+-- instead of raising an error, so the comparison fails closed (no rows)
+-- when the tenant context was never set for the transaction.
 CREATE POLICY tenant_isolation ON projects
-  USING (tenant_id = current_setting('app.tenant_id')::uuid);
+  USING (tenant_id = current_setting('app.tenant_id', true)::uuid);
 ```
 
 ## Validation Checklist

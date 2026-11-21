@@ -41,13 +41,21 @@ execution in CI, and enabling remote caching.
 - A monorepo with a workspace tool already configured (pnpm workspaces is the recommended default).
 - Each package has the scripts Turborepo will run (`build`, `lint`, `test`, `typecheck`, `dev`).
 - Turborepo installed (the `turbo` package) at the repository root.
-- Node.js 24 LTS is the current line.
+- Supported versions (verified 2026-11-20): Turborepo 2.x is current
+  (latest stable 2.11.x, November 2026). Turborepo 1.x is end-of-life
+  and 3.0 is in canary. In 2.x the `turbo.json` top-level key is
+  `tasks`; the 1.x `pipeline` key was renamed and must not be used.
+  The `daemon` top-level option is deprecated and will be removed in
+  3.0. Use Turborepo 2.9.14 or later (see Security Considerations).
+- Node.js 26 LTS is the current line (Active LTS since 2026-10-28,
+  supported to 2029-04-30); Node.js 24 is in maintenance until
+  2028-04-30. Node.js 20 and 25 are end-of-life.
 
 ## Official Documentation
 
 - [Turborepo documentation](https://turborepo.dev/docs) — getting started, configuration, and caching.
 - [Configuring turbo.json](https://turborepo.dev/docs/reference/configuration) — the task configuration reference.
-- [Turborepo caching](https://turborepo.dev/docs/core-concepts/caching) — how local and remote caching work.
+- [Turborepo caching](https://turborepo.dev/docs/crafting-your-repository/caching) — how local and remote caching work.
 
 ## Required Workflow
 
@@ -57,7 +65,12 @@ execution in CI, and enabling remote caching.
 4. Define `lint`, `test`, and `typecheck` tasks; give `typecheck` and `test` a `dependsOn` of `["^build"]` only when they genuinely need built dependencies.
 5. Define `dev` as a persistent task (`"persistent": true`) with no cache, since it runs a long-lived process.
 6. Run `turbo run build` twice: the second run should report full cache hits, proving caching works.
-7. Wire CI to run `turbo run build lint test typecheck --filter=...[HEAD^1]` (affected packages) or the equivalent for the CI provider, so unchanged packages are skipped.
+7. Wire CI to run affected packages only: on Turborepo 2.10 and later
+   use `turbo run build lint test typecheck --affected` (equivalent to
+   `--filter=...[main...HEAD]` by default, and composable with
+   `--filter`); on earlier 2.x versions use
+   `turbo run build lint test typecheck --filter=...[HEAD^1]` or the
+   equivalent for the CI provider, so unchanged packages are skipped.
 8. Enable remote caching when the team is ready: connect the repository to a remote cache so CI and developers share cache entries.
 9. Document the tasks and the common commands in the repository README.
 10. Run the Validation Checklist.
@@ -85,6 +98,9 @@ execution in CI, and enabling remote caching.
 ## Security Considerations
 
 - Remote cache entries can contain build outputs; use a cache the team controls and authenticate access to it.
+- Use Turborepo 2.9.14 or later: earlier versions can execute arbitrary
+  code from a malicious Yarn configuration when run in an untrusted
+  repository (CVE-2026-45772, fixed in 2.9.14).
 - Environment variables listed in a task's `env` are hashed into the cache key; do not put secret values in `env` lists — only their names.
 - Build outputs restored from cache are trusted; a compromised cache entry could inject code, so protect cache credentials like any other credential.
 - Turborepo runs package scripts; a malicious script in any package runs with the developer's or CI's privileges — review scripts in new packages.
@@ -93,7 +109,10 @@ execution in CI, and enabling remote caching.
 
 - Caching is the main win: a full cache hit skips the work entirely, so correct `inputs` and `outputs` matter more than any other tuning.
 - Remote caching turns CI builds into cache restores for unchanged packages; it is the single biggest CI speedup for most monorepos.
-- Parallelism defaults to the machine's CPU count; on shared CI runners, cap it if builds compete for memory.
+- Parallelism defaults to 10 concurrent tasks; raise it with
+  `--concurrency` (for example `--concurrency=100%` to use all logical
+  processors) or the `concurrency` key in `turbo.json`. On shared CI
+  runners, cap it if builds compete for memory.
 - Cache misses have causes: undeclared env vars, timestamps in outputs, or overly broad inputs. Investigate misses instead of disabling the cache.
 - Keep the task graph shallow; deep dependency chains serialize work that could run in parallel.
 
@@ -138,6 +157,7 @@ Common commands:
 ```bash
 turbo run build
 turbo run build --filter=@repo/web...
+turbo run build --affected
 turbo run lint test --filter=...[HEAD^1]
 turbo run build --dry-run
 ```
@@ -164,5 +184,5 @@ turbo run build --dry-run
 
 - [Turborepo documentation](https://turborepo.dev/docs)
 - [Configuring turbo.json](https://turborepo.dev/docs/reference/configuration)
-- [Turborepo caching](https://turborepo.dev/docs/core-concepts/caching)
+- [Turborepo caching](https://turborepo.dev/docs/crafting-your-repository/caching)
 - Related skills in this repository: `monorepo`, `pnpm-workspaces`, `package-boundaries`.

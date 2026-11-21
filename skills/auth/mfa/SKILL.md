@@ -40,7 +40,7 @@ plus backup codes and safe recovery flows, using maintained libraries.
 ## Prerequisites
 
 - Authentication and sessions are already working; MFA is a second step after the first factor succeeds.
-- A maintained MFA library for the stack (for example the auth library's own two-factor plugin, `otplib` for TOTP, or a WebAuthn library).
+- A maintained MFA library for the stack (for example the auth library's own two-factor plugin, `otplib` for TOTP, or a WebAuthn library). `otplib` 13.x is the current line (13.6.0 as of November 2026); v13 is a complete rewrite with an async-first functional API — the v12 `authenticator` object API was removed, so do not use `authenticator.generateSecret()`, `authenticator.keyuri()`, or `authenticator.verify()` with v13.
 - A way to show a QR code for TOTP setup (the app renders the otpauth URL as a QR code).
 - HTTPS on every environment handling real credentials.
 
@@ -48,9 +48,9 @@ plus backup codes and safe recovery flows, using maintained libraries.
 
 - [RFC 6238 — TOTP: Time-Based One-Time Password Algorithm](https://datatracker.ietf.org/doc/html/rfc6238) — the TOTP specification.
 - [RFC 4226 — HOTP: HMAC-Based One-Time Password Algorithm](https://datatracker.ietf.org/doc/html/rfc4226) — the counter-based algorithm TOTP builds on.
-- [WebAuthn Level 2 (W3C)](https://www.w3.org/TR/webauthn-2/) — the WebAuthn specification behind passkeys.
+- [WebAuthn Level 3 (W3C)](https://www.w3.org/TR/webauthn-3/) — the WebAuthn specification behind passkeys; a W3C Recommendation since 25 August 2026, superseding Level 2.
 - [passkeys.dev](https://passkeys.dev) — practical passkey guidance for implementers.
-- [NIST SP 800-63B](https://pages.nist.gov/800-63-3/sp800-63b.html) — authenticator strength guidance.
+- [NIST SP 800-63B-4](https://pages.nist.gov/800-63-4/sp800-63b.html) — authenticator strength guidance; final July 2025, superseding SP 800-63B-3.
 
 ## Required Workflow
 
@@ -112,21 +112,26 @@ plus backup codes and safe recovery flows, using maintained libraries.
 
 ## Examples
 
-TOTP enrollment and verification with `otplib` (TypeScript):
+TOTP enrollment and verification with `otplib` v13 (TypeScript):
 
 ```ts
-import { authenticator } from "otplib";
+import { generateSecret, generateURI, verify } from "otplib";
 
 // Enrollment: generate a secret, build the otpauth URL, render it as a QR code.
-const secret = authenticator.generateSecret();
-const otpauthUrl = authenticator.keyuri(user.email, "My App", secret);
+const secret = generateSecret();
+const otpauthUrl = generateURI({
+  issuer: "My App",
+  label: user.email,
+  secret,
+});
 // Show otpauthUrl as a QR code; store `secret` encrypted only after the
 // user proves enrollment by entering a valid code.
 
 // Verification: check the code the user entered against the stored secret.
-const isValid = authenticator.verify({
-  token: codeFromUser,
+// verify() is async and returns a result object; check `valid`.
+const { valid } = await verify({
   secret: storedSecret,
+  token: codeFromUser,
 });
 ```
 
@@ -162,7 +167,7 @@ const backupCodes = Array.from({ length: 10 }, () =>
 ## References
 
 - [RFC 6238 — TOTP](https://datatracker.ietf.org/doc/html/rfc6238)
-- [WebAuthn Level 2 (W3C)](https://www.w3.org/TR/webauthn-2/)
+- [WebAuthn Level 3 (W3C)](https://www.w3.org/TR/webauthn-3/) — W3C Recommendation, 25 August 2026.
 - [passkeys.dev](https://passkeys.dev)
-- [NIST SP 800-63B](https://pages.nist.gov/800-63-3/sp800-63b.html)
+- [NIST SP 800-63B-4](https://pages.nist.gov/800-63-4/sp800-63b.html) — final July 2025.
 - Related skills in this repository: `authentication`, `session-management`, `auth-security`, `better-auth`.

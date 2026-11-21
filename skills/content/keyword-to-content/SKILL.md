@@ -73,6 +73,7 @@ brief an agent or writer can execute without further research into intent.
 - Keyword use must be natural: use the exact keyword in the title, H1, and first paragraph, then use natural variants. Never repeat a keyword to hit a density target.
 - Never promise a ranking, traffic number, or result in the brief. Estimates must be labeled as estimates.
 - Every outline must include at least one section that adds value beyond what the top results already say (an original angle, example, or data point).
+- Do not plan a page around a rich-result type Google no longer shows: HowTo rich results were fully removed from Google Search on September 13, 2023 (Google Search Central Blog, "Changes to HowTo and FAQ rich results"), and FAQ rich results were fully removed on May 7, 2026. The schema.org types still exist and are harmless, but they earn no visible Google feature — never list them in a plan as a visibility tactic. Google states there is no need to proactively remove existing markup of these types.
 
 ## Best Practices
 
@@ -117,7 +118,8 @@ H2s:
   - Signs your starter is hungry
   - Troubleshooting
 Internal links: pillar "Sourdough starter guide", sibling "Sourdough starter feeding schedule"
-Schema: HowTo
+Schema: HowTo (valid schema.org type, but note it no longer produces a
+rich result in Google Search — see Implementation Standards)
 ```
 
 ## Validation Checklist

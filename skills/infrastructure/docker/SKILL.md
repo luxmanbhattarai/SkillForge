@@ -50,7 +50,13 @@ containers that build reproducibly and run the same everywhere.
 
 - Docker installed and running (Docker Desktop or the Docker Engine).
 - Docker Compose available (included with current Docker Desktop and
-  Docker Engine installs).
+  Docker Engine installs). Use Compose v2 (`docker compose`); the
+  standalone `docker-compose` v1 binary is end-of-life.
+- Base images: Node.js 22, 24, and 26 are the active LTS lines as of
+  2026-11-20 (26 is the newest LTS; `node:26-alpine` exists on Docker
+  Hub). Node.js 20 reached end-of-life on 30 April 2026; do not base new
+  images on it. Alpine images use musl libc, so verify native
+  dependencies work there before choosing `-alpine` over `-slim`.
 - The application builds and runs outside Docker first; containerize a
   working application, not a broken one.
 - A `.dockerignore` file in the project root before the first build.
@@ -146,6 +152,10 @@ containers that build reproducibly and run the same everywhere.
 - Baking secrets into the image with `ENV` or build arguments — secrets
   persist in image history.
 - Running as root — a compromised container has full privileges.
+- Switching to the non-root user before `COPY` or `npm ci` — the app
+  directory is root-owned, so copies and installs fail; install as
+  root (or `COPY --chown=node:node`) and switch user last, as in the
+  example below.
 - Forgetting `.dockerignore` — `node_modules` and `.git` bloat the build
   context and can leak files into the image.
 - Storing data inside the container filesystem — data is lost when the
@@ -165,10 +175,10 @@ RUN npm run build
 
 FROM node:24-alpine AS runtime
 WORKDIR /app
-USER node
-COPY --from=build /app/package.json /app/package-lock.json ./
-COPY --from=build /app/dist ./dist
+COPY --from=build --chown=node:node /app/package.json /app/package-lock.json ./
+COPY --from=build --chown=node:node /app/dist ./dist
 RUN npm ci --omit=dev
+USER node
 EXPOSE 3000
 CMD ["node", "dist/index.js"]
 ```

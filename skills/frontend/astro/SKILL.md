@@ -48,9 +48,14 @@ to write content for.
 
 ## Prerequisites
 
-- Node.js 24 LTS installed (current LTS line as of 2026-11-20).
-- An Astro 7 project (current major line as of 2026-11-20); do not assume
-  a minor version. New projects are created with `npm create astro@latest`.
+- Node.js 24 LTS or 26 LTS installed (26 is the newest LTS line as
+  of 2026-11-20; 24 and 22 remain in LTS). Astro 7 requires Node.js
+  22.12 or newer at minimum (22.23.4 or newer from Astro 7.4.2);
+  check the local, CI, and hosting Node versions before upgrading.
+- An Astro 7 project (current major line as of 2026-11-20, released
+  2026-06-22, built on Vite 8 and Zod 4); do not assume a minor
+  version. New projects are created with `npm create astro@latest`;
+  upgrade existing projects with `npx @astrojs/upgrade`.
 - Content ready as Markdown files (or MDX) for content-driven sites.
 - Familiarity with `html`, `css`, and `javascript`; `.astro` files mix
   HTML-like markup with JavaScript frontmatter.
@@ -63,6 +68,12 @@ to write content for.
   the official guided tutorial for building a blog.
 - [Astro configuration reference](https://docs.astro.build/en/reference/configuration-reference/) —
   every `astro.config.mjs` option.
+- [Upgrade to Astro v7](https://docs.astro.build/en/guides/upgrade-to/v7/) —
+  the official v7 upgrade guide (Node floor, Markdown processor,
+  `src/fetch.ts` entrypoint).
+- [Upgrade to Astro v6](https://docs.astro.build/en/guides/upgrade-to/v6/) —
+  Zod 4, the `astro/zod` import, and the removal of legacy content
+  collections support.
 
 ## Required Workflow
 
@@ -89,7 +100,12 @@ to write content for.
 
 - Astro 7 is the current major line as of 2026-11-20. Follow the docs at
   docs.astro.build for the current APIs; do not rely on pre-5.0 patterns
-  such as the legacy content collections configuration file location.
+  such as the legacy content collections configuration file location
+  (`src/content/config.ts` without loaders — legacy support was
+  removed in Astro 6 along with the `legacy.collections` flag).
+- Import Zod from `astro/zod` (`import { z } from 'astro/zod'`).
+  Importing `z` from `astro:content` was deprecated in Astro 6.0 in
+  favor of `astro/zod`; `astro:schema` is deprecated the same way.
 - Pages live in `src/pages/`; a file `src/pages/blog/[slug].astro` is a
   dynamic route whose params come from `getStaticPaths()`.
 - `.astro` frontmatter runs on the server at build time (or request time
@@ -177,6 +193,8 @@ to write content for.
   XSS.
 - Importing a framework component without the integration installed —
   the build fails. Install and configure the integration first.
+- Importing `z` from `astro:content` — deprecated since Astro 6.0.
+  Import from `astro/zod` instead.
 - Writing content as loose Markdown files instead of a content collection
   — loses schema validation and typed queries.
 - Skipping the `site` config — breaks canonical URLs, sitemaps, and RSS.
@@ -214,7 +232,8 @@ A content collection schema and a listing page:
 
 ```ts
 // src/content.config.ts
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 const blog = defineCollection({
@@ -279,5 +298,7 @@ const posts = (await getCollection('blog'))
   guided blog tutorial.
 - [Astro configuration reference](https://docs.astro.build/en/reference/configuration-reference/) —
   config options.
+- [Upgrade to Astro v7](https://docs.astro.build/en/guides/upgrade-to/v7/) —
+  official v7 upgrade guide.
 - Related skills in this repository: `html`, `css`, `tailwind-css`,
   `react`, `frontend-performance`.

@@ -2,12 +2,13 @@
 name: seo-migration
 description: >
   Plans and executes SEO-safe website migrations: domain changes, URL
-  restructuring, platform moves, HTTPS changes, and redesigns, without
-  losing rankings or traffic. Use when changing domains, restructuring
-  URLs, moving platforms or CMSs, redesigning a site, or merging sites,
-  and when auditing a migration that already happened. Trigger keywords:
-  SEO migration, site migration, domain change, URL redirect, 301 redirect
-  map, platform migration, redesign SEO, site move, redirect chains.
+  restructuring, platform moves, HTTPS changes, and redesigns, aiming
+  to preserve as much search visibility as possible. Use when changing
+  domains, restructuring URLs, moving platforms or CMSs, redesigning a
+  site, or merging sites, and when auditing a migration that already
+  happened. Trigger keywords: SEO migration, site migration, domain
+  change, URL redirect, 301 redirect map, platform migration, redesign
+  SEO, site move, redirect chains.
 license: MIT
 metadata:
   version: "1.0.0"
@@ -70,6 +71,11 @@ as a controlled, reversible operation with verification at each step.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — baseline for the migrated site.
 - [Sitemaps.org](https://www.sitemaps.org/) — sitemap format for the new URL set.
 
+Guidance current as of 2026-11-20. Since June 2026, Google's site move
+guide covers using the Change of Address tool for all subdomain variants
+(including www and non-www) during a domain migration; file the change
+for every variant, not just the canonical one.
+
 ## Required Workflow
 
 1. Audit before the move. Crawl the current site and record every
@@ -88,7 +94,8 @@ as a controlled, reversible operation with verification at each step.
    redirects together, then verify immediately: homepage, top pages,
    redirect samples, robots.txt, and sitemap.
 6. Update external references. Submit the new sitemap in Search
-   Console, use the change of address tool for domain changes, and
+   Console, use the change of address tool for domain changes (file it
+   for all subdomain variants, including www and non-www), and
    update the most valuable external links where possible.
 7. Monitor daily for two weeks, then weekly for two months. Watch
    Search Console coverage, crawl errors, indexed pages, traffic,

@@ -47,13 +47,26 @@ reliable.
 
 ## Prerequisites
 
-- Node.js installed (Node.js 24 is the current LTS line as of
-  2026-11-20) and a project using ESM or Vite.
-- Vitest installed as a development dependency.
+- Node.js installed. Node.js 22, 24, and 26 are the active LTS lines
+  as of 2026-11-20; Node.js 20 reached end-of-life on 30 April 2026.
+  Vitest 5.x is the current major (5.0 released 2026-09-03) and
+  requires Node.js >= 22.12 and Vite >= 6.4; Vite is a peer
+  dependency in v5, so Yarn users must install `vite` explicitly.
+  Vitest 4.x requires Node.js >= 20 and Vite >= 6.
+- Vitest installed as a development dependency. Keep `@vitest/*`
+  packages (coverage, browser, UI) at the same major version as
+  `vitest` itself.
 - For DOM component tests, a DOM environment package such as
   `happy-dom` or `jsdom` installed as a development dependency.
 - For coverage, the matching coverage provider package installed
-  (Vitest supports V8 and Istanbul providers).
+  (`@vitest/coverage-v8` or `@vitest/coverage-istanbul`) at the same
+  major version as Vitest.
+- Version-specific differences to know: Vitest 4 replaced
+  `vitest.workspace.*` files with the `projects` option and replaced
+  `poolOptions` with `maxWorkers`. Vitest 5 clears mocks before each
+  test by default (`clearMocks` defaults to `true`), fails tests with
+  unawaited async assertions, and requires `vi.mock()` calls at the
+  top level of the test file.
 
 ## Official Documentation
 
@@ -90,7 +103,10 @@ reliable.
 - Mock at the module boundary with `vi.mock()` for external modules
   and `vi.fn()` / `vi.spyOn()` for individual functions. Never mock the
   module under test.
-- Reset mocks between tests with `vi.clearAllMocks()` in a
+- Reset mocks between tests. In Vitest 5, mocks are cleared before
+  each test by default (`clearMocks` defaults to `true`), so an
+  explicit `clearMocks: true` in config is redundant but harmless.
+  On Vitest 4 and earlier, reset with `vi.clearAllMocks()` in a
   `beforeEach` hook, or set `clearMocks: true` in config.
 - Use `vi.useFakeTimers()` for time-dependent tests and always restore
   real timers afterwards (`vi.useRealTimers()`).
@@ -145,8 +161,12 @@ reliable.
 
 ## Common Mistakes
 
-- Forgetting `vi.clearAllMocks()` — mock call history leaks between
-  tests and creates order-dependent failures.
+- Forgetting `vi.clearAllMocks()` on Vitest 4 and earlier — mock call
+  history leaks between tests and creates order-dependent failures.
+  (Vitest 5 clears mocks by default.)
+- Leaving an async assertion unawaited — Vitest 5 fails the test when
+  an `expect(...).resolves` / `.rejects` assertion is not awaited; always
+  `await` it.
 - Mocking the module under test — the test then verifies the mock, not
   the code.
 - Using globals without declaring them — tests fail under strict

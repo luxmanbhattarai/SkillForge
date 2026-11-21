@@ -51,6 +51,14 @@ it makes pages eligible for them and keeps the markup trustworthy.
   Results Test.
 - Knowledge of which rich result features matter for the site's goals
   (articles, products, FAQs, breadcrumbs, videos).
+- Guidance current as of 2026-11-20. Google retires rich result
+  features regularly: FAQ rich results stopped appearing on
+  7 May 2026, HowTo was deprecated in September 2023, the sitelinks
+  search box was removed in November 2024, and the course info,
+  estimated salary, learning video, special announcement, and vehicle
+  listing features were removed in September 2025. A schema.org type
+  staying valid does not mean Google still shows the feature — check
+  the current search gallery before planning around any type.
 
 ## Official Documentation
 
@@ -64,6 +72,10 @@ it makes pages eligible for them and keeps the markup trustworthy.
   Google's tool for validating markup on a page.
 - [Schema Markup Validator](https://validator.schema.org/) — the
   schema.org validator for general JSON-LD correctness.
+- [Changes to HowTo and FAQ rich results](https://developers.google.com/search/blog/2023/08/howto-faq-changes) —
+  Google's announcement of the FAQ restriction and HowTo deprecation.
+- [Latest documentation updates](https://developers.google.com/search/updates) —
+  Google's changelog, where feature retirements are recorded.
 
 ## Required Workflow
 
@@ -120,6 +132,10 @@ it makes pages eligible for them and keeps the markup trustworthy.
   reinventing or contradicting the existing markup.
 - Watch Google's search gallery for feature changes; a retired feature
   means markup that no longer earns anything and can be simplified.
+  Retired as of 2026-11-20: FAQ and HowTo rich results, the sitelinks
+  search box, and the course info, estimated salary, learning video,
+  special announcement, and vehicle listing features. Breadcrumb rich
+  results appear on desktop search results only (since January 2025).
 - Treat Search Console enhancement errors as defects with owners and
   deadlines, not as background noise.
 
@@ -170,6 +186,11 @@ Example schema map for a blog (template → types → data source):
 | FAQ page | FAQPage, BreadcrumbList | page body: questions and answers |
 | Category | BreadcrumbList, ItemList | section data: name, page list |
 ```
+
+Note: FAQPage markup earns no Google rich result since May 2026; it
+is listed here only because it remains valid schema.org vocabulary
+that other consumers may use. Do not plan a template around a FAQ
+rich result.
 
 Example site-wide Organization entity (values are generic examples for
 illustration; use the site's real details in production):

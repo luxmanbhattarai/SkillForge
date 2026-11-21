@@ -29,6 +29,7 @@ and never invents search volumes.
 | `on-page-seo` | When recommendations touch page optimization. |
 | `competitor-profiling` (upstream) | Comparing against competing sites. |
 | `analytics` (upstream) | Using existing traffic data to inform research. |
+| `serp-monitoring` | Rankings or SERP features need monitoring. |
 
 ## Skills it should use
 

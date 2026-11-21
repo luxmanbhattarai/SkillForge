@@ -58,12 +58,14 @@ to do anything?" without making the reader dig through commit history.
 ## Official Documentation
 
 - [Keep a Changelog](https://keepachangelog.com/) — the standard
-  changelog format.
+  changelog format. Keep a Changelog 1.1.0 is the current version
+  of the format.
 - [Semantic Versioning](https://semver.org/) — the versioning
-  scheme changelogs are built around.
+  scheme changelogs are built around. Semantic Versioning 2.0.0
+  is current.
 - [Conventional Commits](https://www.conventionalcommits.org/) —
   a commit message convention that makes changelog generation
-  easier.
+  easier. Conventional Commits 1.0.0 is current.
 
 ## Required Workflow
 

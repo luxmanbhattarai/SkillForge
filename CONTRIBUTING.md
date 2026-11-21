@@ -41,15 +41,79 @@ documentation, and tooling.
    ```
    This runs frontmatter, section, link, duplicate, and registry
    checks. A skill that fails validation is not merged.
-6. **Regenerate the registry.**
+6. **Score the skill.**
+   ```bash
+   node scripts/score-skills.mjs --filter skills/<category>/<skill-name>
+   ```
+   The scorer checks the 22-element quality standard. A security
+   pattern hit caps the score at 40 and flags the skill CRITICAL;
+   a missing required section caps it at 50. See
+   [Quality scoring](docs/SKILL-STANDARDS.md#quality-scoring).
+7. **Add eval coverage.** New skills get a generated discovery case
+   automatically — regenerate the discovery dataset and run the evals:
+   ```bash
+   npm run evals:generate
+   npm run evals
+   ```
+   The mock agent evaluates the library, not a real model; see
+   [`docs/EVALUATION.md`](docs/EVALUATION.md). If your skill needs a
+   hand-written case (selection, content, refusal, or code), add one
+   to `evals/cases/` following the schema in `evals/README.md`.
+8. **Regenerate the registry.**
    ```bash
    npm run registry
    ```
    Never hand-edit `registry/` — it is generated from the skills on
    disk. Commit the regenerated files with your change.
-7. **Update the changelog.** Add an entry under `Unreleased` in
+9. **Update the changelog.** Add an entry under `Unreleased` in
    `CHANGELOG.md`.
-8. **Open a pull request** (see [PR process](#pr-process)).
+10. **Open a pull request** (see [PR process](#pr-process)).
+
+### Worked example: adding a skill end to end
+
+Adding a skill for a (fictional) framework called Acme, in the
+`backend` category:
+
+```bash
+# 1. Scaffold from the template (directory name = skill name)
+mkdir -p skills/backend/acme
+cp templates/SKILL-TEMPLATE.md skills/backend/acme/SKILL.md
+
+# 2. Edit skills/backend/acme/SKILL.md:
+#    - frontmatter: name: acme, a description with trigger keywords,
+#      license: MIT, metadata (version "1.0.0", category backend,
+#      maintainer skills-library, source original, last_verified with
+#      today's date in YYYY-MM-DD form)
+#    - all 15 template sections in order, verified against Acme's
+#      official docs (link them in Official Documentation)
+
+# 3. Validate just this skill first, then the whole library
+node scripts/validate-skills.mjs --filter skills/backend/acme
+npm run validate
+
+# 4. Score it
+node scripts/score-skills.mjs --filter skills/backend/acme
+
+# 5. Security-scan the repo (a separate check; also runs in CI)
+npm run check:security
+
+# 6. Eval coverage: regenerate discovery cases, run the suite
+npm run evals:generate
+npm run evals
+
+# 7. Regenerate the registry and confirm the skill appears
+npm run registry
+npm run query -- show acme
+
+# 8. Run the full test suite, then commit
+npm test
+git add skills/backend/acme registry/ evals/datasets/discovery-generated.json CHANGELOG.md
+```
+
+If validation reports a frontmatter error, check the supported
+subset first: this repository uses a hand-rolled parser with no YAML
+dependency, so lists, deeper nesting, and anchors are not supported —
+see [Frontmatter parser subset](docs/SKILL-STANDARDS.md#frontmatter-parser-subset).
 
 ## Updating an existing skill
 
@@ -94,16 +158,37 @@ new commit and date in the vendor's `ATTRIBUTION.md` and in
   with ordered steps, inputs/outputs, and checks.
 - Agents and workflows must follow the discovery rules in `AGENTS.md`:
   task-based skill selection only — never load the whole library.
+- Validate them with the dedicated checker, which verifies the
+  required sections, resolves every referenced skill, and checks that
+  the "should use" set is a subset of the "can discover" set:
+  ```bash
+  npm run check:agents
+  ```
+  Then regenerate the registry (`npm run registry`) so
+  `registry/agents.json` and `registry/workflows.json` pick up the
+  change.
+- Agents and workflows are plain Markdown with no frontmatter. The
+  installer adds the frontmatter each target needs at install time
+  (see [`docs/INSTALLATION.md`](docs/INSTALLATION.md#agents-and-workflows));
+  do not add frontmatter to the library files.
 
 ## PR process
 
 1. Fork the repository and create a branch from `main`.
-2. Make your change, run `npm run validate`, regenerate the registry,
-   and update `CHANGELOG.md`.
+2. Make your change, run `npm run validate`, score new or changed
+   skills, regenerate the registry, and update `CHANGELOG.md`.
+   Before opening the PR, run the checks CI will run:
+   ```bash
+   npm run validate && npm run check:frontmatter && npm run check:duplicates \
+     && npm run check:sources && npm run check:agents && npm run check:registry \
+     && npm run check:links && npm run check:security && npm run score \
+     && npm test && npm run evals
+   ```
 3. Open a pull request using the PR template. Describe what changed and
    why, and list the official sources you verified against.
-4. CI runs validation, link checks, and a security scan on every PR.
-   All checks must pass before merge.
+4. CI runs validation (Node 24), registry regeneration diff,
+   evals, lint, a security audit, and CodeQL on every PR. All checks
+   must pass before merge.
 5. A maintainer reviews for accuracy, originality, and standards
    compliance. Address feedback and re-run validation after changes.
 

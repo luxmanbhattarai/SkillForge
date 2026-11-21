@@ -45,6 +45,13 @@ usable, and the behaviour to be specified before it is implemented.
 
 - A test runner configured for the project (for example, Vitest or Jest
   for TypeScript, pytest for Python).
+- Supported versions (verified 2026-11-20): Vitest 5.x is current
+  (5.1.x, November 2026; requires Node.js 22.12 or later — Node.js 20
+  is no longer supported) and Jest 30.x is current (30.5.x, September
+  2026; Jest 30 removed matcher aliases such as `toBeCalledWith` and
+  requires TypeScript 5.4 or later). Node.js ships a built-in test
+  runner (`node:test`, stable since Node.js 20) as a zero-dependency
+  alternative for simple suites.
 - The ability to run a single test file quickly from the command line.
 - Agreement on where tests live and how they are named in the project.
 

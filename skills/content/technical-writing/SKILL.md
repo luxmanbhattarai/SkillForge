@@ -52,7 +52,8 @@ READMEs, and treats every code sample as a promise that must work.
 - [Google developer documentation style guide](https://developers.google.com/style) — the standard style guide for technical docs.
 - [Google Technical Writing courses](https://developers.google.com/tech-writing) — free courses on planning and writing technical docs.
 - [Markdown Guide](https://www.markdownguide.org/) — Markdown syntax reference for docs written in Markdown.
-- [Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/WAI/standards-guidelines/wcag/) — accessibility requirements that docs must meet.
+- [Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/WAI/standards-guidelines/wcag/) — accessibility requirements that docs must meet. WCAG 2.2 (W3C Recommendation, October 2023) is the current version.
+- Compatibility: Node.js 26 is the current LTS line as of 28 October 2026 (codename "Lithium", supported until April 2029); Node.js 24 moved to Maintenance LTS on 20 October 2026 and Node.js 22 reaches end of life in April 2027. From Node.js 27 onward the project moves to one release per year with every major version becoming LTS, so the old even-numbered-only LTS rule no longer applies. Check the [Node.js release schedule](https://nodejs.org/en/about/previous-releases) before stating which line is current — do not cite a version from memory.
 
 ## Required Workflow
 
@@ -119,7 +120,7 @@ This guide installs the TypeScript compiler and verifies it runs.
 
 ## Prerequisites
 
-- Node.js 24 (current LTS line) or later
+- Node.js 26 (current LTS line since 28 October 2026) or later
 - A terminal with network access
 
 ## Steps

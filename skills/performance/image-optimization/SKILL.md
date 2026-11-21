@@ -63,7 +63,13 @@ largest contentful paint, and where no image causes layout shift.
 - [MDN — Responsive images](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Performance/Multimedia)
   — `srcset`, `sizes`, and the `picture` element.
 - [Sharp](https://sharp.pixelplumbing.com/) — the Node.js image
-  processing library used by most frameworks.
+  processing library used by most frameworks. Sharp 0.35.x requires
+  Node.js 20.9 or later.
+- Browser support (MDN compatibility data): AVIF in Chrome 85+,
+  Firefox 93+, Safari 16+; WebP in Safari 14+; `fetchpriority` in
+  Chrome 101+, Firefox 132, Safari 17.2; `loading="lazy"` in Safari
+  15.4+. Browsers that do not support the new attributes ignore
+  them safely, so no polyfill is needed.
 
 ## Required Workflow
 
@@ -98,6 +104,10 @@ largest contentful paint, and where no image causes layout shift.
   more than twice its displayed width is oversized.
 - Prefer AVIF or WebP over JPEG and PNG for photographic content;
   use SVG for logos, icons, and simple graphics.
+- When a format is not universal, use `<picture>` with a
+  `<source type="image/avif">` first, then WebP, with a JPEG or
+  PNG `<img>` fallback — browsers pick the first format they
+  support.
 - Always set `width` and `height` (or an aspect-ratio) on `<img>`
   elements so the browser can reserve space before the image loads.
 - The LCP image must load eagerly, must not be lazy-loaded, and

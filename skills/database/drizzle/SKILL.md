@@ -41,7 +41,8 @@ This skill covers general Drizzle ORM usage in TypeScript and JavaScript applica
 
 ## Prerequisites
 
-- Node.js 24 LTS and TypeScript 5.x, per the project's verified stack.
+- Node.js 26 LTS (24 and 22 remain supported LTS lines) and TypeScript 7.x.
+- This skill describes the stable Drizzle ORM 0.45 line (0.45.4 as of 2026-11-20). Drizzle ORM 1.0 is a release candidate on the `@rc` npm tag (1.0.0-rc.5) with a new relations API and migration engine; its API differs from the stable line, so check the installed version before following 1.0 documentation, and keep `drizzle-orm` and `drizzle-kit` on matching lines.
 - A supported database reachable from the project (PostgreSQL, MySQL, or SQLite).
 - The connection string stored as an environment variable such as `$DATABASE_URL`, never committed to the repository.
 - A driver for the chosen database, as documented by Drizzle for that database.
@@ -59,7 +60,7 @@ This skill covers general Drizzle ORM usage in TypeScript and JavaScript applica
 4. Create one database client instance per process (a singleton module) and share it; do not create a client per request.
 5. Write queries with the relational API (`db.query.books.findMany`) for reads with relations, and the SQL-like builder (`db.select().from(books)`) when precise control over the SQL is needed.
 6. Use `columns` and `with` to fetch only the fields and relations the caller needs.
-7. Use `db.transaction` for multi-statement writes that must succeed or fail together.
+7. Use `db.transaction` for multi-statement writes that must succeed or fail together. Interactive transactions need a driver with transaction support; HTTP-only drivers (Neon HTTP, Cloudflare D1) do not support them — use `db.batch` on those drivers instead.
 8. Generate migrations with drizzle-kit after schema changes, review the generated SQL, and apply migrations with the project's migrator — never hand-edit the database and leave the schema behind.
 9. Use `sql` template literals only for expressions the builder cannot express, with parameterized values.
 10. Check generated SQL for hot queries (Drizzle's logger) and confirm the database uses an index.
@@ -83,7 +84,7 @@ This skill covers general Drizzle ORM usage in TypeScript and JavaScript applica
 - Prefer the SQL-like builder when the query needs precise control (complex joins, window functions, specific ordering).
 - Fetch with `columns` and `with` and shape the response in the query, not by fetching whole rows and deleting fields afterwards.
 - Watch for N+1 queries: a loop that queries inside it is almost always a missing `with` or a missing `inArray` filter.
-- Use `db.batch` or a transaction for bulk writes instead of one round trip per row.
+- Use a transaction for bulk writes instead of one round trip per row. `db.batch` exists only on drivers that support batching (Cloudflare D1, libSQL, Neon HTTP, and proxy drivers); it is not available on node-postgres, postgres-js, or mysql2.
 - Log generated SQL in development; Drizzle stays close to SQL, so reading the SQL is the fastest way to spot a bad query.
 - Review every generated migration before applying it: drizzle-kit generates SQL from the schema diff, and a rename can look like a drop-and-create.
 - Seed the database with a repeatable seed script that can run against a fresh database.
@@ -105,7 +106,7 @@ This skill covers general Drizzle ORM usage in TypeScript and JavaScript applica
 - Use cursor pagination for large lists so later pages stay fast.
 - Add indexes for the filter and sort columns of hot queries, and verify with the database's `EXPLAIN`.
 - Use a single shared database client so connection pooling works as intended.
-- Use transactions or batch writes for bulk operations rather than many separate round trips.
+- Use transactions or batch writes (where the driver supports `db.batch`) for bulk operations rather than many separate round trips.
 
 ## Common Mistakes
 

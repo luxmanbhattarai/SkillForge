@@ -12,7 +12,7 @@ metadata:
   maintainer: skills-library
   source: original
   last_verified: "2026-11-20"
-compatibility: Requires Node.js 24 LTS and a GraphQL server library such as GraphQL Yoga or Apollo Server.
+compatibility: "Requires Node.js 24 LTS or later and a GraphQL server library: GraphQL Yoga 6.x or Apollo Server 5.x."
 ---
 
 # GraphQL
@@ -51,8 +51,12 @@ performant under real load.
 
 - Familiarity with the GraphQL type system: object types, queries,
   mutations, input types, and the schema definition language.
-- A Node.js project with a GraphQL server library installed (GraphQL
-  Yoga or Apollo Server are the common choices).
+- A Node.js project with a GraphQL server library installed: GraphQL
+  Yoga 6.x (requires Node.js 22 or later and `graphql` 16 or later)
+  or Apollo Server 5.x (`@apollo/server`) are the current choices.
+  Apollo Server 4 reached end-of-life on 2026-01-26 — do not start
+  new projects on it — and the legacy `apollo-server-express`
+  package (v3) is long obsolete.
 - A data layer (database, ORM, or service clients) that resolvers can
   call.
 
@@ -65,7 +69,8 @@ performant under real load.
 - [GraphQL Code](https://graphql.org/code/) — the official list of
   server and client libraries.
 - [Apollo Server documentation](https://www.apollographql.com/docs/apollo-server)
-  — a widely used GraphQL server implementation.
+  — a widely used GraphQL server implementation. Apollo Server 5 is
+  the current, supported version; v4 is end-of-life.
 
 ## Required Workflow
 
@@ -259,5 +264,6 @@ type UserError {
 - [GraphQL Specification](https://spec.graphql.org/)
 - [GraphQL Code](https://graphql.org/code/)
 - [Apollo Server documentation](https://www.apollographql.com/docs/apollo-server)
+  (Apollo Server 5 current; v4 end-of-life 2026-01-26)
 - Related skills in this repository: `api-design`, `rest-api`, `trpc`,
   `caching`, `rate-limiting`.

@@ -33,6 +33,8 @@ bolted on.
 | `blog-featured-images` | When the article needs a featured image. |
 | `writing-guidelines` (upstream) | Voice and style guidance. |
 | `copy-editing` (upstream) | Line-level editing and polish. |
+| `editorial-workflow` | The article goes through an editorial pipeline. |
+| `source-verification` | Claims need source checking before publication. |
 
 ## Skills it should use
 

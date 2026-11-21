@@ -59,6 +59,11 @@ markup foundation.
 - [W3C Markup Validation Service](https://validator.w3.org/) — validate a
   document or snippet against the standard.
 
+HTML is a living standard with no version numbers: there is no "HTML6"
+to upgrade to. Features are added to the WHATWG standard and ship in
+browsers individually, so check MDN or Can I Use for the support status
+of any newer element or attribute before relying on it.
+
 ## Required Workflow
 
 1. Identify the content: headings, paragraphs, lists, media, forms, tables.

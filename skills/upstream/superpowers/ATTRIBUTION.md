@@ -29,3 +29,17 @@
 
 These files are imported verbatim and must not be edited. See
 `sources/imported-skills.md` for the import policy.
+
+## Unimported siblings referenced by these skills
+
+`executing-plans` and `writing-skills` name
+`superpowers:test-driven-development` as required background, and
+`executing-plans` and `using-superpowers` reference
+`superpowers:systematic-debugging`. Those two skills were deliberately
+not imported: SkillForge originals cover the same ground. Use these
+instead:
+
+- `superpowers:test-driven-development` → original skill `tdd`
+- `superpowers:systematic-debugging` → original skill `debugging`
+
+See `ai/decisions/2026-11-20-upstream-sibling-skills.md`.

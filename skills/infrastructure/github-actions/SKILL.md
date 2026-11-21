@@ -51,6 +51,15 @@ request. It produces workflows that are fast, secure, and easy to debug.
 - Secrets the workflow needs, added in the repository settings under
   Settings, Secrets and variables, Actions.
 - Familiarity with YAML and the repository's build and test commands.
+- Action versions: `actions/checkout` and `actions/setup-node` are at
+  v7 as of 2026-11-20 (setup-node v7.1.0). v5 moved both actions to
+  the Node.js 24 runtime (self-hosted runners need v2.327.1 or
+  later); v6 changed checkout's credential storage and limited
+  setup-node's automatic caching to npm; v7 migrated internals to
+  ESM. v4 and earlier run on Node.js 20, which reached end-of-life
+  on 30 April 2026 — do not use v4 for new workflows.
+- Node.js 22, 24, and 26 are the active LTS lines as of 2026-11-20;
+  use one of them for `node-version`.
 
 ## Official Documentation
 
@@ -81,7 +90,7 @@ request. It produces workflows that are fast, secure, and easy to debug.
 - One workflow file per purpose: keep CI (test and build) separate from
   CD (deploy) where the deploy needs different permissions or approvals.
 - Pin actions to a full commit SHA for production workflows, or to a
-  major version tag (such as `v4`) when the publisher is trusted and the
+  major version tag (such as `v7`) when the publisher is trusted and the
   repository accepts that trade-off.
 - Set explicit `permissions` at the top of the workflow; never rely on
   the default token permissions.
@@ -173,8 +182,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
@@ -193,7 +202,7 @@ Deploy job that depends on the test job:
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: npm ci
       - run: npm run build
       - run: npx wrangler deploy

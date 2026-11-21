@@ -62,6 +62,8 @@ it identifies problems and the fixes that address them.
 - [Schema.org](https://schema.org/) — the vocabulary reference for
   structured data checks.
 
+Guidance current as of 2026-11-20.
+
 ## Required Workflow
 
 1. Confirm scope: domain(s) included, sample size for large sites, and
@@ -173,7 +175,7 @@ Example severity summary table:
 | Critical | 2     | robots.txt blocks /blog/ |
 | High     | 9     | 47 empty titles |
 | Medium   | 14    | Missing alt text on 120 images |
-| Low      | 21    | Meta descriptions over 160 chars |
+| Low      | 21    | Meta descriptions over ~160 chars (display heuristic) |
 ```
 
 ## Validation Checklist

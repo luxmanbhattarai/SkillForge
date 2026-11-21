@@ -1,5 +1,11 @@
 name: Security audit
 
+# Local security scan (scripts/security-scan.mjs) plus a dependency
+# audit. Runs on every push/PR and weekly, so newly disclosed issues
+# surface even without code changes. CodeQL runs in its own workflow
+# (codeql.yml); GitHub secret scanning and Dependabot alerts are repo
+# settings, not workflow steps — see ai/phase10/NOTES.md.
+
 on:
   push:
     branches: [main]
@@ -9,17 +15,44 @@ on:
     # Weekly, Monday 06:00 UTC
     - cron: "0 6 * * 1"
 
+# Least privilege: these jobs only read the repository and run local
+# checks. No secrets are used anywhere in this workflow, so
+# pull_request runs from forks are safe.
+permissions:
+  contents: read
+
+# One run per ref at a time: a new push to a PR cancels the stale run,
+# but runs on main are never cancelled (the weekly schedule also runs
+# on main, so it is never cancelled either).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   security-audit:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
       - name: Set up Node.js 20
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "24"
+          # No cache: this repo has zero dependencies and no lockfile,
+          # so there is nothing to cache.
 
       - name: Run security scan
         run: npm run check:security
+
+      - name: "Audit dependencies (skipped: zero dependencies)"
+        # This repo has zero dependencies and no lockfile, so plain
+        # `npm audit` fails with ENOLOCK. Run the audit only if a
+        # lockfile ever appears; until then, say so and pass.
+        run: |
+          if [ -f package-lock.json ]; then
+            npm audit --omit=dev
+          else
+            echo "No package-lock.json: zero dependencies, nothing to audit."
+            echo "(npm audit would fail with ENOLOCK; see ai/phase10/NOTES.md.)"
+          fi
