@@ -41,8 +41,9 @@
 // read (see validateEntry), and a manifest with an invalid entry
 // counts as corrupt.
 
-import { readFile, writeFile, rename, rm } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { atomicWriteFile } from '../lib/atomic-write.mjs';
 import { TARGETS } from './targets.mjs';
 import { isWindowsLockError, lockErrorMessage } from './links.mjs';
 
@@ -295,21 +296,17 @@ export async function readManifest(skillsDir) {
   return { manifest: parsed, error: null };
 }
 
-/** Write the manifest atomically (temp file + rename). */
+/** Write the manifest atomically (temp file + rename, with a retry for transient Windows lock errors). */
 export async function writeManifest(skillsDir, manifest) {
   const file = manifestPath(skillsDir);
-  const tmp = `${file}.tmp-${process.pid}-${Math.random().toString(36).slice(2, 8)}`;
   try {
-    await writeFile(tmp, JSON.stringify(manifest, null, 2) + '\n', 'utf8');
-    await rename(tmp, file);
+    await atomicWriteFile(file, JSON.stringify(manifest, null, 2) + '\n');
   } catch (err) {
     // On Windows, a manifest held open by another program fails
     // the rename with EBUSY/EPERM — say so instead of surfacing
     // the bare errno (Stage D).
     if (isWindowsLockError(err)) throw new Error(lockErrorMessage(err, `replacing the manifest at ${file}`));
     throw err;
-  } finally {
-    await rm(tmp, { force: true }).catch(() => {});
   }
 }
 

@@ -10,6 +10,7 @@ import { access, appendFile, chmod, cp, lstat, mkdir, mkdtemp, readFile, readlin
 import os from 'node:os';
 import path from 'node:path';
 import { PassThrough } from 'node:stream';
+import { pathToFileURL } from 'node:url';
 import {
   INSTALLER,
   REPO_ROOT,
@@ -1268,7 +1269,10 @@ test('A-09a: quarantine failure fails closed — the corrupt manifest is never o
   const r = await runCli(['install', '--dest', 'out', '--skill', 'fixture-one'], {
     home,
     proj,
-    env: { ...env, NODE_OPTIONS: `--import ${pinDate}` },
+    // --import needs a file:// URL: a bare Windows absolute path
+    // (C:\...) is rejected by the ESM loader with
+    // ERR_UNSUPPORTED_ESM_URL_SCHEME (first real Windows CI run).
+    env: { ...env, NODE_OPTIONS: `--import ${pathToFileURL(pinDate).href}` },
   });
   assert.equal(r.code, 1, r.stdout + r.stderr);
   assert.match(r.stderr, /could not be moved aside/);
@@ -1440,34 +1444,35 @@ test('A-16c: restore recovers from a corrupt or missing backup.json', async () =
 });
 
 test('A-16d: a failed createBackup leaves no partial backup directory (unit)', async () => {
-  const { createServer } = await import('node:net');
   const { createBackup } = await import('../scripts/install/backups.mjs');
   const { base } = await makeSandbox();
   const skillsDir = path.join(base, 'skills');
   const good = path.join(skillsDir, 'good');
   await mkdir(good, { recursive: true });
   await writeFile(path.join(good, 'SKILL.md'), '# good\n');
-  // A directory containing a socket file: cp fails on it, after the
-  // first item has already been copied.
   const bad = path.join(skillsDir, 'bad');
   await mkdir(bad, { recursive: true });
   await writeFile(path.join(bad, 'SKILL.md'), '# bad\n');
-  const sockPath = path.join(bad, 's.sock');
-  const server = createServer(() => {});
-  await new Promise((resolve, reject) => server.listen(sockPath, (err) => (err ? reject(err) : resolve())));
-  try {
-    await assert.rejects(() => createBackup(skillsDir, {
-      reason: 'test', command: 'test',
-      items: [
-        { kind: 'skill', name: 'good', destAbs: good, entry: null },
-        { kind: 'skill', name: 'bad', destAbs: bad, entry: null },
-      ],
-    }));
-    // No partial backup directory lingers.
-    assert.deepEqual(await listNames(path.join(base, '.skillforge-backups')), []);
-  } finally {
-    await new Promise((resolve) => server.close(resolve));
-  }
+  // Fail the second copy, after the first item has already been
+  // copied: the cleanup path must remove the partial backup
+  // directory. The failure is injected through fsOps.cp — the
+  // previous injection (a Unix socket file cp cannot copy) cannot
+  // be created on Windows (first real Windows CI run).
+  let calls = 0;
+  const failingCp = async (...args) => {
+    calls++;
+    if (calls === 2) throw new Error('injected copy failure');
+    return cp(...args);
+  };
+  await assert.rejects(() => createBackup(skillsDir, {
+    reason: 'test', command: 'test',
+    items: [
+      { kind: 'skill', name: 'good', destAbs: good, entry: null },
+      { kind: 'skill', name: 'bad', destAbs: bad, entry: null },
+    ],
+  }, { cp: failingCp }));
+  // No partial backup directory lingers.
+  assert.deepEqual(await listNames(path.join(base, '.skillforge-backups')), []);
 });
 
 // ---------------------------------------------------------------- A-30: stale-staging cleanup
@@ -1999,7 +2004,9 @@ test('A-11: createLink resolves a relative target against the link parent before
   // relative target against the process cwd — the wrong base for
   // a link target — so createLink resolves it against the link's
   // parent directory. (path.resolve is the platform-native one:
-  // POSIX here, win32 on Windows; the resolution rule is the same.)
+  // POSIX here, win32 on Windows; the resolution rule is the same.
+  // The expectation is computed with it, not hardcoded POSIX: on
+  // real Windows '/x/lib/skill' resolves to 'D:\x\lib\skill'.)
   await createLink('../lib/skill', '/x/dest/skill', {
     kind: 'skill',
     platform: 'win32',
@@ -2007,7 +2014,7 @@ test('A-11: createLink resolves a relative target against the link parent before
   });
   assert.deepEqual(calls, [
     ['dir', '../lib/skill'],
-    ['junction', '/x/lib/skill'],
+    ['junction', path.resolve(path.dirname('/x/dest/skill'), '../lib/skill')],
   ]);
 });
 
@@ -2207,10 +2214,13 @@ test('Stage D (simulated Windows): relativeRoot stores manifest roots with forwa
   assert.equal(relativeRoot('/proj/.claude/skills', '/proj/.claude/agents'), '../agents');
   assert.equal(relativeRoot('/proj/out', '/proj/.codex/agents'), '../.codex/agents');
   // The stored form resolves back through entryRoot on this platform.
+  // The expectation is computed with the platform-native resolve,
+  // not hardcoded POSIX: on real Windows '/proj/.claude/agents'
+  // resolves to 'D:\proj\.claude\agents'.
   const { entryRoot } = await import('../scripts/install/manifest.mjs');
   assert.equal(
     entryRoot('/proj/.claude/skills', { kind: 'agent', root: '../agents', destName: 'x.md' }),
-    '/proj/.claude/agents',
+    path.resolve('/proj/.claude/skills', '../agents'),
   );
 });
 

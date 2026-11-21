@@ -73,6 +73,11 @@ export async function createBackup(skillsDir, { target, scope, reason, command, 
   }
   if (!existing.length) return null;
 
+  // fsOps.cp injects the copy function (same seam as fsOps.symlink):
+  // tests fail a copy mid-backup through it. The previous failure
+  // injection — a Unix socket file cp cannot copy — cannot be
+  // created on Windows (first real Windows CI run).
+  const copy = fsOps.cp ?? cp;
   const id = backupId();
   const dir = path.join(backupsDir(skillsDir), id);
   const itemsDir = path.join(dir, 'items');
@@ -101,10 +106,10 @@ export async function createBackup(skillsDir, { target, scope, reason, command, 
           symlinkFn: fsOps.symlink,
         });
       } else if (st.isDirectory()) {
-        await cp(item.destAbs, dst, { recursive: true });
+        await copy(item.destAbs, dst, { recursive: true });
       } else {
         await mkdir(dst, { recursive: true });
-        await cp(item.destAbs, path.join(dst, path.basename(item.destAbs)));
+        await copy(item.destAbs, path.join(dst, path.basename(item.destAbs)));
       }
       records.push({
         kind: item.kind,

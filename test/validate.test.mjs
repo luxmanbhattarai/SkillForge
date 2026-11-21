@@ -108,7 +108,9 @@ test('validate --strict fails on a warning on an original skill', async () => {
     const strict = await runValidator(copiedValidator, ['--strict']);
     assert.equal(strict.code, 1, strict.stdout);
     assert.match(strict.stdout, /FAIL: 0 error\(s\), 5 warning\(s\)\./);
-    assert.match(strict.stdout, /WARN  skills\/frontend\/nextjs\/SKILL\.md: SKILL\.md is 51\d lines/);
+    // The validator prints platform-native paths (backslashes on
+    // Windows); normalize before matching the POSIX form.
+    assert.match(strict.stdout.replace(/\\/g, '/'), /WARN  skills\/frontend\/nextjs\/SKILL\.md: SKILL\.md is 51\d lines/);
     // Non-strict mode still passes: a warning is not an error.
     const plain = await runValidator(copiedValidator);
     assert.equal(plain.code, 0, plain.stdout);

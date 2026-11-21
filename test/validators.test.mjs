@@ -109,7 +109,9 @@ test('check-duplicates flags a duplicate name and near-duplicate descriptions', 
     const r = await runNode(path.join(root, 'scripts', 'check-duplicates.mjs'));
     assert.match(r.stdout, /Compared 4 skills \(threshold 0\.8\)\./);
     assert.equal(r.code, 1, `duplicate names must fail the check: ${r.stdout}`);
-    assert.match(r.stdout, /ERROR duplicate name 'dup': skills\/cat-a\/dup\/SKILL\.md and skills\/cat-b\/dup\/SKILL\.md/);
+    // The checker prints platform-native paths (backslashes on
+    // Windows); normalize before matching the POSIX form.
+    assert.match(r.stdout.replace(/\\/g, '/'), /ERROR duplicate name 'dup': skills\/cat-a\/dup\/SKILL\.md and skills\/cat-b\/dup\/SKILL\.md/);
     assert.match(r.stdout, /WARN  near-duplicate descriptions \(0\.86\): 'alpha-one' and 'alpha-two'/);
   } finally {
     await rm(root, { recursive: true, force: true });
