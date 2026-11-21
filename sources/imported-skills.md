@@ -39,7 +39,7 @@ Commit `e4bb5d960d87126ff3b3a8af1a104b7db67560ba` · Imported 2026-11-20
 ### Vercel — 8 skills (MIT)
 
 Source: https://github.com/vercel-labs/agent-skills ·
-Commit `1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62` · Imported 2026-11-20
+Commit `5a37a6329fbad3666c3207392a6a7c0110e92efb` · Imported 2026-11-20 (re-imported from `1a2c79d4` on 2026-11-20; `web-design-guidelines` 1.0.0 → 1.1.0)
 
 `deploy-to-vercel`, `vercel-cli-with-tokens`,
 `vercel-composition-patterns`, `vercel-optimize`,

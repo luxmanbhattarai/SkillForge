@@ -4,8 +4,8 @@
 - **Maintainer:** Vercel
 - **License:** MIT (stated in the upstream README's License section; the
   upstream repository has no LICENSE file)
-- **Imported commit:** `1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62`
-- **Imported:** 2026-11-20
+- **Imported commit:** `5a37a6329fbad3666c3207392a6a7c0110e92efb`
+- **Imported:** 2026-11-20 (re-imported at `5a37a632` on 2026-11-20; original import at `1a2c79d4`)
 - **Note:** Three upstream skill directories were renamed on import so the
   directory name matches the frontmatter `name`, as the Agent Skills
   specification requires: `composition-patterns` →
