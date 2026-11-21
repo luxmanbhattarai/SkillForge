@@ -105,7 +105,13 @@ SkillForge originals; the rest accepted as an import-scope gap). See
 Source: https://github.com/pwg-projects/agentic-seo-skill ·
 Commit `67775741ce88e0a474513ac53d6f6e4558ff1a3b` · Imported 2026-11-20
 
+Live upstream: https://github.com/Bhanunamikaze/Agentic-SEO-Skill
+
 `seo` (includes 15 sub-skill references and deterministic audit scripts)
 
 Low-activity upstream: no pushes since 2026-03-03. Flagged for re-review
-at the next update cycle.
+at the next update cycle. The pinned repo above is a dormant fork of the
+author's repo (S-14); `check-upstream` compares the pin against the
+live upstream's HEAD too, so drift there is reported rather than
+hidden behind the fork's UP-TO-DATE status. The fork remains the
+import source until a re-import decision re-points it.

@@ -32,15 +32,26 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
  * removed on failure; on success it was renamed away, so the
  * cleanup is a no-op. Throws the last rename error when retries
  * are exhausted.
+ *
+ * The temp file is created with flag 'wx' (A5-10): a plain
+ * writeFile would follow a pre-planted symlink at the temp path.
+ * Guessing the random temp name is practically infeasible, but
+ * 'wx' closes the hole entirely at zero cost — a planted
+ * symlink (or any pre-existing file) makes the write fail with
+ * EEXIST instead of following it.
+ *
+ * `renameFn` (default: fs rename) is injectable so the retry
+ * behavior is directly unit-testable with a fault-injected
+ * rename (A2-22); production callers never pass it.
  */
-export async function atomicWriteFile(file, content, { attempts = 10, delayMs = 25, maxDelayMs = 400 } = {}) {
+export async function atomicWriteFile(file, content, { attempts = 10, delayMs = 25, maxDelayMs = 400, renameFn = rename } = {}) {
   const tmp = `${file}.tmp-${process.pid}-${Math.random().toString(36).slice(2, 8)}`;
   try {
-    await writeFile(tmp, content, 'utf8');
+    await writeFile(tmp, content, { encoding: 'utf8', flag: 'wx' });
     let delay = delayMs;
     for (let i = 0; i < attempts; i++) {
       try {
-        await rename(tmp, file);
+        await renameFn(tmp, file);
         return;
       } catch (err) {
         if (!RETRYABLE.has(err.code) || i === attempts - 1) throw err;

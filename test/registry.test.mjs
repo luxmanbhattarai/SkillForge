@@ -282,9 +282,14 @@ test('query CLI: search, show, status, categories, stale', async () => {
   // verified-with-limitations (platform-social-images) — so no skill
   // remains unverified. Update these numbers only when an audit
   // re-labels a skill, never to make the test pass.
-  assert.equal(status.counts.verified, 254);
+  // A3-01 (2026-11-21 re-audit): link-building was promoted from
+  // verified-with-limitations to verified — its only limitation
+  // (6 broken tools/ links) was resolved by the Phase 4 tools/
+  // import — so the split is now 255 verified / 16 with
+  // limitations. See AUDIT_OVERRIDES in scripts/validate-registry.mjs.
+  assert.equal(status.counts.verified, 255);
   assert.equal(status.counts.unverified, 0);
-  assert.equal(status.counts['verified-with-limitations'], 17);
+  assert.equal(status.counts['verified-with-limitations'], 16);
   assert.equal(status.counts['needs-correction'], 6);
 
   r = await runNode(QUERY, ['categories']);

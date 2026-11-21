@@ -16,6 +16,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateAgainstSchema } from './lib/schema-validate.mjs';
 import { toPosixPath } from './lib/paths.mjs';
+// Shared skill-file discovery (A2-18).
+import { findSkillFiles } from './lib/skill-files.mjs';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_ROOT = path.resolve(SCRIPT_DIR, '..');
@@ -28,6 +30,28 @@ const AUDIT_STATUS_MAP = {
   Verified: 'verified',
   'Verified with limitations': 'verified-with-limitations',
   'Needs correction': 'needs-correction',
+};
+
+// Post-audit overrides for the Phase 3 audit cross-check (A3-01).
+// The Phase 3 audit table (ai/audits/TECHNICAL-ACCURACY-AUDIT.md)
+// is a HISTORICAL record — it is never edited — but a later
+// re-audit can legitimately re-label a skill when the evidence
+// changes (e.g. the limitation the audit recorded is resolved).
+// Such a re-label is recorded here, explicitly, one skill at a
+// time: the overridden status, the date of the re-audit decision,
+// and the reason. The cross-check accepts the overridden status
+// in place of the audit table's and reports the override as a
+// warning, so it stays visible in every run — never a silent or
+// blanket skip. A skill with no override entry must still agree
+// with the audit table exactly, and an override whose status no
+// longer matches verification-status.json is itself an error (a
+// stale override must not linger unnoticed).
+const AUDIT_OVERRIDES = {
+  'link-building': {
+    status: 'verified',
+    date: '2026-11-21',
+    reason: 'A3-01: the 6 broken tools/ links were the only limitation; they were resolved by the Phase 4 tools/ import (all 6 targets verified on disk), so the skill is verified.',
+  },
 };
 
 const errors = [];
@@ -46,19 +70,6 @@ async function loadJson(rel) {
 
 async function loadSchema(name) {
   return JSON.parse(await readFile(path.join(SCRIPT_DIR, 'schemas', `${name}.schema.json`), 'utf8'));
-}
-
-async function findSkillFiles(dir) {
-  const out = [];
-  for (const e of await readdir(dir, { withFileTypes: true }).catch(() => [])) {
-    const full = path.join(dir, e.name);
-    if (e.isDirectory()) out.push(...await findSkillFiles(full));
-    // Normalized to POSIX separators so disk paths compare equal
-    // to the POSIX paths stored in the registry on Windows too
-    // (Stage D, W-3). No-op on POSIX.
-    else if (e.name === 'SKILL.md') out.push(toPosixPath(path.relative(ROOT, path.dirname(full))));
-  }
-  return out;
 }
 
 function checkDuplicates(names, what) {
@@ -90,10 +101,20 @@ for (const [rel, schemaName] of FILES) {
 }
 
 // --- semantic checks (only for files that loaded) ---
+// A2-02: schema errors are collected into errors[] but execution
+// used to continue into semantic checks that dereferenced the very
+// keys the schema requires (e.g. compatibility.compatibility, a
+// missing skills array), crashing with an uncaught TypeError and
+// never printing the collected diagnostics. Every semantic block
+// below is therefore guarded on the shape it needs: a file that
+// failed schema validation still reports its schema errors, and
+// the semantic checks for the missing keys are skipped, not
+// crashed into.
 const skillsDoc = data.skills;
+const skillsValid = Boolean(skillsDoc) && Array.isArray(skillsDoc.skills);
 const skillNames = new Set();
 const skillByName = new Map();
-if (skillsDoc) {
+if (skillsValid) {
   checkDuplicates(skillsDoc.skills.map((s) => s.name), 'registry/skills.json');
   for (const s of skillsDoc.skills) {
     skillNames.add(s.name);
@@ -102,7 +123,13 @@ if (skillsDoc) {
   if (skillsDoc.total_skills !== skillsDoc.skills.length) {
     err(`registry/skills.json: total_skills is ${skillsDoc.total_skills} but ${skillsDoc.skills.length} skills are listed`);
   }
-  const diskPaths = new Set(await findSkillFiles(path.join(ROOT, 'skills')));
+  // Disk paths normalized to POSIX separators so they compare
+  // equal to the POSIX paths stored in the registry on Windows
+  // too (Stage D, W-3). No-op on POSIX.
+  const diskPaths = new Set(
+    (await findSkillFiles(path.join(ROOT, 'skills')))
+      .map((f) => toPosixPath(path.relative(ROOT, path.dirname(f)))),
+  );
   const regPaths = new Set(skillsDoc.skills.map((s) => s.path));
   for (const p of regPaths) if (!diskPaths.has(p)) err(`registry/skills.json: lists missing skill path '${p}'`);
   for (const p of diskPaths) if (!regPaths.has(p)) err(`registry/skills.json: skill on disk missing from registry: '${p}'`);
@@ -115,7 +142,7 @@ if (skillsDoc) {
   }
 }
 
-if (skillsDoc && data.categories) {
+if (skillsValid && data.categories && Array.isArray(data.categories.categories) && Array.isArray(skillsDoc.categories)) {
   const catNames = new Set(data.categories.categories.map((c) => c.name));
   checkDuplicates(data.categories.categories.map((c) => c.name), 'registry/categories.json');
   const regCats = new Set(skillsDoc.categories);
@@ -123,13 +150,17 @@ if (skillsDoc && data.categories) {
   for (const c of regCats) if (!catNames.has(c)) err(`registry/skills.json: category '${c}' has no entry in categories.json`);
   for (const c of data.categories.categories) {
     const actual = skillsDoc.skills.filter((s) => s.category === c.name).map((s) => s.name).sort();
-    const listed = [...c.skills].sort();
     if (c.count !== actual.length) err(`registry/categories.json: category '${c.name}' count is ${c.count} but ${actual.length} skills have that category`);
-    if (JSON.stringify(actual) !== JSON.stringify(listed)) err(`registry/categories.json: category '${c.name}' skill list does not match skills.json`);
+    // A missing/non-array skill list is a schema error, already
+    // recorded; skip the list comparison rather than crashing.
+    if (Array.isArray(c.skills)) {
+      const listed = [...c.skills].sort();
+      if (JSON.stringify(actual) !== JSON.stringify(listed)) err(`registry/categories.json: category '${c.name}' skill list does not match skills.json`);
+    }
   }
 }
 
-if (skillsDoc && data.sources) {
+if (skillsValid && data.sources && Array.isArray(data.sources.sources)) {
   const srcById = new Map(data.sources.sources.map((s) => [s.id, s]));
   checkDuplicates(data.sources.sources.map((s) => s.id), 'registry/sources.json');
   for (const s of skillsDoc.skills) {
@@ -137,14 +168,18 @@ if (skillsDoc && data.sources) {
   }
   for (const src of data.sources.sources) {
     const actual = skillsDoc.skills.filter((s) => s.source === src.id).map((s) => s.name).sort();
-    const listed = [...src.skills].sort();
-    if (JSON.stringify(actual) !== JSON.stringify(listed)) err(`registry/sources.json: source '${src.id}' skill list does not match skills.json`);
+    if (Array.isArray(src.skills)) {
+      const listed = [...src.skills].sort();
+      if (JSON.stringify(actual) !== JSON.stringify(listed)) err(`registry/sources.json: source '${src.id}' skill list does not match skills.json`);
+    }
   }
 }
 
-if (skillsDoc && data.compatibility) {
+const compatGroups = data.compatibility?.compatibility;
+if (skillsValid && compatGroups && typeof compatGroups === 'object' && !Array.isArray(compatGroups)) {
   const seen = new Map();
-  for (const [group, names] of Object.entries(data.compatibility.compatibility)) {
+  for (const [group, names] of Object.entries(compatGroups)) {
+    if (!Array.isArray(names)) continue; // schema error, already recorded
     for (const n of names) {
       if (!skillNames.has(n)) err(`registry/compatibility.json: group '${group}' lists unknown skill '${n}'`);
       if (seen.has(n)) err(`registry/compatibility.json: skill '${n}' appears in two groups ('${seen.get(n)}' and '${group}')`);
@@ -154,8 +189,9 @@ if (skillsDoc && data.compatibility) {
   for (const n of skillNames) if (!seen.has(n)) err(`registry/compatibility.json: skill '${n}' appears in no group`);
 }
 
-if (skillsDoc && data.versions) {
-  const versioned = new Set(Object.keys(data.versions.skills));
+const versionSkills = data.versions?.skills;
+if (skillsValid && versionSkills && typeof versionSkills === 'object' && !Array.isArray(versionSkills)) {
+  const versioned = new Set(Object.keys(versionSkills));
   for (const n of skillNames) if (!versioned.has(n)) err(`registry/versions.json: no version for skill '${n}'`);
   for (const n of versioned) if (!skillNames.has(n)) err(`registry/versions.json: version for unknown skill '${n}'`);
   for (const s of skillsDoc.skills) {
@@ -168,6 +204,9 @@ if (skillsDoc && data.versions) {
 async function checkAgentWorkflowRegistry(doc, kind, dir) {
   const totalKey = kind === 'agent' ? 'total_agents' : 'total_workflows';
   const listKey = kind === 'agent' ? 'agents' : 'workflows';
+  // A missing/non-array list is a schema error, already recorded;
+  // return no entries rather than crashing (A2-02).
+  if (!Array.isArray(doc[listKey])) return [];
   checkDuplicates(doc[listKey].map((x) => x.name), `registry/${listKey}.json`);
   if (doc[totalKey] !== doc[listKey].length) {
     err(`registry/${listKey}.json: ${totalKey} is ${doc[totalKey]} but ${doc[listKey].length} are listed`);
@@ -188,12 +227,16 @@ if (data.agents) {
   const agents = await checkAgentWorkflowRegistry(data.agents, 'agent', 'agents');
   agentNames = new Set(agents.map((a) => a.name));
   for (const a of agents) {
-    if (!existsSync(path.join(ROOT, a.path))) err(`registry/agents.json: agent '${a.name}' path '${a.path}' does not exist`);
-    for (const s of [...a.discover, ...a.use]) {
+    // path.join throws on a non-string path; a missing path is a
+    // schema error, already recorded (A2-02).
+    if (typeof a.path === 'string' && !existsSync(path.join(ROOT, a.path))) err(`registry/agents.json: agent '${a.name}' path '${a.path}' does not exist`);
+    const discoverList = Array.isArray(a.discover) ? a.discover : [];
+    const useList = Array.isArray(a.use) ? a.use : [];
+    for (const s of [...discoverList, ...useList]) {
       if (!skillNames.has(s)) err(`registry/agents.json: agent '${a.name}' references unknown skill '${s}'`);
     }
-    const discover = new Set(a.discover);
-    for (const s of a.use) {
+    const discover = new Set(discoverList);
+    for (const s of useList) {
       if (!discover.has(s)) err(`registry/agents.json: agent '${a.name}' lists '${s}' in use but not in discover`);
     }
   }
@@ -202,14 +245,14 @@ if (data.workflows) {
   const workflows = await checkAgentWorkflowRegistry(data.workflows, 'workflow', 'workflows');
   workflowNames = new Set(workflows.map((w) => w.name));
   for (const w of workflows) {
-    if (!existsSync(path.join(ROOT, w.path))) err(`registry/workflows.json: workflow '${w.name}' path '${w.path}' does not exist`);
-    for (const s of w.skills) {
+    if (typeof w.path === 'string' && !existsSync(path.join(ROOT, w.path))) err(`registry/workflows.json: workflow '${w.name}' path '${w.path}' does not exist`);
+    for (const s of Array.isArray(w.skills) ? w.skills : []) {
       if (!skillNames.has(s)) err(`registry/workflows.json: workflow '${w.name}' references unknown skill '${s}'`);
     }
   }
 }
 for (const [doc, listKey] of [[data.agents, 'agents'], [data.workflows, 'workflows']]) {
-  if (!doc) continue;
+  if (!doc || !Array.isArray(doc[listKey])) continue;
   for (const x of doc[listKey]) {
     for (const a of x.references?.agents || []) {
       if (!agentNames.has(a)) err(`registry/${listKey}.json: '${x.name}' references unknown agent '${a}'`);
@@ -229,8 +272,9 @@ if (generated.size > 1) {
 }
 
 // --- verification coverage + audit cross-check ---
-if (skillsDoc && data['verification-status']) {
-  const vs = data['verification-status'].statuses;
+const verificationStatuses = data['verification-status']?.statuses;
+if (skillsValid && verificationStatuses && typeof verificationStatuses === 'object' && !Array.isArray(verificationStatuses)) {
+  const vs = verificationStatuses;
   for (const n of skillNames) {
     if (!vs[n]) err(`sources/verification-status.json: no entry for skill '${n}'`);
   }
@@ -263,9 +307,28 @@ if (skillsDoc && data['verification-status']) {
       if (!expected) { warn(`audit table: unmapped status '${auditStatus}' for '${name}'`); continue; }
       const entry = vs[name];
       if (!entry) continue; // already reported above
+      const override = AUDIT_OVERRIDES[name];
+      if (override) {
+        // A dated, reasoned post-audit re-label (see
+        // AUDIT_OVERRIDES): the override replaces the audit
+        // table's expectation for this skill only. A stale
+        // override — one the sidecar no longer matches — is an
+        // error, not a silent pass.
+        if (entry.status !== override.status) {
+          err(`sources/verification-status.json: '${name}' status is '${entry.status}' but the post-audit override (${override.date}) says '${override.status}' — the override is stale or the sidecar disagrees`);
+        } else if (entry.status !== expected) {
+          warn(`audit cross-check: '${name}' status '${entry.status}' accepted per post-audit override (${override.date}: ${override.reason})`);
+        }
+        continue;
+      }
       if (entry.status !== expected) {
         err(`sources/verification-status.json: '${name}' status is '${entry.status}' but the Phase 3 audit says '${auditStatus}'`);
       }
+    }
+    // An override for a skill the audit table does not list is
+    // stale (or mistyped) — flag it so it cannot linger.
+    for (const name of Object.keys(AUDIT_OVERRIDES)) {
+      if (!rows.has(name)) warn(`audit cross-check: override for '${name}' matches no Phase 3 audit table row (stale override?)`);
     }
   }
 }

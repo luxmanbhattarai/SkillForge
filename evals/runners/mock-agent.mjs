@@ -147,7 +147,9 @@ export class MockAgent {
       if (taskTokens.includes(s.category)) score += 1;
       if (score > 0) scored.push({ name: s.name, score });
     }
-    scored.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+    // Code-point tie-break (A2-07): localeCompare depends on the
+    // runtime's ICU default locale; eval ranking must not.
+    scored.sort((a, b) => b.score - a.score || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
     return scored;
   }
 
@@ -170,8 +172,18 @@ export class MockAgent {
     if (this.skillText.has(name)) return this.skillText.get(name);
     const skill = this.byName.get(name);
     if (!skill) return '';
-    const text = await readFile(path.join(ROOT, skill.path, 'SKILL.md'), 'utf8')
-      .catch(() => '');
+    // A5-04: the registry path is trusted only as far as the
+    // skills directory. A tampered registry entry pointing
+    // outside it (e.g. '../../etc') must not make the mock agent
+    // read an arbitrary file into an eval report — treat it as
+    // unloadable, like a missing skill.
+    const skillsDir = path.join(ROOT, 'skills');
+    const skillFile = path.resolve(ROOT, skill.path || '', 'SKILL.md');
+    if (!skillFile.startsWith(skillsDir + path.sep)) {
+      this.skillText.set(name, '');
+      return '';
+    }
+    const text = await readFile(skillFile, 'utf8').catch(() => '');
     this.skillText.set(name, text);
     return text;
   }

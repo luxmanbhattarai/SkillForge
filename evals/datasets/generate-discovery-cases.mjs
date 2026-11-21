@@ -24,9 +24,22 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '.
 
 const registry = JSON.parse(await readFile(path.join(ROOT, 'registry', 'skills.json'), 'utf8'));
 
+// A2-06: the `generated` date used to be the wall-clock date, so
+// every regeneration produced a spurious diff in a committed file
+// — contradicting the repo's determinism rule. It is now derived
+// from the registry's own `generated` date (itself the newest
+// last_verified on disk), with the same fallbacks the registry
+// generator uses. Regenerating without a registry change is a
+// zero-diff operation.
+const GENERATED = registry.generated
+  || registry.skills.map((s) => s.last_verified).filter(Boolean).sort().pop()
+  || '2026-11-20';
+
 const cases = registry.skills
   .slice()
-  .sort((a, b) => a.name.localeCompare(b.name))
+  // Code-point comparison (A2-07): localeCompare depends on the
+  // runtime's ICU default locale; generated output must not.
+  .sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
   .map((s) => ({
     id: `GEN-disc-${s.name}`,
     category: 'skill-discovery',
@@ -39,7 +52,7 @@ const cases = registry.skills
 
 await writeFile(
   path.join(ROOT, 'evals', 'datasets', 'discovery-generated.json'),
-  JSON.stringify({ generated: new Date().toISOString().slice(0, 10), count: cases.length, cases }, null, 2) + '\n',
+  JSON.stringify({ generated: GENERATED, count: cases.length, cases }, null, 2) + '\n',
   'utf8',
 );
 console.log(`Generated ${cases.length} discovery cases -> evals/datasets/discovery-generated.json`);

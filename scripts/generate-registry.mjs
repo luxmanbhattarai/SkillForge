@@ -28,6 +28,7 @@ import { readdir, readFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { atomicWriteFile } from './lib/atomic-write.mjs';
+import { findSkillFiles } from './lib/skill-files.mjs';
 import { splitFrontmatter, parseFrontmatter } from './lib/frontmatter.mjs';
 import { toPosixPath } from './lib/paths.mjs';
 import { extractSection, extractSkillTokens, extractTitle, extractDescription, classifyToken } from './lib/agents-workflows.mjs';
@@ -48,15 +49,12 @@ const CATEGORY_DESCRIPTIONS = JSON.parse(await readFile(path.join(ROOT, 'scripts
 // `unverified` below; `npm run check:registry` errors on the gap.
 const VERIFICATION = JSON.parse(await readFile(path.join(ROOT, 'sources/verification-status.json'), 'utf8')).statuses;
 
-async function findSkillFiles(dir) {
-  const out = [];
-  for (const e of await readdir(dir, { withFileTypes: true }).catch(() => [])) {
-    const full = path.join(dir, e.name);
-    if (e.isDirectory()) out.push(...await findSkillFiles(full));
-    else if (e.name === 'SKILL.md') out.push(full);
-  }
-  return out;
-}
+// Code-point comparison (A2-07): localeCompare depends on the
+// runtime's ICU default locale, so the same registry could sort
+// differently on two machines. Skill/category names are [a-z0-9-],
+// so the risk is latent — but generated output must not depend on
+// locale at all.
+const codePointCompare = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 
 const skills = [];
 for (const file of (await findSkillFiles(path.join(ROOT, 'skills'))).sort()) {
@@ -91,7 +89,7 @@ for (const file of (await findSkillFiles(path.join(ROOT, 'skills'))).sort()) {
   });
 }
 
-skills.sort((a, b) => a.name.localeCompare(b.name));
+skills.sort((a, b) => codePointCompare(a.name, b.name));
 const skillNames = new Set(skills.map((s) => s.name));
 
 // --- agents and workflows (M-10) ---
@@ -171,7 +169,7 @@ for (const s of skills) {
   const counts = cooccur.get(s.name) || new Map();
   s.related = [...counts.entries()]
     .filter(([, n]) => n >= 2)
-    .sort((x, y) => (y[1] - x[1]) || x[0].localeCompare(y[0]))
+    .sort((x, y) => (y[1] - x[1]) || codePointCompare(x[0], y[0]))
     .slice(0, 5)
     .map(([name]) => name);
 }
@@ -234,7 +232,7 @@ await write('skills.json', {
   total_skills: skills.length,
   skills,
 });
-await write('categories.json', { version: VERSION, categories: Object.values(categories).sort((a, b) => a.name.localeCompare(b.name)) });
+await write('categories.json', { version: VERSION, categories: Object.values(categories).sort((a, b) => codePointCompare(a.name, b.name)) });
 await write('sources.json', { version: VERSION, sources });
 await write('compatibility.json', { version: VERSION, compatibility });
 await write('versions.json', versions);
@@ -242,6 +240,6 @@ await write('agents.json', { version: VERSION, generated: GENERATED, total_agent
 await write('workflows.json', { version: VERSION, generated: GENERATED, total_workflows: workflows.length, workflows });
 
 console.log(`Registry generated: ${skills.length} skills, ${Object.keys(categories).length} categories, ${sources.length} sources, ${agents.length} agents, ${workflows.length} workflows.`);
-for (const c of Object.values(categories).sort((a, b) => a.name.localeCompare(b.name))) {
+for (const c of Object.values(categories).sort((a, b) => codePointCompare(a.name, b.name))) {
   console.log(`  ${c.name}: ${c.count}`);
 }

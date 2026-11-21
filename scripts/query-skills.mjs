@@ -91,6 +91,13 @@ function out(obj, asJson, human) {
   else human();
 }
 
+// Code-point comparison (A2-07): localeCompare depends on the
+// runtime's ICU default locale; query output must sort the same
+// on every machine.
+function codePointCompare(a, b) {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
 function needSkill(name) {
   const s = byName.get(name);
   if (!s) {
@@ -112,7 +119,7 @@ function cmdSearch(query, asJson) {
     const score = inName ? 0 : inCat ? 1 : 2;
     scored.push({ score, skill: s });
   }
-  scored.sort((a, b) => (a.score - b.score) || a.skill.name.localeCompare(b.skill.name));
+  scored.sort((a, b) => (a.score - b.score) || codePointCompare(a.skill.name, b.skill.name));
   const results = scored.map(({ skill: s }) => ({
     name: s.name,
     category: s.category,
@@ -188,6 +195,15 @@ function cmdRelated(name) {
   console.log(`Skills related to ${name} (shared agents/workflows):\n`);
   for (const r of s.related) {
     const other = byName.get(r);
+    // A2-20: a stale related reference (a skill removed from the
+    // registry while another still lists it) used to crash with a
+    // TypeError on other.category. Flag it and move on instead —
+    // validate-registry normally guards this, but a read-only
+    // query must not crash on an inconsistent registry.
+    if (!other) {
+      console.log(`  ${r} [unknown] (stale related reference — not in the registry)`);
+      continue;
+    }
     console.log(`  ${r} [${other.category}] (${other.status})`);
     console.log(`    ${other.description.slice(0, 140)}${other.description.length > 140 ? '…' : ''}`);
   }
@@ -216,7 +232,7 @@ function cmdStale(days, asJson) {
   const stale = registry.skills
     .filter((s) => !s.last_verified || s.last_verified < cutoffStr)
     .map((s) => ({ name: s.name, category: s.category, status: s.status, last_verified: s.last_verified }))
-    .sort((a, b) => (a.last_verified || '').localeCompare(b.last_verified || '') || a.name.localeCompare(b.name));
+    .sort((a, b) => codePointCompare(a.last_verified || '', b.last_verified || '') || codePointCompare(a.name, b.name));
   out({ days, cutoff: cutoffStr, count: stale.length, skills: stale }, asJson, () => {
     if (stale.length === 0) {
       console.log(`No skills are stale (all verified within the last ${days} days, cutoff ${cutoffStr}).`);
