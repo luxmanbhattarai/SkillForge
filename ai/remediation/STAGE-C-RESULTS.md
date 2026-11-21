@@ -149,7 +149,7 @@ Commands run from the repo root. Full battery after the last edit:
 | `npm run check:sources` | PASS (277 skills against 7 sources, 0 warnings) |
 | `npm run check:agents` | PASS (40 files: 24 agents, 16 workflows) |
 | `npm run check:registry` | PASS (277 skills, 24 agents, 16 workflows) |
-| `npm run check:security` | PASS: no findings (1,053 text files + 4 binary, 29 patterns) |
+| `npm run check:security` | PASS: no findings (1,054 text files + 4 binary, 29 patterns) |
 | `npm run check:upstream` | **Could not run — GitHub API rate limit exhausted** (HTTP 403, rate-limit remaining: 0; 6 unknown). Not a Stage C failure: no upstream files were touched, and Stage A re-verified all 6 upstream commits + licenses via the GitHub API earlier on 2026-11-20. Stage D should re-run it when the rate limit resets. |
 | `npm run score` | Mean 87/100 (228 original skills), 0 CRITICAL |
 | `npm run registry` (regenerate + diff) | Zero diff (deterministic) |
