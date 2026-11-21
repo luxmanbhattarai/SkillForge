@@ -7,8 +7,10 @@
 // against the library and the manifest, reports what differs, and
 // (interactively) asks or (non-interactively) refuses with
 // instructions. Every replacement is backed up first, installs are
-// staged and swapped in atomically, and re-running an install with
-// no changes is a no-op.
+// staged and swapped in with two renames (each rename is atomic on
+// the same filesystem, but the pair is NOT atomic — see
+// installer.mjs swapIn), and re-running an install with no changes
+// is a no-op.
 //
 // Commands:
 //   install    install skills (default: all), --category, --skill,
