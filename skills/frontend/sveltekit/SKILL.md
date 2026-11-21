@@ -14,7 +14,7 @@ metadata:
   maintainer: skills-library
   source: original
   last_verified: "2026-11-20"
-compatibility: Requires Node.js 22.17 or newer, Vite 8, and Svelte 5.57 or newer.
+compatibility: Requires Node.js 22.17 or newer, Vite 8, and Svelte 5.56.4 or newer.
 ---
 
 # SvelteKit
@@ -51,7 +51,7 @@ production deployment.
 
 ## Prerequisites
 
-- Node.js v22.17 or newer, Vite v8.0.12 or newer, Svelte v5.57.1
+- Node.js v22.17 or newer, Vite v8.0.12 or newer, Svelte v5.56.4
   or newer, and TypeScript v6 for typed projects (the minimums
   SvelteKit 3 requires). Do not assume a minor version.
 - A SvelteKit 3 project (current major line as of 2026-11-20,
@@ -113,7 +113,9 @@ production deployment.
   `plugins: [sveltekit({ adapter: adapter() })]`. Do not create a
   `svelte.config.js`.
 - Imports: `#lib` (declared in the `imports` field of
-  `package.json`) replaces `$lib`. `$app/env` replaces
+  `package.json`) replaces `$lib`. `#lib` imports require an
+  explicit file extension (`#lib/foo.ts` or `#lib/foo/index.ts`);
+  `#lib/foo` without one fails to resolve. `$app/env` replaces
   `$app/environment`. `$app/forms`, `$app/navigation`, and
   `$app/paths` keep their names.
 - Routing: dynamic segments use `[param]` folders; optional
@@ -161,6 +163,18 @@ production deployment.
   `adapter-node` for a Node server, `adapter-static` for SSG,
   `adapter-vercel`, `adapter-netlify`, `adapter-cloudflare`, or
   `adapter-bun`. Only one adapter is active at a time.
+
+### Accessibility
+
+- Use semantic HTML and native elements (`<button>`, `<a>`,
+  `<dialog>`) over `<div>` elements with click handlers; custom
+  controls must be keyboard-operable with visible focus.
+- Manage focus on navigation: SvelteKit does not move focus
+  automatically, so move it to the new page heading (or an
+  `aria-live` region) after route changes. Announce dynamic
+  updates with `aria-live`.
+- Keep body-text contrast at WCAG 2.2 AA (4.5:1). Test with
+  keyboard only and a screen reader.
 
 ### Testing Strategy
 

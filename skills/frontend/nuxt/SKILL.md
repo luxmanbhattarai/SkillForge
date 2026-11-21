@@ -14,7 +14,7 @@ metadata:
   maintainer: skills-library
   source: original
   last_verified: "2026-11-20"
-compatibility: Requires Node.js 22.21, 24.11, or 26 or newer and a Nuxt 4 project.
+compatibility: Requires Node.js ^22.22.3, ^24.15.0, or >=26.0.0 and a Nuxt 4 project.
 ---
 
 # Nuxt
@@ -49,8 +49,9 @@ from scaffolding with `npm create nuxt` to a production deployment.
 
 ## Prerequisites
 
-- Node.js v22.21+, v24.11+, or v26+ (the Nuxt CLI v4 requirement).
-  Do not assume a minor version.
+- Node.js ^22.22.3, ^24.15.0, or >=26.0.0 (the `nuxt` package
+  engines range; the Nuxt CLI v4 floor of v22.21/v24.11 is lower, so
+  do not rely on it). Do not assume a minor version.
 - A Nuxt 4 project (current major line as of 2026-11-20; latest
   release 4.6.4, a security release from 2026-11-02 — upgrade
   promptly if the project is behind it). Nuxt 4 runs on Vite 8 and
@@ -129,8 +130,9 @@ from scaffolding with `npm create nuxt` to a production deployment.
   (introduced in Nuxt 4.6; `defineEventHandler` is an alias).
   Handlers may return JSON, a `Promise`, or a `Response`. Suffix
   file names with the method (`.get.ts`, `.post.ts`) to restrict
-  it. Dynamic parameters use `[name].ts` and are read via
-  `event.context.params`. Shared server helpers live in
+  it. Dynamic parameters use `[name].ts` and are read with
+  `getRouterParam` (or `getRouterParams` for all of them) imported
+  from `nuxt/server`. Shared server helpers live in
   `server/utils/` and are auto-imported; import from anywhere in
   `server/` with the `#server` alias. `server/middleware/` runs
   on every request before routes.
@@ -155,13 +157,19 @@ from scaffolding with `npm create nuxt` to a production deployment.
   build-time configuration.
 - SEO: `useHead` for titles and meta, `useSeoMeta` /
   `useServerSeoMeta` for Open Graph and Twitter cards.
-- Accessibility: Nuxt 4.4+ ships `useAnnouncer` and the
-  `<NuxtAnnouncer>` component for screen-reader announcements of
-  dynamic changes (form submissions, search results) that do not
-  trigger navigation.
 - Types: Nuxt generates types for auto-imports, routes, and
   runtime config. Run the typecheck (`nuxt typecheck` or the
   project's typecheck script) in CI.
+
+### Accessibility
+
+- Nuxt 4.4+ ships `useAnnouncer` and the `<NuxtAnnouncer>`
+  component for screen-reader announcements of dynamic changes
+  (form submissions, search results) that do not trigger
+  navigation.
+- Use semantic HTML in templates, manage focus on route changes,
+  and keep body-text contrast at WCAG 2.2 AA (4.5:1). Test with
+  keyboard only and a screen reader.
 
 ### Testing Strategy
 
@@ -315,7 +323,7 @@ import { defineHandler, getRouterParam, createError } from 'nuxt/server';
 export default defineHandler((event) => {
   const id = getRouterParam(event, 'id');
   if (!id || !/^[a-z0-9-]+$/i.test(id)) {
-    throw createError({ statusCode: 400, statusMessage: 'Invalid article id.' });
+    throw createError({ status: 400, statusText: 'Invalid article id.' });
   }
   // Load the article from the database here; 404 when missing.
   return { id, title: 'Example article', body: 'Example body.' };

@@ -137,6 +137,16 @@ serverless and edge functions where a headless browser cannot.
   `resvg` or `sharp` for the PNG step, or serve the SVG where the
   consumer accepts it.
 
+### Accessibility
+
+- Satori output is an image: the accessible name lives where the
+  image is published, not in the file. The page or post that
+  embeds the rendered PNG must supply `alt` text (or
+  `og:image:alt` for social cards); see `platform-social-images`.
+- Keep text in the card legible: body-text contrast at WCAG 2.2 AA
+  (4.5:1) at the rendered size, and do not rely on color alone to
+  convey meaning.
+
 ### Testing Strategy
 
 - Snapshot-test the SVG output for representative designs with pinned

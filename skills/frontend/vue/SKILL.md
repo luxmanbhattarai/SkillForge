@@ -154,6 +154,18 @@ shared state. It covers the full loop from scaffolding with
   into the client bundle at build time; they must never hold
   secrets. Server-side values stay on the server.
 
+### Accessibility
+
+- Use semantic HTML and native elements (`<button>`, `<a>`,
+  `<dialog>`) over `<div>` elements with click handlers; custom
+  controls must be keyboard-operable with visible focus, and
+  modals must trap focus and return it on close.
+- Bind `aria-*` attributes for state that sighted users see
+  (expanded, selected, invalid) and announce dynamic updates
+  with `aria-live`.
+- Keep body-text contrast at WCAG 2.2 AA (4.5:1). Test with
+  keyboard only and a screen reader.
+
 ### Testing Strategy
 
 - Test components with Vue Test Utils and Vitest: mount with

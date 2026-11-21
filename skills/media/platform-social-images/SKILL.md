@@ -67,6 +67,7 @@ and when a platform needs its own export.
 - [Open Graph protocol](https://ogp.me/) — the tag specification all of these platforms read. It defines the tags, not the dimensions.
 - [Meta Sharing Debugger](https://developers.facebook.com/tools/debug/) — Meta's tool for checking what its crawler reads and forcing a re-scrape.
 - [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/) — LinkedIn's tool for checking a link preview and requesting a re-scrape.
+- [Discord Link Previews](https://docs.discord.com/developers/link-previews) — Discord's official documentation of the tags it reads, its layouts, and its limits, including the Embed Debugger for checking how Discord reads a URL.
 - [X Developer Platform](https://developer.x.com/) — official X developer documentation. X's Cards documentation pages now redirect to the general docs overview and its standalone Card Validator has been retired, so the X figures below come from X's last published card specification (Summary Card with Large Image, as archived January 2026); re-check X's current documentation before relying on them for an edge case.
 - Compatibility: Meta's sharing documentation page could not be
   fetched directly during verification (its server returned 403);
@@ -75,9 +76,9 @@ and when a platform needs its own export.
   corroborated by multiple secondary sources in November 2026.
   WhatsApp's figures come from Meta's WhatsApp Business
   link-previews documentation (updated November 5, 2025) as
-  reported by multiple secondary sources. Discord's figures come
-  from Discord's developer documentation (Link Previews page,
-  November 2026) as reported by secondary sources. Slack publishes
+  reported by multiple secondary sources. Discord's figures were
+  verified directly against Discord's developer documentation
+  (Link Previews page, updated 2026-11-19). Slack publishes
   no image size or file-size rules; Telegram and iMessage publish
   no link-preview image spec.
 

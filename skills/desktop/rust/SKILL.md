@@ -193,6 +193,13 @@ errors explicitly, and ships with its dependency tree audited.
   not declare one by accident by using a newer feature without
   checking.
 
+### Accessibility
+
+- Not applicable to this skill: Rust is a systems language with no
+  user interface of its own. Accessibility is a property of the
+  application built with it — a web UI, a desktop app, or a TUI —
+  and is covered by the skill for that layer.
+
 ### Testing Strategy
 
 - Test every public function with non-trivial logic (unit

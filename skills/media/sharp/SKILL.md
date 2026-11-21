@@ -128,6 +128,16 @@ post-processing.
   files in servers; a single input stream can feed multiple output
   pipelines with `.clone()`.
 
+### Accessibility
+
+- Sharp produces pixels, not accessible documents: the accessible
+  name must live where the image is published (`alt` text, or
+  `og:image:alt` for social cards), not in the file. EXIF/IPTC
+  metadata is not a substitute for alt text.
+- Do not burn essential text into images that screen readers
+  cannot reach; when text must be in the image, keep contrast at
+  WCAG 2.2 AA and publish the same text alongside the image.
+
 ### Testing Strategy
 
 - Assert on the output file, not the pipeline: dimensions, format,

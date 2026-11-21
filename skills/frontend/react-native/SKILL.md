@@ -151,6 +151,17 @@ the App Store and Google Play.
   `react-native-keychain`); configuration that is not secret lives in
   build config.
 
+### Accessibility
+
+- Every interactive element gets an accessible name and role:
+  `accessibilityLabel`, `accessibilityRole`, `accessibilityHint`,
+  and `accessibilityState`; group related elements with
+  `accessible` so screen readers announce them as one item.
+- Respect system settings: honor Dynamic Type / font scaling and
+  reduced motion; never disable font scaling globally.
+- Touch targets are at least 44x44 points. Test with VoiceOver on
+  iOS and TalkBack on Android, not only visually.
+
 ### Testing Strategy
 
 - Test components with React Native Testing Library and Jest:

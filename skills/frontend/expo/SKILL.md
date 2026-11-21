@@ -14,7 +14,7 @@ metadata:
   maintainer: skills-library
   source: original
   last_verified: "2026-11-20"
-compatibility: Requires Node.js 22 LTS and an Expo account for EAS cloud builds, updates, and submissions.
+compatibility: Requires Node.js 22.13+, 24.3+, or 26+ (odd-numbered releases unsupported) and an Expo account for EAS cloud builds, updates, and submissions.
 ---
 
 # Expo
@@ -24,7 +24,7 @@ compatibility: Requires Node.js 22 LTS and an Expo account for EAS cloud builds,
 This skill builds universal React Native apps with Expo: one TypeScript
 codebase for iOS, Android, and web, file-based routing with Expo Router,
 native capabilities through the Expo SDK, and cloud delivery through
-Expo Application Services (EAS) — builds, store submissions, and
+Expo Services (EAS) — builds, store submissions, and
 over-the-air updates. It covers the managed workflow from first run to
 a store release.
 
@@ -53,8 +53,9 @@ a store release.
 
 ## Prerequisites
 
-- Node.js 22 LTS or newer. Check the SDK changelog for the exact
-  supported Node.js range when a build fails on tooling.
+- Node.js 22.13 or newer on the 22 line, 24.3 or newer on the 24
+  line, or Node.js 26 and later (the SDK 58 tooling requirement;
+  odd-numbered releases such as 23 and 25 are not supported).
 - An Expo project on SDK 58 (current stable as of 2026-11-20,
   released 2026-10-15; built for iOS 27 and ships React Native
   0.88). SDK 57 (React Native 0.86) is the previous release. New
@@ -160,6 +161,19 @@ a store release.
   `single` (SPA), `static` (prerendered pages), or `server`
   (per-request rendering with API routes) — and deploy the matching
   artifacts.
+
+### Accessibility
+
+- Every interactive element gets an accessible name and role:
+  `accessibilityLabel`, `accessibilityRole`, and
+  `accessibilityState` on pressables. Images that convey meaning
+  get `accessibilityLabel`; decorative images get
+  `accessible={false}` so screen readers skip them.
+- Respect system settings: honor reduced motion and do not disable
+  font scaling (`allowFontScaling={false}`) except where the
+  layout genuinely breaks.
+- Touch targets are at least 44x44 points. Test with VoiceOver on
+  iOS and TalkBack on Android, not only visually.
 
 ### Testing Strategy
 

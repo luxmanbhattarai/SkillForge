@@ -190,6 +190,16 @@ APIs it was explicitly granted.
 - Pin the Rust toolchain for the team with a `rust-toolchain.toml`
   (see `rust`) so local builds and CI use the same compiler.
 
+### Accessibility
+
+- The webview UI follows web accessibility (see `accessibility`):
+  semantic HTML, keyboard-operable controls, visible focus, and
+  WCAG 2.2 AA contrast. Native menus and dialogs must be
+  keyboard-operable.
+- Respect OS settings the app renders against: high-contrast mode
+  and reduced motion. Test with the platform screen reader
+  (NVDA on Windows, VoiceOver on macOS).
+
 ### Testing Strategy
 
 - Unit-test commands in Rust (`cargo test`), including malformed
