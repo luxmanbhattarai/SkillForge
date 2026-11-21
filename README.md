@@ -190,7 +190,7 @@ npm run check:links         # internal link check (add --online for external URL
 npm run check:security      # credential / prompt-injection scan
 npm run check:upstream      # upstream drift vs pinned commits
 npm run score               # quality score for every original skill (0–100)
-npm run test                # unit tests (250 tests, node:test, zero dependencies)
+npm run test                # unit tests (325 tests, node:test, zero dependencies)
 npm run evals               # behavioral evals: 463 cases, deterministic mock agent
 npm run registry            # regenerate registry/ from disk (never hand-edit it)
 npm run report              # coverage + audit report

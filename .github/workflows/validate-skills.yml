@@ -65,7 +65,15 @@ jobs:
         run: npm run score
 
       - name: Run regression tests
-        run: npm test
+        # Tee the spec output so the next step can verify the recorded
+        # runner counts in ai/PROJECT-STATUS.json. pipefail keeps a
+        # failing suite failing this step (tee alone would mask it).
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee /tmp/test-output.txt
+
+      - name: Verify test counts match canonical status
+        run: node scripts/check-status.mjs --verify-tests /tmp/test-output.txt
 
   registry:
     # Registry validation: the committed registry must match what the

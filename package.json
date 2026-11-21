@@ -37,6 +37,7 @@
     "check:registry": "node scripts/validate-registry.mjs",
     "check:security": "node scripts/security-scan.mjs",
     "check:sources": "node scripts/check-sources.mjs",
+    "check:status": "node scripts/check-status.mjs",
     "check:upstream": "node scripts/check-upstream.mjs",
     "evals": "node evals/runners/run-evals.mjs",
     "evals:generate": "node evals/datasets/generate-discovery-cases.mjs",

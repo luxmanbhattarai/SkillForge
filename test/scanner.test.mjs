@@ -8,9 +8,10 @@
 // paths are suppressed (findings S-11 and A-01).
 //
 // Fixture strings here are fake by construction (example.com URLs,
-// placeholder config snippets). The scanner excepts this file's
-// literals (see scripts/security-scan.mjs SKIP_FILES) for the same
-// reason it excepts test/security.test.mjs: the fixtures ARE the
+// placeholder config snippets). The scanner's allowlist covers this
+// file's fixture lines (line-level `security-scan:ignore` comments;
+// see scripts/security-scan.mjs IGNORE_ALLOWLIST) for the same
+// reason it covers test/security.test.mjs: the fixtures ARE the
 // patterns under test.
 
 import test from 'node:test';

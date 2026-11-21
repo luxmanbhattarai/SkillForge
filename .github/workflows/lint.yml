@@ -43,6 +43,12 @@ jobs:
       - name: Check links (offline)
         run: npm run check:links
 
+      - name: Check canonical status (docs/counts drift guard)
+        # Verifies ai/PROJECT-STATUS.json against the registry,
+        # verification data, eval cases, and pattern counts, and
+        # verifies the living docs carry the canonical numbers.
+        run: npm run check:status
+
       - name: Check trailing whitespace in Markdown
         # Upstream skills are imported verbatim and never edited, so
         # they are excluded from this check.

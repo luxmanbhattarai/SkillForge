@@ -4,8 +4,9 @@
 // Every fixture string here is fake by construction: repeated
 // characters, AWS's documented example key ID, the jwt.io example
 // token, or obvious placeholder words. No real credential appears in
-// this file. The scanner excepts this file's fixtures (see
-// scripts/security-scan.mjs EXCEPTIONS).
+// this file. The scanner's allowlist covers this file's fixture lines
+// (line-level `security-scan:ignore` comments; see
+// scripts/security-scan.mjs IGNORE_ALLOWLIST).
 
 import test from 'node:test';
 import assert from 'node:assert/strict';

@@ -1054,3 +1054,31 @@ RELEASE-ACCEPTANCE.md. No silent acceptance.
   `npm run query -- status` (254/17/6/0), `node scripts/security-scan.mjs`
   (PASS, 1079 text + 4 binary files, 29 patterns), Semgrep 1.186.0 local
   (0 findings, 68 rules — Stage D + b619388 verification).
+
+## Resolution status (Phase C, 2026-11-21)
+
+This appendix records what happened to each finding after Phase A. It is a
+dated addendum — the finding entries above (§3–§6) are left as written.
+
+**Tally: 48 fixed, 2 partially addressed, 1 documented residual, 9 open.**
+Prior items: S-08/S-09 mitigated-open upstream, S-11 mitigated, S-14 fixed.
+
+| Group | Fixed | Partial / residual | Open |
+|---|---|---|---|
+| High (4) | A1-01, A1-02 | A4-02 (comment fixed; protection is an owner decision) | A4-01 (pending draft PR #2 CI) |
+| Medium (14) | A1-03, A1-04, A1-05, A1-06, A2-01, A2-02, A2-03, A2-04/A5-01, A3-01, A3-02, A4-03, A5-02 | — | A4-04 (resolves on re-merge), A4-05 (owner action on main's PRs) |
+| Low (42) | 34 (all except the rows at right) | A3-03 (standard narrowed; library-wide pass recorded as follow-up), A4-06 (documented residual: unhashed pip install + runtime ruleset) | A3-04 (re-check after 2026-12-01), A4-07 (post-re-merge Dependabot), A4-09, A4-10 (owner repo settings), A4-12 (resolves on re-merge), A5-11 (test written; proof needs Windows CI) |
+
+**Fix commits (all on this branch):** `59736dd` (C4 workflows),
+`f790ecd` (C1 docs/status), `c63673b` (C3 scanner/scorer), `33e43b9` (C2
+installer/registry/evals). Phase F (this commit) adds `ai/PROJECT-STATUS.json`
+(canonical status) and `scripts/check-status.mjs` (drift guard, wired into
+CI). The 5 CodeQL alerts (A4-03) were triaged (record in
+`ai/audits/SECURITY-STATUS.md`) and dismissed via API 2026-11-21 — 0 open.
+
+**Verified counts after Phase C (HEAD 33e43b9):** 325 tests (324 pass, 0 fail,
+1 Windows-only skip); evals 463/463, 0 regressions; validate PASS (277
+skills); registry PASS (1 override-notice warning); security scan PASS (1,119
+text + 4 binary files, 4 hashes verified); Semgrep 1.186.0 local: 0 findings
+(68 rules, 42 files); registry regeneration zero-diff. Online link check and
+fresh CI results are recorded in `ai/audits/CI-VALIDATION-REPORT.md`.
