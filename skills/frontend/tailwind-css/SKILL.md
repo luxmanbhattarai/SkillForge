@@ -46,8 +46,7 @@ utility-heavy markup maintainable.
 
 ## Prerequisites
 
-- Node.js 24 LTS or 26 LTS installed (26 is the newest LTS line as
-  of 2026-11-20; 24 and 22 remain in LTS).
+- Node.js 24 LTS installed (current LTS line as of 2026-11-20).
 - A Tailwind CSS v4 project (current major line as of 2026-11-20); do not
   assume a minor version. Tailwind v4 is CSS-first: configuration lives
   in CSS with `@theme`, not in a JavaScript config file.

@@ -13,12 +13,25 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const run = promisify(execFile);
 
-// Planned original skill tree (category -> skill names), externalized
-// to scripts/lib/target-tree.json (finding L-06): the v1 plan (177
-// skills) plus the 51 skills added in Phase 4, 228 in total. The
-// report shows coverage against it honestly; a skill added without
-// a tree entry shows up as missing coverage, not as a silent pass.
-const TARGET_TREE = JSON.parse(await readFile(path.join(ROOT, 'scripts', 'lib', 'target-tree.json'), 'utf8'));
+// Planned original skill tree (category -> skill names). This is the v1 target;
+// the report shows coverage against it honestly.
+const TARGET_TREE = {
+  core: ['software-architecture', 'clean-code', 'design-patterns', 'debugging', 'code-review', 'refactoring', 'tdd', 'security', 'performance', 'technical-decision-records', 'engineering-standards'],
+  frontend: ['html', 'semantic-html', 'css', 'modern-css', 'responsive-design', 'javascript', 'typescript', 'react', 'nextjs', 'astro', 'hugo', 'tailwind-css', 'shadcn-ui', 'accessibility', 'ui-design', 'frontend-performance'],
+  backend: ['nodejs', 'api-design', 'rest-api', 'graphql', 'trpc', 'hono', 'background-jobs', 'queues', 'caching', 'rate-limiting', 'sdk-development', 'package-development', 'mcp-development'],
+  database: ['database-design', 'postgresql', 'mysql', 'sqlite', 'mongodb', 'prisma', 'drizzle', 'sql-optimization', 'indexing', 'migrations', 'transactions', 'connection-pooling', 'backup-recovery', 'database-security'],
+  auth: ['better-auth', 'oauth', 'authentication', 'authorization', 'jwt', 'session-management', 'rbac', 'multi-tenancy', 'mfa', 'auth-security'],
+  architecture: ['monorepo', 'pnpm-workspaces', 'turborepo', 'modular-monolith', 'microservices', 'domain-driven-design', 'package-boundaries', 'dependency-management', 'system-design'],
+  infrastructure: ['cloudflare', 'cloudflare-workers', 'cloudflare-d1', 'cloudflare-r2', 'cloudflare-kv', 'cloudflare-queues', 'durable-objects', 'vercel', 'docker', 'github-actions', 'ci-cd', 'deployment', 'observability'],
+  testing: ['unit-testing', 'integration-testing', 'e2e-testing', 'vitest', 'playwright', 'accessibility-testing', 'performance-testing', 'regression-testing'],
+  security: ['owasp', 'xss-prevention', 'csrf-protection', 'sql-injection-prevention', 'secrets-management', 'dependency-security', 'secure-headers', 'security-auditing'],
+  seo: ['seo-audit', 'on-page-seo', 'technical-seo', 'off-page-seo', 'keyword-research', 'keyword-clustering', 'search-intent', 'serp-analysis', 'competitor-analysis', 'content-gap-analysis', 'internal-linking', 'schema-jsonld', 'structured-data', 'geo-optimization', 'aeo-optimization', 'llm-seo', 'llms-txt', 'sitemap-robots', 'canonical-management', 'hreflang', 'international-seo', 'programmatic-seo', 'local-seo', 'image-seo', 'seo-migration', 'eeat', 'search-console'],
+  performance: ['core-web-vitals', 'lighthouse', 'pagespeed-insights', 'image-optimization', 'javascript-optimization', 'caching-strategy', 'bundle-optimization', 'web-performance-audit'],
+  content: ['content-strategy', 'keyword-to-content', 'article-writing', 'blog-writing', 'seo-content-writing', 'content-brief', 'content-research', 'technical-writing', 'copywriting', 'fact-checking', 'human-editing', 'eeat-writing', 'content-refresh', 'content-localization', 'content-repurposing', 'faq-generation', 'editorial-review'],
+  media: ['ai-image-generation', 'image-prompt-engineering', 'blog-featured-images', 'og-image-generation', 'twitter-card-images', 'social-preview', 'youtube-thumbnails', 'infographic-generation', 'image-compression', 'image-format-conversion', 'image-accessibility', 'brand-visual-consistency'],
+  metadata: ['seo-metadata', 'open-graph', 'twitter-cards', 'dynamic-metadata', 'social-sharing', 'metadata-validation'],
+  documentation: ['technical-documentation', 'api-documentation', 'changelog-management', 'readme-engineering', 'developer-experience'],
+};
 
 const reg = JSON.parse(await readFile(path.join(ROOT, 'registry', 'skills.json'), 'utf8'));
 const existing = new Map(reg.skills.map((s) => [s.name, s]));
@@ -50,13 +63,7 @@ try {
 }
 
 const report = {
-  // Inherit the registry's deterministic generation date (newest
-  // last_verified on disk) so the report is reproducible too. The
-  // fallbacks derive the same value from the registry skills, so no
-  // wall-clock read remains anywhere in this generator.
-  generated: reg.generated
-    || reg.skills.map((s) => s.last_verified).filter(Boolean).sort().pop()
-    || '2026-11-20',
+  generated: new Date().toISOString().slice(0, 10),
   registry_version: reg.version,
   totals: { skills: reg.skills.length, original, upstream, categories: reg.categories.length },
   by_source: bySource,

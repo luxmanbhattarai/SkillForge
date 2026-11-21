@@ -29,10 +29,6 @@ What this skill is for and what outcome it produces. 2-4 sentences.
 ## Prerequisites
 
 - What must exist or be known before following this skill (tools, accounts, project state).
-- Supported versions (required): the version range this skill was
-  verified against, or "current stable as of YYYY-MM-DD" with a link
-  to the official release notes. Never state a version you did not
-  verify.
 
 ## Official Documentation
 
@@ -52,23 +48,6 @@ capable agent can execute without guessing.
 Rules, conventions, and patterns the work must follow. Include version notes
 only for versions verified against official sources; otherwise write
 "current stable as of YYYY-MM-DD" and link to the official release notes.
-Use "must" only for checkable requirements; "should" for recommendations.
-
-### Architecture
-
-Architecture guidance for the work, where applicable. Reference sibling
-skills by name instead of repeating their content.
-
-### Testing Strategy
-
-How the work this skill produces is tested: what to test, with which
-tools, and what passing looks like.
-
-### Accessibility
-
-Accessibility requirements, where applicable (frontend, media,
-content, metadata skills). If the skill has no user-facing surface,
-say so in one sentence and explain why.
 
 ## Best Practices
 
@@ -92,15 +71,9 @@ say so in one sentence and explain why.
 
 Real, valid, minimal examples. No fake APIs, no invented package methods.
 Keep examples short; put long code in `examples/` or `references/`.
-Include at least one counter-example (the wrong way, labeled as such)
-next to the correct way where a common mistake exists.
 
 ```ts
 // Example: concise, runnable, secure by default.
-```
-
-```ts
-// Counter-example: do NOT do this — <why it is wrong>.
 ```
 
 ## Validation Checklist

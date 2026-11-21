@@ -16,9 +16,9 @@ optimization, images, review, and publish.
    or the user before writing.
 2. **Research keywords** (`keyword-research`, `serp-analysis`). Confirm
    the target queries and what the search results for them reward.
-3. **Research the topic** (`content-research`, `source-verification`).
-   Gather facts from the sources the skill describes. Verify claims;
-   note anything that cannot be verified.
+3. **Research the topic** (`content-research`). Gather facts from the
+   sources the skill describes. Verify claims; note anything that
+   cannot be verified.
 4. **Draft the article** (`article-writing`). Structure it with a
    direct answer first, then depth. Write for the reader, not the
    keyword count.
@@ -30,9 +30,9 @@ optimization, images, review, and publish.
    following `workflows/image-generation.md`. Add alt text.
 8. **Set metadata** (`open-graph`, `seo-metadata`). Confirm the social
    preview renders correctly.
-9. **Editorial review** (`editorial-review`, `editorial-workflow`,
-   `copy-editing` upstream). Check accuracy, clarity, and consistency.
-   Fix issues; do not publish around them.
+9. **Editorial review** (`editorial-review`, `copy-editing` upstream).
+   Check accuracy, clarity, and consistency. Fix issues; do not publish
+   around them.
 10. **Publish and verify.** Publish the article, then check the live
     page: rendering, links, structured data, and social preview.
 

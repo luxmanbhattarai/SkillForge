@@ -26,24 +26,22 @@ smallest safe change.
 | `secrets-management` | Secrets, tokens, or credentials are involved. |
 | `auth-security` | Auth flows, sessions, or access control. |
 | `csrf-protection` | Forms or state-changing requests. |
-| `secure-headers` | HTTP headers, CSP, or browser protections. |
-| `xss-prevention` | Rendering user-controlled content. |
-| `sql-injection-prevention` | Queries built from user input. |
+| `security-headers` | HTTP headers, CSP, or browser protections. |
+| `xss` | Rendering user-controlled content. |
+| `sql-injection` | Queries built from user input. |
 | `authentication` | Reviewing how auth is implemented. |
 | `better-auth` | Projects using Better Auth. |
 | `oauth` | OAuth/OIDC flows. |
 | `jwt` | Token-based auth review. |
 | `rbac` | Role and permission modeling. |
 | `mfa` | Multi-factor authentication requirements. |
-| `mcp-security` | MCP servers or tools need threat modeling. |
-| `passkeys` | The product uses passkey authentication. |
 
 ## Skills it should use
 
 Load `owasp` for every review, plus `secrets-management` when credentials
 are involved and `auth-security` when the task touches login, sessions, or
-permissions. Add the specific vulnerability skill (`xss-prevention`,
-`sql-injection-prevention`, `csrf-protection`) only when the code under review has
+permissions. Add the specific vulnerability skill (`xss`,
+`sql-injection`, `csrf-protection`) only when the code under review has
 that attack surface, and the auth-framework skill that matches the
 project (`better-auth` or `oauth`).
 

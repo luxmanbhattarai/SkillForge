@@ -61,10 +61,6 @@ delivering a correctly sized, correctly licensed file with alt text.
   generation guides and safety documentation.
 - [Unsplash](https://unsplash.com/) — a stock-photo alternative when a
   real photograph is the better choice.
-- Compatibility: image-model names, capabilities, and usage terms change
-  frequently. Do not name a specific model version from memory — check the
-  linked docs for the current model before promising a capability, and
-  record the exact tool and model version used with each delivered image.
 
 ## Required Workflow
 

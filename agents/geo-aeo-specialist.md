@@ -33,7 +33,6 @@ promising citations or rankings.
 | `content-research` | Researching questions and entities to answer. |
 | `technical-seo` | Crawlability and indexing foundations. |
 | `ai-seo` (upstream) | AI visibility workflows and checks. |
-| `entity-seo` | The work involves entities and the knowledge graph. |
 
 ## Skills it should use
 

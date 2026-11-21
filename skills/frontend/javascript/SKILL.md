@@ -44,9 +44,8 @@ written under it behaves predictably in current browsers and in Node.js.
 
 ## Prerequisites
 
-- A current browser or Node.js 24 LTS or 26 LTS to run the code;
-  Node.js 26 is the newest LTS line as of 2026-11-20, and 24 and 22
-  remain in LTS.
+- A current browser or Node.js 24 LTS to run the code; Node.js 24 is the
+  current LTS line as of 2026-11-20.
 - The HTML the script operates on (see `html`); scripts should enhance
   working markup, not replace it.
 - A module-aware setup (a bundler, or `<script type="module">` in the

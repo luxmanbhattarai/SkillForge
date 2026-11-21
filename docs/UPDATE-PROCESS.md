@@ -9,10 +9,6 @@ Upstream skills are imported verbatim and never edited. To update one:
 
 1. **Check upstream.** Look at the source repository for new commits
    since the imported commit recorded in the vendor's `ATTRIBUTION.md`.
-   `npm run check:upstream` does this mechanically for all six
-   vendors (it also runs weekly in CI) and reports drift; it exits 0
-   even when upstreams moved, because drift is informational until a
-   maintainer decides to re-import.
 2. **Re-import by commit.** Copy the skill from the new upstream commit
    into `skills/upstream/<vendor>/<skill-name>/`, replacing the old
    files entirely. Do not merge or hand-edit.
@@ -40,10 +36,7 @@ documentation, not merely when the date is old — but the date is how
 staleness is found.
 
 1. **Find stale skills.** Run `npm run check:sources`, which reports
-   provenance and verification-date freshness, or
-   `npm run query -- stale --days 180`, which lists skills not
-   re-verified in the last 180 days and exits 1 when any are stale
-   (scheduled CI runs this weekly).
+   provenance and verification-date freshness.
 2. **Check official docs.** For each claim that matters — versions,
    APIs, flags, behavior — verify against the official documentation
    linked in the skill.

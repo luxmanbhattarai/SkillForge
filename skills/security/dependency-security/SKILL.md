@@ -62,11 +62,6 @@ takes.
 - [Snyk](https://snyk.io/) — dependency vulnerability database and
   scanning.
 - [Socket](https://socket.dev/) — supply-chain analysis for packages.
-- [OWASP Top 10](https://owasp.org/www-project-top-ten/) — in the
-  current 2025 edition, dependency risk sits in A03 Software Supply
-  Chain Failures, which expands the 2021 "Vulnerable and Outdated
-  Components" category to cover compromised packages, build systems,
-  and distribution infrastructure, not just known vulnerabilities.
 
 ## Required Workflow
 

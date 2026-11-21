@@ -62,10 +62,6 @@ planning, keyword prioritization, and `search-intent` classification.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) —
   the policies that govern what can appear in results.
 
-Guidance current as of 2026-11-20. Third-party difficulty scores are
-estimates from private indexes, not Google data; judge winnability
-from the live SERP evidence.
-
 ## Required Workflow
 
 1. Record the query, location, language, device, and date; SERPs are

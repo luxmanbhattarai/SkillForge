@@ -42,21 +42,7 @@ running commands across packages.
 
 - pnpm installed and the version pinned (`packageManager` in the root `package.json`).
 - The monorepo layout decided: which directories hold apps and packages.
-- Supported versions (verified 2026-11-20): pnpm 12.x is current
-  (stable August 2026; a Rust rewrite that keeps pnpm 11's commands,
-  flags, settings, and lockfile format, so upgrading needs no
-  migration). pnpm 11 is supported until 2027-04-30; pnpm 10 and
-  earlier are unsupported. pnpm 11 requires Node.js 22 or later.
-  Version differences to know: in pnpm 12, `--frozen-lockfile false`
-  is no longer accepted (use `--no-frozen-lockfile`); an unrecognized
-  key in `pnpm-workspace.yaml` is reported instead of silently
-  ignored; git dependencies resolve through the host's canonical HTTPS
-  URL, never SSH; and CI installs default to frozen-lockfile mode when
-  a non-empty lockfile exists (pass `--frozen-lockfile` explicitly
-  anyway so the intent is visible).
-- Node.js 26 LTS is the current line (Active LTS since 2026-10-28,
-  supported to 2029-04-30); Node.js 24 is in maintenance until
-  2028-04-30. Node.js 20 and 25 are end-of-life.
+- Node.js 24 LTS is the current line.
 
 ## Official Documentation
 
@@ -93,7 +79,7 @@ running commands across packages.
 
 - Use `--filter` with dependency selectors (`...<name>` for a package and its dependencies, `<name>...` for dependents) when running targeted tasks.
 - Keep the catalog small: only dependencies used by more than one package belong there.
-- Add a `preinstall` guard (for example the `only-allow` package) so contributors cannot accidentally install with npm or Yarn. Corepack is an alternative, but it is bundled with Node.js only through version 24; on Node.js 25 and later install it explicitly (`npm install -g corepack`) or install pnpm directly.
+- Add a `preinstall` guard or use Corepack so contributors cannot accidentally install with npm or Yarn.
 - Run `pnpm install --frozen-lockfile` in CI so a drifted lockfile fails loudly instead of silently changing.
 - Use `pnpm why <dep>` and `pnpm list` to diagnose duplicate or unexpected versions.
 - Document the common commands (install, add a dependency, run a package script) in the repository README.
@@ -101,7 +87,6 @@ running commands across packages.
 ## Security Considerations
 
 - pnpm's strict default layout (no phantom dependencies) is a security feature: packages can only import what they declare. Do not weaken it with hoisting settings to paper over missing declarations.
-- pnpm 11 and later are safer by default: newly published releases are held for 24 hours (`minimumReleaseAge: 1440`), exotic subdependencies are blocked, and dependency build scripts need explicit approval (`allowBuilds`, `pnpm approve-builds`). Do not disable these defaults.
 - Audit dependencies centrally with `pnpm audit`; a vulnerability in a shared dependency affects every package.
 - Only install from the configured registry; do not add untrusted registries to `.npmrc`.
 - Lockfile integrity: `--frozen-lockfile` in CI prevents a tampered or drifted lockfile from changing what gets installed.
@@ -132,7 +117,7 @@ packages:
   - "packages/*"
 
 catalog:
-  typescript: "^7"
+  typescript: "^5"
   react: "^19"
 ```
 
@@ -156,7 +141,7 @@ Common filtered commands:
 ```bash
 pnpm --filter @repo/web add react
 pnpm --filter @repo/web... build
-pnpm --filter "./packages/*" test
+pnpm -r --filter "./packages/*" test
 pnpm install --frozen-lockfile
 ```
 

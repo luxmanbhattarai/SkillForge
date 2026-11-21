@@ -46,57 +46,13 @@ It does **not** cover:
 
 ## What this repository does
 
-Security here is layered; no single check is the whole story. See
-`docs/SECURITY-SCANNING.md` for the scanner and
-`docs/THREAT-MODEL.md` for what is and is not defended against.
-
-- **Pattern scan** (`npm run check:security`, also in CI on every push,
-  pull request, and weekly): 29 patterns over every text file plus a
-  byte-level secret scan over binary files — secrets (keys, tokens,
-  JWTs, connection strings), prompt-injection markers, dangerous
-  commands (including multi-line curl-pipe), and code-vulnerability
-  shapes (SQLi, XSS, command injection, insecure deserialization,
-  weak crypto, disabled TLS). Findings are triaged, not auto-fixed:
-  intentional examples live in a documented exceptions list, and every
-  exception needs a reason.
-- **Shared pattern library** (`scripts/lib/security-patterns.mjs`): one
-  source of truth for the scanner, the quality scorer, and the eval
-  mock agent, covered by 22 unit tests (`test/security.test.mjs`).
-- **Behavioral evals** (`npm run evals`): refusal cases test that the
-  library's guidance leads an agent to refuse injection, exfiltration,
-  and destructive-command requests — and that legitimate security
-  questions are still answered.
-- **Supply-chain verification:** every upstream import records its
-  source repository, commit, and license in `sources/`, and the
-  commits and licenses were re-verified against the public GitHub API
-  on 2026-11-20 (see `ai/audits/SECURITY-AUDIT.md`). Drift against
-  the pinned commits is monitored weekly by CI
-  (`npm run check:upstream`).
-- **CI scanning:** CodeQL runs via a workflow
-  (`.github/workflows/codeql.yml`, advanced setup). GitHub secret
-  scanning, Dependabot alerts, and branch protection are manual repo
-  settings, still to be enabled — see `ai/phase10/NOTES.md`. No
-  workflow has run on GitHub yet.
-- **Manual review:** imported executable code (scripts, installers) is
-  read before it is trusted; the audit report records what was
-  reviewed, what was found, and what remains an accepted upstream risk.
+- The repository runs an automated credential and prompt-injection scan
+  (`npm run check:security`) on every push, pull request, and weekly
+  via CI.
 - Upstream skills are treated as untrusted input until reviewed; see
   `AGENTS.md`.
 - Examples in original skills use secret-manager placeholders, never
   real secrets.
-
-## Supported versions
-
-Only the latest release (and `main` between releases) receives security
-fixes. Older snapshots are not patched; upgrade to the latest release.
-
-## What we will not do
-
-- We will not ask you for credentials, tokens, or private keys as part
-  of a report. Do not send them.
-- We will not silently fix a vulnerability in an imported upstream
-  skill by editing it here: upstream stays verbatim, so the fix goes
-  upstream and the import is updated afterwards.
 
 ## No security guarantees
 

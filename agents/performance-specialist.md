@@ -29,7 +29,6 @@ numbers, never estimates, and fixes the biggest bottleneck first.
 | `observability` | Production performance data. |
 | `caching` | Cache strategy work. |
 | `vercel-optimize` (upstream) | Optimizing on Vercel. |
-| `redis` | Caching uses Redis. |
 
 ## Skills it should use
 

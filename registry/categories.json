@@ -2,32 +2,17 @@
   "version": "1.0.0",
   "categories": [
     {
-      "name": "ai-engineering",
-      "description": "LLM integration, RAG, AI agents, MCP security, agent evaluation.",
-      "count": 5,
-      "skills": [
-        "agent-evaluation",
-        "ai-agents",
-        "llm-integration",
-        "mcp-security",
-        "rag"
-      ]
-    },
-    {
       "name": "architecture",
       "description": "Monorepos, Turborepo, modular monoliths, microservices, DDD.",
-      "count": 12,
+      "count": 9,
       "skills": [
-        "changesets",
         "dependency-management",
         "domain-driven-design",
         "microservices",
         "modular-monolith",
         "monorepo",
-        "nx",
         "package-boundaries",
         "pnpm-workspaces",
-        "release-management",
         "system-design",
         "turborepo"
       ]
@@ -35,56 +20,44 @@
     {
       "name": "auth",
       "description": "Authentication, authorization, OAuth, sessions, JWT, RBAC, MFA.",
-      "count": 14,
+      "count": 10,
       "skills": [
         "auth-security",
         "authentication",
-        "authjs",
         "authorization",
         "better-auth",
-        "clerk",
         "jwt",
         "mfa",
         "multi-tenancy",
         "oauth",
-        "passkeys",
         "rbac",
-        "session-management",
-        "supabase-auth"
+        "session-management"
       ]
     },
     {
       "name": "backend",
       "description": "Node.js, APIs, queues, caching, SDK and package development, MCP.",
-      "count": 21,
+      "count": 13,
       "skills": [
-        "advanced-api-architecture",
-        "api-client-generation",
         "api-design",
         "background-jobs",
         "caching",
-        "express",
-        "fastify",
         "graphql",
         "hono",
         "mcp-development",
-        "nestjs",
         "nodejs",
-        "openapi",
         "package-development",
-        "python-sdk",
         "queues",
         "rate-limiting",
         "rest-api",
         "sdk-development",
-        "trpc",
-        "typescript-sdk"
+        "trpc"
       ]
     },
     {
       "name": "content",
       "description": "Content strategy, article writing, editorial review, localization.",
-      "count": 19,
+      "count": 17,
       "skills": [
         "article-writing",
         "blog-writing",
@@ -96,14 +69,12 @@
         "content-strategy",
         "copywriting",
         "editorial-review",
-        "editorial-workflow",
         "eeat-writing",
         "fact-checking",
         "faq-generation",
         "human-editing",
         "keyword-to-content",
         "seo-content-writing",
-        "source-verification",
         "technical-writing"
       ]
     },
@@ -128,36 +99,22 @@
     {
       "name": "database",
       "description": "Database design, SQL, PostgreSQL/MySQL/SQLite/MongoDB, Prisma, Drizzle.",
-      "count": 18,
+      "count": 14,
       "skills": [
         "backup-recovery",
-        "clickhouse",
         "connection-pooling",
         "database-design",
         "database-security",
         "drizzle",
-        "elasticsearch",
         "indexing",
         "migrations",
         "mongodb",
         "mysql",
-        "opensearch",
         "postgresql",
         "prisma",
-        "redis",
         "sql-optimization",
         "sqlite",
         "transactions"
-      ]
-    },
-    {
-      "name": "desktop",
-      "description": "Desktop apps: Tauri 2, Electron, Rust, native APIs, packaging.",
-      "count": 3,
-      "skills": [
-        "electron",
-        "rust",
-        "tauri"
       ]
     },
     {
@@ -175,37 +132,31 @@
     {
       "name": "frontend",
       "description": "HTML, CSS, JavaScript, TypeScript, React, Next.js, Astro, Hugo, UI.",
-      "count": 21,
+      "count": 16,
       "skills": [
         "accessibility",
         "astro",
         "css",
-        "expo",
         "frontend-performance",
         "html",
         "hugo",
         "javascript",
         "modern-css",
         "nextjs",
-        "nuxt",
         "react",
-        "react-native",
         "responsive-design",
         "semantic-html",
         "shadcn-ui",
-        "sveltekit",
         "tailwind-css",
         "typescript",
-        "ui-design",
-        "vue"
+        "ui-design"
       ]
     },
     {
       "name": "infrastructure",
       "description": "Cloudflare, Vercel, Docker, CI/CD, deployment, observability.",
-      "count": 22,
+      "count": 13,
       "skills": [
-        "aws",
         "ci-cd",
         "cloudflare",
         "cloudflare-d1",
@@ -216,23 +167,15 @@
         "deployment",
         "docker",
         "durable-objects",
-        "fly-io",
-        "gcp",
         "github-actions",
-        "kubernetes",
         "observability",
-        "pulumi",
-        "railway",
-        "render",
-        "self-hosted-vps",
-        "terraform",
         "vercel"
       ]
     },
     {
       "name": "media",
       "description": "AI image generation, OG images, thumbnails, image optimization.",
-      "count": 16,
+      "count": 12,
       "skills": [
         "ai-image-generation",
         "blog-featured-images",
@@ -243,10 +186,6 @@
         "image-prompt-engineering",
         "infographic-generation",
         "og-image-generation",
-        "platform-social-images",
-        "resvg",
-        "satori",
-        "sharp",
         "social-preview",
         "twitter-card-images",
         "youtube-thumbnails"
@@ -298,15 +237,13 @@
     {
       "name": "seo",
       "description": "Technical SEO, on-page SEO, schema, GEO/AEO, keyword research.",
-      "count": 31,
+      "count": 27,
       "skills": [
         "aeo-optimization",
         "canonical-management",
         "competitor-analysis",
-        "content-decay",
         "content-gap-analysis",
         "eeat",
-        "entity-seo",
         "geo-optimization",
         "hreflang",
         "image-seo",
@@ -326,11 +263,9 @@
         "seo-audit",
         "seo-migration",
         "serp-analysis",
-        "serp-monitoring",
         "sitemap-robots",
         "structured-data",
-        "technical-seo",
-        "topical-authority"
+        "technical-seo"
       ]
     },
     {

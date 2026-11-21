@@ -34,7 +34,6 @@ it hands off to the right specialist with a clear brief.
 | `clean-code` | Maintainability findings. |
 | `verification-before-completion` (upstream) | Proving work is complete. |
 | `webapp-testing` (upstream) | Verifying a web app end to end. |
-| `source-verification` | The audit checks factual claims. |
 
 ## Skills it should use
 

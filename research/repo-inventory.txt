@@ -1,16 +1,9 @@
-# Research snapshot: GitHub repository metadata captured 2026-11-20 during
-# SkillForge v1.0.0 research (upstream candidates and official-source repos).
-# Point-in-time data, not live: star counts and push dates go stale. Refresh by
-# re-querying the GitHub API (GET /repos/{owner}/{repo}) when the snapshot is
-# next needed; nothing in the repo parses this file. The prisma/skills line
-# was a PARSE ERROR in the original snapshot (the repo has no description on
-# GitHub); it was filled in from the live API on 2026-11-20 (Phase 12, L-04).
 anthropics/skills | Public repository for Agent Skills | license=none | stars=197981 | updated=2026-11-20 | pushed=2026-11-16 | branch=main | archived=False
 vercel-labs/agent-skills | Vercel's official collection of agent skills | license=none | stars=34597 | updated=2026-11-20 | pushed=2026-11-12 | branch=main | archived=False
 vercel-labs/skills | The open agent skills tool - npx skills | license=MIT | stars=40196 | updated=2026-11-20 | pushed=2026-11-17 | branch=main | archived=False
 obra/superpowers | An agentic skills framework & software development methodology that works. | license=MIT | stars=322690 | updated=2026-11-20 | pushed=2026-11-03 | branch=main | archived=False
 github/awesome-copilot | Community-contributed instructions, agents, skills, and configurations to help y | license=MIT | stars=41391 | updated=2026-11-20 | pushed=2026-11-20 | branch=main | archived=False
-prisma/skills | (no description on GitHub) | license=MIT | stars=80 | updated=2026-11-17 | pushed=2026-11-10 | branch=main | archived=False
+prisma/skills | PARSE ERROR
 pwg-projects/agentic-seo-skill | An LLM-first SEO analysis skill for Antigravity, Codex, Claude with 12 specializ | license=MIT | stars=0 | updated=2026-03-06 | pushed=2026-03-03 | branch=main | archived=False
 coreyhaines31/marketingskills | Marketing skills for Claude Code and AI agents. CRO, copywriting, SEO, analytics | license=MIT | stars=61681 | updated=2026-11-20 | pushed=2026-11-20 | branch=main | archived=False
 withastro/astro | The web framework for content-driven websites. | license=NOASSERTION | stars=64092 | updated=2026-11-20 | pushed=2026-11-20 | branch=main | archived=False

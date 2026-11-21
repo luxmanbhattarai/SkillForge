@@ -60,23 +60,11 @@ specific defensive skill that fixes them.
 - [OWASP](https://owasp.org/) — the project home and index of all
   projects.
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/) — the most
-  critical web application security risks. The 2025 edition is
-  current (announced November 2025, finalized January 2026):
-  A01 Broken Access Control, A02 Security Misconfiguration,
-  A03 Software Supply Chain Failures, A04 Cryptographic Failures,
-  A05 Injection, A06 Insecure Design, A07 Authentication Failures,
-  A08 Software or Data Integrity Failures, A09 Security Logging and
-  Alerting Failures, A10 Mishandling of Exceptional Conditions.
-  Compared with 2021, SSRF is folded into A01, and the 2021
-  "Vulnerable and Outdated Components" category is expanded and
-  renamed to A03. Do not cite the 2021 list for new work.
+  critical web application security risks.
 - [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/) —
   concise defensive guidance per topic.
 - [OWASP ASVS](https://owasp.org/www-project-application-security-verification-standard/) —
-  the Application Security Verification Standard. ASVS 5.0.0
-  (May 2025) is current: 345 requirements in 17 chapters, with
-  requirement numbering changed from 4.0.3 — cite requirements
-  with their version prefix (for example `v5.0.0-1.2.5`).
+  the Application Security Verification Standard.
 - [OWASP Web Security Testing Guide](https://owasp.org/www-project-web-security-testing-guide/) —
   testing methodology.
 
@@ -185,8 +173,8 @@ Top 10 review pass for a small web app (excerpt):
 - Security Misconfiguration: verbose error pages leak stack traces.
   Fix: generic error responses in production; detailed logs
   server-side only.
-- Software Supply Chain Failures (A03:2025): one dependency has a
-  known critical issue. Fix: upgrade (see `dependency-security`).
+- Vulnerable Components: one dependency has a known critical issue.
+  Fix: upgrade (see `dependency-security`).
 ```
 
 ```text

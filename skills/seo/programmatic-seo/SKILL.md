@@ -75,13 +75,6 @@ better than a generic page could, or it should not exist.
 - [Google Search Central](https://developers.google.com/search) — current guidance on helpful content and spam policies.
 - [Schema.org](https://schema.org/) — structured data vocabulary for templated page types.
 
-Guidance current as of 2026-11-20. Google's spam policy on this is
-"scaled content abuse" (strengthened in the March 2024 spam policy
-update): mass-producing pages primarily to manipulate rankings, with
-little or no value to users, violates the policy regardless of whether
-the content is AI-generated or templated. The quality bar in this skill
-is what keeps a programmatic program on the right side of that line.
-
 ## Required Workflow
 
 1. Define the page pattern. State the query pattern (for example

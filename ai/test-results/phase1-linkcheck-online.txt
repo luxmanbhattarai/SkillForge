@@ -1,6 +1,0 @@
-Command: node scripts/check-links.mjs --online
-Date: 2026-11-20
-Duration: ~6m55s
-Result: PASS
-Checked 14 internal links; 311 unique external URLs verified (47 skipped: example domains / documented exceptions).
-0 errors. Matches the v1.0.0 baseline.

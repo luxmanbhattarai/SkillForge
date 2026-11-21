@@ -67,17 +67,9 @@ promising it.
 ## Official Documentation
 
 - [Google Search Central](https://developers.google.com/search) — how Google crawls and surfaces content, including AI features.
-- [Google's guide to optimizing for generative AI features](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) —
-  Google's official guide (May 2026): foundational SEO still applies
-  to AI Overviews and AI Mode, and it mythbusts common AEO/GEO claims
-  — no special markup, chunking, or rewriting just for AI is needed
-  for Google Search, and structured data is not required for
-  generative AI search.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — the baseline for content Google systems can use.
 - [Schema.org](https://schema.org/) — structured data vocabulary that helps machines interpret page content.
 - [llms.txt](https://llmstxt.org/) — the emerging convention for an LLM-oriented site index file.
-
-Guidance current as of 2026-11-20.
 
 ## Required Workflow
 
@@ -111,15 +103,6 @@ Guidance current as of 2026-11-20.
 - Robots.txt decisions are deliberate and documented. Blocking an AI
   crawler is a business decision about training and citation, not a
   default; record which crawlers are allowed or blocked and why.
-- Know what each Google control actually governs. `Google-Extended`
-  is a robots.txt product token, not a crawler: it controls whether
-  content Google crawls may train future Gemini models and ground
-  answers in Gemini Apps and Vertex AI. It does not affect inclusion
-  or ranking in Google Search, and blocking it does not remove a site
-  from AI Overviews or AI Mode (those are governed by `Googlebot`
-  rules and by the Search generative AI control in Search Console).
-  Blocking `Google-Extended` also opts the site out of Gemini
-  grounding, not just training.
 - Do not block AI crawlers in robots.txt while expecting AI citation;
   a crawler that cannot fetch a page cannot cite it accurately.
 - Every priority page states its main point in the first 100 words in
@@ -143,12 +126,9 @@ Guidance current as of 2026-11-20.
   and the key term included, so a quoted sentence makes sense alone.
 - Publish original data, tests, or experience where possible; AI
   tools prefer citing primary sources over pages that repeat others.
-  (An industry observation, not a documented rule of any AI system.)
 - Keep evergreen pages current. AI tools favor recently updated
   content for time-sensitive topics, so review high-value pages on a
-  schedule. (Also an industry observation; Google documents that its
-  generative AI features rely on its core ranking and quality systems,
-  so foundational SEO is the verified baseline.)
+  schedule.
 - Use consistent naming for the brand, products, and key concepts
   across the site so models associate them reliably.
 - Earn mentions on other reputable sites; AI tools weigh independent

@@ -4,22 +4,16 @@
     "any agent implementing the Agent Skills standard": [
       "accessibility",
       "accessibility-testing",
-      "advanced-api-architecture",
       "aeo-optimization",
-      "agent-evaluation",
-      "ai-agents",
       "ai-image-generation",
       "ai-seo",
       "analytics",
-      "api-client-generation",
       "api-design",
       "api-documentation",
       "article-writing",
       "auth-security",
       "authentication",
-      "authjs",
       "authorization",
-      "aws",
       "backup-recovery",
       "better-auth",
       "blog-featured-images",
@@ -31,17 +25,13 @@
       "caching-strategy",
       "canonical-management",
       "changelog-management",
-      "changesets",
       "ci-cd",
       "clean-code",
-      "clerk",
-      "clickhouse",
       "code-review",
       "competitor-analysis",
       "competitor-profiling",
       "connection-pooling",
       "content-brief",
-      "content-decay",
       "content-gap-analysis",
       "content-localization",
       "content-refresh",
@@ -71,20 +61,15 @@
       "dynamic-metadata",
       "e2e-testing",
       "editorial-review",
-      "editorial-workflow",
       "eeat",
       "eeat-writing",
-      "elasticsearch",
-      "electron",
       "engineering-standards",
-      "entity-seo",
       "executing-plans",
       "fact-checking",
       "faq-generation",
       "finishing-a-development-branch",
       "frontend-design",
       "frontend-performance",
-      "gcp",
       "geo-optimization",
       "hreflang",
       "html",
@@ -106,15 +91,12 @@
       "keyword-clustering",
       "keyword-research",
       "keyword-to-content",
-      "kubernetes",
       "lighthouse",
       "link-building",
-      "llm-integration",
       "llm-seo",
       "llms-txt",
       "local-seo",
       "mcp-builder",
-      "mcp-security",
       "metadata-validation",
       "mfa",
       "microservices",
@@ -125,22 +107,17 @@
       "monorepo",
       "multi-tenancy",
       "mysql",
-      "nx",
       "oauth",
       "observability",
       "off-page-seo",
       "og-image-generation",
       "on-page-seo",
       "open-graph",
-      "openapi",
-      "opensearch",
       "owasp",
       "package-boundaries",
       "pagespeed-insights",
-      "passkeys",
       "performance",
       "performance-testing",
-      "platform-social-images",
       "pnpm-workspaces",
       "postgresql",
       "prisma",
@@ -156,21 +133,13 @@
       "prisma-postgres-upgrade",
       "prisma-upgrade-v7",
       "programmatic-seo",
-      "pulumi",
-      "python-sdk",
-      "rag",
       "rbac",
       "readme-engineering",
       "receiving-code-review",
-      "redis",
       "refactoring",
       "regression-testing",
-      "release-management",
       "requesting-code-review",
       "responsive-design",
-      "resvg",
-      "rust",
-      "satori",
       "schema",
       "schema-jsonld",
       "search-console",
@@ -186,37 +155,29 @@
       "seo-metadata",
       "seo-migration",
       "serp-analysis",
-      "serp-monitoring",
       "session-management",
-      "sharp",
       "site-architecture",
       "sitemap-robots",
       "skill-creator",
       "social-preview",
       "social-sharing",
       "software-architecture",
-      "source-verification",
       "sql-injection-prevention",
       "sql-optimization",
       "sqlite",
       "structured-data",
       "subagent-driven-development",
-      "supabase-auth",
       "system-design",
-      "tauri",
       "tdd",
       "technical-decision-records",
       "technical-documentation",
       "technical-seo",
       "technical-writing",
-      "terraform",
       "theme-factory",
-      "topical-authority",
       "transactions",
       "turborepo",
       "twitter-card-images",
       "twitter-cards",
-      "typescript-sdk",
       "ui-design",
       "unit-testing",
       "using-git-worktrees",
@@ -260,35 +221,20 @@
     "Requires Docker installed and running on the machine, and network access to pull base images.": [
       "docker"
     ],
-    "Requires Node.js 22.13+, 24.3+, or 26+ (odd-numbered releases unsupported) and an Expo account for EAS cloud builds, updates, and submissions.": [
-      "expo"
-    ],
-    "Requires Node.js 18 or later (Express 5.x).": [
-      "express"
-    ],
-    "Requires Node.js 20 or later (Fastify 5.x).": [
-      "fastify"
-    ],
-    "Requires a Fly.io account, a Dockerfile or a buildable project, flyctl installed, and network access to Fly.io.": [
-      "fly-io"
-    ],
     "Requires a GitHub repository with Actions enabled and network access to GitHub.": [
       "github-actions"
     ],
-    "Requires Node.js 24 LTS or later and a GraphQL server library: GraphQL Yoga 6.x or Apollo Server 5.x.": [
+    "Requires Node.js 24 LTS and a GraphQL server library such as GraphQL Yoga or Apollo Server.": [
       "graphql"
     ],
-    "Requires Node.js 24 LTS or later or a supported edge runtime; TypeScript 7.x recommended.": [
+    "Requires Node.js 24 LTS or a supported edge runtime; TypeScript 5.x recommended.": [
       "hono"
     ],
-    "Requires the Hugo binary installed on the machine building the site; Sass/SCSS support needs a separate Dart Sass install (see Prerequisites).": [
+    "Requires the Hugo binary (extended edition for Sass/SCSS support) installed on the machine building the site.": [
       "hugo"
     ],
-    "Requires Node.js 24 LTS or later, TypeScript 7.x, and the MCP TypeScript SDK v2 (`@modelcontextprotocol/server`); network access for remote servers.": [
+    "Requires Node.js 24 LTS, TypeScript 5.x, and the MCP TypeScript SDK; network access for remote servers.": [
       "mcp-development"
-    ],
-    "Requires Node.js v20.19+ or v22.12+ (NestJS 12; CLI generators need 22.22.3+/24.15+/26+); TypeScript 6.x (TypeScript 7 not yet supported by nest build).": [
-      "nestjs"
     ],
     "Requires Node.js 24 LTS and a Next.js 16 project; deployment targets may need a hosting account.": [
       "nextjs"
@@ -296,10 +242,7 @@
     "Requires Node.js 24 LTS or later and npm; network access for installing dependencies.": [
       "nodejs"
     ],
-    "Requires Node.js ^22.22.3, ^24.15.0, or >=26.0.0 and a Nuxt 4 project.": [
-      "nuxt"
-    ],
-    "Requires Node.js 24 LTS or later, npm, and an npm account for publishing.": [
+    "Requires Node.js 24 LTS, npm, and an npm account for publishing.": [
       "package-development"
     ],
     "Requires Node.js and downloads browser binaries on install.": [
@@ -308,40 +251,25 @@
     "Requires a queue system such as Redis with BullMQ, RabbitMQ, Amazon SQS, or Cloudflare Queues.": [
       "queues"
     ],
-    "Requires a Railway account, a Git repository or a local project directory, and network access to Railway.": [
-      "railway"
-    ],
     "Requires a shared store such as Redis for limits that work across multiple server instances.": [
       "rate-limiting"
     ],
     "Requires Node.js 24 LTS and a React 19 project set up with a bundler or framework such as Vite or Next.js.": [
       "react"
     ],
-    "Requires Node.js 22 LTS; Xcode on macOS for iOS builds and Android Studio for Android builds.": [
-      "react-native"
-    ],
-    "Requires a Render account, a Git repository (GitHub, GitLab, or Bitbucket), and network access to Render.": [
-      "render"
-    ],
-    "Requires a Node.js HTTP framework such as Hono or Express and TypeScript 7.x.": [
+    "Requires a Node.js HTTP framework such as Hono or Express and TypeScript 5.x.": [
       "rest-api"
     ],
-    "Requires Node.js 24 LTS or later and TypeScript 7.x; the target API must be documented.": [
+    "Requires Node.js 24 LTS and TypeScript 5.x; the target API must be documented.": [
       "sdk-development"
-    ],
-    "Requires root or sudo access to a Linux VPS (Ubuntu LTS or Debian stable) and a domain name for TLS.": [
-      "self-hosted-vps"
     ],
     "Requires Node.js 24 LTS, a React project with Tailwind CSS v4, and the shadcn/ui CLI (npx shadcn@latest).": [
       "shadcn-ui"
     ],
-    "Requires Node.js 22.17 or newer, Vite 8, and Svelte 5.56.4 or newer.": [
-      "sveltekit"
-    ],
     "Requires Node.js 24 LTS and a Tailwind CSS v4 project with the Tailwind CLI, PostCSS plugin, or Vite plugin.": [
       "tailwind-css"
     ],
-    "Requires Node.js 24 LTS or later, TypeScript 7.x, and a TypeScript client; works best in a monorepo.": [
+    "Requires Node.js 24 LTS, TypeScript 5.x, and a TypeScript client; works best in a monorepo.": [
       "trpc"
     ],
     "Requires Node.js 24 LTS and the TypeScript compiler (tsc) for type checking and builds.": [
@@ -352,9 +280,6 @@
     ],
     "Requires Node.js and a Vite-based or ESM TypeScript project.": [
       "vitest"
-    ],
-    "Requires Node.js ^22.18.0 or >=24.12.0 and a Vite-based project created with create-vue.": [
-      "vue"
     ]
   }
 }

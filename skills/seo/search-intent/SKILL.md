@@ -18,12 +18,12 @@ metadata:
 
 ## Purpose
 
-Search intent is the goal behind a query, and matching it is one of
-the most important factors in whether a page can rank. A page that
-answers the wrong intent — a product page for a "how to" query, a blog
-post for a "buy" query — rarely ranks well no matter how well optimized
-it is. This skill classifies intent from query language and SERP
-evidence, then maps each intent to the content type that serves it.
+Search intent is the goal behind a query, and matching it is the single
+most important factor in whether a page can rank. A page that answers
+the wrong intent — a product page for a "how to" query, a blog post for
+a "buy" query — will not rank no matter how well optimized it is. This
+skill classifies intent from query language and SERP evidence, then maps
+each intent to the content type that serves it.
 
 ## When to Use
 
@@ -63,10 +63,6 @@ evidence, then maps each intent to the content type that serves it.
   Google's guidance on people-first content that satisfies intent.
 - [SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide) —
   Google's guidance on understanding what users want.
-
-Guidance current as of 2026-11-20. Intent labels (informational,
-navigational, commercial, transactional) are an industry taxonomy,
-not Google-published categories; the SERP is the evidence for them.
 
 ## Required Workflow
 

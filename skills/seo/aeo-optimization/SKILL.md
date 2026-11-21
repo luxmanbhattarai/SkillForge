@@ -66,14 +66,7 @@ conditions under which a page can be selected.
 
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — the quality and technical baseline every answer page must meet.
 - [Google Search Central](https://developers.google.com/search) — current guidance on how Google surfaces content, including AI features.
-- [Google's guide to optimizing for generative AI features](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) —
-  Google's official guide (May 2026): foundational SEO and
-  non-commodity content are what Google documents for AI Overviews
-  and AI Mode; it explicitly mythbusts AEO/GEO "hacks" such as
-  special markup, content chunking, and rewriting just for AI.
 - [Schema.org](https://schema.org/) — the vocabulary for FAQPage, HowTo, and QAPage structured data.
-
-Guidance current as of 2026-11-20.
 
 ## Required Workflow
 
@@ -85,9 +78,7 @@ Guidance current as of 2026-11-20.
    extract.
 3. Draft the direct answer first. Write a 40-60 word self-contained
    answer that stands alone without the rest of the page, using the
-   question's key terms naturally. The 40-60 word range is an industry
-   heuristic drawn from featured-snippet studies, not a Google
-   requirement; completeness and clarity matter more than the count.
+   question's key terms naturally.
 4. Place the answer immediately after the heading that restates the
    question. Do not bury it under introductions, anecdotes, or
    calls to action.
@@ -111,7 +102,6 @@ Guidance current as of 2026-11-20.
   heading.
 - Direct answers are 40-60 words, factual, and free of marketing
   language, first-person claims, and hedging that adds no information.
-  (The word count is an industry heuristic, not a Google requirement.)
 - Definitions start with the term and its category ("X is a ..."),
   then add the distinguishing detail in the same paragraph.
 - How-to answers use a numbered list with one action per step, in
@@ -120,10 +110,6 @@ Guidance current as of 2026-11-20.
   columns and the same criteria for each item.
 - FAQPage structured data may only mark up questions and answers that
   are visible on the page. Never mark up hidden or generated FAQ text.
-  Note: FAQ rich results no longer appear in Google Search (removed
-  7 May 2026), and HowTo rich results were deprecated in September
-  2023 — FAQPage and HowTo markup remain valid schema.org vocabulary
-  but earn no Google rich result. Do not add them expecting one.
 - HowTo structured data requires visible, ordered steps on the page.
   Do not apply it to narrative advice that has no real sequence.
 - Every factual claim in a direct answer must be verifiable from a
@@ -202,8 +188,7 @@ may need a warmer spot or a different feeding ratio.
 ...
 ```
 
-FAQPage JSON-LD for questions that are visible on the page (earns no
-Google rich result since May 2026; still valid schema.org markup):
+FAQPage JSON-LD for questions that are visible on the page:
 
 ```json
 {
@@ -225,8 +210,7 @@ Google rich result since May 2026; still valid schema.org markup):
 ## Validation Checklist
 
 - [ ] Each target question has a question-style heading with a direct
-      answer of about 40-60 words (an industry heuristic, not a Google
-      requirement) immediately below it.
+      answer of 40-60 words immediately below it.
 - [ ] The direct answer stands alone and contains no marketing language
       or unverified claims.
 - [ ] Every factual claim in an answer is verifiable from a cited

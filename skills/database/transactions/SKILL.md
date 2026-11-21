@@ -41,7 +41,7 @@ This skill covers correct transaction use: keeping multi-statement writes atomic
 
 ## Prerequisites
 
-- Knowledge of the target engine's transaction syntax and default isolation level. The defaults differ by engine: PostgreSQL defaults to READ COMMITTED, MySQL/InnoDB defaults to REPEATABLE READ, and SQLite is effectively SERIALIZABLE (one writer at a time). Never assume the default is READ COMMITTED.
+- Knowledge of the target engine's transaction syntax and default isolation level.
 - The list of operations that must be atomic, and what "consistent" means for the domain (for example: an order is never created without its items).
 - Access to run the workload against a test database with concurrent clients, to observe locking behaviour.
 - Basic SQL knowledge: `BEGIN`, `COMMIT`, `ROLLBACK`, and `SELECT ... FOR UPDATE`.
@@ -56,7 +56,7 @@ This skill covers correct transaction use: keeping multi-statement writes atomic
 
 1. Identify the unit of work: the exact set of statements that must succeed or fail together, and no more.
 2. Draw the transaction boundary around that unit only: start the transaction as late as possible and commit as early as possible.
-3. Choose the isolation level deliberately: the engine default is right for most work — PostgreSQL's default is READ COMMITTED, MySQL/InnoDB's is REPEATABLE READ, SQLite's is effectively SERIALIZABLE. Use a stricter level only for a named consistency requirement, and document why.
+3. Choose the isolation level deliberately: the engine default (usually read committed) is right for most work; use a stricter level only for a named consistency requirement, and document why.
 4. Inside the transaction, perform only database work: no HTTP calls, no file I/O, no waiting on user input, no sleeping.
 5. Acquire locks in a consistent order across all code paths that touch the same tables, to avoid deadlocks.
 6. Use `SELECT ... FOR UPDATE` when a read must reserve a row for an update in the same transaction.

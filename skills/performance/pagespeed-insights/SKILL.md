@@ -53,8 +53,7 @@ a diagnosis that does not confuse them, and a prioritized fix list.
 
 - A public URL that PSI can fetch (no login wall, no bot blocking).
 - For API use: an API key from Google Cloud, or accept the lower
-  unauthenticated rate limits. The API is v5
-  (`pagespeedonline/v5/runPagespeed`).
+  unauthenticated rate limits.
 - Enough real traffic for CrUX field data to exist; low-traffic URLs
   show lab data only.
 - A baseline reading taken before changes, so improvements can be
@@ -65,9 +64,8 @@ a diagnosis that does not confuse them, and a prioritized fix list.
 - [PageSpeed Insights](https://pagespeed.web.dev/) — the tool itself.
 - [PageSpeed Insights API](https://developers.google.com/speed/docs/insights/v5/about)
   — how to query PSI programmatically.
-- [web.dev — Web Vitals](https://web.dev/articles/vitals) — how
-  Chrome UX Report field data is collected and what the
-  percentiles mean.
+- [web.dev — CrUX](https://web.dev/) — how Chrome UX Report field
+  data is collected and what the percentiles mean.
 
 ## Required Workflow
 
@@ -109,8 +107,6 @@ a diagnosis that does not confuse them, and a prioritized fix list.
   `desktop`) and store the full JSON response with a timestamp.
 - Do not quote a Lighthouse score from PSI without the date and
   strategy (mobile/desktop), because both affect the result.
-  Lighthouse category scores: 90 or above is good, 50 to 89 needs
-  improvement, below 50 is poor.
 
 ## Best Practices
 
@@ -211,8 +207,7 @@ console.log('lab performance score:', score);
 - [PageSpeed Insights](https://pagespeed.web.dev/) — the tool.
 - [PageSpeed Insights API](https://developers.google.com/speed/docs/insights/v5/about)
   — programmatic access to PSI data.
-- [web.dev — Web Vitals](https://web.dev/articles/vitals) — Core Web
-  Vitals and CrUX guidance.
+- [web.dev](https://web.dev/) — Core Web Vitals and CrUX guidance.
 - Related skills in this repository: `core-web-vitals`, `lighthouse`,
   `web-performance-audit`, `image-optimization`,
   `javascript-optimization`, `caching-strategy`.

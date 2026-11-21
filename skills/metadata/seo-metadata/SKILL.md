@@ -108,14 +108,6 @@ budget on the right URLs.
 - Use `noindex` for pages that should not be indexed, and do not
   block those same pages in robots.txt — a blocked page cannot be
   crawled to see the `noindex` directive.
-- `index, follow` is the default behavior; an explicit robots tag
-  is only needed when restricting something.
-- Use the `X-Robots-Tag` HTTP header instead of a meta tag for
-  non-HTML resources (PDFs, images, video) that should not be
-  indexed.
-- Do not use the retired robots directives `noarchive`, `nocache`,
-  or `nositelinkssearchbox` — Google ignores them (the cached-link
-  and sitelink-search-box features no longer exist).
 - Do not use `noindex` on a page that is linked as canonical from
   other pages; the signals conflict.
 - Keep metadata in the server-rendered HTML (or in the static

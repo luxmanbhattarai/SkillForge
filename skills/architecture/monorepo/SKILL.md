@@ -43,14 +43,7 @@ grows.
 
 - The package manager is chosen (pnpm is the recommended default for this repository's stack; npm and Yarn workspaces are alternatives).
 - The apps and packages are known, at least roughly: what will live in `apps/` and `packages/`.
-- Node.js 26 LTS is the current line (Active LTS since 2026-10-28,
-  supported to 2029-04-30); Node.js 24 is in maintenance until
-  2028-04-30. Node.js 20 and 25 are end-of-life. Pin the Node and
-  package manager versions for the repository.
-- Supported versions (verified 2026-11-20): pnpm 12.x is current
-  (stable August 2026); pnpm 11 is supported until 2027-04-30; pnpm 10
-  and earlier are unsupported. Turborepo 2.x is current (2.11.x,
-  November 2026); Turborepo 1.x is end-of-life and 3.0 is in canary.
+- Node.js 24 LTS is the current line; pin the Node and package manager versions for the repository.
 - A task runner is chosen (Turborepo is the recommended default) or deliberately deferred.
 
 ## Official Documentation
@@ -58,7 +51,7 @@ grows.
 - [pnpm Workspaces](https://pnpm.io/workspaces) — workspace configuration for pnpm.
 - [Turborepo documentation](https://turborepo.dev/docs) — task running and caching for monorepos.
 - [Nx documentation](https://nx.dev/docs) — an alternative monorepo toolchain.
-- [npm workspaces (npm docs)](https://docs.npmjs.com/cli/v12/using-npm/workspaces) — npm's workspace support.
+- [npm workspaces (npm docs)](https://docs.npmjs.com/) — npm's workspace support.
 
 ## Required Workflow
 
@@ -141,7 +134,7 @@ Root `package.json` (scripts delegate to the task runner):
 {
   "name": "repo-root",
   "private": true,
-  "packageManager": "pnpm@12",
+  "packageManager": "pnpm@10",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",

@@ -65,13 +65,8 @@ outcome.
 ## Official Documentation
 
 - [Google Search Central](https://developers.google.com/search) — Google's guidance on helpful content and quality.
-- [Creating helpful content](https://developers.google.com/search/docs/fundamentals/creating-helpful-content) —
-  Google's people-first content guidance, the main documented source
-  for E-E-A-T concepts alongside the Search Quality Rater Guidelines.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — the quality baseline, including E-E-A-T concepts.
 - [Schema.org](https://schema.org/) — Person, Organization, and author properties for structured data.
-
-Guidance current as of 2026-11-20.
 
 ## Required Workflow
 

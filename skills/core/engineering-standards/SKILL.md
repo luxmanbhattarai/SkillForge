@@ -46,17 +46,7 @@ down where everyone can find them.
 ## Prerequisites
 
 - Agreement on the project's language, package manager, and runtime
-  (for example, Node.js 26 LTS, TypeScript 7.x, pnpm 12).
-- Supported versions (verified 2026-11-20): Node.js 26 LTS is the
-  current line (Active LTS since 2026-10-28, supported to 2029-04-30);
-  Node.js 24 is in maintenance until 2028-04-30; Node.js 20 and 25 are
-  end-of-life and must not be targeted. TypeScript 7.x is current
-  (7.0 GA July 2026, native Go compiler); TypeScript 6.x is the bridge
-  release — tooling that uses the compiler's programmatic API
-  (typescript-eslint, framework template type-checking) stays on 6.x
-  until 7.1 ships the new API; 5.x is superseded. pnpm 12.x is current;
-  pnpm 11 is supported until 2027-04-30; pnpm 10 and earlier are
-  unsupported.
+  (for example, Node.js 24 LTS, TypeScript 5.x, pnpm).
 - Access to the repository settings and CI configuration.
 - Knowledge of the team's size and workflow (solo, small team, or
   many contributors).

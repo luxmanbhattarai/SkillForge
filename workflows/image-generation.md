@@ -18,7 +18,7 @@ thumbnails — optimized and accessible.
    guidance on prompts and iteration. Generate for the final placement,
    not a generic size.
 3. **Shape it for its placement** (`blog-featured-images`,
-   `og-image-generation`, or `youtube-thumbnails`). Crop and compose for the
+   `og-image-generation`, or `thumbnails`). Crop and compose for the
    required dimensions and aspect ratio.
 4. **Match the brand** (`brand-guidelines` upstream) when a brand
    identity exists. Keep style consistent with existing images.

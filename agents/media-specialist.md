@@ -25,22 +25,18 @@ thumbnails. It produces images that fit their placement and load fast.
 | `ai-image-generation` | Generating images with AI tools. |
 | `blog-featured-images` | Featured images for articles. |
 | `og-image-generation` | Open Graph and social images. |
-| `youtube-thumbnails` | Thumbnail images for listings or video. |
+| `thumbnails` | Thumbnail images for listings or video. |
 | `open-graph` | Open Graph metadata for shared pages. |
 | `seo-metadata` | Metadata that accompanies images. |
 | `accessibility` | Alt text and image accessibility. |
 | `frontend-performance` | Image loading performance. |
 | `brand-guidelines` (upstream) | Matching a brand's visual identity. |
 | `theme-factory` (upstream) | Theming and visual style work. |
-| `platform-social-images` | Images target social platforms. |
-| `resvg` | SVG rendering uses resvg. |
-| `satori` | OG images are generated with Satori. |
-| `sharp` | Image processing uses Sharp. |
 
 ## Skills it should use
 
 Load the skill for the asset type being made (`blog-featured-images`,
-`og-image-generation`, or `youtube-thumbnails`), plus `ai-image-generation`
+`og-image-generation`, or `thumbnails`), plus `ai-image-generation`
 when generating with AI and `open-graph` when the image serves social
 sharing. Add `accessibility` for alt text and `brand-guidelines` when a
 brand identity must be matched.

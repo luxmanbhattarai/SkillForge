@@ -26,10 +26,7 @@ authoritativeness, and trustworthiness — is how Google's quality raters
 assess whether content deserves a reader's confidence, and it matters most
 for topics that affect health, money, safety, or legal rights (YMYL). This
 skill shows how to demonstrate each element honestly: real experience,
-credible authors, transparent sources, and clear limits. Note that Google
-states E-E-A-T itself is not a specific ranking factor; its systems use a
-mix of factors that can identify content with good E-E-A-T, and trust is
-the most important of the four aspects.
+credible authors, transparent sources, and clear limits.
 
 ## When to Use
 

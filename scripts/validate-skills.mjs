@@ -8,17 +8,13 @@
 //
 // Usage:
 //   node scripts/validate-skills.mjs [--filter <path-prefix>] [--strict]
-// Exit code 1 if any error is found. --strict also fails on warnings
-// on original skills. Upstream warnings never fail, even in strict
-// mode: upstream files are never edited, so an upstream warning is
-// informational by policy (see ai/decisions/2026-11-20-validate-strict-upstream-warnings.md).
+// Exit code 1 if any error is found. --strict also fails on warnings.
 
 import { readdir, readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { splitFrontmatter, parseFrontmatter, validateName } from './lib/frontmatter.mjs';
-import { toPosixPath } from './lib/paths.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SKILLS_DIR = path.join(ROOT, 'skills');
@@ -63,24 +59,9 @@ function headings(body) {
   return found;
 }
 
-// Registry/disk consistency, exported for testing. Registry paths are
-// always POSIX; disk paths use platform separators, so on Windows
-// path.relative returns backslashes and every skill mismatches unless
-// disk paths are normalized first (PR #1: the Windows leg failed with
-// 277 "registry lists missing skill" errors for exactly this reason).
-export function findRegistryMismatches(regPaths, diskPaths) {
-  const reg = new Set(regPaths);
-  const disk = new Set([...diskPaths].map((p) => toPosixPath(p)));
-  const errors = [];
-  for (const p of reg) if (!disk.has(p)) errors.push(`registry lists missing skill: ${p}`);
-  for (const p of disk) if (!reg.has(p)) errors.push(`skill on disk missing from registry: ${p}`);
-  return errors;
-}
-
 async function main() {
   const errors = [];
-  const warnings = []; // non-upstream warnings (fail --strict)
-  const upstreamWarnings = []; // upstream warnings (informational, never fail)
+  const warnings = [];
   const names = new Map(); // name -> [paths]
   let checked = 0, original = 0, upstream = 0;
 
@@ -94,11 +75,9 @@ async function main() {
     if (isUpstream) upstream++; else original++;
     const dirName = parts[parts.length - 2];
     const text = await readFile(file, 'utf8');
-    // Line count that agrees with `wc -l`: split() counts a trailing
-    // newline as an extra empty line (audit finding L-01).
-    const lineCount = text.split('\n').length - (text.endsWith('\n') ? 1 : 0);
+    const lineCount = text.split('\n').length;
     const err = (msg) => errors.push(`${rel}: ${msg}`);
-    const warn = (msg) => (isUpstream ? upstreamWarnings : warnings).push(`${rel}: ${msg}`);
+    const warn = (msg) => warnings.push(`${rel}: ${msg}`);
 
     if (lineCount > 800) err(`SKILL.md is ${lineCount} lines (hard limit 800; keep under 500)`);
     else if (lineCount > 500) warn(`SKILL.md is ${lineCount} lines (recommended max 500)`);
@@ -181,30 +160,20 @@ async function main() {
       const reg = JSON.parse(await readFile(registryPath, 'utf8'));
       const regPaths = new Set((reg.skills || []).map((s) => s.path));
       const diskPaths = new Set(files.map((f) => path.relative(ROOT, path.dirname(f))));
-      errors.push(...findRegistryMismatches(regPaths, diskPaths));
+      for (const p of regPaths) if (!diskPaths.has(p)) errors.push(`registry lists missing skill: ${p}`);
+      for (const p of diskPaths) if (!regPaths.has(p)) errors.push(`skill on disk missing from registry: ${p}`);
     } catch (e) {
       errors.push(`registry/skills.json is not valid JSON: ${e.message}`);
     }
   }
 
-  const totalWarnings = warnings.length + upstreamWarnings.length;
-  // The summary line must agree with the exit code: a strict-mode
-  // failure on warnings is a FAIL, not a PASS.
-  const failed = errors.length > 0 || (STRICT && warnings.length > 0);
   console.log(`Checked ${checked} skills (${original} original, ${upstream} upstream).`);
   for (const w of warnings) console.log(`  WARN  ${w}`);
-  for (const w of upstreamWarnings) console.log(`  WARN (upstream)  ${w}`);
   for (const e of errors) console.log(`  ERROR ${e}`);
-  console.log(!failed
-    ? (totalWarnings
-      ? `PASS with ${totalWarnings} warning(s)${upstreamWarnings.length ? ` (${upstreamWarnings.length} upstream, informational)` : ''}.`
-      : 'PASS: all skills valid.')
-    : `FAIL: ${errors.length} error(s), ${totalWarnings} warning(s).`);
-  process.exit(failed ? 1 : 0);
+  console.log(errors.length === 0
+    ? (warnings.length ? `PASS with ${warnings.length} warning(s).` : 'PASS: all skills valid.')
+    : `FAIL: ${errors.length} error(s), ${warnings.length} warning(s).`);
+  process.exit(errors.length > 0 || (STRICT && warnings.length > 0) ? 1 : 0);
 }
 
-// Main guard (same idiom as evals/runners/run-evals.mjs): importing
-// this module for findRegistryMismatches must not run the suite.
-const invokedAsScript = process.argv[1]
-  && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
-if (invokedAsScript) main();
+main();

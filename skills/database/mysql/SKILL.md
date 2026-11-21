@@ -44,8 +44,6 @@ This skill covers practical MySQL use for application developers: writing correc
 - The `mysql` command-line client or an equivalent client for inspecting the database directly.
 - The connection string stored as an environment variable such as `$DATABASE_URL`, never committed to the repository.
 - Basic SQL knowledge: `SELECT`, `JOIN`, `GROUP BY`, and transactions.
-- Supported versions as of 2026-11-20: MySQL 8.4 LTS and 9.7 LTS (Innovation releases use calendar versions, currently 26.10). MySQL 8.0 reached end of life on 30 April 2026 (final release 8.0.46) and 5.7 is long unsupported; upgrade 8.0 to 8.4 LTS first — skipping an LTS series is not supported.
-- This skill targets Oracle MySQL. MariaDB has diverged from MySQL, so some syntax here (for example the row-alias upsert) does not apply to MariaDB; check MariaDB's own documentation when the target is MariaDB.
 
 ## Official Documentation
 
@@ -73,7 +71,7 @@ This skill covers practical MySQL use for application developers: writing correc
 - Use `JSON` for semi-structured data only when the fields are not filtered or joined often; prefer real columns for hot fields.
 - Prefer `VARCHAR` with a realistic length over `TEXT` for short strings; `TEXT` columns cannot have a default value in older versions and behave differently in indexes.
 - Name constraints explicitly so error messages and migrations are readable.
-- Use `INSERT ... ON DUPLICATE KEY UPDATE` with a row alias (`VALUES (...) AS new ... new.col`) for idempotent inserts instead of a read-then-write race. The row-alias syntax needs MySQL 8.0.19 or later; the older `VALUES(col)` function has been deprecated since MySQL 8.0.20 and must not be used in new code.
+- Use `INSERT ... ON DUPLICATE KEY UPDATE` for idempotent inserts instead of a read-then-write race.
 - Keep the default storage and character-set settings in the migration or schema definition, not only in server configuration, so a fresh database is created correctly.
 - Use `ENUM` sparingly: adding a value requires a schema change, and ordering surprises are common; a reference table or a `CHECK` constraint is often clearer.
 - Set `sql_mode` to include strict mode (`STRICT_TRANS_TABLES`) so invalid values error instead of being silently coerced.
@@ -132,11 +130,9 @@ CREATE TABLE books (
 ```
 
 ```sql
--- Example: idempotent insert using the duplicate-key clause with a row
--- alias (MySQL 8.0.19+). The older VALUES(name) form is deprecated.
+-- Example: idempotent insert using the duplicate-key clause.
 INSERT INTO users (email, name) VALUES (?, ?)
-AS new
-ON DUPLICATE KEY UPDATE name = new.name;
+ON DUPLICATE KEY UPDATE name = VALUES(name);
 ```
 
 ```sql

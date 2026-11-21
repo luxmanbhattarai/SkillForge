@@ -48,10 +48,6 @@ correct query code that runs inside Workers through the D1 binding.
 ## Prerequisites
 
 - A Cloudflare account and Wrangler installed and authenticated.
-  Wrangler 4.x is the current major version. In Wrangler 4, D1
-  commands default to local mode: add `--remote` to run a command
-  against the live database (without it, `wrangler d1 execute` reads
-  the local database, not production).
 - A Worker project with a `wrangler.toml` that will declare the D1 binding.
 - Basic SQL knowledge: tables, indexes, transactions, and parameterized
   queries.
@@ -104,9 +100,8 @@ correct query code that runs inside Workers through the D1 binding.
 
 - Design the schema for the queries the application actually runs; D1
   rewards simple, well-indexed queries.
-- Use `wrangler d1 execute --remote` for safe, read-only inspection of
-  production data; avoid ad-hoc writes against production. (Without
-  `--remote`, Wrangler 4 targets the local database.)
+- Use `wrangler d1 execute` for safe, read-only inspection of production
+  data; avoid ad-hoc writes against production.
 - Keep migration files numbered and ordered so every environment applies
   the same history.
 - Test migrations against a copy of realistic data before applying them to
@@ -137,10 +132,7 @@ correct query code that runs inside Workers through the D1 binding.
   many separate statements.
 - Avoid `SELECT *` on wide tables; select only the columns the endpoint
   needs.
-- Keep result sets bounded with `LIMIT` and paginate lists. D1
-  enforces a maximum query result size (50 MB as of late 2026), so an
-  unbounded query over a large table fails instead of returning
-  partial data.
+- Keep result sets bounded with `LIMIT` and paginate lists.
 - Remember that D1 is a serverless SQLite database replicated for reads;
   design for read-heavy workloads and keep write transactions short.
 

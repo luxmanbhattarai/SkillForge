@@ -28,7 +28,6 @@ examples accurate, and keeps docs in sync with the code they describe.
 | `sdk-development` | Documenting an SDK surface. |
 | `doc-coauthoring` (upstream) | Collaborative document drafting. |
 | `writing-guidelines` (upstream) | Voice and style guidance. |
-| `openapi` | The API docs describe an OpenAPI contract. |
 
 ## Skills it should use
 

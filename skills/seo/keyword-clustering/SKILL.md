@@ -62,10 +62,6 @@ search.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) —
   content policies that clustered pages must meet.
 
-Guidance current as of 2026-11-20. Clustering by SERP overlap and
-shared intent is an industry method, not a Google-published procedure;
-the SERP evidence is what makes a cluster defensible.
-
 ## Required Workflow
 
 1. Take the keyword list and confirm every keyword has an intent label;

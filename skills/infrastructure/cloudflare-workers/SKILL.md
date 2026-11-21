@@ -46,16 +46,12 @@ code, and deploy reliably to production.
 
 ## Prerequisites
 
-- Node.js installed (22, 24, and 26 are the active LTS lines as of
-  2026-11-20; Node.js 26 "Lithium" is the newest LTS. Node.js 20
-  reached end-of-life on 30 April 2026).
-- Wrangler 4.x installed, either globally or as a project dev
-  dependency. Wrangler 4 is the current major version; in v4, commands
-  that can run locally default to local mode and need `--remote` to
-  reach the Cloudflare API.
+- Node.js installed (current LTS line; Node.js 24 is current as of
+  2026-11-20).
+- Wrangler installed, either globally or as a project dev dependency.
 - A Cloudflare account, authenticated with `wrangler login`.
-- A `wrangler.toml` (or `wrangler.json` / `wrangler.jsonc`) in the
-  project root for any non-trivial Worker.
+- A `wrangler.toml` (or `wrangler.json`) in the project root for any
+  non-trivial Worker.
 - Understanding that Workers run on V8 isolates, not on Node.js: no
   filesystem access, no long-lived processes, no native Node.js modules
   unless the runtime provides a compatibility layer.

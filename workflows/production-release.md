@@ -11,9 +11,9 @@ production.
 
 ## Steps
 
-1. **Confirm the release contents** (`release-management`). List what
-   is included and what is not. Confirm the version number and that
-   breaking changes are called out.
+1. **Confirm the release contents.** List what is included and what is
+   not. Confirm the version number and that breaking changes are called
+   out.
 2. **Run the full verification** (`verification-before-completion`
    upstream). Type checks, lint, and the full test suite
    (`unit-testing`, `integration-testing`, `e2e-testing` as the
@@ -24,9 +24,8 @@ production.
    feedback is resolved.
 5. **Check security** (`owasp`, `secrets-management`). Confirm no
    secrets were introduced and no new unsafe patterns shipped.
-6. **Write the changelog** (`changelog-management`, `changesets` when
-   the project versions with Changesets). Record what changed,
-   including breaking changes and migration notes.
+6. **Write the changelog** (`changelog-management`). Record what
+   changed, including breaking changes and migration notes.
 7. **Deploy** (`deployment`, plus `cloudflare-workers` or `vercel`
    for the host). Deploy to staging or preview first when the project
    has one; verify there before production.

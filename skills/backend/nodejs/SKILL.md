@@ -49,10 +49,7 @@ in production.
 
 ## Prerequisites
 
-- Node.js 26 LTS installed (the current LTS line as of 2026-11-20;
-  Node.js 24 and 22 remain supported LTS lines). Node.js 20 reached
-  end-of-life on 30 April 2026 and Node.js 25 was a short-lived Current
-  release — do not start new projects on either.
+- Node.js 24 LTS installed (the current LTS line as of 2026-11-20).
 - npm, the package manager bundled with Node.js.
 - Familiarity with JavaScript or TypeScript and asynchronous programming.
 - A version manager such as nvm or fnm is recommended so the whole team
@@ -67,21 +64,15 @@ in production.
 - [npm documentation](https://docs.npmjs.com/) — package installation,
   scripts, and publishing.
 - [TypeScript documentation](https://www.typescriptlang.org/docs/) —
-  TypeScript 7.x, the recommended language for new Node.js services.
-  TypeScript 7.0 (July 2026) is a native port of the compiler; 6.0 was
-  the last JavaScript-based release and 5.x is superseded. Note that
-  7.0 ships no stable programmatic API until 7.1, so tooling built on
-  the compiler API (such as typescript-eslint) may still need 6.0 via
-  the `@typescript/typescript6` compatibility package.
+  TypeScript 5.x, the recommended language for new Node.js services.
 
 ## Required Workflow
 
 1. Confirm the runtime: run `node --version` and `npm --version`, and make
-   sure the project pins a supported LTS line (26 preferred; 24 and 22
-   are also supported — see Implementation Standards).
+   sure the project pins Node.js 24 LTS (see Implementation Standards).
 2. Scaffold with `npm init` and set `"type": "module"` for ESM unless a
    dependency forces CommonJS.
-3. Add TypeScript 7.x with strict mode enabled, plus a lint and format
+3. Add TypeScript 5.x with strict mode enabled, plus a lint and format
    setup, before writing application code.
 4. Structure the project by concern: entry point, routes or handlers,
    business logic, data access, and shared utilities in separate modules.
@@ -98,8 +89,8 @@ in production.
 - Use ESM (`"type": "module"`) for new projects. Use `import` and
   `export`; avoid `require` except when a dependency requires it.
 - Pin the runtime in `package.json` with an `engines` field requiring
-  Node.js 24 or later (26 is the current LTS line), and commit a
-  `.nvmrc` or `.node-version` file with the same version.
+  Node.js 24 or later, and commit a `.nvmrc` or `.node-version` file
+  with the same version.
 - Commit `package-lock.json`. Never install dependencies without a
   lockfile in a shared project.
 - Use TypeScript with `"strict": true`. Avoid `any`; prefer `unknown`
@@ -256,6 +247,6 @@ process.on("unhandledRejection", (err) => {
   reference.
 - [npm documentation](https://docs.npmjs.com/) — package management.
 - [TypeScript documentation](https://www.typescriptlang.org/docs/) —
-  TypeScript 7.x reference.
+  TypeScript 5.x reference.
 - Related skills in this repository: `rest-api`, `hono`, `api-design`,
   `package-development`, `background-jobs`, `testing`.

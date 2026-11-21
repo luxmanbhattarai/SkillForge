@@ -64,13 +64,6 @@ promises AI citations.
 
 - [Google Search Central](https://developers.google.com/search) — official
   SEO documentation hub, including AI Overviews guidance.
-- [Google's guide to optimizing for generative AI features](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) —
-  Google's official guide (May 2026), the authoritative source for
-  this skill: foundational SEO and non-commodity content are what
-  Google documents for AI Overviews and AI Mode, and the guide
-  explicitly mythbusts GEO "hacks" (special markup, chunking,
-  rewriting just for AI, inauthentic mentions). Structured data is
-  not required for generative AI search.
 - [Creating helpful content](https://developers.google.com/search/docs/fundamentals/creating-helpful-content) —
   Google's people-first content guidance, which applies to AI surfaces too.
 - [Schema.org](https://schema.org/) — the vocabulary reference for the
@@ -78,8 +71,6 @@ promises AI citations.
 - [llms.txt](https://llmstxt.org/) — the emerging convention for
   LLM-friendly site files (not a Google requirement; see the note in
   Implementation Standards).
-
-Guidance current as of 2026-11-20.
 
 ## Required Workflow
 
@@ -136,18 +127,14 @@ Guidance current as of 2026-11-20.
 ## Best Practices
 
 - Lead with the answer: a 40-60 word direct answer at the top of a
-  section is easy for both readers and answer engines to use. (The
-  word count is an industry heuristic from featured-snippet studies,
-  not a Google requirement.)
+  section is easy for both readers and answer engines to use.
 - Use tables for comparisons and lists for steps; structured formats
   are easier to extract than prose paragraphs.
 - Keep the site's facts consistent across pages: conflicting dates,
   prices, or definitions on different pages confuse both readers and
   machines.
 - Refresh high-value pages regularly; AI engines favor current
-  information, and a stale page loses citation chances. (An industry
-  observation; Google documents that its generative AI features rely
-  on its core ranking and quality systems.)
+  information, and a stale page loses citation chances.
 - Build topical authority with clusters of related, well-linked content
   (see `keyword-clustering` and `internal-linking`); a site that covers
   a topic thoroughly is more citable than one with a single page.

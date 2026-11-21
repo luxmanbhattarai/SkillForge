@@ -54,8 +54,7 @@ but a plan — what to fix first, why, and how to prove it worked.
 - Access to the site's source code, or at least a channel to the
   team that owns it.
 - Tools: a Chromium browser with DevTools, Node.js 24 LTS for CLI
-  tooling (Node.js 26 is the newer LTS since October 2026), and
-  access to PageSpeed Insights.
+  tooling, and access to PageSpeed Insights.
 
 ## Official Documentation
 
@@ -216,8 +215,8 @@ A recommendation entry with impact, effort, and verification:
 
 ## References
 
-- [web.dev — Web Vitals](https://web.dev/articles/vitals) —
-  performance measurement and improvement guides.
+- [web.dev](https://web.dev/) — performance measurement and
+  improvement guides.
 - [PageSpeed Insights](https://pagespeed.web.dev/) — field and lab
   data for public URLs.
 - [MDN — Web performance](https://developer.mozilla.org/en-US/docs/Web/Performance)

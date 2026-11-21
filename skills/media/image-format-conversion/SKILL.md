@@ -66,19 +66,6 @@ and the conversion workflow for single files and batches.
   — responsive images and the picture element.
 - [Can I use](https://caniuse.com/) — browser support tables for
   WebP, AVIF, and other formats.
-- Compatibility (verified November 2026): WebP is supported by all
-  current browsers (Chrome 32+, Firefox 65+, Safari 14+, Edge 18+;
-  about 97% of global usage) and needs no fallback for web audiences.
-  AVIF reached Baseline in January 2024 (Chrome 85+, Firefox 93+,
-  Safari 16+, Edge 121+; about 94-96% of global usage) — safe as the
-  first `<source>` in a `<picture>` element with a WebP or JPEG
-  fallback for older browsers. JPEG XL is newer: it decodes by default
-  in Chrome 155+, Firefox 158+, and Safari 17+ (stills only, partial),
-  but not in Edge — use it only as an optional first source, never as
-  the sole format. Code examples in this skill use the Sharp 0.35.x
-  API (current as of November 2026) and ImageMagick 7 (`magick`;
-  ImageMagick 6's `convert` command is not available by default on
-  ImageMagick 7 installs).
 
 ## Required Workflow
 

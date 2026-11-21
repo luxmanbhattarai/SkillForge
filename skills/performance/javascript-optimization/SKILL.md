@@ -62,13 +62,7 @@ user to notice.
 - [MDN — Web performance](https://developer.mozilla.org/en-US/docs/Web/Performance)
   — browser-neutral reference for scheduling and loading APIs.
 - [MDN — Scheduler API](https://developer.mozilla.org/en-US/docs/Web/API/Scheduler)
-  — `scheduler.postTask` for prioritized scheduling and
-  `scheduler.yield()` for yielding to the browser.
-- [Chrome — Use scheduler.yield()](https://developer.chrome.com/blog/use-scheduler-yield)
-  — the dedicated API for breaking up long tasks, with
-  feature-detection and fallback guidance. `scheduler.yield()` is
-  supported in Chrome 129+ and Firefox 142, but not in Safari, so
-  always feature-detect it and fall back to `setTimeout`.
+  — `scheduler.postTask` for yielding to the browser.
 
 ## Required Workflow
 
@@ -87,10 +81,9 @@ user to notice.
    for scripts that do not need to run before first paint, and load
    below-the-fold or on-interaction features on demand.
 6. Break up long tasks. Split work over 50 ms into smaller chunks
-   by yielding — prefer `scheduler.yield()` where it is supported,
-   with `setTimeout` as the fallback — and move heavy computation
-   off the main thread where it makes sense. `scheduler.postTask()`
-   schedules prioritized tasks; it is not a yield.
+   with yielding (for example, `scheduler.postTask` or
+   `setTimeout`), and move heavy computation off the main thread
+   where it makes sense.
 7. Re-measure under the same conditions and compare INP, Total
    Blocking Time, and JavaScript bytes against the baseline.
 
@@ -174,9 +167,6 @@ user to notice.
   breaks the page for those users.
 - Treating Total Blocking Time as the whole story — it is a lab
   metric; INP field data is what users experience.
-- Relying on `requestIdleCallback` as the only way to yield —
-  its browser support is incomplete, and on a busy page an idle
-  callback can be postponed indefinitely.
 
 ## Examples
 
@@ -200,22 +190,12 @@ document.getElementById('show-map').addEventListener('click', async () => {
 Break up a long task by yielding between chunks:
 
 ```js
-// scheduler.yield() is the dedicated yield API; fall back to
-// setTimeout where it is not supported (Safari).
-async function yieldToMain() {
-  if (typeof scheduler !== 'undefined' && scheduler.yield) {
-    await scheduler.yield();
-  } else {
-    await new Promise((resolve) => setTimeout(resolve, 0));
-  }
-}
-
 // Process items in small batches so the browser can handle input
 // between batches.
 async function processItems(items) {
   for (let i = 0; i < items.length; i += 50) {
     items.slice(i, i + 50).forEach(processOne);
-    await yieldToMain();
+    await new Promise((resolve) => setTimeout(resolve, 0));
   }
 }
 ```

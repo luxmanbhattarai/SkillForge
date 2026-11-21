@@ -47,8 +47,8 @@ enforcing it on the server for every route, API endpoint, and data query.
 ## Official Documentation
 
 - [OWASP Authorization Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html) — access control patterns and pitfalls.
-- [OWASP Top Ten — Broken Access Control](https://owasp.org/www-project-top-ten/) — why access control failures top the list (A01 in the current 2025 edition, which also folds SSRF into this category).
-- [OWASP ASVS](https://owasp.org/www-project-application-security-verification-standard/) — verification standard, including the authorization sections; ASVS 5.0.0 (May 2025) is current.
+- [OWASP Top Ten — Broken Access Control](https://owasp.org/www-project-top-ten/) — why access control failures top the list.
+- [OWASP ASVS](https://owasp.org/www-project-application-security-verification-standard/) — verification standard, including the authorization sections.
 
 ## Required Workflow
 

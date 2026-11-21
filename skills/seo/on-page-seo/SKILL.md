@@ -58,25 +58,15 @@ clicks; it never guarantees a position.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) —
   content and technical policies the page must meet.
 
-Guidance current as of 2026-11-20. Title length, meta description
-length, and the one-H1 convention in this skill are display and
-clarity heuristics, not Google requirements: Google publishes no
-character limits for titles or descriptions and does not require a
-single H1.
-
 ## Required Workflow
 
 1. Confirm the target query and its intent; check what currently ranks for
    it with `serp-analysis` to understand the expected content type.
 2. Write the title tag: primary keyword near the front, unique to the page,
-   readable as a headline, and short enough not to be truncated in
-   results. Google truncates titles by pixel width, not by a character
-   count — "under roughly 60 characters" is an industry rule of thumb,
-   not a Google limit.
-3. Write the meta description: a summary of around 150-160 characters
-   that includes the query naturally and gives a reason to click. The
-   150-160 character range is a display heuristic, not a Google limit,
-   and Google often rewrites descriptions. It does not directly
+   readable as a headline, and under roughly 60 characters so it is not
+   truncated in results.
+3. Write the meta description: a 150-160 character summary that includes
+   the query naturally and gives a reason to click. It does not directly
    affect rankings, but it affects click-through.
 4. Structure headings: one H1 that matches the page's topic (usually the
    page title), H2s for the main sections, H3s for subsections. Never skip
@@ -105,10 +95,8 @@ single H1.
   deliver.
 - Meta descriptions: unique, written as a summary for humans, no keyword
   stuffing, no quoted claims the page does not support.
-- Headings: one H1 per page as a house convention; H2/H3 order follows
-  the document outline; headings describe the section that follows
-  them. (Google does not require a single H1 and does not penalize
-  multiple H1s — one H1 is a clarity convention, not a Google rule.)
+- Headings: exactly one H1 per page; H2/H3 order follows the document
+  outline; headings describe the section that follows them.
 - Body copy: the primary query appears in the first 100 words only if it
   reads naturally; keyword density targets are not a real standard and
   must not be enforced.
@@ -156,8 +144,7 @@ single H1.
 - Duplicate titles across pages — template defaults that produce the same
   title on every page confuse search engines about which page to show.
 - Multiple H1s or H1s used as logo text — the H1 should name the page's
-  topic, not the site. (Multiple H1s are not penalized by Google; one
-  H1 per page is the house convention for clarity.)
+  topic, not the site.
 - Optimizing for the wrong intent — a product page cannot rank for an
   informational query no matter how well its title is written.
 - Changing a ranking URL without a redirect — the old URL's signals are
@@ -192,13 +179,10 @@ Example image markup with descriptive alt text:
 
 ## Validation Checklist
 
-- [ ] Title tag is unique, short enough to avoid truncation in
-      results (roughly 60 characters is a rule of thumb, not a Google
-      limit), and matches the page's content.
-- [ ] Meta description is unique, around 150-160 characters (a
-      display heuristic, not a Google limit), and written for humans.
-- [ ] One H1 per page (house convention); heading order is logical
-      with no skipped levels.
+- [ ] Title tag is unique, under roughly 60 characters, and matches the
+      page's content.
+- [ ] Meta description is unique, 150-160 characters, and written for humans.
+- [ ] Exactly one H1; heading order is logical with no skipped levels.
 - [ ] The target query's intent matches the page's content type.
 - [ ] All meaningful images have descriptive alt text.
 - [ ] The canonical URL is short, lowercase, and free of tracking parameters.

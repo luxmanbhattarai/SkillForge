@@ -61,11 +61,7 @@ work, and auditing existing visuals for drift.
 - [W3C Web Accessibility Initiative: Images](https://www.w3.org/WAI/tutorials/images/)
   — accessible treatment of images, including text in images.
 - [Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/WAI/standards-guidelines/wcag/)
-  — contrast requirements that brand palettes must satisfy. WCAG 2.2
-  (W3C Recommendation, October 2023) is the current version; Level AA
-  requires at least 4.5:1 contrast for normal text and 3:1 for large text
-  (1.4.3), and 3:1 for meaningful non-text graphics (1.4.11). WCAG 3.0 is
-  still a Working Draft and must not be cited as a requirement.
+  — contrast requirements that brand palettes must satisfy.
 - [Open Graph protocol](https://ogp.me/) — how preview images carry
   the brand into shared links.
 
@@ -113,9 +109,7 @@ work, and auditing existing visuals for drift.
   from a template, not from a blank canvas.
 - On-image text follows the contrast rules: large type with strong
   contrast against its background, readable at the image's real
-  display size. As a floor, text on images should meet WCAG 2.2 AA
-  ratios: 4.5:1 for normal text, 3:1 for large text (at least 18pt,
-  about 24px, or 14pt bold, about 18.66px bold).
+  display size.
 - Changes to the system are recorded with a date and a reason, and
   templates are updated at the same time as the rules.
 

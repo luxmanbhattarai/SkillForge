@@ -3,11 +3,10 @@ name: cloudflare
 description: >
   Use this skill when working with the Cloudflare platform: setting up a
   Cloudflare account, configuring DNS and custom domains, managing zones,
-  configuring SSL/TLS, redirect, cache, and configuration rules,
-  caching, WAF and security settings, and choosing between Cloudflare
-  products such as Workers, Pages, D1, R2, KV, Queues, and Durable
-  Objects. Trigger keywords: Cloudflare, DNS, zone, custom domain, SSL,
-  TLS, WAF, cache, CDN, Cloudflare account, nameserver.
+  configuring SSL/TLS, page rules, caching, WAF and security settings, and
+  choosing between Cloudflare products such as Workers, Pages, D1, R2, KV,
+  Queues, and Durable Objects. Trigger keywords: Cloudflare, DNS, zone,
+  custom domain, SSL, TLS, WAF, cache, CDN, Cloudflare account, nameserver.
 license: MIT
 metadata:
   version: "1.0.0"
@@ -52,11 +51,6 @@ Cloudflare product for a given workload.
 - For API or CLI work: an API token with the minimum scopes for the task,
   stored in a secret manager or environment variable, never in source files.
 - Familiarity with DNS record types (A, AAAA, CNAME, MX, TXT, CAA).
-- Page Rules are deprecated: do not create new ones. Use Redirect
-  Rules (Single Redirects) for redirects, Cache Rules for caching,
-  and Configuration Rules for per-path setting overrides; see the
-  Page Rules migration guide linked below. Existing Page Rules still
-  work and Cloudflare plans to migrate them automatically.
 
 ## Official Documentation
 
@@ -66,8 +60,6 @@ Cloudflare product for a given workload.
   DNS management.
 - [Cloudflare API documentation](https://developers.cloudflare.com/api/) —
   REST API reference for programmatic management.
-- [Page Rules migration guide](https://developers.cloudflare.com/rules/reference/page-rules-migration/) —
-  how each Page Rules setting maps to a modern Rules product.
 
 ## Required Workflow
 
@@ -126,9 +118,8 @@ Cloudflare product for a given workload.
   WAF events regularly for abuse patterns.
 - Restrict dashboard access by role; give collaborators the lowest role
   that lets them do their job.
-- Be careful with redirect, transform, and configuration rules that
-  modify headers or redirect traffic, since a bad rule can expose or
-  break the origin.
+- Be careful with page rules and transform rules that modify headers or
+  redirect traffic, since a bad rule can expose or break the origin.
 
 ## Performance Considerations
 
@@ -138,8 +129,7 @@ Cloudflare product for a given workload.
   dashboard toggles.
 - Keep DNS TTLs low (for example 300 seconds) during migrations, and raise
   them after the change is stable.
-- Avoid excessive redirect rules and redirects; each redirect adds a
-  round trip.
+- Avoid excessive page rules and redirects; each redirect adds a round trip.
 
 ## Common Mistakes
 

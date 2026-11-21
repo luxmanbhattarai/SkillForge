@@ -33,10 +33,6 @@ a last resort.
 | `typescript` | Typed SDK surfaces. |
 | `mcp-development` | The SDK exposes MCP tools. |
 | `mcp-builder` (upstream) | Building an MCP server alongside the SDK. |
-| `typescript-sdk` | The SDK targets TypeScript. |
-| `python-sdk` | The SDK targets Python. |
-| `openapi` | The API contract is defined in OpenAPI. |
-| `api-client-generation` | Clients are generated from the contract. |
 
 ## Skills it should use
 

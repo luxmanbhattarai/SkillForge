@@ -21,7 +21,7 @@ metadata:
 
 This skill produces blog posts that read like a person talking to a reader,
 not a report: a strong hook, a clear point of view, short scannable sections,
-and an ending that invites the next step. It is built for posts where voice
+and a ending that invites the next step. It is built for posts where voice
 and engagement matter as much as information — the kind of post a reader
 finishes and shares.
 

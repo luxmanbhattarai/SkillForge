@@ -47,7 +47,6 @@ This skill covers securing a database and the data in it: authenticating and aut
 - A list of who and what needs database access: application services, background workers, analysts, administrators.
 - Knowledge of what sensitive data the database holds and which regulations or policies apply to it.
 - Access to the database server configuration and the deployment's secret management.
-- Supported versions as of 2026-11-20: PostgreSQL 15–19, MySQL 8.4/9.7 LTS, MongoDB 7.0/8.0/8.3/9.0, SQLite 3.51 (see the engine skills for version detail). The examples use PostgreSQL syntax.
 
 ## Official Documentation
 
@@ -128,19 +127,13 @@ CREATE ROLE app_readwrite LOGIN PASSWORD 'stored-in-secret-manager';
 GRANT CONNECT ON DATABASE mydb TO app_readwrite;
 GRANT USAGE ON SCHEMA public TO app_readwrite;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO app_readwrite;
--- Cover tables created later, which the grant above does not reach:
-ALTER DEFAULT PRIVILEGES IN SCHEMA public
-  GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO app_readwrite;
 ```
 
 ```sql
 -- Example: row-level security so tenants see only their own rows (PostgreSQL).
--- current_setting(..., true) returns NULL instead of erroring when the
--- setting is unset, so the policy fails closed (no rows match) rather
--- than breaking the query.
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 CREATE POLICY tenant_isolation ON orders
-  USING (tenant_id = current_setting('app.tenant_id', true)::bigint);
+  USING (tenant_id = current_setting('app.tenant_id')::bigint);
 ```
 
 ```ts

@@ -48,10 +48,8 @@ flow with PKCE, with tokens stored and refreshed safely.
 ## Official Documentation
 
 - [OAuth 2.0 (oauth.net)](https://oauth.net/2/) — the standard's home, with flow explanations and guidance.
-- [RFC 6749 — OAuth 2.0 Authorization Framework](https://datatracker.ietf.org/doc/html/rfc6749) — the normative specification; still the published standard. OAuth 2.1 (draft-ietf-oauth-v2-1-17, October 2026) is an Internet-Draft that consolidates RFC 6749 with the security BCPs below; it is not yet an RFC.
-- [RFC 9700 — Best Current Practice for OAuth 2.0 Security](https://datatracker.ietf.org/doc/html/rfc9700) — the current security baseline (January 2025, BCP 240). It requires PKCE for public clients, deprecates the implicit grant, and forbids the resource owner password credentials grant. Follow it today; it is the substance of the coming OAuth 2.1.
+- [RFC 6749 — OAuth 2.0 Authorization Framework](https://datatracker.ietf.org/doc/html/rfc6749) — the normative specification.
 - [RFC 7636 — Proof Key for Code Exchange (PKCE)](https://datatracker.ietf.org/doc/html/rfc7636) — the PKCE extension.
-- [RFC 10017 — OAuth 2.0 for Browser-Based Applications](https://datatracker.ietf.org/doc/html/rfc10017) — BCP for SPAs and other browser-based OAuth clients (August 2026).
 - [OpenID Connect](https://openid.net/connect/) — the identity layer on top of OAuth 2.0.
 - [RFC 8252 — OAuth 2.0 for Native Apps](https://datatracker.ietf.org/doc/html/rfc8252) — rules for mobile and desktop clients.
 
@@ -71,7 +69,7 @@ flow with PKCE, with tokens stored and refreshed safely.
 ## Implementation Standards
 
 - Always use authorization code with PKCE for user-facing flows, including confidential clients.
-- Never use the implicit flow or the resource owner password credentials flow for new work: the implicit grant is deprecated by RFC 9700, and the password credentials grant MUST NOT be used (RFC 9700 §2.4).
+- Never use the implicit flow or the resource owner password credentials flow for new work; both are deprecated in current best practice.
 - `state` must be a cryptographically random value bound to the user's session, checked on callback, and single-use.
 - The redirect URI must match the registered value exactly; never build it from user input.
 - Request the minimum scopes the feature needs; add scopes later only with a new consent step.
@@ -96,7 +94,6 @@ flow with PKCE, with tokens stored and refreshed safely.
 - Never accept tokens from the URL fragment in a server flow, and never trust an unverified ID token.
 - Refresh tokens are long-lived credentials: encrypt them, scope them per user, and revoke them on sign-out and on password change.
 - Reject tokens from unexpected issuers and audiences; a token minted for another app must not authenticate this one.
-- When the client talks to more than one authorization server, validate the `iss` response parameter (RFC 9207) on the callback to prevent mix-up attacks; a distinct redirect URI per provider is the fallback when the provider does not send `iss`.
 
 ## Performance Considerations
 
@@ -166,9 +163,7 @@ https://provider.example/authorize
 ## References
 
 - [RFC 6749 — OAuth 2.0 Authorization Framework](https://datatracker.ietf.org/doc/html/rfc6749)
-- [RFC 9700 — Best Current Practice for OAuth 2.0 Security](https://datatracker.ietf.org/doc/html/rfc9700)
 - [RFC 7636 — PKCE](https://datatracker.ietf.org/doc/html/rfc7636)
-- [RFC 10017 — OAuth 2.0 for Browser-Based Applications](https://datatracker.ietf.org/doc/html/rfc10017)
 - [RFC 8252 — OAuth 2.0 for Native Apps](https://datatracker.ietf.org/doc/html/rfc8252)
 - [OpenID Connect](https://openid.net/connect/)
 - Related skills in this repository: `authentication`, `better-auth`, `jwt`, `session-management`, `auth-security`.

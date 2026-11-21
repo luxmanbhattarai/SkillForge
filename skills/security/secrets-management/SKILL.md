@@ -61,8 +61,8 @@ rotating them, and responding when one leaks.
   storing secrets for CI workflows.
 - [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/) —
   secrets and key management guidance.
-- [OWASP Top 10](https://owasp.org/www-project-top-ten/) — Cryptographic
-  Failures (A04 in the current 2025 edition) context.
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/) — sensitive
+  data exposure context.
 
 ## Required Workflow
 
@@ -167,13 +167,13 @@ rotating them, and responding when one leaks.
 
 ```bash
 # .env (local only, git-ignored) — real values live here, never in git.
-DATABASE_URL=postgres://app-user:<password>@localhost:5432/app
+DATABASE_URL=postgres://app-user:CHANGE_ME@localhost:5432/app
 API_KEY=your-development-key-here
 ```
 
 ```bash
 # .env.example (committed) — names and formats only, no real values.
-DATABASE_URL=postgres://user:<password>@host:5432/database
+DATABASE_URL=postgres://user:password@host:5432/database
 API_KEY=your-api-key-here
 ```
 

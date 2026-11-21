@@ -40,7 +40,7 @@ hand-rolled crypto.
 
 ## Prerequisites
 
-- A maintained JWT library for the stack (for example `jose` for JavaScript/TypeScript; the 6.x line is current as of November 2026, and the API shown here works on jose 5.x and 6.x).
+- A maintained JWT library for the stack (for example `jose` for JavaScript/TypeScript).
 - A signing key: an asymmetric key pair (RS256/ES256) for tokens verified by other parties, or a strong secret (HS256) only when issuer and verifier are the same service.
 - Agreement on the claims the token carries and the issuer/audience values.
 - HTTPS on every environment that transmits tokens.
@@ -129,9 +129,8 @@ const token = await new SignJWT({ role: "member" })
   .setExpirationTime("15m")
   .sign(secret);
 
-// Verify strictly: the algorithm is pinned, and issuer and audience are checked.
+// Verify strictly: algorithm, issuer, and audience are all checked.
 const { payload } = await jwtVerify(token, secret, {
-  algorithms: ["HS256"],
   issuer: "https://app.example",
   audience: "https://api.example",
 });

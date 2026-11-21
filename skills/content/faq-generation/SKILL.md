@@ -52,7 +52,6 @@ and structuring the result for both readers and search engines.
 - [FAQPage structured data](https://schema.org/FAQPage) — the Schema.org type for FAQ pages.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — baseline rules for content in Google Search.
 - [Creating helpful, reliable, people-first content](https://developers.google.com/search/docs/fundamentals/creating-helpful-content) — Google's guidance on content quality.
-- Compatibility: Google fully removed the FAQ rich result from Google Search on May 7, 2026, and removed the FAQ structured-data documentation in June 2026 (see the [Google Search documentation updates log](https://developers.google.com/search/updates) — entries of May 8 and June 15, 2026). FAQPage remains valid schema.org vocabulary and causes no penalty, but it no longer produces any visible rich result in Google Search — do not add FAQ markup expecting an expandable listing. Other search engines and consumers may still read it. Google also states there is no need to proactively remove existing FAQPage markup: unused structured data causes no problems in Search.
 
 ## Required Workflow
 
@@ -63,7 +62,7 @@ and structuring the result for both readers and search engines.
 5. Write the answer to each question directly: lead with the answer in the first sentence, then add the necessary detail. Keep answers to 40-80 words unless the question genuinely needs more.
 6. Order the questions logically: by topic, or by the order a reader encounters them (before buying, while using, when something goes wrong).
 7. Verify every answer's facts with `fact-checking` where the answer states a fact, number, or policy.
-8. Add FAQ structured data (FAQPage) only when the questions and answers are visible on the page and the site controls the content. Never add FAQ markup for questions the page does not display. Expect no Google rich result from it: Google removed the FAQ rich result in May 2026, so the markup is for other consumers and for machine-readable page understanding only.
+8. Add FAQ structured data (FAQPage) only when the questions and answers are visible on the page and the site controls the content. Never add FAQ markup for questions the page does not display.
 9. Review the FAQ with `editorial-review`, checking that each question is real and each answer is accurate and complete.
 10. Plan maintenance: review the FAQ when the product, policy, or topic changes, and add new questions as they appear in support tickets.
 
@@ -75,7 +74,6 @@ and structuring the result for both readers and search engines.
 - Questions are written in the reader's words, not the company's jargon.
 - Answers are accurate and current; policy answers (pricing, shipping, returns) match the current published policy.
 - FAQ structured data is used only for visible Q&A content the site controls, following the Schema.org FAQPage type.
-- Do not promise or expect a Google rich result from FAQPage markup: Google stopped showing FAQ rich results on May 7, 2026. Existing FAQPage markup is harmless and does not need to be removed.
 - The FAQ does not duplicate content that already exists on the site; it links to it.
 - Questions are ordered by topic or reader journey, not randomly.
 
@@ -97,7 +95,7 @@ and structuring the result for both readers and search engines.
 
 - A FAQ section should load with the page, not behind a slow script; use native HTML details elements or simple markup.
 - Keep FAQ pages focused: one topic per FAQ page, with links to related pages, rather than a single giant FAQ.
-- FAQ structured data is optional; add it only when the content genuinely qualifies, and never for the sake of a Google rich result — that feature no longer exists.
+- FAQ structured data is optional; add it only when the content genuinely qualifies.
 
 ## Common Mistakes
 

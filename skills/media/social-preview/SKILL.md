@@ -58,20 +58,10 @@ target platform is checked on its own.
 
 - [Open Graph protocol](https://ogp.me/) — the tag specification that
   most preview systems read.
-- [Meta Sharing Debugger](https://developers.facebook.com/tools/debug/) — Meta's official tool: shows what its crawler reads from a page and forces a re-scrape ("Scrape Again").
 - [X Developer Platform](https://developer.x.com/) — official X
   developer documentation, including cards.
 - [MDN: the meta element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta)
   — how meta tags are written in HTML.
-- Compatibility: X's standalone Card Validator has been retired, and
-  X's developer site no longer publishes its Cards documentation pages
-  (both confirmed via secondary reporting, November 2026; X's domains
-  could not be checked directly). To preview an X card, paste the URL
-  into a post composer draft instead of using a validator tool.
-  LinkedIn's debugger is the LinkedIn Post Inspector. Each platform
-  caches previews separately, and Facebook caches images by URL — a
-  changed image under the same filename may keep showing the old
-  preview until re-scraped.
 
 ## Required Workflow
 
@@ -84,10 +74,7 @@ target platform is checked on its own.
 3. Confirm every image URL is absolute, uses HTTPS, and returns the
    image when fetched, with the expected dimensions.
 4. Check the preview with each platform's official debugger or card
-   validator where one exists (Meta Sharing Debugger, LinkedIn Post
-   Inspector; for X, paste the URL into a post composer draft, since
-   X's standalone Card Validator has been retired), and record what
-   each one shows.
+   validator where one exists, and record what each one shows.
 5. Compare each preview against the expected title, description, and
    image. Note every mismatch per platform.
 6. When a platform shows stale content, use its official cache-refresh
@@ -191,10 +178,8 @@ Example of what a correct tag set looks like in the served HTML:
 <meta property="og:image" content="https://example.com/images/og/sourdough-starter-smell.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Glass jar of bubbling sourdough starter on a wooden counter in morning light.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://example.com/images/cards/sourdough-starter-smell.jpg">
-<meta name="twitter:image:alt" content="Glass jar of bubbling sourdough starter on a wooden counter in morning light.">
 ```
 
 Example check record:
@@ -231,7 +216,6 @@ Fixes: updated og:image URL after the image was re-exported.
 ## References
 
 - [Open Graph protocol](https://ogp.me/) — the tag specification.
-- [Meta Sharing Debugger](https://developers.facebook.com/tools/debug/) — check what Meta's crawler reads and force a re-scrape.
 - [X Developer Platform](https://developer.x.com/) — official X
   developer documentation, including cards.
 - [MDN: the meta element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta)

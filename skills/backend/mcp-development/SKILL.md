@@ -12,7 +12,7 @@ metadata:
   maintainer: skills-library
   source: original
   last_verified: "2026-11-20"
-compatibility: Requires Node.js 24 LTS or later, TypeScript 7.x, and the MCP TypeScript SDK v2 (`@modelcontextprotocol/server`); network access for remote servers.
+compatibility: Requires Node.js 24 LTS, TypeScript 5.x, and the MCP TypeScript SDK; network access for remote servers.
 ---
 
 # MCP Development
@@ -47,13 +47,8 @@ tools that do one thing well and fail with clear messages.
 
 ## Prerequisites
 
-- Node.js 24 LTS or later (26 is the current LTS line) and
-  TypeScript 7.x.
-- The MCP TypeScript SDK v2 (`@modelcontextprotocol/server`, 2.4.x)
-  installed. The v1 package `@modelcontextprotocol/sdk` is legacy:
-  it receives only bug fixes and security updates until early 2027
-  (six months after the v2 release on 2026-07-27), and new servers
-  must use v2.
+- Node.js 24 LTS and TypeScript 5.x.
+- The MCP TypeScript SDK (`@modelcontextprotocol/sdk`) installed.
 - A clear list of the capabilities to expose: what the tools do, what
   data the resources provide, and who may use them.
 - An MCP client or the MCP Inspector for testing.
@@ -63,14 +58,7 @@ tools that do one thing well and fail with clear messages.
 - [Model Context Protocol documentation](https://modelcontextprotocol.io/docs)
   — the official guides, concepts, and SDK references.
 - [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
-  — the official TypeScript SDK repository. SDK v2 is the stable
-  release line (released 2026-07-27, implementing the 2026-07-28 MCP
-  specification) with split packages: `@modelcontextprotocol/server`
-  for servers, `@modelcontextprotocol/client` for clients, plus
-  thin middleware packages (`@modelcontextprotocol/node`,
-  `/express`, `/fastify`, `/hono`) for Streamable HTTP. Tool and
-  prompt schemas use Standard Schema, so Zod v4, Valibot, or ArkType
-  all work.
+  — the official TypeScript SDK repository.
 - [Node.js documentation](https://nodejs.org/docs/) — the runtime
   reference.
 
@@ -85,9 +73,7 @@ tools that do one thing well and fail with clear messages.
 3. Scaffold the server with the TypeScript SDK and register the tools,
    resources, and prompts.
 4. Choose the transport: stdio for local servers run by the client,
-   Streamable HTTP for remote servers shared by many clients. Do not
-   use the HTTP+SSE transport for new servers — it is deprecated and
-   kept only for backwards compatibility.
+   Streamable HTTP for remote servers shared by many clients.
 5. Implement each tool handler as a thin wrapper over a service
    function, with input validation and a clear success or error result.
 6. Add authentication and authorization for remote servers; local
@@ -107,10 +93,8 @@ tools that do one thing well and fail with clear messages.
   and what it returns — written for a model that has never seen the
   tool before. Vague descriptions produce wrong tool calls.
 - Input schemas are minimal: only the fields the tool needs, with
-  required fields marked and sensible defaults. In SDK v2 the input
-  schema is a single Standard Schema object (for example a Zod v4
-  `z.object({...})`), not a shape of per-field schemas as in v1.
-  Validate input with the SDK's schema support before acting.
+  required fields marked and sensible defaults. Validate input with
+  the SDK's schema support (Zod) before acting.
 - Tool results are structured content: return JSON the model can use,
   plus a short human-readable text summary. Keep results small;
   paginate or truncate large outputs.
@@ -199,13 +183,12 @@ tools that do one thing well and fail with clear messages.
 
 ## Examples
 
-A minimal MCP server with one tool, using the TypeScript SDK v2
-(matching the SDK repository's own getting-started example):
+A minimal MCP server with one tool, using the TypeScript SDK:
 
 ```ts
-import { McpServer } from "@modelcontextprotocol/server";
-import { StdioServerTransport } from "@modelcontextprotocol/server/stdio";
-import * as z from "zod/v4";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { z } from "zod";
 
 const server = new McpServer({
   name: "greeter-server",
@@ -215,10 +198,9 @@ const server = new McpServer({
 server.registerTool(
   "greet",
   {
+    title: "Greet",
     description: "Returns a friendly greeting for the given name.",
-    inputSchema: z.object({
-      name: z.string().min(1).describe("The name to greet"),
-    }),
+    inputSchema: { name: z.string().min(1).describe("The name to greet") },
   },
   async ({ name }) => {
     return {
@@ -227,20 +209,12 @@ server.registerTool(
   },
 );
 
-async function main() {
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-}
-
-main();
+const transport = new StdioServerTransport();
+await server.connect(transport);
 ```
 
 Run and inspect it with the MCP Inspector (from the SDK repository's
-documented tooling) before wiring it into a client. To serve the same
-server over Streamable HTTP instead of stdio, use the
-`@modelcontextprotocol/node` middleware package (or the Express,
-Fastify, or Hono middleware package) rather than the deprecated
-HTTP+SSE transport.
+documented tooling) before wiring it into a client.
 
 ## Validation Checklist
 

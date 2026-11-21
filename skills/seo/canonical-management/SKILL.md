@@ -66,12 +66,7 @@ signals conflict, so this skill keeps every signal consistent.
 ## Official Documentation
 
 - [Google Search Central](https://developers.google.com/search) — Google's canonicalization guidance.
-- [How to specify a canonical with rel="canonical" and other methods](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls) —
-  Google's canonicalization guide: signal strength order (redirects,
-  then rel="canonical", then sitemap) and best practices.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — duplicate content and crawlability baseline.
-
-Guidance current as of 2026-11-20.
 
 ## Required Workflow
 
@@ -95,9 +90,7 @@ Guidance current as of 2026-11-20.
    canonicalize to each other.
 7. Verify in Search Console. After deploying, use the URL Inspection
    tool on sample pages to confirm the user-declared canonical and
-   the Google-selected canonical match. Allow time for Google to
-   re-evaluate canonicalization after a change; it does not happen
-   instantly.
+   the Google-selected canonical match.
 8. Monitor. Re-check canonical selection after template changes,
    migrations, or large content updates.
 
@@ -123,12 +116,10 @@ Guidance current as of 2026-11-20.
   `noindex` (with a self-referencing canonical or no canonical
   conflict) rather than canonicalizing every facet to the base page
   when the facet content differs substantially.
-- Canonical signals stack, and Google documents their relative
-  strength: redirects are the strongest signal, `rel="canonical"`
-  (in HTML or in an HTTP `Link` header) is also strong, and sitemap
-  inclusion is a weak signal. Use two or more methods together so
-  they reinforce each other, and never let them disagree. Use HTTP
-  `Link` headers for canonicals only for non-HTML files such as PDFs.
+- Canonical tags in the HTML head take precedence in practice over
+  conflicting signals in sitemaps or headers; keep them consistent
+  anyway, and use HTTP `Link` headers for canonicals only for
+  non-HTML files such as PDFs.
 
 ## Best Practices
 

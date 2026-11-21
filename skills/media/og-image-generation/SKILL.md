@@ -53,22 +53,10 @@ text rules, per-page images, and preview verification.
 
 - [Open Graph protocol](https://ogp.me/) — the `og:` tag specification,
   including `og:image`, `og:title`, and `og:description`.
-- [Meta Sharing Debugger](https://developers.facebook.com/tools/debug/) — Meta's official tool for checking what its crawler reads from a page and forcing a re-scrape.
 - [MDN: the meta element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta)
   — how meta tags are written in HTML.
 - [Sharp documentation](https://sharp.pixelplumbing.com/) — scripted
-  resizing and conversion for OG images. Code examples in this skill use
-  the Sharp 0.35.x API (current as of November 2026).
-- Compatibility: the Open Graph protocol itself specifies no image
-  dimensions — it only defines the tags. The 1200x630 size comes from
-  Meta's sharing documentation for Facebook link previews: at least
-  1200x630 pixels (about 1.91:1) is recommended for the best display on
-  high-resolution screens, at least 600x315 is needed for a large
-  preview, 200x200 is the absolute minimum, and files must be under
-  8 MB. LinkedIn recommends 1200x627 (1.91:1) with a 5 MB limit, so a
-  1200x630 file under 5 MB satisfies both. Keep on-image text inside a
-  safe area away from the edges: X's large card is 2:1 and trims about
-  15 px from the top and bottom of a 1200x630 image.
+  resizing and conversion for OG images.
 
 ## Required Workflow
 
@@ -86,8 +74,7 @@ text rules, per-page images, and preview verification.
    `og:title`, `og:description`, `og:url`, and `og:type` tags with
    absolute URLs.
 8. Include `og:image:width` and `og:image:height` (1200 and 630) so
-   crawlers do not have to fetch the image to learn its size, and add
-   `og:image:alt` describing what the image shows.
+   crawlers do not have to fetch the image to learn its size.
 9. Verify the preview with `social-preview`, including a cache refresh
    when a platform still shows an old image.
 10. Record the image file, its source design, and the tags set, so the
@@ -95,29 +82,20 @@ text rules, per-page images, and preview verification.
 
 ## Implementation Standards
 
-- OG images are 1200x630 pixels (about 1.91:1). This is the size Meta's
-  sharing documentation recommends for Facebook link previews and the de
-  facto standard other platforms expect — not a requirement of the Open
-  Graph protocol itself, which defines the tags but no dimensions. An
-  image smaller than 600x315 shows only as a small thumbnail on
-  Facebook, and one under 200x200 is ignored.
+- OG images are 1200x630 pixels. This is the size the Open Graph
+  protocol documents and the size major platforms expect.
 - `og:image` uses an absolute URL (`https://...`), never a relative path;
   crawlers fetch the image from the URL in the tag.
 - Every page that can be shared has `og:title`, `og:description`,
   `og:image`, `og:url`, and `og:type`. A page with only some of these
   tags gets an inconsistent preview.
-- `og:image:width` and `og:image:height` are set (1200 and 630), and
-  `og:image:alt` describes the image: the Open Graph protocol says a
-  page that specifies `og:image` should also specify `og:image:alt`.
 - `og:title` and `og:description` match the page's real title and
   description; do not write preview-only text that contradicts the page.
 - Text on the image is large, high-contrast, and limited to a short
   headline plus the site or brand name. Small body text is unreadable
   in a preview.
 - The image file is compressed for fast crawler fetching; a slow or
-  oversized image may be skipped by the crawler. Keep it under 5 MB so it
-  also satisfies LinkedIn's and X's limits, and prefer JPEG or PNG:
-  not every platform's scraper renders WebP or AVIF previews.
+  oversized image may be skipped by the crawler.
 - A default OG image exists for the whole site so no shared page ever
   shows a random image or none at all.
 
@@ -187,7 +165,6 @@ Example Open Graph tags for an article page:
 <meta property="og:image" content="https://example.com/images/og/sourdough-starter-smell.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Glass jar of bubbling sourdough starter on a wooden counter in morning light.">
 <meta property="og:site_name" content="Example Baking Blog">
 ```
 
@@ -223,8 +200,7 @@ await sharp("og-source.png")
 - [ ] The image is compressed and served over HTTPS at a stable URL.
 - [ ] `og:image` uses an absolute URL.
 - [ ] `og:title`, `og:description`, `og:url`, `og:type`, and
-      `og:image:width` / `og:image:height` are all set, with
-      `og:image:alt` describing the image.
+      `og:image:width` / `og:image:height` are all set.
 - [ ] On-image text is short, large, and inside the safe area.
 - [ ] The preview was verified with `social-preview` and shows the
       intended image, title, and description.
@@ -242,7 +218,6 @@ await sharp("og-source.png")
 ## References
 
 - [Open Graph protocol](https://ogp.me/) — the tag specification.
-- [Meta Sharing Debugger](https://developers.facebook.com/tools/debug/) — check what Meta's crawler reads and force a re-scrape.
 - [MDN: the meta element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta)
   — meta tag syntax.
 - [Sharp documentation](https://sharp.pixelplumbing.com/) — scripted

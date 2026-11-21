@@ -61,11 +61,9 @@ a cropped title.
 - [The Open Graph protocol](https://ogp.me/) — the specification:
   required and optional properties.
 - [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/)
-  — test and refresh how Facebook scrapes a URL. Requires a
-  Facebook login.
+  — test and refresh how Facebook scrapes a URL.
 - [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/)
-  — test how LinkedIn renders a shared URL. Requires a LinkedIn
-  sign-in to run an inspection.
+  — test how LinkedIn renders a shared URL.
 
 ## Required Workflow
 
@@ -94,12 +92,8 @@ a cropped title.
 
 ## Implementation Standards
 
-- Per the Open Graph protocol, the four required properties are
-  `og:title`, `og:type`, `og:image`, and `og:url`; `og:description`
-  is optional in the spec but recommended. Include all five on
-  every public page that may be shared.
-- Add `og:image:alt` (the spec recommends it whenever `og:image`
-  is present) and `og:site_name` for the site's display name.
+- Every public page that may be shared must have `og:title`,
+  `og:description`, `og:image`, `og:url`, and `og:type`.
 - Use absolute URLs for `og:image` and `og:url`. Relative URLs are
   a common cause of broken previews.
 - The default preview image size is 1200x630 pixels. Do not use an
@@ -185,9 +179,7 @@ Open Graph tags for an article page:
   <meta property="og:image" content="https://example.com/images/og/sourdough-crumb.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="A loaf of sourdough with a dense, tight crumb">
-  <meta property="og:site_name" content="Example Bakery Blog">
-  <meta property="article:published_time" content="2026-11-20T09:00:00Z">
+  <meta property="article:published_time" content="2026-11-20">
 </head>
 ```
 

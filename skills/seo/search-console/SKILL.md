@@ -73,13 +73,6 @@ pairs it with analytics for the full traffic picture.
 - [Google Search Central](https://developers.google.com/search) — guidance on Search Console reports and site management.
 - [Search Console Help](https://support.google.com/webmasters/) — report definitions and troubleshooting.
 
-Guidance current as of 2026-11-20. Two recent changes to know: AI Mode
-traffic counts towards the totals in the Performance report (since
-June 2025), and Search Console has a Generative AI performance report
-for measuring how content performs in Google's generative AI features
-(AI Overviews, AI Mode). The old International Targeting report was
-deprecated in November 2022 and no longer exists.
-
 ## Required Workflow
 
 1. Verify ownership. Add the property as a domain property (covers
@@ -148,10 +141,6 @@ deprecated in November 2022 and no longer exists.
   content or poor internal linking before requesting indexing.
 - Use the Links report to spot the site's most-linked pages and any
   unexpected external links worth investigating.
-- Check the Generative AI performance report to see how content
-  performs in AI Overviews and AI Mode; AI Mode traffic also counts
-  towards the Performance report totals, so a rise in impressions
-  may come from AI surfaces rather than classic results.
 - After a launch or migration, check coverage daily for two weeks;
   problems caught early are cheap to fix.
 

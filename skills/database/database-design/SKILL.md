@@ -45,7 +45,6 @@ This skill guides the design of a correct, maintainable relational database sche
 - Knowledge of which database engine will be used, or a shortlist to decide between.
 - Understanding of the expected scale: rough row counts, read/write ratio, and growth.
 - Access to the project repository and its existing schema or migration tooling, if any.
-- Supported versions as of 2026-11-20: PostgreSQL 15–19, MySQL 8.4/9.7 LTS, SQLite 3.51. The examples use PostgreSQL syntax (identity columns need PostgreSQL 10+; `CITEXT` needs the `citext` extension).
 
 ## Official Documentation
 
@@ -120,9 +119,6 @@ This skill guides the design of a correct, maintainable relational database sche
 ```sql
 -- Example: normalized schema for authors and books, with a join table
 -- for the many-to-many relationship between books and categories.
--- CITEXT is not built in: the citext extension must be enabled first.
-CREATE EXTENSION IF NOT EXISTS citext;
-
 CREATE TABLE authors (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name TEXT NOT NULL,

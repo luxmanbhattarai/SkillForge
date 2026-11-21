@@ -58,11 +58,6 @@ limiting, and real-time collaboration that KV and D1 cannot do correctly.
 - An understanding of the Durable Object model: one object instance per
   unique ID, single-threaded execution per object, and persistent storage
   attached to the object.
-- New classes should use the SQLite storage backend, declared with
-  `new_sqlite_classes` in the migration; the older KV backend
-  (`new_classes`) is legacy and cannot use the SQL API
-  (`ctx.storage.sql`). The backend is fixed when the class is created.
-  Wrangler 4.x is the current major version.
 - Familiarity with the Workers runtime and the `cloudflare-workers` skill.
 
 ## Official Documentation
@@ -79,17 +74,15 @@ limiting, and real-time collaboration that KV and D1 cannot do correctly.
 1. Decide the object granularity before writing code: one Durable Object
    per room, per user, per counter, or per document — the ID is the unit
    of consistency.
-2. Write the Durable Object class extending the `DurableObject` base
-   class from `cloudflare:workers`; its constructor takes `ctx` and
-   `env` and must call `super(ctx, env)`. Add a `fetch` method that
-   handles requests.
+2. Write the Durable Object class with a constructor that takes `state`
+   and `env`, and a `fetch` method that handles requests.
 3. Add the `[[durable_objects.bindings]]` entry and the
-   `[[migrations]]` entry (with a `new_sqlite_classes` list and a
-   unique tag) to `wrangler.toml`.
+   `[[migrations]]` entry (with a `new_classes` list and a unique tag)
+   to `wrangler.toml`.
 4. In the Worker, derive the object ID with `env.BINDING.idFromName` or
    `idFromString`, get the stub, and forward the request.
-5. Store persistent state with `this.ctx.storage` and keep in-memory
-   state only as a cache that can be rebuilt from storage.
+5. Store persistent state with `state.storage` and keep in-memory state
+   only as a cache that can be rebuilt from storage.
 6. Test locally with `wrangler dev`, including the case where the object
    is created for the first time.
 7. Deploy with `wrangler deploy` and verify the flow against the live
@@ -103,9 +96,9 @@ limiting, and real-time collaboration that KV and D1 cannot do correctly.
   that handles unrelated features.
 - Keep the constructor light: do not do I/O in the constructor; load
   state lazily in `fetch` or in a dedicated method.
-- Use `this.ctx.storage` for all durable state; in-memory fields are a
+- Use `state.storage` for all durable state; in-memory fields are a
   cache and are lost when the object is evicted.
-- Use `this.ctx.blockConcurrencyWhile` when initialization must complete
+- Use `state.blockConcurrencyWhile` when initialization must complete
   before any request is handled.
 - Derive IDs deterministically from the entity (for example
   `idFromName(roomId)`) so the same entity always maps to the same object.
@@ -149,7 +142,7 @@ limiting, and real-time collaboration that KV and D1 cannot do correctly.
   serializes all traffic for that object; keep handlers fast.
 - Choose a fine-grained ID (per room, per user) rather than one global
   object, so unrelated traffic does not serialize behind each other.
-- Use `this.ctx.storage` transactions for multi-key updates that must be
+- Use `state.storage` transactions for multi-key updates that must be
   atomic.
 - Avoid storing large values in object storage; large values slow down
   reads and increase costs.
@@ -161,7 +154,7 @@ limiting, and real-time collaboration that KV and D1 cannot do correctly.
 - Using one global Durable Object for everything — all requests
   serialize through a single object; split by entity instead.
 - Keeping state only in memory — the object can be evicted at any time
-  and the state is lost; persist to `this.ctx.storage`.
+  and the state is lost; persist to `state.storage`.
 - Reusing a migration tag — Wrangler rejects the deploy; every migration
   needs a unique tag.
 - Doing heavy I/O in the constructor — the constructor runs on object
@@ -182,7 +175,7 @@ class_name = "ChatRoom"
 
 [[migrations]]
 tag = "v1"
-new_sqlite_classes = ["ChatRoom"]
+new_classes = ["ChatRoom"]
 ```
 
 Durable Object class and Worker forwarding:
@@ -218,7 +211,7 @@ export default {
 - [ ] The class is declared in `wrangler.toml` with a binding and a
       migration with a unique tag.
 - [ ] The object ID is derived deterministically from the entity.
-- [ ] All durable state lives in `ctx.storage`, not only in memory.
+- [ ] All durable state lives in `state.storage`, not only in memory.
 - [ ] The Worker authorizes requests before forwarding them to the object.
 - [ ] The flow works locally with `wrangler dev` and after deploy.
 - [ ] No secret is stored in Durable Object storage.

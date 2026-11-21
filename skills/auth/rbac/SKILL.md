@@ -46,9 +46,9 @@ on the server.
 
 ## Official Documentation
 
-- [OWASP Authorization Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html) — access control patterns including RBAC. Note the cheat sheet prefers attribute-based (ABAC) or relationship-based (ReBAC) access control when decisions need attributes or relationships beyond roles; RBAC fits when roles alone decide access.
-- [NIST Role-Based Access Control project](https://csrc.nist.gov/projects/role-based-access-control) — the reference model for role-based access control (ANSI/INCITS 359-2012). The NIST project page itself is archived and no longer updated; the standard it describes is stable.
-- [OWASP ASVS](https://owasp.org/www-project-application-security-verification-standard/) — verification standard, including authorization sections; ASVS 5.0.0 (May 2025) is current.
+- [OWASP Authorization Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html) — access control patterns including RBAC.
+- [NIST Role-Based Access Control project](https://csrc.nist.gov/projects/role-based-access-control) — the reference model for role-based access control.
+- [OWASP ASVS](https://owasp.org/www-project-application-security-verification-standard/) — verification standard, including authorization sections.
 
 ## Required Workflow
 

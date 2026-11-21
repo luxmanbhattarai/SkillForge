@@ -60,8 +60,7 @@ complements, but does not replace, a professional penetration test.
 - [OWASP Web Security Testing Guide](https://owasp.org/www-project-web-security-testing-guide/) —
   testing methodology.
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/) — the
-  critical risks list; the 2025 edition is current (finalized
-  January 2026).
+  critical risks list.
 - [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/) —
   defensive guidance per topic.
 - [OWASP ZAP](https://www.zaproxy.org/) — dynamic application
@@ -232,7 +231,7 @@ Audit checklist (areas to cover):
 - [OWASP Web Security Testing Guide](https://owasp.org/www-project-web-security-testing-guide/) —
   testing methodology.
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/) — the
-  critical risks list; the 2025 edition is current.
+  critical risks list.
 - [OWASP ZAP](https://www.zaproxy.org/) — dynamic testing.
 - [Semgrep](https://semgrep.dev/) — static analysis.
 - Related skills in this repository: `owasp`, `xss-prevention`,

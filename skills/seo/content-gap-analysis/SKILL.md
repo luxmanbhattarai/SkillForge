@@ -61,10 +61,6 @@ it does not promise traffic for any single piece.
 - [SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide) —
   Google's guidance on covering topics thoroughly.
 
-Guidance current as of 2026-11-20. Competitor keyword and traffic
-figures are third-party estimates, not Google data; label them as
-estimates with a named source.
-
 ## Required Workflow
 
 1. Build the site's content inventory: every indexable page with its

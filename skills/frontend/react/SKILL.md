@@ -45,12 +45,8 @@ and the common pitfalls that make React apps slow or buggy.
 
 ## Prerequisites
 
-- Node.js 24 LTS or 26 LTS and a React 19 project (current major line
-  as of 2026-11-20; 26 is the newest Node.js LTS line, 24 and 22
-  remain in LTS); do not assume a minor version. React 19.2 (October
-  2025) added the `<Activity>` component (hide a subtree while
-  preserving its state) and the `useEffectEvent` hook (non-reactive
-  logic inside effects); both require 19.2 or newer.
+- Node.js 24 LTS and a React 19 project (current major line as of
+  2026-11-20); do not assume a minor version.
 - A bundler or framework (Vite, Next.js, or similar) already configured.
 - Familiarity with `javascript` and, for typed projects, `typescript`.
 - The component's data source decided before writing it: props, local
@@ -98,10 +94,7 @@ and the common pitfalls that make React apps slow or buggy.
 - Effects: `useEffect` for synchronization with external systems;
   `useLayoutEffect` only when measuring layout before paint. Every effect
   returns a cleanup function when it subscribes, starts a timer, or
-  fetches. On React 19.2+, `useEffectEvent` holds non-reactive logic an
-  effect needs (for example reading the latest theme) without adding
-  the value to the dependency array; effect events are only called from
-  inside effects and never passed as props.
+  fetches.
 - Refs: `useRef` for values that persist across renders without triggering
   a re-render (DOM nodes, timers, previous values). Do not read or write
   refs during render.
@@ -113,9 +106,7 @@ and the common pitfalls that make React apps slow or buggy.
   insert, or delete items.
 - Forms: controlled inputs for values the component must read; use the
   `action` attribute or `useActionState` for form submissions where the
-  framework supports it. `useActionState` (imported from `react`) is
-  the React 19 name; the canary-era `useFormState` from `react-dom` is
-  deprecated.
+  framework supports it.
 - Data fetching: fetch in server components or route loaders when the
   framework supports them; in client components, fetch in an effect or
   use a data-fetching library, and always handle loading and error states.
@@ -188,7 +179,7 @@ and the common pitfalls that make React apps slow or buggy.
 - Mutating state directly (`state.items.push(...)`) — React cannot detect
   the change. Create a new array or object.
 - Fetching in render or in an event handler without cleanup — causes
-  duplicate requests and state updates after unmount. Fetch in an
+  duplicate requests and set-state-after-unmount warnings. Fetch in an
   effect with an `AbortController`, or in a server component.
 - Lifting all state to the top — re-renders the whole tree on every
   keystroke. Keep state low.

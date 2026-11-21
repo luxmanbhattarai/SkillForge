@@ -12,7 +12,7 @@ metadata:
   maintainer: skills-library
   source: original
   last_verified: "2026-11-20"
-compatibility: Requires the Hugo binary installed on the machine building the site; Sass/SCSS support needs a separate Dart Sass install (see Prerequisites).
+compatibility: Requires the Hugo binary (extended edition for Sass/SCSS support) installed on the machine building the site.
 ---
 
 # Hugo
@@ -43,20 +43,8 @@ wanted in the toolchain.
 
 ## Prerequisites
 
-- The Hugo binary installed (current line 0.170.x as of 2026-11-20).
-  Check the installed version with `hugo version`. There is only one
-  Hugo binary: the extended edition was removed in Hugo v0.170.0
-  (2026-11-13) along with LibSass, which had been deprecated since
-  v0.153.0. Do not install or request an "extended" build, and do not
-  set `transpiler: "libsass"` — it now returns an error.
-  `hugo.IsExtended` always returns `false` and the module setting
-  `hugoVersion.extended` is deprecated and has no effect.
-- For Sass/SCSS: install Dart Sass separately — it is now the default
-  and only transpiler for `css.Sass` (`toCSS` is the old alias for
-  `css.Sass`). The Snap package and the official Docker image bundle
-  Dart Sass; release archives and most package-manager installs do
-  not. WebP encoding has not needed the extended edition since
-  v0.153.0.
+- The Hugo binary installed; use the extended edition if the project
+  compiles Sass/SCSS. Check the installed version with `hugo version`.
 - Content as Markdown files with front matter, or a plan to write it.
 - Basic familiarity with Go template syntax (`{{ }}`, `range`, `if`,
   `with`) and with `html` and `css`.
@@ -117,9 +105,7 @@ wanted in the toolchain.
   figures, embeds). Keep shortcodes small and documented.
 - Assets: put processed assets (CSS, JS, images) in `assets/` so Hugo
   pipelines can fingerprint, minify, and bundle them; put files that need
-  no processing in `static/`. Compile Sass/SCSS with `css.Sass` using
-  the Dart Sass transpiler (the only transpiler since v0.170.0);
-  LibSass is removed.
+  no processing in `static/`.
 - Output formats: enable RSS and sitemap by default; Hugo generates both
   automatically when configured.
 
@@ -182,9 +168,6 @@ wanted in the toolchain.
   with no processing; files in `assets/` go through Hugo pipes.
 - Not pinning the Hugo version in CI — a new Hugo release can change
   build behavior and break the site.
-- Installing the "extended" edition or relying on LibSass — both were
-  removed in v0.170.0. Use the single Hugo binary with a separate
-  Dart Sass install for Sass/SCSS.
 
 ## Examples
 

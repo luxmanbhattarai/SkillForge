@@ -68,20 +68,8 @@ that market well, with real localized content and support.
 ## Official Documentation
 
 - [Google Search Central](https://developers.google.com/search) — Google's guidance on managing multi-regional and multilingual sites.
-- [Managing multi-regional and multilingual sites](https://developers.google.com/search/docs/specialty/international/managing-multi-regional-sites) —
-  Google's international guide: URL structures, language detection,
-  and geotargeting.
-- [Localized versions of your pages](https://developers.google.com/search/docs/specialty/international/localized-versions) —
-  Google's hreflang guide.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — baseline quality and technical requirements for all versions.
 - [Sitemaps.org](https://www.sitemaps.org/) — sitemap format for international URL sets.
-
-Guidance current as of 2026-11-20. Deprecated approach to avoid:
-Search Console's International Targeting report and its country
-targeting setting were deprecated in November 2022 — there is no
-Search Console setting that geotargets a site anymore. Geotargeting
-today is done with locale-specific URLs (ccTLDs, subdirectories, or
-subdomains), hreflang, and local signals.
 
 ## Required Workflow
 
@@ -115,19 +103,13 @@ subdomains), hreflang, and local signals.
   (`de.example.com`), then country-code domains (`example.de`).
   Subdirectories consolidate signals on one domain and are simplest
   to maintain; country domains send the strongest geo signal but
-  cost the most to run and split authority. (Google states no URL
-  structure is inherently better for ranking; this order reflects
-  maintenance cost and signal consolidation, not a Google ranking
-  preference.)
+  cost the most to run and split authority.
 - One structure per market, applied consistently. Do not mix
   subdirectories for one language and subdomains for another without
   a documented reason.
 - Every localized page declares its language with the `lang`
   attribute on the `<html>` element, matching the page's hreflang
-  language code. Note Google determines a page's language from its
-  visible content, not from the `lang` attribute or hreflang; the
-  `lang` attribute still matters for browsers, screen readers, and
-  other consumers.
+  language code.
 - Metadata is localized, not copied: titles, descriptions, headings,
   alt text, and structured data in each version use that version's
   language.

@@ -64,14 +64,9 @@ and users on slow connections who need it small.
 ## Official Documentation
 
 - [Google Search Central](https://developers.google.com/search) — Google's image SEO guidance, including Google Images best practices.
-- [Image SEO best practices](https://developers.google.com/search/docs/appearance/google-images) —
-  Google's image guide: discovery, supported formats (BMP, GIF, JPEG,
-  PNG, WebP, SVG, AVIF), responsive images, and landing-page guidance.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — baseline for indexable pages and media.
 - [Sitemaps.org](https://www.sitemaps.org/) — sitemap format for image entries.
 - [Schema.org](https://schema.org/) — ImageObject and product or article image properties.
-
-Guidance current as of 2026-11-20.
 
 ## Required Workflow
 
@@ -92,11 +87,8 @@ Guidance current as of 2026-11-20.
    headings so the image's topic is unambiguous.
 7. Lazy-load below-the-fold images with `loading="lazy"`, and never
    lazy-load the hero or largest contentful paint image.
-8. Verify. Check the page in a browser and in the Search Console
-   Performance report filtered by the Image search type, and confirm
-   images are crawlable and indexed. (Search Console has no separate
-   image report; image performance is a filter on the Performance
-   report.)
+8. Verify. Check the page in a browser and in Search Console's image
+   reports, and confirm images are crawlable and indexed.
 
 ## Implementation Standards
 
@@ -104,21 +96,15 @@ Guidance current as of 2026-11-20.
   `sourdough-starter-day-5.jpg`, not `IMG_4821.jpg` or
   `image1.jpg`. No keyword stuffing in filenames.
 - Alt text describes what the image shows and, where relevant, its
-  function, kept concise — about 125 characters or fewer is a
-  long-standing screen-reader convention (older screen readers split
-  longer alt text), not a Google rule. It does not start
+  function, in about 125 characters or fewer. It does not start
   with "image of" or "picture of", and it does not stuff keywords.
-- Use standard HTML `<img>` elements (or `<picture>` with an `<img>`
-  fallback) to embed images: Google finds images in the `src`
-  attribute and does not index CSS background images.
 - Decorative images (backgrounds, dividers, purely visual flourishes)
   use an empty alt attribute (`alt=""`) so screen readers skip them.
 - Every content image has explicit `width` and `height` attributes
   (or an aspect-ratio reservation) to prevent layout shift.
 - Serve modern formats: WebP or AVIF for photographs, SVG for logos
   and simple graphics. Provide a JPEG or PNG fallback only where a
-  target browser needs it. Google supports BMP, GIF, JPEG, PNG, WebP,
-  SVG, and AVIF in the `src` attribute of `<img>`.
+  target browser needs it.
 - Images are sized to their display size; do not serve a 4000-pixel
   image in a 800-pixel slot.
 - Images must be crawlable: served over HTTPS from a URL that

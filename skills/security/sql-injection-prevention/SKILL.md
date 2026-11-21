@@ -55,7 +55,7 @@ for everything else.
 - [OWASP SQL Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html) —
   the canonical defensive guidance.
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/) — Injection
-  (A05 in the current 2025 edition) category context.
+  category context.
 - [Prisma documentation](https://www.prisma.io/docs) — safe query
   APIs and raw query guidance for Prisma projects.
 

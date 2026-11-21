@@ -91,9 +91,7 @@ weight, render-blocking resources, and layout stability.
 - Core Web Vitals targets (Google's "good" thresholds): Largest
   Contentful Paint at or under 2.5 seconds, Interaction to Next Paint at
   or under 200 milliseconds, and Cumulative Layout Shift at or under 0.1.
-  These are the thresholds published on web.dev, assessed at the 75th
-  percentile of real-user field data (Chrome User Experience Report)
-  over a 28-day window.
+  These are the thresholds published on web.dev.
 - Images: serve responsive images (`srcset` and `sizes`), modern formats
   (AVIF or WebP with a fallback where needed), explicit `width` and
   `height` (or `aspect-ratio`) to reserve space, `loading="lazy"` for

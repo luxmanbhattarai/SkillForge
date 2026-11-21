@@ -32,7 +32,6 @@ tests that fail for real reasons and pass for real reasons.
 | `debugging` | Diagnosing failures the tests reveal. |
 | `webapp-testing` (upstream) | Web app testing guidance. |
 | `verification-before-completion` (upstream) | Proving work is done before reporting it. |
-| `agent-evaluation` | The feature under test is an AI agent. |
 
 ## Skills it should use
 

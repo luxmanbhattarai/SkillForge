@@ -55,12 +55,7 @@ that actually run — so developers do not have to guess or ask.
 ## Official Documentation
 
 - [OpenAPI Initiative](https://www.openapis.org/) — the OpenAPI
-  specification for describing REST APIs. OpenAPI 3.2.1 is the
-  current version (3.2.0, September 2025); 3.1.x and 3.0.x remain
-  in wide use. Do not write new specs in Swagger 2.0 (OpenAPI
-  2.0) — it is legacy. Check that your generator, linter, and
-  docs renderer support OpenAPI 3.2 before adopting it; 3.1 is
-  the safer choice where tooling lags.
+  specification for describing REST APIs.
 - [Swagger Documentation](https://swagger.io/docs/) — tooling and
   guides for OpenAPI, including the editor and UI.
 - [GraphQL — Best Practices](https://graphql.org/learn/best-practices/)
@@ -113,9 +108,6 @@ that actually run — so developers do not have to guess or ask.
 - State the API version the docs describe, and keep the docs in
   sync with the version. When the API changes, the docs change in
   the same release.
-- When writing OpenAPI 3.1+ specs, use JSON Schema
-  `type: ["string", "null"]` for nullable fields instead of the
-  3.0-era `nullable: true` keyword.
 - Do not document endpoints that do not exist, parameters that are
   not accepted, or behavior that is not implemented.
 

@@ -34,10 +34,6 @@ database and ORM and keeps data integrity intact.
 | `prisma-postgres-setup` (upstream) | Prisma Postgres setup. |
 | `prisma-client-api` (upstream) | Prisma Client query patterns. |
 | `prisma-postgres` (upstream) | Prisma Postgres features. |
-| `clickhouse` | Analytics workloads use ClickHouse. |
-| `elasticsearch` | Search uses Elasticsearch. |
-| `opensearch` | Search uses OpenSearch. |
-| `redis` | The workload uses Redis. |
 
 ## Skills it should use
 

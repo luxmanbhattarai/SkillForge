@@ -3,7 +3,7 @@ name: twitter-card-images
 description: >
   Create X (Twitter) card images and tags so shared links show a correct
   large-image preview on X. Use when a task asks for a Twitter card,
-  X card, summary_large_image card, twitter:image tag, or a 1200x600
+  X card, summary_large_image card, twitter:image tag, or a 1200x675
   social image for sharing a page on X.
 license: MIT
 metadata:
@@ -20,9 +20,8 @@ metadata:
 
 This skill produces X (formerly Twitter) card images and the matching
 `twitter:` meta tags so shared links render a large-image card on X.
-It covers the `summary_large_image` card type, the 1200x600 image size
-(2:1 aspect ratio), how X cards relate to Open Graph tags, and preview
-verification.
+It covers the `summary_large_image` card type, the 1200x675 image size,
+how X cards relate to Open Graph tags, and preview verification.
 
 ## When to Use
 
@@ -47,8 +46,7 @@ verification.
 
 - The page URL, title, and description the card should show.
 - The site's brand assets: logo, palette, and fonts.
-- The X card image size for a large-image card: 1200x600 pixels (2:1
-  aspect ratio, per X's documented card specification).
+- The X card image size for a large-image card: 1200x675 pixels.
 - Access to the page template or CMS where meta tags are set.
 - The image file's public URL, since `twitter:image` must be absolute.
 
@@ -61,23 +59,7 @@ verification.
 - [MDN: the meta element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta)
   — how meta tags are written in HTML.
 - [Sharp documentation](https://sharp.pixelplumbing.com/) — scripted
-  resizing and conversion for card images. Code examples in this skill
-  use the Sharp 0.35.x API (current as of November 2026).
-- Compatibility: X's developer site no longer publishes its Cards
-  documentation pages (confirmed November 2026), so the card limits
-  below come from X's last published card specification (Summary Card
-  with Large Image, as archived January 2026): images support a 2:1
-  aspect ratio with minimum dimensions of 300x157 and a maximum of
-  4096x4096 pixels, must be under 5 MB, and JPG, PNG, WEBP, and GIF
-  formats are supported (only the first frame of an animated GIF is
-  used; SVG is not supported). The plain `summary` card uses a 1:1
-  image with a minimum of 144x144 pixels. Re-check X's current
-  documentation before relying on these limits for an edge case.
-  Deprecated approach to avoid: sizing the card image at 1200x675
-  (16:9) — that is the size for images posted directly to the X
-  timeline, not for link cards; a 16:9 image in a 2:1 card is cropped
-  top and bottom. A 1200x628 (1.91:1) image is also acceptable, losing
-  only about 14 px top and bottom to the 2:1 crop.
+  resizing and conversion for card images.
 
 ## Required Workflow
 
@@ -85,18 +67,15 @@ verification.
 2. Choose the card type. Use `summary_large_image` for articles and
    landing pages; use `summary` only when a small thumbnail is the
    deliberate choice.
-3. Design the image at 1200x600 for a large-image card: background, one
+3. Design the image at 1200x675 for a large-image card: background, one
    focal visual, short headline, and brand mark.
 4. Keep essential text and the logo inside the central safe area, since
    X crops card images differently across clients and devices.
 5. Keep the on-image headline to a few large words; the full title
    belongs in the `twitter:title` tag.
-6. Export the image as a JPEG or PNG at 1200x600 and compress it to
-   well under the 5 MB limit.
+6. Export the image as a JPEG or PNG at 1200x675 and compress it.
 7. Publish the image at a stable public URL and set the `twitter:card`,
-   `twitter:title`, `twitter:description`, and `twitter:image` tags,
-   plus `twitter:image:alt` (maximum 420 characters) describing the
-   image.
+   `twitter:title`, `twitter:description`, and `twitter:image` tags.
 8. Keep the Open Graph tags in place as well: X falls back to `og:title`,
    `og:description`, and `og:image` when X-specific tags are absent, so
    the two sets should agree rather than contradict each other.
@@ -107,24 +86,14 @@ verification.
 
 ## Implementation Standards
 
-- Large-image card images are 1200x600 pixels (2:1), per X's documented
-  card specification. A 1200x628 (1.91:1) image is also acceptable, with
-  only a small center crop. Do not use a 1200x675 (16:9) timeline image
-  as the card image: the 2:1 card crop cuts roughly 75 px from the top
-  and bottom combined.
-- A 1200x630 Open Graph image is close to 2:1 and works as an X card
-  image with only about 15 px trimmed top and bottom; a dedicated
-  1200x600 export is exact, but reusing the OG image is not the error
-  it is often claimed to be.
-- Card images must be at least 300x157 pixels, at most 4096x4096, and
-  under 5 MB. Supported formats are JPG, PNG, WEBP, and GIF (first
-  frame only for animated GIFs); SVG is not supported.
+- Large-image card images are 1200x675 pixels (16:9). Do not reuse a
+  1200x630 Open Graph image as the X card image without re-cropping;
+  the different aspect ratio crops the top and bottom.
 - `twitter:image` uses an absolute URL (`https://...`), never a
   relative path.
 - Every shareable page has `twitter:card`, `twitter:title`,
   `twitter:description`, and `twitter:image`, alongside the Open Graph
-  tags. Add `twitter:image:alt` (maximum 420 characters) describing the
-  image.
+  tags.
 - `twitter:title` and `twitter:description` match the page's real title
   and description, and agree with the `og:` values.
 - Text on the image is large, high-contrast, and limited to a short
@@ -136,7 +105,7 @@ verification.
 ## Best Practices
 
 - Design X card images and OG images as siblings from one layout
-  system, with separate exports at 1200x600 and 1200x630, so the brand
+  system, with separate exports at 1200x675 and 1200x630, so the brand
   looks consistent across platforms without a bad crop.
 - Use the same headline wording on the image as in the post copy when
   the post promotes the article, so readers connect the two.
@@ -167,9 +136,8 @@ verification.
 ## Performance Considerations
 
 - Compress card images; crawlers may time out on very large files and
-  fall back to no image. The documented limit is under 5 MB; aim for
-  well under 1 MB.
-- One 1200x600 JPEG per page is enough; do not ship multiple
+  fall back to no image.
+- One 1200x675 JPEG per page is enough; do not ship multiple
   resolutions of the same card image.
 - Set long-lived cache headers on card image files, since the same URL
   is fetched by many crawlers and shares.
@@ -178,11 +146,8 @@ verification.
 
 ## Common Mistakes
 
-- Using a 1200x675 (16:9) timeline image as the card image — the 2:1
-  card crop cuts the top and bottom; export a dedicated 1200x600
-  version.
-- Using an SVG card image — X does not support SVG for cards; use JPG,
-  PNG, WEBP, or GIF.
+- Reusing the 1200x630 OG image as the X card image — the 16:9 card
+  crop cuts the top and bottom; export a separate 1200x675 version.
 - Using a relative URL in `twitter:image` — crawlers cannot resolve
   it; always use an absolute `https://` URL.
 - Setting only Open Graph tags and assuming X shows a large card —
@@ -203,10 +168,9 @@ Example X card tags for an article page:
 <meta name="twitter:title" content="Why Your Sourdough Starter Smells Like Nail Polish Remover">
 <meta name="twitter:description" content="That sharp smell usually means your starter is hungry. Here is what it is telling you and how to fix it.">
 <meta name="twitter:image" content="https://example.com/images/cards/sourdough-starter-smell.jpg">
-<meta name="twitter:image:alt" content="Glass jar of bubbling sourdough starter on a wooden counter in morning light.">
 ```
 
-Example image layout at 1200x600:
+Example image layout at 1200x675:
 
 ```text
 +----------------------------------------------------------+
@@ -227,21 +191,18 @@ Example resize step with Sharp (Node.js):
 const sharp = require("sharp");
 
 await sharp("card-source.png")
-  .resize(1200, 600, { fit: "cover" })
+  .resize(1200, 675, { fit: "cover" })
   .jpeg({ quality: 85 })
   .toFile("sourdough-starter-smell-card.jpg");
 ```
 
 ## Validation Checklist
 
-- [ ] The image is exactly 1200x600 pixels for a large-image card
-      (2:1), under 5 MB, in a supported format (JPG, PNG, WEBP, or
-      GIF — not SVG).
+- [ ] The image is exactly 1200x675 pixels for a large-image card.
 - [ ] The image is compressed and served over HTTPS at a stable URL.
 - [ ] `twitter:image` uses an absolute URL.
 - [ ] `twitter:card` is set to `summary_large_image`, with
-      `twitter:title`, `twitter:description`, `twitter:image`, and
-      `twitter:image:alt`.
+      `twitter:title`, `twitter:description`, and `twitter:image`.
 - [ ] The `twitter:` values agree with the `og:` values.
 - [ ] On-image text is short, large, and inside the safe area.
 - [ ] The card was verified with `social-preview` and shows the
@@ -250,7 +211,7 @@ await sharp("card-source.png")
 
 ## Expected Deliverables
 
-- The final X card image file at 1200x600.
+- The final X card image file at 1200x675.
 - The `twitter:` meta tags to add to the page template or CMS.
 - A default card image for the site, if one did not exist.
 - A screenshot or report of the verified card preview.

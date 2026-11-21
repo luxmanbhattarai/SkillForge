@@ -32,17 +32,6 @@ endpoints and services that are correct, typed, and observable.
 | `database-design` | Shaping queries and data access. |
 | `debugging` | Diagnosing server-side failures. |
 | `mcp-builder` (upstream) | Building an MCP server step by step. |
-| `express` | The API is built on Express. |
-| `fastify` | The API is built on Fastify. |
-| `nestjs` | The API is built on NestJS. |
-| `advanced-api-architecture` | The API needs versioning, pagination, or advanced design patterns. |
-| `openapi` | The API needs an OpenAPI contract. |
-| `api-client-generation` | Clients must be generated from the API contract. |
-| `redis` | Caching or queues use Redis. |
-| `authjs` | Authentication uses Auth.js. |
-| `clerk` | Authentication uses Clerk. |
-| `supabase-auth` | Authentication uses Supabase Auth. |
-| `passkeys` | The product needs passwordless passkey sign-in. |
 
 ## Skills it should use
 
