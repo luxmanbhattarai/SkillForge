@@ -18,6 +18,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { splitFrontmatter, parseFrontmatter, validateName } from './lib/frontmatter.mjs';
+import { toPosixPath } from './lib/paths.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SKILLS_DIR = path.join(ROOT, 'skills');
@@ -60,6 +61,20 @@ function headings(body) {
     if (m) found.add(m[1].trim());
   }
   return found;
+}
+
+// Registry/disk consistency, exported for testing. Registry paths are
+// always POSIX; disk paths use platform separators, so on Windows
+// path.relative returns backslashes and every skill mismatches unless
+// disk paths are normalized first (PR #1: the Windows leg failed with
+// 277 "registry lists missing skill" errors for exactly this reason).
+export function findRegistryMismatches(regPaths, diskPaths) {
+  const reg = new Set(regPaths);
+  const disk = new Set([...diskPaths].map((p) => toPosixPath(p)));
+  const errors = [];
+  for (const p of reg) if (!disk.has(p)) errors.push(`registry lists missing skill: ${p}`);
+  for (const p of disk) if (!reg.has(p)) errors.push(`skill on disk missing from registry: ${p}`);
+  return errors;
 }
 
 async function main() {
@@ -166,8 +181,7 @@ async function main() {
       const reg = JSON.parse(await readFile(registryPath, 'utf8'));
       const regPaths = new Set((reg.skills || []).map((s) => s.path));
       const diskPaths = new Set(files.map((f) => path.relative(ROOT, path.dirname(f))));
-      for (const p of regPaths) if (!diskPaths.has(p)) errors.push(`registry lists missing skill: ${p}`);
-      for (const p of diskPaths) if (!regPaths.has(p)) errors.push(`skill on disk missing from registry: ${p}`);
+      errors.push(...findRegistryMismatches(regPaths, diskPaths));
     } catch (e) {
       errors.push(`registry/skills.json is not valid JSON: ${e.message}`);
     }
@@ -189,4 +203,8 @@ async function main() {
   process.exit(failed ? 1 : 0);
 }
 
-main();
+// Main guard (same idiom as evals/runners/run-evals.mjs): importing
+// this module for findRegistryMismatches must not run the suite.
+const invokedAsScript = process.argv[1]
+  && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (invokedAsScript) main();

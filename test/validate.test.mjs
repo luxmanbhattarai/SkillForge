@@ -11,6 +11,7 @@ import { appendFile, cp, mkdtemp, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { parseFrontmatter } from '../scripts/lib/frontmatter.mjs';
+import { findRegistryMismatches } from '../scripts/validate-skills.mjs';
 import { REPO_ROOT } from '../test-support/helpers.mjs';
 
 const VALIDATOR = path.join(REPO_ROOT, 'scripts', 'validate-skills.mjs');
@@ -51,6 +52,26 @@ test('frontmatter parser: plain scalars must not contain ": " (strict YAML)', ()
   // A colon not followed by a space is fine in a plain scalar.
   const url = parseFrontmatter('name: x\ncompatibility: See https://example.com/docs.\n');
   assert.equal(url.error, undefined);
+});
+
+test('registry consistency: Windows backslash disk paths match POSIX registry paths', () => {
+  // PR #1: on Windows, path.relative returns backslashes while the
+  // registry stores forward slashes, so the un-normalized comparison
+  // reported all 277 skills missing. path.win32 builds Windows-shaped
+  // paths on any platform, so this test reproduces the bug on POSIX.
+  const reg = ['skills/frontend/astro', 'skills/upstream/vercel/deploy-to-vercel'];
+  const diskWin = reg.map((p) => path.win32.join(...p.split('/')));
+  assert.deepEqual(diskWin, ['skills\\frontend\\astro', 'skills\\upstream\\vercel\\deploy-to-vercel']);
+  assert.deepEqual(findRegistryMismatches(reg, diskWin), []);
+  // Genuine mismatches must still error in both directions.
+  assert.deepEqual(
+    findRegistryMismatches([...reg, 'skills/core/missing'], diskWin),
+    ['registry lists missing skill: skills/core/missing'],
+  );
+  assert.deepEqual(
+    findRegistryMismatches(reg, [...diskWin, path.win32.join('skills', 'core', 'orphan')]),
+    ['skill on disk missing from registry: skills/core/orphan'],
+  );
 });
 
 test('validate passes on the real repo; every warning is upstream-only', async () => {
