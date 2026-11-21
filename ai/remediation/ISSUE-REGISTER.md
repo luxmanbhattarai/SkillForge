@@ -169,6 +169,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-10 — Medium — `npm test` clobbers the eval report (Stage C)
 
+- **Stage C status (2026-11-20):** **Fixed** — `--out <dir>` flag added to the runner (redirects `latest.json`/`latest.md` and the regression comparison); the smoke test now uses a temp dir and asserts `evals/reports/latest.json` is byte-identical afterwards. Commit `cee083e`. (Note: `evals/reports/` is gitignored, so the clobbering was a local-artifact issue, not a committed-file issue.)
 - **Evidence:** the smoke test `test/evals.test.mjs:99-105` spawns the real runner with
   `--cases SEC-inject-001`, overwriting `evals/reports/latest.json/.md` with a 1-case
   report. Observed: after `npm test`, `latest.json` showed total 1, passed 1. The
@@ -191,6 +192,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-12 — Low — `--backup` flag entirely untested (Stage C)
 
+- **Stage C status (2026-11-20):** **Fixed** — 1 test: `--backup` backs up a modified conflict and a foreign-content conflict and overwrites without prompting; the backup holds the pre-conflict content byte-identical. Commit `4705e0c`.
 - **Evidence:** zero occurrences in `test/`. The flag is parsed
   (`install-skills.mjs:78,203`) and treated identically to `--force` in
   `resolveConflicts` (`commands.mjs:110`) but never executed by any test.
@@ -199,6 +201,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-13 — Low — Rollback, stale-cleanup, and several prompt paths untested (Stage C)
 
+- **Stage C status (2026-11-20):** **Fixed** — 6 tests: 3 dry-run (update/uninstall/restore, byte-identical state asserted) and 3 PTY (abort; uninstall `--all` prompt; modified-content uninstall prompt). SwapIn failure/rollback and stale-cleanup were already covered by Stage B (A-05/A-30) — verified, not duplicated. `runCliPty` now looks `script` up on PATH and returns a skip reason. PTY tests still skip on systems without `script` (notably Windows) — a `node-pty` dependency decision for Stage D. Commit `4705e0c`.
 - **Evidence:** no test for `swapIn` failure/rollback; no test creates
   `.skillforge-tmp-*` leftovers to exercise `cleanStaleStaging`; no restore/uninstall/
   update dry-run test; PTY test never sends abort (`a`) and never covers the uninstall
@@ -219,6 +222,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-15 — Low — `needBackup` detection string-matches reason text (Stage C)
 
+- **Stage C status (2026-11-20):** **Fixed** — structured boolean `needsBackup` set at classification time in `runUninstall`; the filter reads the flag instead of reason text; `notInLibrary` removed. 1 test pins all three classifications in a single run; the A-14 test passes unchanged. Verified: no `reason.includes` or `notInLibrary` remains in `scripts/` or `test/`. Commit `4705e0c`.
 - **Evidence:** `commands.mjs:991-992` (`reason.includes('differs')`) — a reason-text
   edit silently disables backup for modified/foreign uninstalls.
 - **Affected files:** `scripts/install/commands.mjs:991-992`.
@@ -241,6 +245,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-17 — Low — Eval coverage metric is partly tautological (Stage C)
 
+- **Stage C status (2026-11-20):** **Fixed** — coverage computed from `selectedSkills` only; the full run still reports 277/277, confirming the number holds from real selection. Commit `cee083e`.
 - **Evidence:** `summarize()` adds the case's own declared `skill` field to the
   covered set (`if (r.skill) covered.add(r.skill)`, `run-evals.mjs` ~line 156), so
   277/277 follows from case authorship even if the agent selected nothing. The
@@ -261,6 +266,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-19 — Low — Misnamed test; unknown-skill rejection path untested (Stage C)
 
+- **Stage C status (2026-11-20):** **Fixed** — test renamed to "runner exits 2 when the --cases filter matches nothing"; real `validateCases` tests added (unknown skill / expected skill / notSkill, plus duplicate-id, unknown-category, no-expectations); `validateCases` exported with a main-guard. Commit `cee083e`.
 - **Evidence:** `test/evals.test.mjs:107` "runner rejects an unknown skill in a case
   file" actually tests a bad `--cases` filter (its own comment admits this); the
   `validateCases` unknown-skill rejection path is untested despite the name — a test
@@ -373,6 +379,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-31 — Informational — Doc claims contradicting code (Stage C)
 
+- **Stage C status (2026-11-20):** **Partially fixed** — (1) the "update repairs broken links" sub-claim is moot: Stage B's A-07 fix made diverged links a conflict, and the doc no longer makes the claim; (2) the uninstall-doc sub-claim was resolved by Stage B's A-14 doc update (the doc now states unmodified manifest-matching content is removed without a backup); (3) the `install-skills.mjs` header "swapped in atomically" was fixed in Stage C (commit `1c8e657` — now two renames, each atomic, the pair not); (4) the report §7 remainder ("Atomic installs with rollback … tested, including interrupted installs") goes to Stage E's report-reconciliation pass — the report is a historical record, the "atomic" wording is now outdated, and a kill mid-swap is still not testable at CLI level.
 - **Evidence:** `docs/INSTALLATION.md` "update … repairs broken links" omits that it
   also silently repoints diverged links (A-07); "Uninstall … removes only what the
   manifest records (or, with --force, foreign content after a backup)" omits that
@@ -400,6 +407,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-33 — Informational — Generated eval cases are deliberately circular (Stage C)
 
+- **Stage C status (2026-11-20):** **Improved** — 14 non-circular discovery cases added (`evals/cases/discovery-realistic.json`, `DIS-real-*`), all passing; first drafts exposed 4 genuine discoverability gaps (recorded in `ai/remediation/stage-c/evals-results.md`, not hidden). Generated cases and their disclosure untouched — circular by design. Commit `cee083e`.
 - **Evidence:** input is the skill's own description verbatim
   (`evals/datasets/generate-discovery-cases.mjs`: `input: "I need help with this:
   ${s.description}"`). The generator header states this openly ("deliberately
@@ -410,6 +418,7 @@ under D with E involvement. Counts sum to 52 (21 + 12 + 8 + 11).
 
 ### A-34 — Informational — Content checks prove presence, not surfacing (Stage C)
 
+- **Stage C status (2026-11-20):** **Partially strengthened** — a `grounded-in` check was added to the content scorer (evaluated skill must be among selected skills; all 86 content cases already satisfy it, 0 new failures). The "phrase anywhere in the file" half is deliberately unfixed — restricting the answer would invalidate the baseline — with the disclosure intact and now precisely worded. Commit `cee083e`.
 - **Evidence:** the primary skill's full body is included in the grounded answer
   (`mock-agent.mjs` `answer()`), so `mustInclude` passes if the phrase appears
   anywhere in the file. The report's own limitations section says this. Disclosed; no
@@ -534,6 +543,7 @@ supply-chain verification reproduced (claim 15).
 
 ### L-51 — Medium — 51 Phase 4 skills are `unverified` (Stage C)
 
+- **Stage C status (2026-11-20):** **Fixed** — all 51 audited individually (see `ai/audits/SKILL-AUDIT-MATRIX.md`): 59 findings (0 Critical, 3 High, 10 Medium, 38 Low, 8 Informational), 53 fixed in place, 6 Informational needing no fix, 0 unresolved. 50 skills → `verified`, 1 (`platform-social-images`) → `verified-with-limitations`; 0 skills remain `unverified` (library split now 254/17/6/0). The 145 corrected skills were also regression-reviewed (5 findings, all fixed). Commits `3afb568`, `c8f6925`, `3504c26`, `7bdc7ca`, `a2309fd`, `8769a02`, `2a6af50`.
 - **Evidence:** `sources/verification-status.json`: 51 skills `unverified` — written
   against official docs, no formal technical-accuracy audit yet. The largest remaining
   verification gap (report §18/§19, mission brief §3). Stage C audits all 51
@@ -572,6 +582,7 @@ supply-chain verification reproduced (claim 15).
 
 ### L-Model — Low — Model-based eval provider untested without credentials (Stage C)
 
+- **Stage C status (2026-11-20):** **Done (layer built; no real-model run executed)** — provider-independent real-model layer built (`evals/runners/providers.mjs`: env config, no hardcoded keys, retries/timeouts, usage/cost tracking, mock/model report separation, baseline protection) + representative 75-case subset + `docs/REAL-MODEL-EVALUATION.md` plan. Unit-tested against a local stub endpoint only; no real-model run has been executed (no credentials) and must not be claimed. Standard suite needs no credentials. Commit `cee083e`.
 - **Evidence:** report §8/§18. The provider interface exists
   (`evals/runners/providers.mjs`, OpenAI-compatible via `EVAL_PROVIDER_*` env vars)
   but is untested; all 449/449 results are from the deterministic mock agent, which
@@ -581,6 +592,7 @@ supply-chain verification reproduced (claim 15).
 
 ### L-Prisma — Low — Prisma 8 still an RC (Stage C)
 
+- **Stage C status (2026-11-20):** **Resolved** — current stable is Prisma ORM 7.10.1; Prisma 8 is still an RC with no GA date announced (the October GA date was removed from the release-status page on 13 November 2026; latest `prisma` 8.0.0-rc.34). The three upstream skills' RC pins are stale/drifting — documented only, not edited; their verification-status notes (truncated mid-sentence at 160 chars) were completed with the full findings. GA upgrade path documented in `ai/remediation/stage-c/regression-145-review.md` §4. No upgrade to an RC is recommended. Commits `8769a02`, `2a6af50`.
 - **Evidence:** report §18. Three skills pin RC versions (prisma-compute,
   prisma-mongodb-upgrade, prisma-postgres-upgrade). Do NOT upgrade production
   dependencies to Prisma 8 RC. Stage C verifies the currently supported stable version
