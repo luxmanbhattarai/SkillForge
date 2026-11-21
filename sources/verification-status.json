@@ -12,23 +12,20 @@
       "date": "2026-11-20"
     },
     "advanced-api-architecture": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "aeo-optimization": {
       "status": "verified",
       "date": "2026-11-20"
     },
     "agent-evaluation": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "ai-agents": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "ai-image-generation": {
       "status": "verified",
@@ -44,9 +41,8 @@
       "date": "2026-11-20"
     },
     "api-client-generation": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "api-design": {
       "status": "verified",
@@ -73,18 +69,16 @@
       "date": "2026-11-20"
     },
     "authjs": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "authorization": {
       "status": "verified",
       "date": "2026-11-20"
     },
     "aws": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "background-jobs": {
       "status": "verified",
@@ -139,9 +133,8 @@
       "date": "2026-11-20"
     },
     "changesets": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "ci-cd": {
       "status": "verified",
@@ -152,14 +145,12 @@
       "date": "2026-11-20"
     },
     "clerk": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "clickhouse": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "cloudflare": {
       "status": "verified",
@@ -207,9 +198,8 @@
       "date": "2026-11-20"
     },
     "content-decay": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "content-gap-analysis": {
       "status": "verified",
@@ -337,9 +327,8 @@
       "date": "2026-11-20"
     },
     "editorial-workflow": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "eeat": {
       "status": "verified",
@@ -350,23 +339,20 @@
       "date": "2026-11-20"
     },
     "elasticsearch": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "electron": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "engineering-standards": {
       "status": "verified",
       "date": "2026-11-20"
     },
     "entity-seo": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "executing-plans": {
       "status": "verified-with-limitations",
@@ -374,14 +360,12 @@
       "note": "No content errors. Limitation (import-scope gap): names `superpowers:test-driven-development` as a REQUIRED sub-skill/background and references `superpowers:..."
     },
     "expo": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "express": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "fact-checking": {
       "status": "verified",
@@ -392,18 +376,16 @@
       "date": "2026-11-20"
     },
     "fastify": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "finishing-a-development-branch": {
       "status": "verified",
       "date": "2026-11-20"
     },
     "fly-io": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "frontend-design": {
       "status": "verified",
@@ -414,9 +396,8 @@
       "date": "2026-11-20"
     },
     "gcp": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "geo-optimization": {
       "status": "verified",
@@ -519,9 +500,8 @@
       "date": "2026-11-20"
     },
     "kubernetes": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "lighthouse": {
       "status": "verified",
@@ -533,9 +513,8 @@
       "note": "No content errors. Limitation (import-scope gap, real): 6 broken relative links to `../../tools/integrations/{ahrefs,semrush,dataforseo,exa,firecrawl,hunter}..."
     },
     "llm-integration": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "llm-seo": {
       "status": "verified",
@@ -558,9 +537,8 @@
       "date": "2026-11-20"
     },
     "mcp-security": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "metadata-validation": {
       "status": "verified",
@@ -603,9 +581,8 @@
       "date": "2026-11-20"
     },
     "nestjs": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "nextjs": {
       "status": "verified",
@@ -616,14 +593,12 @@
       "date": "2026-11-20"
     },
     "nuxt": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "nx": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "oauth": {
       "status": "verified",
@@ -650,14 +625,12 @@
       "date": "2026-11-20"
     },
     "openapi": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "opensearch": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "owasp": {
       "status": "verified",
@@ -676,9 +649,8 @@
       "date": "2026-11-20"
     },
     "passkeys": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "performance": {
       "status": "verified",
@@ -689,9 +661,9 @@
       "date": "2026-11-20"
     },
     "platform-social-images": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified-with-limitations",
+      "date": "2026-11-20",
+      "note": "Stage C audit 2026-11-20 (see ai/audits/SKILL-AUDIT-MATRIX.md). Limitation: Meta sharing docs returned 403 during verification, so Facebook figures rest on the og-image-generation skill plus secondary corroboration; X figures come from X's last published card specification (archived January 2026) after the Card Validator was retired. Discord figures verified directly against official docs."
     },
     "playwright": {
       "status": "verified",
@@ -720,7 +692,7 @@
     "prisma-compute": {
       "status": "verified-with-limitations",
       "date": "2026-11-20",
-      "note": "No errors. Limitation: verified against Prisma 8 RC pins (rc.21/rc.23, Composer 0.30.0); official page now lists newer RCs (prisma 8.0.0-rc.34). Skill frames..."
+      "note": "No errors. Limitation: verified against Prisma 8 RC pins (prisma 8.0.0-rc.21 / @prisma/orm-postgres 8.0.0-rc.23, Composer 0.30.0); current RCs are prisma 8.0.0-rc.34 / @prisma/orm-postgres 8.0.0-rc.24. Prisma 8 is still a release candidate with no GA date announced (the October GA date was removed from the release-status page on 13 November 2026). Prisma Compute runs only Prisma 8. Re-verify pins at Prisma 8 GA."
     },
     "prisma-database-setup": {
       "status": "verified",
@@ -733,7 +705,7 @@
     "prisma-mongodb-upgrade": {
       "status": "verified-with-limitations",
       "date": "2026-11-20",
-      "note": "No errors. Limitation: verified against `@prisma/orm-mongo` 8.0.0-rc.13; official page now lists rc.24. Prisma 8 is still an RC (GA was \"expected in October ..."
+      "note": "No errors. Limitation: verified against `@prisma/orm-mongo` 8.0.0-rc.13; current RC is 8.0.0-rc.24. Prisma 8 is still a release candidate with no GA date announced (the October GA date was removed from the release-status page on 13 November 2026). Re-verify pins at Prisma 8 GA."
     },
     "prisma-orm-setup": {
       "status": "verified",
@@ -750,7 +722,7 @@
     "prisma-postgres-upgrade": {
       "status": "verified-with-limitations",
       "date": "2026-11-20",
-      "note": "No errors. Limitations: pins `prisma 8.0.0-rc.27` / `@prisma/orm-postgres 8.0.0-rc.20` \"today\"; current RCs are rc.34 / rc.24. The claim that \"the latest pai..."
+      "note": "No errors. Limitations: pins `prisma 8.0.0-rc.27` / `@prisma/orm-postgres 8.0.0-rc.20` as current; current RCs are 8.0.0-rc.34 / 8.0.0-rc.24. Prisma 8 is still a release candidate with no GA date announced (the October GA date was removed from the release-status page on 13 November 2026). Re-verify pins at Prisma 8 GA."
     },
     "prisma-upgrade-v7": {
       "status": "needs-correction",
@@ -762,28 +734,24 @@
       "date": "2026-11-20"
     },
     "pulumi": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "python-sdk": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "queues": {
       "status": "verified",
       "date": "2026-11-20"
     },
     "rag": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "railway": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "rate-limiting": {
       "status": "verified",
@@ -798,9 +766,8 @@
       "date": "2026-11-20"
     },
     "react-native": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "readme-engineering": {
       "status": "verified",
@@ -811,9 +778,8 @@
       "date": "2026-11-20"
     },
     "redis": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "refactoring": {
       "status": "verified",
@@ -824,14 +790,12 @@
       "date": "2026-11-20"
     },
     "release-management": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "render": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "requesting-code-review": {
       "status": "verified",
@@ -846,19 +810,16 @@
       "date": "2026-11-20"
     },
     "resvg": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "rust": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "satori": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "schema": {
       "status": "verified",
@@ -897,9 +858,8 @@
       "date": "2026-11-20"
     },
     "self-hosted-vps": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "semantic-html": {
       "status": "verified",
@@ -931,9 +891,8 @@
       "date": "2026-11-20"
     },
     "serp-monitoring": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "session-management": {
       "status": "verified",
@@ -944,9 +903,8 @@
       "date": "2026-11-20"
     },
     "sharp": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "site-architecture": {
       "status": "verified-with-limitations",
@@ -975,9 +933,8 @@
       "date": "2026-11-20"
     },
     "source-verification": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "sql-injection-prevention": {
       "status": "verified",
@@ -1000,14 +957,12 @@
       "date": "2026-11-20"
     },
     "supabase-auth": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "sveltekit": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "system-design": {
       "status": "verified",
@@ -1018,9 +973,8 @@
       "date": "2026-11-20"
     },
     "tauri": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "tdd": {
       "status": "verified",
@@ -1043,18 +997,16 @@
       "date": "2026-11-20"
     },
     "terraform": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "theme-factory": {
       "status": "verified",
       "date": "2026-11-20"
     },
     "topical-authority": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "transactions": {
       "status": "verified",
@@ -1083,9 +1035,8 @@
       "date": "2026-11-20"
     },
     "typescript-sdk": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "ui-design": {
       "status": "verified",
@@ -1142,9 +1093,8 @@
       "date": "2026-11-20"
     },
     "vue": {
-      "status": "unverified",
-      "date": null,
-      "note": "Added in Phase 4 (2026-11-20); written against official documentation; no formal technical-accuracy audit yet."
+      "status": "verified",
+      "date": "2026-11-20"
     },
     "web-artifacts-builder": {
       "status": "needs-correction",

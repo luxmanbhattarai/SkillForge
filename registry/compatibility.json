@@ -260,7 +260,7 @@
     "Requires Docker installed and running on the machine, and network access to pull base images.": [
       "docker"
     ],
-    "Requires Node.js 22 LTS and an Expo account for EAS cloud builds, updates, and submissions.": [
+    "Requires Node.js 22.13+, 24.3+, or 26+ (odd-numbered releases unsupported) and an Expo account for EAS cloud builds, updates, and submissions.": [
       "expo"
     ],
     "Requires Node.js 18 or later (Express 5.x).": [
@@ -287,7 +287,7 @@
     "Requires Node.js 24 LTS or later, TypeScript 7.x, and the MCP TypeScript SDK v2 (`@modelcontextprotocol/server`); network access for remote servers.": [
       "mcp-development"
     ],
-    "Requires Node.js v20.19+ or v22.12+ (NestJS 12); TypeScript 6.x (TypeScript 7 not yet supported by nest build).": [
+    "Requires Node.js v20.19+ or v22.12+ (NestJS 12; CLI generators need 22.22.3+/24.15+/26+); TypeScript 6.x (TypeScript 7 not yet supported by nest build).": [
       "nestjs"
     ],
     "Requires Node.js 24 LTS and a Next.js 16 project; deployment targets may need a hosting account.": [
@@ -296,7 +296,7 @@
     "Requires Node.js 24 LTS or later and npm; network access for installing dependencies.": [
       "nodejs"
     ],
-    "Requires Node.js 22.21, 24.11, or 26 or newer and a Nuxt 4 project.": [
+    "Requires Node.js ^22.22.3, ^24.15.0, or >=26.0.0 and a Nuxt 4 project.": [
       "nuxt"
     ],
     "Requires Node.js 24 LTS or later, npm, and an npm account for publishing.": [
@@ -335,7 +335,7 @@
     "Requires Node.js 24 LTS, a React project with Tailwind CSS v4, and the shadcn/ui CLI (npx shadcn@latest).": [
       "shadcn-ui"
     ],
-    "Requires Node.js 22.17 or newer, Vite 8, and Svelte 5.57 or newer.": [
+    "Requires Node.js 22.17 or newer, Vite 8, and Svelte 5.56.4 or newer.": [
       "sveltekit"
     ],
     "Requires Node.js 24 LTS and a Tailwind CSS v4 project with the Tailwind CLI, PostCSS plugin, or Vite plugin.": [
