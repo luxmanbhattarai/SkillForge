@@ -19,7 +19,7 @@ import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
 import { fetchWithRetry, unsafeRedirectReason } from '../scripts/check-links.mjs';
-import { api, checkVendor, parsePins } from '../scripts/check-upstream.mjs';
+import { api, checkVendor, parsePins, runCheck } from '../scripts/check-upstream.mjs';
 import { MockAgent } from '../evals/runners/mock-agent.mjs';
 import { createModelProvider, parseModelConfig, parseRetryAfter } from '../evals/runners/providers.mjs';
 import { scoreCode } from '../evals/scorers/code.mjs';
@@ -212,7 +212,7 @@ test('S-14: parsePins parses a Live upstream line in fixture text', () => {
   assert.equal(vendors[0].liveUpstream, 'author/original');
 });
 
-test('S-14: checkVendor reports live-upstream drift without changing the primary status', async () => {
+test('S-14/D1: checkVendor reports live-upstream drift; runCheck exits 0 on drift and 1 on UNKNOWN', async () => {
   const PIN = 'a'.repeat(40);
   const FORK_HEAD = PIN; // fork head == pin: primary is UP-TO-DATE
   const LIVE_HEAD = 'b'.repeat(40);
@@ -241,6 +241,63 @@ test('S-14: checkVendor reports live-upstream drift without changing the primary
   assert.equal(result.live.repo, 'author/original');
   assert.equal(result.live.status, 'BEHIND');
   assert.match(result.live.detail, /50 commit\(s\) behind main head/);
+
+  // D1: the exit-code behavior, end to end through runCheck with
+  // the same stubbed API and fixture pins text (no network).
+  const pinsText = [
+    '### Demo — 1 skill (MIT)',
+    'Source: https://github.com/someone/fork ·',
+    `Commit \`${PIN}\` · Imported 2026-11-20`,
+    '',
+    'Live upstream: https://github.com/author/original',
+    '',
+  ].join('\n');
+  const capture = () => {
+    const out = [];
+    const err = [];
+    return { out, err, log: (m) => out.push(m), error: (m) => err.push(m) };
+  };
+
+  // Drift stays informational: live BEHIND by 50 still exits 0.
+  const drift = capture();
+  const driftCode = await runCheck({ fetchFn: stubFetch, retryDelayMs: 1, pinsText, log: drift.log, error: drift.error });
+  assert.equal(driftCode, 0);
+  assert.match(drift.out.join('\n'), /BEHIND: 50 commit\(s\) behind main head/);
+  assert.match(drift.out.join('\n'), /Live-upstream drift: 1 pinned import/);
+  assert.match(drift.out.join('\n'), /1 up-to-date, 0 behind, 0 ahead, 0 diverged, 0 unknown/);
+  assert.equal(drift.err.length, 0);
+
+  // A monitoring failure exits non-zero: a refused connection
+  // makes both the primary and the live check UNKNOWN, and the
+  // run must not report success.
+  const failingFetch = async () => {
+    const e = new Error('connect ECONNREFUSED 127.0.0.1:443');
+    e.code = 'ECONNREFUSED';
+    throw e;
+  };
+  const failed = capture();
+  const failedCode = await runCheck({ fetchFn: failingFetch, retryDelayMs: 1, pinsText, log: failed.log, error: failed.error });
+  assert.equal(failedCode, 1);
+  assert.match(failed.out.join('\n'), /0 up-to-date, 0 behind, 0 ahead, 0 diverged, 1 unknown/);
+  assert.match(failed.err.join('\n'), /Upstream check incomplete: 1 vendor\(s\) UNKNOWN, 1 live-upstream check\(s\) UNKNOWN/);
+
+  // A live-only failure counts too: the primary check succeeds
+  // but the live compare cannot run, so the S-14 drift signal is
+  // blind and the run fails.
+  const liveFailingFetch = async (url) => {
+    if (url.includes('author/original')) {
+      const e = new Error('connect ECONNREFUSED 127.0.0.1:443');
+      e.code = 'ECONNREFUSED';
+      throw e;
+    }
+    return stubFetch(url);
+  };
+  const liveFailed = capture();
+  const liveFailedCode = await runCheck({ fetchFn: liveFailingFetch, retryDelayMs: 1, pinsText, log: liveFailed.log, error: liveFailed.error });
+  assert.equal(liveFailedCode, 1);
+  assert.match(liveFailed.out.join('\n'), /1 up-to-date, 0 behind, 0 ahead, 0 diverged, 0 unknown/);
+  assert.match(liveFailed.err.join('\n'), /Upstream check incomplete: 1 live-upstream check\(s\) UNKNOWN/);
+  assert.doesNotMatch(liveFailed.err.join('\n'), /vendor\(s\) UNKNOWN/);
 });
 
 // --- A2-10: check-upstream timeout and retry ---

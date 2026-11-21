@@ -287,6 +287,21 @@ function printPlan(ctx, plannedItems, locations) {
         ctx.out(`would ${p.action} ${label(p.kind, p.name)}`);
     }
   }
+  // Agentic-SEO warnings (S-08/S-09): a dry run is the careful
+  // path — warn here too, so a user who previews first learns
+  // about the unsafe upstream docs before the real run. Only for
+  // items the run would leave installed (install/update/
+  // overwrite/already); skipped/refused items warn about nothing.
+  // Once per run, like the execute-phase warning.
+  if (
+    plannedItems.some(
+      (p) =>
+        ['install', 'update', 'overwrite', 'already'].includes(p.action) &&
+        isAgenticSeoSource(p.item?.source),
+    )
+  ) {
+    for (const w of AGENTIC_SEO_WARNINGS) ctx.err(w);
+  }
 }
 
 function printSummary(ctx, results) {
@@ -361,7 +376,10 @@ async function executeInstallRun(ctx, locations, plannedItems, manifest, { comma
   // installed, or the quarantine would leave no manifest at all.
   let manifestDirty = initialDirty;
   // Agentic-SEO warnings (S-08/S-09): emitted once per run, when
-  // the first item from that upstream vendor is installed/updated.
+  // the first item from that upstream vendor is installed/updated
+  // — or found already installed (below): a re-run that finds the
+  // seo skill in place used to warn about nothing, so users who
+  // installed before the warnings existed never saw them.
   let warnedAgenticSeo = false;
   // Persist incrementally (A-09): a kill mid-run leaves the items
   // installed so far recorded, instead of losing the whole run.
@@ -429,6 +447,15 @@ async function executeInstallRun(ctx, locations, plannedItems, manifest, { comma
 
   for (const p of plannedItems) {
     if (p.action === 'already') {
+      // Agentic-SEO warnings (S-08/S-09): a run that leaves the
+      // seo skill installed warns even when nothing was written
+      // this run — otherwise a re-run, or an update with nothing
+      // to do, silently skips the warning. Same once-per-run flag
+      // as the install/update warning above.
+      if (!warnedAgenticSeo && isAgenticSeoSource(p.item.source)) {
+        warnedAgenticSeo = true;
+        for (const w of AGENTIC_SEO_WARNINGS) ctx.err(w);
+      }
       if (p.adopt) {
         try {
           const files = p.method === 'link' ? new Map() : await hashInstalled(p);

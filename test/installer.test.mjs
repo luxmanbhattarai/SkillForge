@@ -1515,13 +1515,32 @@ test('A-30: install cleans staged leftovers when everything is already; trash su
 
 // ---------------------------------------------------------------- S-08/S-09: agentic-seo warnings
 
-test('S-08/S-09: installing the seo skill warns about the upstream install docs and TLS-blind link checker', async () => {
+test('S-08/S-09: installing, re-running, and dry-running the seo skill warn about the upstream install docs and TLS-blind link checker', async () => {
   const { home, proj } = await makeSandbox();
   // A non-agentic skill warns about nothing.
   const control = await runCli(['install', ...CLAUDE, '--skill', 'astro'], { home, proj });
   assert.equal(control.code, 0, control.stderr);
   assert.doesNotMatch(control.stderr, /finding S-08/);
   assert.doesNotMatch(control.stderr, /finding S-09/);
+
+  // A dry run of a non-agentic skill warns about nothing either.
+  const dryControl = await runCli(['install', ...CLAUDE, '--skill', 'nextjs', '--dry-run'], { home, proj });
+  assert.equal(dryControl.code, 0, dryControl.stderr);
+  assert.doesNotMatch(dryControl.stderr, /finding S-08/);
+  assert.doesNotMatch(dryControl.stderr, /finding S-09/);
+
+  // Dry-run install of seo warns (stderr), while the plan itself
+  // (stdout) is unchanged: before the fix, the careful path —
+  // preview first — warned about nothing.
+  const dry = await runCli(['install', ...CLAUDE, '--skill', 'seo', '--dry-run'], { home, proj });
+  assert.equal(dry.code, 0, dry.stderr);
+  assert.match(dry.stdout, /would install seo/);
+  assert.match(dry.stderr, /documents an unsafe install method/);
+  assert.match(dry.stderr, /disables TLS certificate verification/);
+  assert.match(dry.stderr, /finding S-08/);
+  assert.match(dry.stderr, /finding S-09/);
+  assert.equal((dry.stderr.match(/finding S-08/g) || []).length, 1);
+  assert.equal((dry.stderr.match(/finding S-09/g) || []).length, 1);
 
   const r = await runCli(['install', ...CLAUDE, '--skill', 'seo'], { home, proj });
   assert.equal(r.code, 0, r.stderr);
@@ -1532,6 +1551,27 @@ test('S-08/S-09: installing the seo skill warns about the upstream install docs 
   // Once per run, not once per warning site.
   assert.equal((r.stderr.match(/finding S-08/g) || []).length, 1);
   assert.equal((r.stderr.match(/finding S-09/g) || []).length, 1);
+
+  // A re-run that finds the seo skill already installed warns too:
+  // before the fix, only a fresh install/update warned, so users
+  // who installed before the warnings existed never saw them.
+  const again = await runCli(['install', ...CLAUDE, '--skill', 'seo'], { home, proj });
+  assert.equal(again.code, 0, again.stderr);
+  assert.match(again.stdout, /already installed: seo/);
+  assert.match(again.stderr, /finding S-08/);
+  assert.match(again.stderr, /finding S-09/);
+  assert.equal((again.stderr.match(/finding S-08/g) || []).length, 1);
+  assert.equal((again.stderr.match(/finding S-09/g) || []).length, 1);
+
+  // Update dry-run with seo already installed warns too (the
+  // 'already' action in the shared plan printer).
+  const updateDry = await runCli(['update', ...CLAUDE, '--dry-run'], { home, proj });
+  assert.equal(updateDry.code, 0, updateDry.stderr);
+  assert.match(updateDry.stdout, /already installed: seo/);
+  assert.match(updateDry.stderr, /finding S-08/);
+  assert.match(updateDry.stderr, /finding S-09/);
+  assert.equal((updateDry.stderr.match(/finding S-08/g) || []).length, 1);
+  assert.equal((updateDry.stderr.match(/finding S-09/g) || []).length, 1);
 });
 
 test('S-08/S-09: doctor warns about an installed seo skill', async () => {

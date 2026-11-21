@@ -858,3 +858,267 @@ audit body above is left as the point-in-time record.
    in CI yet" clause now records the PR #4 runs and the unblocked
    lockfile follow-up; the safe-install guide's "(planned)" doctor
    warning now reads "(implemented)".
+
+## Addendum — 2026-11-21 (Phase 3, Final Staging Validation)
+
+Phase 3 re-verified S-08, S-09, S-11, and S-14 from scratch — every
+prior claim re-derived by reading or by execution, none assumed —
+plus D1, a genuine defect in the drift check routed from Phase 6+8.
+Work started at HEAD `be03f2c`; sibling phases committed in the same
+checkout while this work ran, so the verifications below ran at HEAD
+`41bba4a` plus the uncommitted Phase 3 changes described here. The
+audit body above is left as the point-in-time record; this addendum
+is the Phase 3 record. Two small fixes were implemented (warning
+coverage, D1), each with regression coverage inside existing tests —
+no new test call sites, so the guarded test counts did not move
+(326 tests, 332 static call sites; `check:status` 0 failures).
+Nothing under `skills/upstream/` was edited; no upstream content was
+imported. Like the audit body, this addendum describes flagged
+constructs in prose and never reproduces their literal forms, so it
+contributes zero scanner findings (verified: the post-edit scan
+passes, 1,128 text files + 4 binary, 0 findings).
+
+### What was verified by execution vs by reading
+
+Executed: `npm run check:upstream` live, twice (before and after the
+D1 fix); sandbox installer probes — dry-run, real install, re-run,
+and update dry-run of the `seo` skill, before and after the warning
+fix; `sha256sum` of the vendored `install.sh`; `node --test` on both
+affected test files; `npm run check:security`; `npm run check:status`;
+GitHub API reads of the live upstream head (compare + file contents)
+— read-only, no import. Read in full: the installer warning and
+execute paths (`scripts/install/commands.mjs`), `scripts/
+check-upstream.mjs`, the vendored `broken_links.py` / `fetch_page.py`
+/ `README.md` / `install.sh` / Prisma files, the safe-install guide,
+the pins file, the scheduled-maintenance workflow, and the scanner
+pattern library. Verified by reading only: the three-line `main()` →
+`runCheck()` wiring in `check-upstream.mjs` (the exit-code behavior
+itself was verified by execution through `runCheck` and the tests),
+and the claim that no workflow other than scheduled-maintenance runs
+the drift check (grep over `.github/workflows/`).
+
+### S-08 — High — Agentic SEO documents an unsafe install — MITIGATED (unchanged)
+
+**Unsafe text still present, re-confirmed.** `skills/upstream/
+agentic-seo/seo/README.md:109-110` (curl-pipe install, split across
+two lines), `seo/install.sh:57-58` (same form in the usage text),
+`seo/install.sh:222` (remote mode does an unpinned `git clone
+--depth 1` of `main`; `REPO_URL` defaults to the author's repo at
+`:4`). No checksums or signatures anywhere in the upstream path.
+
+**Enforcement analysis — the mitigation is advisory, not a gate,
+and it had two coverage holes (now fixed).** The installer itself
+never executes the unsafe install: there is no child-process
+execution anywhere in `scripts/install/` (grep for the process-
+spawning calls returns nothing there — the installer is pure file
+operations), and the installed `install.sh` is non-executable
+(vendored mode `-rw-rw----`, preserved on install — verified by
+execution), so it takes an explicit `bash install.sh` or the
+documented curl-pipe to run it. The warning mechanism, however, only
+fired on a fresh install/update (`commands.mjs:431-433`, once per
+run, stderr). Sandbox probes before the fix proved the holes: a
+dry-run install of `seo` warned about nothing, a re-run that found
+`seo` already installed warned about nothing, and an update dry-run
+warned about nothing — so the careful path (preview first) and every
+user who installed before the warnings existed never saw them. The
+fix (this phase): the plan printer now warns on dry runs
+(`printPlan`, `commands.mjs:296-304`) and the execute path warns for
+already-installed items (`:455-457`), sharing the once-per-run flag
+(`:383`); install/update (`:431-433`) and doctor (`:867-868`) sites
+are unchanged. Post-fix probes: dry-run, install, re-run, and update
+dry-run each warn exactly once per finding; a non-agentic control
+skill stays silent in all four paths. The real exposure remains
+use-time, not install-time: an agent (or user) reading the installed
+README can still follow the documented install, and nothing warns at
+that moment. The `seo` skill's own workflow does not invoke the
+installer, but its README is on disk after every install.
+
+**What was considered and rejected.** A confirmation gate before
+installing `seo` would break non-interactive installs, and any bypass
+flag reintroduces silent bypass. A hard installer block is removal by
+another name — an owner decision, not an installer default. Stripping
+`install.sh` / `README.md` from the installed copy would break the
+installer's own staged-content verification, which compares staged
+content against the library. The restore path still does not warn
+(restores content the user already had installed — marginal, noted
+here, not fixed). The warning can still be missed in the scrollback
+of a full-library run; an end-of-run re-print is possible future
+hardening, not done here (it would change the deliberate once-per-run
+property the tests pin).
+
+**Recommended owner decision: (a) keep the skill with mandatory
+warnings + safe-install guidance.** This addendum makes the
+recommendation §3.5 left open. (b) is not available as a small,
+honest installer fix for the reasons above; (c) has no target — no
+equivalent alternative skill exists in the library, and the vendored
+install *is* the pinned, integrity-verified path (byte-identical to
+pin `67775741…`, re-verified Phase G); (d) is disproportionate — it
+removes a unique skill for a risk SkillForge never executes, and the
+residual is bounded to users or agents who independently follow the
+README. Upstream follow-up is still owed, and a re-import does not
+close S-08: the live head still documents the curl-pipe install
+(author's README `:152-161` at `445c46c2`) and its installer still
+clones unpinned `main` (`:639`).
+
+### S-09 — Medium — `broken_links.py` disables TLS verification — MITIGATED (unchanged for the vendored copy; FIXED upstream at live head)
+
+**Still present in the vendored copy, re-confirmed.**
+`skills/upstream/agentic-seo/seo/scripts/broken_links.py:71` (HEAD)
+and `:76` (GET fallback) disable TLS certificate verification,
+silently. The oversight reading holds: the same script's initial page
+fetch (`:131`) keeps verification on, and the sibling `fetch_page.py`
+has no verification override at all and handles `SSLError`
+explicitly (`:110`).
+
+**SkillForge never executes the script and its own network
+validation is unaffected.** A repo-wide grep for references finds
+only docs/audit mentions and a path fixture
+(`test/paths.test.mjs:29`); no first-party code invokes the script.
+`scripts/check-links.mjs` uses the global fetch with default TLS
+validation (`fetchWithRetry`, `:284-286`, `fetchFn = fetch`;
+`checkUrl`, `:318`), and the eval model provider likewise
+(`evals/runners/providers.mjs:206`, `globalThis.fetch`). The
+exposure is real but bounded and use-time: the skill's own workflow
+prescribes running the script (`seo/SKILL.md:117`), so agents
+following the skill *will* run it, and the warning is install-time
+only — nothing warns at execution time. The data at stake is public
+link statuses, so the blast radius stays as the safe-install guide
+states it. There is no drop-in replacement script in the library;
+the documented secure alternatives are the guide's re-check tools
+(a verifying client or `fetch_page.py`) and the first-party link
+checker for repo links. A patched vendored copy is forbidden by the
+verbatim policy.
+
+**New finding: S-09 is fixed upstream at live head `445c46c2`.**
+Read via the GitHub API (no import performed): the live
+`broken_links.py` routes its per-link checks through `safe_head` /
+`safe_get` from `scripts/lib/safe_http.py`, which forces
+verification on (`:149`). The vendored copy predates that refactor.
+**Recommendation: keep mitigated for the vendored copy; close via
+the S-14 reviewed re-import, not by patching the vendored copy.**
+Upstream follow-up for the fix itself is moot — upstream already
+fixed it; the follow-up now is the re-import decision.
+
+### S-11 — Medium — TLS-disable guidance — MITIGATED (unchanged)
+
+**Confirmed upstream-only, with a complete re-grep.**
+Searching the whole repo outside `skills/upstream/` for the
+TLS-disable constructs returns only the pattern definition itself
+(`scripts/lib/security-patterns.mjs:205`), audit-doc quotes (each
+per-file excepted), prose in `ai/PROJECT-STATUS.json`, and test
+fixtures (allowlisted line-level ignores). **No first-party code or
+guidance recommends disabling TLS certificate validation.** A second
+grep for the wider family — the curl insecure flag,
+`CURLOPT_SSL_VERIFYPEER`, `check_hostname`, unverified-context
+constructors, `CERT_NONE`, `InsecureSkipVerify` — returns zero hits
+outside `skills/upstream/`. The upstream-only inventory is exactly
+four occurrences, matching the prior audit with no new ones:
+`broken_links.py:71,76` (S-09) and `prisma-upgrade-v7/SKILL.md:244`
+plus `references/driver-adapters.md:203` (S-11); the same Prisma
+doc shows the verifying form at `driver-adapters.md:215`.
+First-party TLS verification is enabled wherever this repository
+fetches over the network (`check-links.mjs`, `:284-286`;
+`providers.mjs:206`). No owner decision is needed beyond the
+standing upstream follow-up for Prisma, still owed.
+
+### S-14 — Medium — Agentic-seo import tracks a dormant fork — MITIGATED (unchanged label; monitoring re-verified working; D1 fixed)
+
+**The drift check genuinely checks the live upstream — re-verified
+live.** `sources/imported-skills.md:105-108` carries the fork source
+plus the `Live upstream:` line; `parsePins` (`:68`) parses it,
+`comparePin` (`:135`) compares a pin against a repo's head, and
+`checkVendor` (`:162-187`) runs the primary fork check and then the
+same pin against the live repo. A live run on 2026-11-21 (run twice,
+before and after the D1 fix) reports all 6 vendors up-to-date
+against their pinned repos, the agentic-seo fork head at
+`67775741` (2026-03-03), the live head at `445c46c2` (2026-10-14),
+and **BEHIND: 50 commits** — the gap is unchanged since Phase G. The
+compare API confirms `ahead_by` 50, `behind_by` 0: the pin is a
+strict ancestor of the live head, no divergence. The remaining fork
+references are consistent pin-source records, not stale pointers —
+`registry/sources.json:338`, `scripts/lib/registry-sources.json:6`,
+`skills/upstream/agentic-seo/ATTRIBUTION.md:3` — and they are the
+re-point touchpoints listed below.
+
+**New findings from reading the live head (API reads only, no
+import).** (1) S-09 is fixed upstream there (see S-09). (2) S-08 is
+*not* fixed upstream: the live README still documents the curl-pipe
+install (`:152-161`, now with an `--online` flag) and the live
+installer still clones unpinned `main` (`:639`) and fetches the
+latest release (`:561`, `:587`). (3) The live repo restructured —
+files now sit at the repo root (`README.md`, `install.sh`,
+`scripts/`) instead of under `seo/` — so a re-import is not a
+fast-forward and the import mapping must change. (4) The 50 commits
+add unreviewed features (a new GitHub-SEO skill area, `.env`
+credentials support, `install.ps1`, and a PowerShell invocation
+that bypasses the execution policy in the install docs) — a
+re-import needs a full re-audit, not a blind update. (5)
+`docs/SECURITY-SCANNING.md:102-110` still describes the pre-fix
+behavior ("the weekly check reports agentic-seo UP-TO-DATE while the
+author's live repository is 50 commits ahead") — stale since the
+live-compare fix landed; flagged here for the coordinator, not
+edited (file outside Phase 3 scope). (6) The weekly scheduled run
+(`.github/workflows/scheduled-maintenance.yml:97`) has still never
+executed on GitHub, so the live-drift signal currently surfaces only
+from local runs.
+
+**D1 — fixed this phase (routed from Phase 6+8).** When upstream
+checks returned UNKNOWN — a monitoring failure, e.g. a network
+outage or a deleted/renamed repo — the script exited 0, so a total
+monitoring failure produced a green scheduled-maintenance run,
+visible only in logs. The fix: `main()` is now a thin wrapper over
+an exported `runCheck()` (`scripts/check-upstream.mjs:197`), which
+returns 1 when any primary vendor is UNKNOWN *or* any live-upstream
+check is UNKNOWN (`:263-271`) — the live compare counts because the
+S-14 drift signal is blind when it cannot run — and 0 otherwise, so
+drift (BEHIND/AHEAD/DIVERGED) stays informational. The header
+comment now states the rule. Regression coverage extends the
+existing S-14 test (`test/audit-fixes-c2-evals.test.mjs:215`): live
+drift still exits 0, a stubbed refused connection exits 1 with the
+UNKNOWN notice on stderr, and a live-only failure exits 1. The
+affected file passes 21/21, and the live run after the fix still
+exits 0 (6 up-to-date, live BEHIND 50). Two doc statements stay
+true and needed no edit: `docs/ARCHITECTURE.md:157` ("exits 0 on
+drift") and `docs/TROUBLESHOOTING.md:134` ("exits 0 even when
+upstreams moved") — drift still exits 0; only the inability to
+check now fails. The only caller is the scheduled-maintenance
+workflow, which has no `continue-on-error`, so a monitoring failure
+now fails that job visibly, as intended.
+
+**Recommended owner decision — two steps.** (1) **Re-point the pin
+source to the author's repo at the same commit `67775741`** — zero
+content change (the vendored files are byte-identical to that commit
+in the author's repo, re-verified Phase G), and the primary status
+then honestly reports BEHIND 50 instead of UP-TO-DATE; touchpoints
+are `sources/imported-skills.md`, `scripts/lib/registry-sources.
+json`, `registry/sources.json` (generated), and `ATTRIBUTION.md`.
+(2) **Schedule a reviewed re-import from live head `445c46c2`** — it
+would close S-09, but it requires a full re-audit (layout change,
+new features, S-08 still open). Do not re-import blindly, and do not
+keep the fork pin as the long-term source: the fork is dormant and
+the author's repo is the live upstream.
+
+### Safe-install guide fact-check — no errors found, not updated
+
+`docs/AGENTIC-SEO-SAFE-INSTALL.md` was fact-checked line by line
+and every checkable claim held: the `install.sh` SHA-256 matches the
+vendored file exactly, the file is 280 lines, all cited line
+references are correct (README `:109-110`, `install.sh` `:57-58`
+and `:220-230`, `broken_links.py` `:71` / `:76` / `:131`), the
+50-commit gap is still current, and the doctor warning now reads
+"(implemented)". Per the Phase 3 scope rule the guide was therefore
+left untouched.
+
+### Fix record (Phase 3)
+
+| Fix | Files | Verification |
+| --- | --- | --- |
+| S-08/S-09 warning coverage: warn on dry runs and already-installed runs | `scripts/install/commands.mjs` (`printPlan` `:296-304`, already branch `:455-457`); test extended in `test/installer.test.mjs:1518` | `node --test test/installer.test.mjs`: 97/97 pass; 6-point sandbox probe post-fix (dry-run/install/re-run/update dry-run warn, controls silent) |
+| D1: UNKNOWN exits non-zero, drift stays informational | `scripts/check-upstream.mjs` (`runCheck` `:197`, exit rule `:263-271`); test extended in `test/audit-fixes-c2-evals.test.mjs:215` | `node --test test/audit-fixes-c2-evals.test.mjs`: 21/21 pass; live `npm run check:upstream` still exits 0; stubbed-refusal execution returns 1 |
+
+Both regressions extend existing tests, so no new test call sites
+were added and the guarded counts are unchanged (326 tests, 332
+static call sites; `npm run check:status` reports 0 failures).
+`npm run check:security` passes after all edits (1,128 text files +
+4 binary, 0 findings; the file count rose from the Phase G 1,125
+because sibling phases added files).
