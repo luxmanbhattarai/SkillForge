@@ -13,7 +13,7 @@ metadata:
   category: infrastructure
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Docker installed and running on the machine, and network access to pull base images.
 ---
 

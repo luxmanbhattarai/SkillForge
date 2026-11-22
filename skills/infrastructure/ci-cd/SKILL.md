@@ -52,6 +52,7 @@ deploy can be rolled back quickly.
 - A deployment target and a way to deploy to it from automation.
 - Agreement on environments: at minimum staging and production for a
   user-facing service.
+- Version range: none — this skill covers methodology, not a versioned tool.
 
 ## Official Documentation
 

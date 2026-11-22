@@ -13,7 +13,7 @@ metadata:
   category: infrastructure
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js, the Wrangler CLI, a Cloudflare account, and network access to Cloudflare.
 ---
 
@@ -139,7 +139,7 @@ correct query code that runs inside Workers through the D1 binding.
 - Avoid `SELECT *` on wide tables; select only the columns the endpoint
   needs.
 - Keep result sets bounded with `LIMIT` and paginate lists. D1
-  enforces a maximum query result size (50 MB as of late 2026), so an
+  enforces a maximum query result size (50 MB, enforced since 2026-11-04), so an
   unbounded query over a large table fails instead of returning
   partial data.
 - Remember that D1 is a serverless SQLite database replicated for reads;

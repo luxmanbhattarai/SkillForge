@@ -15,7 +15,7 @@ metadata:
   category: infrastructure
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires a Railway account, a Git repository or a local project directory, and network access to Railway.
 ---
 

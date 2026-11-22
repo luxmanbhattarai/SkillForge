@@ -14,7 +14,7 @@ metadata:
   category: infrastructure
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # AWS
@@ -57,7 +57,7 @@ optimization, and sustainability.
 ## Prerequisites
 
 - An AWS account with a defined home Region and billing alerts enabled.
-- AWS CLI v2 installed (the current major version; 2.41.0 was the latest
+- AWS CLI v2 installed (the current major version; 2.42.1 was the latest
   release at last verification) and authenticated, preferably through IAM
   Identity Center (`aws configure sso`) rather than long-term access keys.
 - The target Region(s) and Availability Zones decided, with data-residency

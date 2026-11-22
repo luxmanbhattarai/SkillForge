@@ -13,7 +13,7 @@ metadata:
   category: infrastructure
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Deployment
@@ -52,6 +52,7 @@ reversible.
 - A way to verify the deployment: smoke tests, health endpoints, or
   manual checks.
 - A rollback path identified before the first production deploy.
+- Version range: none — this skill covers deployment strategy across platforms, not a versioned tool.
 
 ## Official Documentation
 
@@ -178,15 +179,16 @@ or storage writes):
 
 ```bash
 wrangler rollback
-# Or roll back to a specific version:
-wrangler rollback <version-id>
+# Or roll back to a specific version (set VERSION_ID first):
+wrangler rollback "$VERSION_ID"
 ```
 
 Fallback when no platform rollback is available: redeploy the previous
 known-good commit:
 
 ```bash
-git checkout <previous-commit-sha>
+# PREVIOUS_COMMIT_SHA is the last known-good commit:
+git checkout "$PREVIOUS_COMMIT_SHA"
 npx wrangler deploy
 git checkout main
 ```

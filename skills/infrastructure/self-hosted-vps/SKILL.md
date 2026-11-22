@@ -16,7 +16,7 @@ metadata:
   category: infrastructure
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires root or sudo access to a Linux VPS (Ubuntu LTS or Debian stable) and a domain name for TLS.
 ---
 

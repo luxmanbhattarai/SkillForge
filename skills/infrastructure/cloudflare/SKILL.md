@@ -14,7 +14,7 @@ metadata:
   category: infrastructure
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires a Cloudflare account and network access to the Cloudflare dashboard and API.
 ---
 
@@ -57,6 +57,7 @@ Cloudflare product for a given workload.
   and Configuration Rules for per-path setting overrides; see the
   Page Rules migration guide linked below. Existing Page Rules still
   work and Cloudflare plans to migrate them automatically.
+- Version range: none — Cloudflare is a managed platform with no pinned version.
 
 ## Official Documentation
 

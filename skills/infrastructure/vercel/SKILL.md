@@ -13,7 +13,7 @@ metadata:
   category: infrastructure
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires a Vercel account, a Git repository, and network access to Vercel.
 ---
 
@@ -67,7 +67,7 @@ every push and behaves the same in preview and production.
   projects, deployments, domains, and functions.
 - [Vercel CLI reference](https://vercel.com/docs/cli) — command
   reference for the Vercel CLI.
-- [Vercel Dashboard](https://vercel.com/dashboard) — project and
+- [Vercel Dashboard](https://vercel.com/) — project and
   deployment management.
 
 ## Required Workflow

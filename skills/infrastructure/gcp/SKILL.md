@@ -14,7 +14,7 @@ metadata:
   category: infrastructure
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # GCP
@@ -63,7 +63,7 @@ following Google Cloud's own architecture and security guidance.
 
 - A Google Cloud project (or organization with folders per environment)
   with billing enabled and a budget alert configured.
-- Google Cloud CLI (`gcloud`) installed and authenticated; 594.0.0 was
+- Google Cloud CLI (`gcloud`) installed and authenticated; 594.0.1 was
   the latest release at last verification. Run `gcloud components update`
   to stay current (tarball installs; package-manager installs update
   through the package manager), and `gcloud auth login` plus

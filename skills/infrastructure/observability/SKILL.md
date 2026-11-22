@@ -14,7 +14,7 @@ metadata:
   category: infrastructure
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Observability
@@ -54,6 +54,7 @@ telemetry, and fixed before users report them.
   and latency targets.
 - Access to the log and metrics store for the service.
 - For tracing: an OpenTelemetry-compatible collector or vendor endpoint.
+- Version range: none — this skill covers observability practice, not a versioned tool.
 
 ## Official Documentation
 

@@ -14,7 +14,7 @@ metadata:
   category: infrastructure
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js, the Wrangler CLI, a Cloudflare account, and network access to Cloudflare.
 ---
 
