@@ -13,7 +13,7 @@ metadata:
   category: architecture
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # System Design
@@ -44,6 +44,7 @@ revisited.
 ## Prerequisites
 
 - The problem is stated: what the system does and for whom.
+- Version range: none — this is a conceptual skill; it does not depend on a versioned tool or API.
 - The scale is roughly known or can be estimated: users, requests, data volume, growth.
 - The constraints are known: budget, team size, compliance, latency requirements, existing systems to integrate with.
 - The decision-makers are available to confirm requirements and trade-offs.

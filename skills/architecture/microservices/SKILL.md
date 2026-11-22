@@ -12,7 +12,7 @@ metadata:
   category: architecture
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Microservices
@@ -42,6 +42,7 @@ worth paying.
 ## Prerequisites
 
 - The domain boundaries are understood well enough to draw service lines; see `domain-driven-design`.
+- Version range: none — this is a conceptual skill; it does not depend on a versioned tool or API.
 - The operational baseline exists: CI/CD, containerization, logging, metrics, and tracing across services.
 - The team accepts the costs: network calls, distributed debugging, eventual consistency, and per-service operations.
 - A deployment platform that can run many small services (containers, serverless, or a platform service).

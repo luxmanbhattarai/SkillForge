@@ -12,7 +12,7 @@ metadata:
   category: architecture
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # pnpm Workspaces
@@ -45,15 +45,16 @@ running commands across packages.
 - Supported versions: pnpm 12.x is current
   (stable August 2026; a Rust rewrite that keeps pnpm 11's commands,
   flags, settings, and lockfile format, so upgrading needs no
-  migration). pnpm 11 is supported until 2027-04-30; pnpm 10 and
-  earlier are unsupported. pnpm 11 requires Node.js 22 or later.
+  migration). pnpm 11 and pnpm 10 are supported until 2027-04-30;
+  pnpm 9 and earlier are unsupported. pnpm 11 requires Node.js 22 or later.
   Version differences to know: in pnpm 12, `--frozen-lockfile false`
   is no longer accepted (use `--no-frozen-lockfile`); an unrecognized
   key in `pnpm-workspace.yaml` is reported instead of silently
-  ignored; git dependencies resolve through the host's canonical HTTPS
-  URL, never SSH; and CI installs default to frozen-lockfile mode when
-  a non-empty lockfile exists (pass `--frozen-lockfile` explicitly
-  anyway so the intent is visible).
+  ignored; and for GitHub, GitLab, and Bitbucket, git dependencies
+  resolve through the host's canonical HTTPS URL, never SSH.
+  Separately, CI installs default to frozen-lockfile mode when a
+  lockfile exists (pass `--frozen-lockfile` explicitly anyway so the
+  intent is visible).
 - Node.js 26 LTS is the current line (Active LTS since 2026-10-28,
   supported to 2029-04-30); Node.js 24 is in maintenance until
   2028-04-30. Node.js 20 and 25 are end-of-life.
@@ -74,7 +75,7 @@ running commands across packages.
 5. Install from the root with `pnpm install`; verify a single `pnpm-lock.yaml` exists at the root and none inside packages.
 6. Add dependencies with filtering: `pnpm --filter <name> add <dep>` for one package, `pnpm add -w -D <dep>` for a root dev dependency.
 7. Run scripts across packages with filters: `pnpm --filter <name> <script>`, `pnpm -r <script>` for all packages, or delegate to Turborepo for graph-aware runs.
-8. Configure shared settings in `.npmrc` at the root (strict peer dependency behavior, engine checks) and keep it minimal.
+8. Configure shared pnpm settings in `pnpm-workspace.yaml` (strict peer dependency behavior, engine checks). `.npmrc` is auth/registry only since pnpm 11 — pnpm no longer reads other settings from it.
 9. Verify the workspace: `pnpm -r list --depth -1` shows all packages, and a clean install from a fresh checkout works.
 10. Run the Validation Checklist.
 
@@ -86,7 +87,7 @@ running commands across packages.
 - Never use `file:` or relative-path dependencies for sibling packages; the workspace protocol is the mechanism.
 - Root `package.json` is `private: true` and holds only repository tooling and scripts.
 - Do not disable strict peer dependency checks globally to silence an error; fix the peer range or add an explicit override in one place.
-- Keep `.npmrc` minimal and committed; machine-specific settings belong in the user's global config, not the repository.
+- Keep `.npmrc` to registry/auth settings only and committed; pnpm settings live in `pnpm-workspace.yaml`, and machine-specific settings belong in the user's global config, not the repository.
 - Use `pnpm dlx` for one-off tools instead of installing them globally or per package.
 
 ## Best Practices

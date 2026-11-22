@@ -12,7 +12,7 @@ metadata:
   category: architecture
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Modular Monolith
@@ -42,6 +42,7 @@ and it leaves the door open to extracting a service later.
 ## Prerequisites
 
 - The domain areas (modules) are roughly known: billing, catalog, users, orders, and so on.
+- Version range: none — this is a conceptual skill; it does not depend on a versioned tool or API.
 - One database is acceptable for the whole application (modules share the database but not each other's tables).
 - The team agrees on the module rules before coding; boundaries only work when everyone enforces them.
 - A language and framework that supports the chosen module structure (packages, namespaces, or folders).

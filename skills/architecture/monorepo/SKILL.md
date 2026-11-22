@@ -12,7 +12,7 @@ metadata:
   category: architecture
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Monorepo
@@ -48,9 +48,10 @@ grows.
   2028-04-30. Node.js 20 and 25 are end-of-life. Pin the Node and
   package manager versions for the repository.
 - Supported versions: pnpm 12.x is current
-  (stable August 2026); pnpm 11 is supported until 2027-04-30; pnpm 10
-  and earlier are unsupported. Turborepo 2.x is current (2.11.x,
-  November 2026); Turborepo 1.x is end-of-life and 3.0 is in canary.
+  (stable August 2026); pnpm 11 and pnpm 10 are supported until
+  2027-04-30; pnpm 9 and earlier are unsupported. Turborepo 2.x is
+  current (2.11.x, November 2026); Turborepo 1.x is end-of-life and
+  3.0 has not been released yet.
 - A task runner is chosen (Turborepo is the recommended default) or deliberately deferred.
 
 ## Official Documentation

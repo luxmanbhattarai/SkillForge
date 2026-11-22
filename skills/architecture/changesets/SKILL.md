@@ -14,7 +14,7 @@ metadata:
   category: architecture
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Changesets
@@ -77,7 +77,7 @@ and prereleases, and CI release automation.
 
 1. Install the CLI as a root dev dependency (`pnpm add -Dw @changesets/cli`) and run `changeset init` to create `.changeset/` with `config.json` and a README. Review the generated config: set `baseBranch` to the repository's default branch if it is not `main`, and choose the changelog generator (the default `@changesets/cli/changelog`, or `@changesets/changelog-github` for PR links and author thanks in open-source projects).
 2. Add root scripts for the release commands the team and CI will use: `changeset` (add), `version` (`changeset version`), and `release` (`changeset publish`).
-3. In every feature pull request that changes releasable code, create a changeset: run `changeset` (interactive: it lists changed packages, asks for the bump type per package, and asks for a summary) or, for scripts and agents, use the v3 non-interactive flags (`changeset add --minor <pkg> --message "<summary>"`). Commit the generated `.changeset/<name>.md` file with the pull request.
+3. In every feature pull request that changes releasable code, create a changeset: run `changeset` (interactive: it lists changed packages, asks for the bump type per package, and asks for a summary) or, for scripts and agents, use the non-interactive flags (`changeset add --minor <pkg> --message "<summary>"`). Commit the generated `.changeset/<name>.md` file with the pull request.
 4. Review the changeset file as part of code review: the bump type is a decision (major for breaking changes, minor for new backward-compatible features, patch for bug fixes) and the summary is the future changelog entry, so both must be accurate.
 5. Set up the release workflow in CI with `changesets/action@v2`: on pushes to the default branch it opens or updates a "Version Packages" pull request that applies pending changesets (bumps versions, writes changelogs, updates internal dependency ranges, deletes the consumed files). Merging that pull request triggers the publish step (`changeset publish`).
 6. When a release is needed outside the automated flow, run `changeset version` to apply pending changesets, review the version bumps and changelog diff, commit it, then run `changeset publish` (which publishes to the registry and creates git tags).
@@ -194,7 +194,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
           node-version: 26

@@ -13,7 +13,7 @@ metadata:
   category: architecture
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Nx
@@ -175,7 +175,7 @@ Minimal `nx.json` with a task pipeline and caching:
 
 Tagging a project and constraining dependencies (ESLint flat config):
 
-```json
+```jsonc
 // packages/ui/package.json (excerpt)
 {
   "name": "@repo/ui",

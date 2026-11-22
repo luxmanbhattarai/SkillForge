@@ -12,7 +12,7 @@ metadata:
   category: architecture
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Domain-Driven Design
@@ -42,6 +42,7 @@ repositories) needed to model a complex domain well.
 ## Prerequisites
 
 - Access to domain experts (or written domain knowledge) to learn the real language and rules.
+- Version range: none — this is a conceptual skill; it does not depend on a versioned tool or API.
 - The core subdomain is identified: where the complexity and business value actually live.
 - The team agrees to use the ubiquitous language in code, tests, and conversation.
 - A persistence layer exists or is planned, so repositories can be defined against it.

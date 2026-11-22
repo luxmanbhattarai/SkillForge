@@ -11,7 +11,7 @@ metadata:
   category: architecture
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Turborepo
@@ -43,7 +43,7 @@ execution in CI, and enabling remote caching.
 - Turborepo installed (the `turbo` package) at the repository root.
 - Supported versions: Turborepo 2.x is current
   (latest stable 2.11.x, November 2026). Turborepo 1.x is end-of-life
-  and 3.0 is in canary. In 2.x the `turbo.json` top-level key is
+  and 3.0 has not been released yet. In 2.x the `turbo.json` top-level key is
   `tasks`; the 1.x `pipeline` key was renamed and must not be used.
   The `daemon` top-level option is deprecated and will be removed in
   3.0. Use Turborepo 2.9.14 or later (see Security Considerations).
@@ -65,10 +65,11 @@ execution in CI, and enabling remote caching.
 4. Define `lint`, `test`, and `typecheck` tasks; give `typecheck` and `test` a `dependsOn` of `["^build"]` only when they genuinely need built dependencies.
 5. Define `dev` as a persistent task (`"persistent": true`) with no cache, since it runs a long-lived process.
 6. Run `turbo run build` twice: the second run should report full cache hits, proving caching works.
-7. Wire CI to run affected packages only: on Turborepo 2.10 and later
-   use `turbo run build lint test typecheck --affected` (equivalent to
-   `--filter=...[main...HEAD]` by default, and composable with
-   `--filter`); on earlier 2.x versions use
+7. Wire CI to run affected packages only with
+   `turbo run build lint test typecheck --affected` (available since
+   2.1; equivalent to `--filter=...[main...HEAD]` by default, and
+   composable with `--filter` on 2.10 and later). On Turborepo 2.0,
+   which predates the flag, use
    `turbo run build lint test typecheck --filter=...[HEAD^1]` or the
    equivalent for the CI provider, so unchanged packages are skipped.
 8. Enable remote caching when the team is ready: connect the repository to a remote cache so CI and developers share cache entries.

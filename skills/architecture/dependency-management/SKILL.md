@@ -12,7 +12,7 @@ metadata:
   category: architecture
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Dependency Management
@@ -42,8 +42,8 @@ vulnerabilities, and removing what is no longer needed.
 - The package manager and lockfile are in place (pnpm with `pnpm-lock.yaml` is the recommended default).
 - Supported versions: pnpm 12.x is current
   (stable August 2026; a Rust rewrite that keeps pnpm 11's commands,
-  flags, settings, and lockfile format). pnpm 11 is supported until
-  2027-04-30; pnpm 10 and earlier are unsupported. The npm CLI's
+  flags, settings, and lockfile format). pnpm 11 and pnpm 10 are
+  supported until 2027-04-30; pnpm 9 and earlier are unsupported. The npm CLI's
   current major is npm 12 (July 2026); note that the npm bundled with
   Node.js is still 11.x (Node.js 26 ships npm 11.20.0), so npm 12 must
   be installed explicitly (`npm install -g npm@12`).
