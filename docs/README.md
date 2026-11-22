@@ -21,6 +21,7 @@ rather than duplicating it (see
 | --- | --- |
 | [`CONTRIBUTING.md`](../CONTRIBUTING.md) | Ground rules, adding a skill end to end, upstream imports, agents/workflows, PR process |
 | [`SKILL-STANDARDS.md`](SKILL-STANDARDS.md) | Skill format, frontmatter (including the parser subset), the 22-element quality standard, quality scoring |
+| [`PROGRESSIVE-DISCLOSURE.md`](PROGRESSIVE-DISCLOSURE.md) | Progressive disclosure standard — line budgets, disclosure folders, loading contract |
 | [`UPDATE-PROCESS.md`](UPDATE-PROCESS.md) | Re-importing upstream skills, re-verifying original skills, versioning, release checklist |
 | [`OFFICIAL-SOURCES.md`](OFFICIAL-SOURCES.md) | Upstream vendors and the canonical source list (`sources/official-sources.md`) |
 

@@ -78,6 +78,9 @@ const EXCEPTIONS = [
   ['https://csrc.nist.gov/', 'host blocks Node fetch (404); verified via curl and browser fetch 2026-11-20'],
   ['https://www.poynter.org/', 'host blocks automated checks (403); verified real'],
   ['https://developers.facebook.com/', 'host blocks automated checks (400); verified real'],
+  ['https://www.domainlanguage.com/ddd/', 'host blocks automated checks (403); verified 200 via curl GET + HEAD 2026-11-22'],
+  ['https://orval.dev', 'host blocks automated checks (403); verified 200 via curl GET + HEAD 2026-11-22'],
+  ['https://scholar.google.com/', 'host blocks automated checks (403); verified 200 via curl GET + HEAD 2026-11-22'],
 ];
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
