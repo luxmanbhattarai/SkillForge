@@ -182,10 +182,9 @@ audit rounds, PR #1/#4/#5 CI runs, and staging fixes):
 
 Initial release of SkillForge, a universal AI Agent Skills library.
 
-> Note: the v1.0.0 tag and GitHub Release were removed on
-> 2026-11-21 at the owner's request; v1.1.0 supersedes this
-> release. The v1.0.0 commit remains in history (see the link
-> below).
+> Note: the v1.0.0 tag and GitHub Release were briefly removed on
+> 2026-11-21 and restored the same day at the owner's request, so
+> the history stays complete; v1.1.0 supersedes this release.
 
 ### Added
 
@@ -213,4 +212,4 @@ Initial release of SkillForge, a universal AI Agent Skills library.
 
 [Unreleased]: https://github.com/luxmanbhattarai/SkillForge/compare/v1.1.0...HEAD
 [1.1.0]: https://github.com/luxmanbhattarai/SkillForge/releases/tag/v1.1.0
-[1.0.0]: https://github.com/luxmanbhattarai/SkillForge/commit/bc304a2b62d383855ff7445de3b4252b5a13a89a
+[1.0.0]: https://github.com/luxmanbhattarai/SkillForge/releases/tag/v1.0.0
