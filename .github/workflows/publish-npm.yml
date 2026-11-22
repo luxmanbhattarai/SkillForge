@@ -1,0 +1,244 @@
+name: Publish to npm (opt-in)
+
+# Opt-in npm publishing for SkillForge. This workflow is the ONLY
+# path to npm, and it is deliberately hard to trigger by accident:
+#
+#   - workflow_dispatch ONLY. No push, pull_request, tag, or schedule
+#     trigger exists, so no commit, tag, or timer can ever publish.
+#   - dry-run by DEFAULT. A dispatch with no inputs only packs the
+#     tarball, prints what would ship, generates the SBOM and
+#     checksums, and uploads them as artifacts. Nothing touches the
+#     registry. Publishing requires explicitly setting dry_run=false.
+#   - The publish step runs only from the main branch, only when
+#     package.json no longer has "private": true, and only when the
+#     NPM_TOKEN secret exists. Flipping private:false is a deliberate,
+#     reviewed commit by the owner (see ai/architecture/
+#     DISTRIBUTION-ARCHITECTURE.md) — this workflow never edits
+#     package.json itself.
+#   - The publish job runs in the `npm` GitHub Environment. Before
+#     the first real publish, configure that environment in repo
+#     Settings > Environments with required reviewers, so a second
+#     person approves the publish. (GitHub creates the environment
+#     on first use if it does not exist yet — unprotected — so set
+#     up the reviewers BEFORE the first non-dry-run dispatch.)
+#   - Provenance: `npm publish --provenance` attaches a Sigstore
+#     attestation linking the tarball to this exact workflow run
+#     (needs id-token: write). The SBOM and tarball SHA-256 are
+#     uploaded as run artifacts for independent verification.
+#
+# This workflow does NOT remove "private": true and does NOT publish
+# anything on its own. Until the owner flips private:false and
+# dispatches with dry_run=false, every run is a dry run.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run: pack + SBOM + checksums only, publish nothing (default true). Set to false to publish for real."
+        type: boolean
+        default: true
+      dist_tag:
+        description: "npm dist-tag for the published version (ignored on a dry run)."
+        type: string
+        default: "latest"
+
+# Least privilege: read the repo, mint an OIDC token for npm
+# provenance. No other write permission. (The npm registry write
+# happens with NPM_TOKEN, not with GITHUB_TOKEN.)
+permissions:
+  contents: read
+  id-token: write
+
+# Publishes must serialize: two concurrent publishes of the same
+# version would race, and npm rejects the second anyway. Never
+# cancel a publish in flight.
+concurrency:
+  group: publish-npm
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: npm
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+          # No cache: this repo has zero dependencies and no lockfile,
+          # so there is nothing to cache.
+
+      - name: Show version and mode
+        run: |
+          echo "package.json version: $(node -p "require('./package.json').version")"
+          echo "private: $(node -p "require('./package.json').private")"
+          echo "dry_run: ${{ inputs.dry_run }}"
+          echo "dist_tag: ${{ inputs.dist_tag }}"
+          echo "ref: ${{ github.ref }}"
+
+      - name: Refuse to publish from a non-main branch
+        # A dispatch can target any branch. Publishing must come from
+        # main only — a branch checkout is not a release.
+        if: ${{ !inputs.dry_run && github.ref != 'refs/heads/main' }}
+        run: |
+          echo "::error::Refusing to publish from ${{ github.ref }}: npm publishes come from main only."
+          exit 1
+
+      - name: Refuse to publish while the package is private
+        # package.json ships with "private": true. Publishing requires
+        # a deliberate owner commit flipping it to false (reviewed,
+        # in git history) — this workflow never edits it.
+        if: ${{ !inputs.dry_run }}
+        run: |
+          if [ "$(node -p "require('./package.json').private")" = "true" ]; then
+            echo "::error::package.json still has \"private\": true. Publishing is opt-in: flip \"private\" to false in a reviewed commit on main first (see ai/architecture/DISTRIBUTION-ARCHITECTURE.md), then dispatch again."
+            exit 1
+          fi
+          echo "Package is not private; publish may proceed."
+
+      - name: Refuse to publish the taken unscoped name
+        # Verified 2026-11-22: the unscoped npm name "skillforge" is
+        # already taken by an unrelated package ("Minimal runner and
+        # eval framework for Claude Skills", v0.1.0). Publishing as
+        # "skillforge" would fail with a 403 at publish time. The
+        # package must be renamed first — a scoped name such as
+        # @luxmanbhattarai/skillforge is recommended (see
+        # ai/architecture/DISTRIBUTION-ARCHITECTURE.md). This guard
+        # only blocks the exact taken name; remove it in a reviewed
+        # commit if the owner ever acquires the name.
+        if: ${{ !inputs.dry_run }}
+        run: |
+          if [ "$(node -p "require('./package.json').name")" = "skillforge" ]; then
+            echo "::error::The npm name \"skillforge\" is taken by an unrelated package. Rename the package first (a scoped name is recommended), then dispatch again."
+            exit 1
+          fi
+          echo "Package name is not the taken unscoped name."
+
+      - name: Refuse to publish without NPM_TOKEN
+        if: ${{ !inputs.dry_run }}
+        run: |
+          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
+            echo "::error::NPM_TOKEN secret is not set. Create a granular npm access token (publish permission for the skillforge package only) and store it as the NPM_TOKEN repository secret, then dispatch again."
+            exit 1
+          fi
+          echo "NPM_TOKEN is present."
+
+      - name: Refuse to republish an existing version
+        # npm rejects republishing a version anyway, but failing here
+        # (before the validation battery) gives a clearer error and
+        # stops a wasted run. A 404 means the version is free.
+        if: ${{ !inputs.dry_run }}
+        run: |
+          PKG="$(node -p "require('./package.json').name")"
+          VER="$(node -p "require('./package.json').version")"
+          if npm view "${PKG}@${VER}" version --silent 2>/dev/null; then
+            echo "::error::${PKG}@${VER} already exists on npm. Bump the version (and CHANGELOG.md) before publishing."
+            exit 1
+          fi
+          echo "${PKG}@${VER} is not on npm yet."
+
+      - name: Validate skills (strict)
+        run: npm run validate:strict
+
+      - name: Check frontmatter
+        run: npm run check:frontmatter
+
+      - name: Check links (offline)
+        run: npm run check:links
+
+      - name: Check for duplicate skills
+        run: npm run check:duplicates
+
+      - name: Check sources and licenses
+        run: npm run check:sources
+
+      - name: Check agents and workflows
+        run: npm run check:agents
+
+      - name: Run security scan
+        run: npm run check:security
+
+      - name: Score skill quality
+        run: npm run score
+
+      - name: Run regression tests
+        run: npm test
+
+      - name: Run behavioral evals (mock provider)
+        run: npm run evals
+
+      - name: Validate registry schema and contents
+        run: npm run check:registry
+
+      - name: Regenerate registry
+        run: npm run registry
+
+      - name: Fail if registry differs from generated output
+        run: |
+          if ! git diff --exit-code --quiet registry/; then
+            echo "::error::The committed registry is out of date."
+            echo "Fix: run 'npm run registry' locally and commit the result."
+            git diff --stat registry/
+            exit 1
+          fi
+
+      - name: Regenerate audit report
+        run: npm run report
+
+      - name: Fail if audit report differs from generated output
+        run: |
+          if ! git diff --exit-code --quiet -- report.json AUDIT-REPORT.md; then
+            echo "::error::The committed audit report is out of date."
+            echo "Fix: run 'npm run report' locally and commit the result."
+            git diff --stat -- report.json AUDIT-REPORT.md
+            exit 1
+          fi
+
+      - name: Pack the tarball (dry run — what would ship)
+        # npm pack --dry-run lists the tarball contents and size
+        # without writing anything. Review this list before the
+        # first real publish: package.json has no "files" field yet,
+        # so the tarball ships everything npm does not exclude
+        # (see the architecture doc for the recommended allowlist).
+        run: npm pack --dry-run
+
+      - name: Generate SBOM and tarball checksums
+        run: |
+          node scripts/generate-sbom.mjs --out sbom.json
+          npm pack --silent
+          TARBALL="$(ls skillforge-*.tgz)"
+          sha256sum "$TARBALL" > checksums.txt
+          sha256sum sbom.json >> checksums.txt
+          echo "Tarball: $TARBALL"
+          cat checksums.txt
+
+      - name: Upload SBOM and checksums
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: npm-publish-sbom-${{ github.run_number }}
+          path: |
+            sbom.json
+            checksums.txt
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: Publish to npm
+        # The only step that writes to the registry. It runs only
+        # when dry_run is explicitly false AND every guard above
+        # passed (main branch, not private, token present, version
+        # free, full validation green).
+        if: ${{ !inputs.dry_run }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm publish --provenance --access public --tag "${{ inputs.dist_tag }}"
+          PKG="$(node -p "require('./package.json').name")"
+          VER="$(node -p "require('./package.json').version")"
+          echo "Published ${PKG}@${VER} to npm (tag: ${{ inputs.dist_tag }})."
+          npm view "${PKG}@${VER}" dist.integrity dist.tarball
