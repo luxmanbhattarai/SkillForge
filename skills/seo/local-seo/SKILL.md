@@ -15,7 +15,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Local SEO
@@ -64,6 +64,9 @@ business, verified with the owner.
 - Access to edit the website's local pages and structured data.
 - A list of the areas the business genuinely serves; do not claim
   areas it does not serve.
+- Conceptual skill; version range: none — applies to Google
+  Business Profile and local search, managed platforms with no
+  pinned version.
 
 ## Official Documentation
 

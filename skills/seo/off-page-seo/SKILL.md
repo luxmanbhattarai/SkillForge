@@ -11,7 +11,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Off-Page SEO
@@ -56,6 +56,8 @@ violate Google's spam policies.
 - A list of the site's current referring domains and top linked pages.
 - Knowledge of the site's niche, its audience, and the publications and
   communities that audience reads.
+- Conceptual skill; version range: none — applies to Google's
+  spam policies and third-party link indexes, with no pinned version.
 
 ## Official Documentation
 
@@ -183,6 +185,9 @@ Happy to share the raw numbers if that helps.
 Best,
 Jordan — Example Baking Blog
 ```
+
+(The survey figures above are illustrative placeholders for the
+fictional example; a real message uses the site's real data.)
 
 Example link-tracking row (spreadsheet or markdown table):
 

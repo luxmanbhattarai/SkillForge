@@ -12,7 +12,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Technical SEO
@@ -66,7 +66,7 @@ prevent a site from competing.
   specification.
 - [RFC 9309 — Robots Exclusion Protocol](https://www.rfc-editor.org/rfc/rfc9309) —
   the standard for robots.txt.
-- [Web Vitals](https://web.dev/vitals/) — definitions and thresholds for
+- [Web Vitals](https://web.dev/articles/vitals) — definitions and thresholds for
   Core Web Vitals.
 
 ## Required Workflow
@@ -251,6 +251,6 @@ Redirect 301 /old-page https://example.com/new-page
   technical requirements.
 - [Sitemaps.org](https://www.sitemaps.org/) — sitemap protocol.
 - [RFC 9309](https://www.rfc-editor.org/rfc/rfc9309) — robots.txt standard.
-- [Web Vitals](https://web.dev/vitals/) — Core Web Vitals definitions.
+- [Web Vitals](https://web.dev/articles/vitals) — Core Web Vitals definitions.
 - Related skills in this repository: `seo-audit`, `sitemap-robots`,
   `canonical-management`, `search-console`, `seo-migration`.

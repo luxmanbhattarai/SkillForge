@@ -11,7 +11,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Keyword Clustering
@@ -52,6 +52,8 @@ search.
   map to real URLs.
 - The site's content capacity: how many pages can realistically be
   created or maintained.
+- Conceptual skill; version range: none — applies to SERP tools
+  and keyword data, with no pinned version.
 
 ## Official Documentation
 

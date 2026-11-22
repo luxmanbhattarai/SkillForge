@@ -11,7 +11,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # SEO Audit
@@ -50,6 +50,8 @@ it identifies problems and the fixes that address them.
   changes (redesigns, migrations, deployments).
 - A list of the site's most important pages (homepage, money pages, top
   traffic pages) from analytics or Search Console.
+- Conceptual skill; version range: none — applies to Google's
+  search guidance and crawler tools, with no pinned version.
 
 ## Official Documentation
 

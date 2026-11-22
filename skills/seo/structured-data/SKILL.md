@@ -11,7 +11,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Structured Data
@@ -55,8 +55,9 @@ it makes pages eligible for them and keeps the markup trustworthy.
   features regularly: FAQ rich results stopped appearing on
   7 May 2026, HowTo was deprecated in September 2023, the sitelinks
   search box was removed in November 2024, and the course info,
-  estimated salary, learning video, special announcement, and vehicle
-  listing features were removed in September 2025. A schema.org type
+  ClaimReview, estimated salary, learning video, special announcement,
+  and vehicle listing features were removed in September 2025, and
+  practice problem in January 2026. A schema.org type
   staying valid does not mean Google still shows the feature — check
   the current search gallery before planning around any type.
 - Knowledge of ISO 8601 date and time formats (dates in markup use
@@ -135,8 +136,9 @@ it makes pages eligible for them and keeps the markup trustworthy.
 - Watch Google's search gallery for feature changes; a retired feature
   means markup that no longer earns anything and can be simplified.
   Retired: FAQ and HowTo rich results, the sitelinks
-  search box, and the course info, estimated salary, learning video,
-  special announcement, and vehicle listing features. Breadcrumb rich
+  search box, and the course info, ClaimReview, estimated salary,
+  learning video, special announcement, and vehicle listing features
+  (September 2025), and practice problem (January 2026). Breadcrumb rich
   results appear on desktop search results only (since January 2025).
 - Treat Search Console enhancement errors as defects with owners and
   deadlines, not as background noise.

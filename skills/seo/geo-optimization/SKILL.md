@@ -11,7 +11,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # GEO Optimization
@@ -59,6 +59,9 @@ promises AI citations.
 - An honest assessment of the site's authority: AI engines cite sources
   they trust, and a new site must earn that trust with quality and
   corroboration, not tricks.
+- Conceptual skill; version range: none — applies to Google's
+  search and generative AI features and third-party AI answer
+  engines, none of which is a pinned, versioned dependency.
 
 ## Official Documentation
 

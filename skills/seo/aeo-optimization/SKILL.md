@@ -14,7 +14,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # AEO Optimization
@@ -61,6 +61,9 @@ conditions under which a page can be selected.
   AEO structuring cannot rescue thin or inaccurate content.
 - Knowledge of the current answer format shown for the query (paragraph,
   list, table, or video), observed from a live search result page.
+- Conceptual skill; version range: none — applies to Google's
+  search and generative AI features, a managed platform with no
+  pinned version.
 
 ## Official Documentation
 

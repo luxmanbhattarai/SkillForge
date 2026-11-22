@@ -14,7 +14,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Sitemap & Robots
@@ -72,7 +72,7 @@ responsibilities separate.
 - [Build and submit a sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap) —
   Google's sitemap guide: formats, size limits, and how Google treats
   each field.
-- [How Google interprets the robots.txt specification](https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt) —
+- [How Google interprets the robots.txt specification](https://developers.google.com/crawling/docs/robots-txt/robots-txt-spec) —
   Google's robots.txt interpretation, including the 500 KiB file size
   limit and error handling.
 - [Google Search Central](https://developers.google.com/search) — Google's guidance on sitemaps and robots.txt.

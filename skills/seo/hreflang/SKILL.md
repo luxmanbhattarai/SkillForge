@@ -14,7 +14,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Hreflang
@@ -113,7 +113,9 @@ a version is missing.
 
 - Language codes use ISO 639-1 (two letters, lowercase). Region codes
   use ISO 3166-1 Alpha-2 (two letters, uppercase), separated by a
-  hyphen: `en-US`, `pt-BR`, `zh-Hant`.
+  hyphen: `en-US`, `pt-BR`. Script variations use an ISO 15924 script
+  subtag instead of a region code: `zh-Hant` (Traditional Chinese),
+  `zh-Hans` (Simplified Chinese).
 - Use a language-only code (`de`) when one version serves all regions
   speaking that language; use a language-region code (`de-AT`) only
   when the content is genuinely region-specific.
@@ -218,6 +220,10 @@ The same cluster expressed in an XML sitemap entry:
   <xhtml:link rel="alternate" hreflang="x-default" href="https://example.com/guide/" />
 </url>
 ```
+
+The sitemap's `<urlset>` root must declare the xhtml namespace —
+`xmlns:xhtml="http://www.w3.org/1999/xhtml"` — or the
+`<xhtml:link>` entries are invalid XML and Google ignores them.
 
 ## Validation Checklist
 

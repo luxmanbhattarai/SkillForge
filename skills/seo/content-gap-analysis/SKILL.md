@@ -11,7 +11,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Content Gap Analysis
@@ -51,6 +51,8 @@ it does not promise traffic for any single piece.
   rank for.
 - The site's keyword strategy or topic list, so gaps are judged against
   the site's focus rather than every topic in the niche.
+- Conceptual skill; version range: none — applies to third-party
+  keyword tools and Search Console, with no pinned version.
 
 ## Official Documentation
 

@@ -11,7 +11,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Internal Linking
@@ -52,6 +52,8 @@ content that already exists.
 - The topic cluster map from `keyword-clustering`, where one exists.
 - Access to edit templates (navigation, footers, breadcrumbs) and page
   content.
+- Conceptual skill; version range: none — applies to Google's
+  site-structure guidance, a managed platform with no pinned version.
 
 ## Official Documentation
 

@@ -14,7 +14,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Programmatic SEO
@@ -68,6 +68,8 @@ better than a generic page could, or it should not exist.
   enough to publish, and who reviews samples.
 - Access to Search Console to monitor indexing and traffic per page
   pattern.
+- Conceptual skill; version range: none — applies to Google's
+  scaled-content and helpful-content policies, with no pinned version.
 
 ## Official Documentation
 

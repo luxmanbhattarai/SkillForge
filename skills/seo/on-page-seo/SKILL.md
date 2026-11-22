@@ -11,7 +11,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # On-Page SEO
@@ -48,6 +48,8 @@ clicks; it never guarantees a position.
 - Access to edit the page or its template (CMS, codebase, or markdown files).
 - Knowledge of the page's current title, headings, and body copy.
 - The site's brand name and naming conventions for titles.
+- Conceptual skill; version range: none — applies to Google's
+  on-page guidance, a managed platform with no pinned version.
 
 ## Official Documentation
 

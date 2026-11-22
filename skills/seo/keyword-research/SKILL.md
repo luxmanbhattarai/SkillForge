@@ -11,7 +11,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Keyword Research
@@ -52,6 +52,8 @@ and must always be labeled as estimates.
   cover).
 - The site's current authority level, honestly assessed: a new site
   cannot target the same queries as an established authority.
+- Conceptual skill; version range: none — applies to third-party
+  keyword tools and Search Console, with no pinned version.
 
 ## Official Documentation
 

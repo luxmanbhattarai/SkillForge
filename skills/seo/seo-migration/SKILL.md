@@ -15,7 +15,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # SEO Migration
@@ -64,6 +64,8 @@ as a controlled, reversible operation with verification at each step.
   problems can be attributed to the migration.
 - Access to Google Search Console for both the old and new
   properties (for domain changes).
+- Conceptual skill; version range: none — applies to Google's
+  site-move guidance and Search Console, with no pinned version.
 
 ## Official Documentation
 

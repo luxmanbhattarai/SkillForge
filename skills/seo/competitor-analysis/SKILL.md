@@ -11,7 +11,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Competitor Analysis
@@ -51,6 +51,8 @@ labeled as estimates.
   site's own data; a third-party index for competitors).
 - Knowledge of the site's own strengths, so gaps are judged against what
   the site can realistically do.
+- Conceptual skill; version range: none — applies to third-party
+  backlink and keyword indexes and Search Console, with no pinned version.
 
 ## Official Documentation
 

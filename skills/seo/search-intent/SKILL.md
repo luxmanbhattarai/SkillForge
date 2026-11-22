@@ -11,7 +11,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Search Intent
@@ -54,6 +54,8 @@ evidence, then maps each intent to the content type that serves it.
 - Knowledge of what the site offers: informational content, products,
   services, or a mix.
 - The site's existing pages, so mismatched pages can be identified.
+- Conceptual skill; version range: none — applies to search
+  results and SERP tools, with no pinned version.
 
 ## Official Documentation
 
@@ -132,6 +134,8 @@ not Google-published categories; the SERP is the evidence for them.
   checks or a tool with an official data source.
 - Do not build pages that impersonate another brand to capture its
   navigational queries; that is deceptive and can create legal exposure.
+- Classifications and SERP notes for a client's site are confidential
+  working data; do not publish them or share them outside the engagement.
 
 ## Performance Considerations
 

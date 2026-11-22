@@ -14,7 +14,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # LLM SEO
@@ -63,6 +63,10 @@ promising it.
   based on real user queries, support questions, or Search Console data.
 - An analytics setup that can show referral traffic by source, so AI
   referrals can be separated from other traffic.
+- Conceptual skill; version range: none — applies to Google's
+  search and generative AI features and third-party AI crawlers,
+  none of which is a pinned, versioned dependency; crawler
+  user-agent names change with each vendor's releases.
 
 ## Official Documentation
 

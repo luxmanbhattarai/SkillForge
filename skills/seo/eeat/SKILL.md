@@ -14,7 +14,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # E-E-A-T
@@ -61,6 +61,9 @@ outcome.
   highest standard of accuracy and review.
 - A list of the site's sources and review processes, or a plan to
   create them.
+- Conceptual skill; version range: none — applies to Google's
+  helpful-content guidance and quality-rater concepts, with no
+  pinned version.
 
 ## Official Documentation
 

@@ -15,7 +15,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Search Console
@@ -66,6 +66,9 @@ pairs it with analytics for the full traffic picture.
 - The site's canonical domain decided (www or non-www, HTTPS), so
   the right property is verified.
 - A sitemap URL ready to submit, if the site has one.
+- Conceptual skill; version range: none — Search Console is a
+  managed Google product with no pinned version; report names and
+  availability change with Google's releases.
 
 ## Official Documentation
 
@@ -151,7 +154,10 @@ deprecated in November 2022 and no longer exists.
 - Check the Generative AI performance report to see how content
   performs in AI Overviews and AI Mode; AI Mode traffic also counts
   towards the Performance report totals, so a rise in impressions
-  may come from AI surfaces rather than classic results.
+  may come from AI surfaces rather than classic results. Note the
+  Generative AI report shows impressions only — no clicks or
+  queries — and its impressions are already included in the main
+  Performance report, so do not add the two together.
 - After a launch or migration, check coverage daily for two weeks;
   problems caught early are cheap to fix.
 

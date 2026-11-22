@@ -11,7 +11,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Schema JSON-LD
@@ -62,8 +62,9 @@ a page eligible for rich results; it never guarantees them.
 - Google retires rich result
   features regularly: besides FAQ (May 2026) and HowTo (September
   2023), Google removed the sitelinks search box (November 2024) and,
-  in September 2025, the course info, estimated salary, learning
-  video, special announcement, and vehicle listing features. Always
+  in September 2025, the course info, ClaimReview, estimated salary,
+  learning video, special announcement, and vehicle listing features,
+  and practice problem in January 2026. Always
   check the current search gallery before adding a type; the
   schema.org type staying valid does not mean Google still shows the
   feature.

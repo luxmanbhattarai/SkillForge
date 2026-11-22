@@ -14,7 +14,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Image SEO
@@ -60,6 +60,9 @@ and users on slow connections who need it small.
   images, or a CDN that does so.
 - The rights to use each image; do not optimize images the site has
   no license to publish.
+- Conceptual skill; version range: none — applies to Google's image
+  SEO guidance and the sitemaps.org protocol, neither of which is a
+  pinned, versioned dependency.
 
 ## Official Documentation
 
@@ -234,10 +237,15 @@ An image entry in an XML sitemap:
   <loc>https://example.com/guides/sourdough-starter/</loc>
   <image:image>
     <image:loc>https://example.com/images/sourdough-starter-day-5-800.webp</image:loc>
-    <image:title>Sourdough starter on day five</image:title>
   </image:image>
 </url>
 ```
+
+The sitemap's `<urlset>` root must declare the image namespace —
+`xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"`.
+Only `<image:loc>` is required per image; `<image:title>`,
+`<image:caption>`, `<image:geo_location>`, and `<image:license>`
+were removed from Google's documentation and must not be used.
 
 ## Validation Checklist
 

@@ -15,7 +15,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # International SEO
@@ -64,6 +64,9 @@ that market well, with real localized content and support.
   each version, and how updates propagate.
 - Access to the site's hosting, DNS, and URL routing, since the
   chosen structure may need new subdomains or domains.
+- Conceptual skill; version range: none — applies to Google's
+  international-site guidance and the ISO 639-1 / ISO 3166-1 Alpha-2
+  code standards, none of which is a pinned, versioned dependency.
 
 ## Official Documentation
 

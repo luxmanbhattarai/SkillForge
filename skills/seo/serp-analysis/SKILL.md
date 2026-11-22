@@ -11,7 +11,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # SERP Analysis
@@ -52,6 +52,8 @@ planning, keyword prioritization, and `search-intent` classification.
   so the difficulty judgment is honest.
 - The list of the site's own pages that already rank or could rank for
   the query.
+- Conceptual skill; version range: none — applies to live
+  search results and SERP tools, with no pinned version.
 
 ## Official Documentation
 

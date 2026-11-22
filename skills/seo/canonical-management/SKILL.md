@@ -14,7 +14,7 @@ metadata:
   category: seo
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Canonical Management
@@ -62,6 +62,9 @@ signals conflict, so this skill keeps every signal consistent.
   as canonical for key pages.
 - A decision, per duplicate group, on which URL is the canonical one
   (usually the cleanest, most linked, and most user-facing URL).
+- Standards: RFC 6596 (the `rel="canonical"` link relation); version
+  range: none — canonicalization follows the RFC and Google's
+  canonicalization guidance, neither of which is a pinned version.
 
 ## Official Documentation
 
