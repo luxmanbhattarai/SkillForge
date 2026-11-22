@@ -1,7 +1,7 @@
 {
   "name": "skillforge",
   "version": "1.0.0",
-  "generated": "2026-11-20",
+  "generated": "2026-11-22",
   "categories": [
     "ai-engineering",
     "architecture",
@@ -37,7 +37,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "frontend-performance",
         "ai-image-generation",
@@ -59,7 +59,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -75,7 +75,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "api-design",
         "api-client-generation",
@@ -97,7 +97,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "ai-seo",
         "geo-optimization",
@@ -119,7 +119,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "verification-before-completion",
         "debugging",
@@ -141,7 +141,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -157,7 +157,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "accessibility",
         "blog-featured-images",
@@ -196,7 +196,7 @@
       "vendor": "marketingskills",
       "source_type": "upstream",
       "source": "marketingskills",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "2.2.7",
       "license": "MIT",
       "maintainer": "marketingskills",
@@ -223,7 +223,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "api-design",
         "openapi",
@@ -245,7 +245,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "api-client-generation",
         "openapi",
@@ -267,7 +267,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "changelog-management",
         "openapi",
@@ -288,7 +288,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "blog-featured-images",
         "content-research",
@@ -310,7 +310,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS and an Astro 7 project; server adapters need a compatible hosting target.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "nextjs",
         "typescript",
@@ -332,7 +332,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "authentication",
         "csrf-protection",
@@ -354,7 +354,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "auth-security",
         "csrf-protection",
@@ -376,7 +376,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "authentication",
         "clerk",
@@ -398,7 +398,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -414,7 +414,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "deployment",
         "fly-io",
@@ -436,7 +436,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a job runner or queue (such as BullMQ, Inngest, or Trigger.dev) and a backing store such as Redis or Postgres.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -452,7 +452,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -468,7 +468,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "authentication",
         "passkeys",
@@ -490,7 +490,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "og-image-generation",
         "open-graph",
@@ -512,7 +512,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -566,7 +566,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -582,7 +582,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -598,7 +598,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a cache store such as Redis or the HTTP cache layer being used.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "core-web-vitals",
         "frontend-performance",
@@ -620,7 +620,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -636,7 +636,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -652,7 +652,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "package-development",
         "unit-testing",
@@ -674,7 +674,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "changelog-management",
         "package-development",
@@ -712,7 +712,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "code-review",
         "owasp",
@@ -734,7 +734,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "authentication",
         "authjs",
@@ -756,7 +756,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -772,7 +772,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a Cloudflare account and network access to the Cloudflare dashboard and API.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -788,7 +788,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js, the Wrangler CLI, a Cloudflare account, and network access to Cloudflare.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -804,7 +804,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js, the Wrangler CLI, a Cloudflare account, and network access to Cloudflare.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -820,7 +820,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js, the Wrangler CLI, a Cloudflare account, and network access to Cloudflare.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -836,7 +836,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js, the Wrangler CLI, a Cloudflare account, and network access to Cloudflare.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -852,7 +852,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js, the Wrangler CLI, a Cloudflare account, and network access to Cloudflare.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "deployment",
         "observability",
@@ -872,7 +872,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "clean-code",
         "owasp",
@@ -894,7 +894,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -932,7 +932,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -948,7 +948,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -964,7 +964,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "analytics",
         "keyword-research",
@@ -986,7 +986,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1002,7 +1002,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1018,7 +1018,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1034,7 +1034,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1050,7 +1050,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "keyword-research",
         "on-page-seo",
@@ -1072,7 +1072,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "content-research",
         "editorial-review",
@@ -1089,7 +1089,7 @@
       "vendor": "marketingskills",
       "source_type": "upstream",
       "source": "marketingskills",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "2.2.4",
       "license": "MIT",
       "maintainer": "marketingskills",
@@ -1116,7 +1116,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1132,7 +1132,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "seo-audit",
         "technical-seo",
@@ -1170,7 +1170,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "auth-security",
         "authentication",
@@ -1192,7 +1192,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1208,7 +1208,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "drizzle",
         "prisma",
@@ -1230,7 +1230,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1246,7 +1246,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "tdd",
         "unit-testing",
@@ -1268,7 +1268,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "owasp",
         "package-boundaries",
@@ -1290,7 +1290,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1322,7 +1322,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "observability",
         "cloudflare-workers",
@@ -1344,7 +1344,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1424,7 +1424,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Docker installed and running on the machine, and network access to pull base images.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1440,7 +1440,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1456,7 +1456,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "database-design",
         "prisma",
@@ -1478,7 +1478,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js, the Wrangler CLI, a Cloudflare account, and network access to Cloudflare.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1494,7 +1494,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1510,7 +1510,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "integration-testing",
         "regression-testing",
@@ -1531,7 +1531,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "source-verification",
         "content-research",
@@ -1553,7 +1553,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "content-research",
         "editorial-review",
@@ -1575,7 +1575,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1591,7 +1591,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1607,7 +1607,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1623,7 +1623,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1639,7 +1639,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1655,7 +1655,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "schema-jsonld",
         "technical-seo"
@@ -1690,7 +1690,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 22.13+, 24.3+, or 26+ (odd-numbered releases unsupported) and an Expo account for EAS cloud builds, updates, and submissions.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1706,7 +1706,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 18 or later (Express 5.x).",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "advanced-api-architecture",
         "api-client-generation",
@@ -1728,7 +1728,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1744,7 +1744,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1760,7 +1760,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 20 or later (Fastify 5.x).",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "advanced-api-architecture",
         "api-client-generation",
@@ -1798,7 +1798,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a Fly.io account, a Dockerfile or a buildable project, flyctl installed, and network access to Fly.io.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "aws",
         "deployment",
@@ -1836,7 +1836,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "accessibility",
         "observability",
@@ -1858,7 +1858,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "aws",
         "deployment",
@@ -1880,7 +1880,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "aeo-optimization",
         "ai-seo",
@@ -1902,7 +1902,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a GitHub repository with Actions enabled and network access to GitHub.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1918,7 +1918,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS or later and a GraphQL server library: GraphQL Yoga 6.x or Apollo Server 5.x.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1934,7 +1934,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS or later or a supported edge runtime; TypeScript 7.x recommended.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1950,7 +1950,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1966,7 +1966,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1982,7 +1982,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires the Hugo binary installed on the machine building the site; Sass/SCSS support needs a separate Dart Sass install (see Prerequisites).",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -1998,7 +1998,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2014,7 +2014,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2030,7 +2030,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2046,7 +2046,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2062,7 +2062,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2078,7 +2078,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2094,7 +2094,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2110,7 +2110,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2126,7 +2126,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2142,7 +2142,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "unit-testing",
         "owasp",
@@ -2164,7 +2164,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2180,7 +2180,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2196,7 +2196,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2212,7 +2212,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2228,7 +2228,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "auth-security",
         "authentication",
@@ -2250,7 +2250,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2266,7 +2266,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "on-page-seo",
         "serp-analysis",
@@ -2288,7 +2288,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2304,7 +2304,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "aws",
         "deployment",
@@ -2326,7 +2326,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "caching",
         "core-web-vitals",
@@ -2343,7 +2343,7 @@
       "vendor": "marketingskills",
       "source_type": "upstream",
       "source": "marketingskills",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "1.1.0",
       "license": "MIT",
       "maintainer": "marketingskills",
@@ -2364,7 +2364,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "agent-evaluation",
         "mcp-security",
@@ -2386,7 +2386,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "aeo-optimization",
         "ai-seo",
@@ -2408,7 +2408,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2424,7 +2424,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2462,7 +2462,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS or later, TypeScript 7.x, and the MCP TypeScript SDK v2 (`@modelcontextprotocol/server`); network access for remote servers.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "mcp-builder",
         "api-design",
@@ -2484,7 +2484,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "agent-evaluation",
         "auth-security",
@@ -2522,7 +2522,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "auth-security",
         "authentication",
@@ -2544,7 +2544,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2560,7 +2560,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2576,7 +2576,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2592,7 +2592,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2608,7 +2608,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2624,7 +2624,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "nx",
         "package-boundaries",
@@ -2646,7 +2646,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2662,7 +2662,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2678,7 +2678,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js v20.19+ or v22.12+ (NestJS 12; CLI generators need 22.22.3+/24.15+/26+); TypeScript 6.x (TypeScript 7 not yet supported by nest build).",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "advanced-api-architecture",
         "api-client-generation",
@@ -2700,7 +2700,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS and a Next.js 16 project; deployment targets may need a hosting account.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "astro",
         "typescript",
@@ -2722,7 +2722,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS or later and npm; network access for installing dependencies.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "database-design",
         "debugging",
@@ -2742,7 +2742,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js ^22.22.3, ^24.15.0, or >=26.0.0 and a Nuxt 4 project.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2758,7 +2758,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "monorepo",
         "package-boundaries",
@@ -2780,7 +2780,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2796,7 +2796,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "deployment",
         "cloudflare-workers",
@@ -2818,7 +2818,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2834,7 +2834,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "blog-featured-images",
         "open-graph",
@@ -2856,7 +2856,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "keyword-research",
         "serp-analysis",
@@ -2878,7 +2878,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "blog-featured-images",
         "og-image-generation",
@@ -2900,7 +2900,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "api-client-generation",
         "api-design",
@@ -2922,7 +2922,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -2938,7 +2938,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "secrets-management",
         "auth-security",
@@ -2960,7 +2960,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "software-architecture",
         "database-design",
@@ -2982,7 +2982,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS or later, npm, and an npm account for publishing.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "changelog-management",
         "changesets",
@@ -3004,7 +3004,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3020,7 +3020,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "authentication",
         "authjs",
@@ -3042,7 +3042,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3058,7 +3058,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3074,7 +3074,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3090,7 +3090,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js and downloads browser binaries on install.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "debugging",
         "regression-testing",
@@ -3112,7 +3112,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "monorepo",
         "nx",
@@ -3134,7 +3134,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3150,7 +3150,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "database-design",
         "drizzle",
@@ -3167,7 +3167,7 @@
       "vendor": "prisma",
       "source_type": "upstream",
       "source": "prisma",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "7.9.1",
       "license": "MIT",
       "maintainer": "prisma",
@@ -3263,7 +3263,7 @@
       "vendor": "prisma",
       "source_type": "upstream",
       "source": "prisma",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "prisma",
@@ -3348,7 +3348,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3364,7 +3364,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "aws",
         "deployment",
@@ -3386,7 +3386,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "api-client-generation",
         "api-design",
@@ -3408,7 +3408,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a queue system such as Redis with BullMQ, RabbitMQ, Amazon SQS, or Cloudflare Queues.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3424,7 +3424,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "agent-evaluation",
         "llm-integration",
@@ -3446,7 +3446,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a Railway account, a Git repository or a local project directory, and network access to Railway.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "aws",
         "deployment",
@@ -3468,7 +3468,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a shared store such as Redis for limits that work across multiple server instances.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3484,7 +3484,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "auth-security",
         "authentication",
@@ -3506,7 +3506,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS and a React 19 project set up with a bundler or framework such as Vite or Next.js.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "astro",
         "nextjs",
@@ -3527,7 +3527,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 22 LTS; Xcode on macOS for iOS builds and Android Studio for Android builds.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3543,7 +3543,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3581,7 +3581,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "caching",
         "database-design"
@@ -3600,7 +3600,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3616,7 +3616,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "unit-testing",
         "changelog-management",
@@ -3638,7 +3638,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "changelog-management",
         "changesets",
@@ -3660,7 +3660,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a Render account, a Git repository (GitHub, GitLab, or Bitbucket), and network access to Render.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "aws",
         "deployment",
@@ -3704,7 +3704,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3720,7 +3720,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a Node.js HTTP framework such as Hono or Express and TypeScript 7.x.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "api-client-generation",
         "api-design",
@@ -3742,7 +3742,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3758,7 +3758,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3774,7 +3774,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3812,7 +3812,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "on-page-seo",
         "content-research",
@@ -3834,7 +3834,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS or later and TypeScript 7.x; the target API must be documented.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "changelog-management",
         "openapi",
@@ -3856,7 +3856,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "core-web-vitals",
         "on-page-seo",
@@ -3878,7 +3878,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3894,7 +3894,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "owasp",
         "auth-security",
@@ -3916,7 +3916,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "auth-security",
         "authentication",
@@ -3938,7 +3938,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3954,7 +3954,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -3970,7 +3970,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires root or sudo access to a Linux VPS (Ubuntu LTS or Debian stable) and a domain name for TLS.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "aws",
         "deployment",
@@ -3992,7 +3992,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4024,7 +4024,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "core-web-vitals",
         "technical-seo",
@@ -4046,7 +4046,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4062,7 +4062,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "blog-featured-images",
         "og-image-generation",
@@ -4084,7 +4084,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4100,7 +4100,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "keyword-research",
         "on-page-seo",
@@ -4122,7 +4122,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "analytics",
         "keyword-research",
@@ -4143,7 +4143,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "authentication",
         "authjs",
@@ -4165,7 +4165,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS, a React project with Tailwind CSS v4, and the shadcn/ui CLI (npx shadcn@latest).",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4181,7 +4181,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4219,7 +4219,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4230,7 +4230,7 @@
       "vendor": "anthropic",
       "source_type": "upstream",
       "source": "anthropic",
-      "status": "verified",
+      "status": "verified-with-limitations",
       "version": "1.0.0",
       "license": "Apache-2.0",
       "maintainer": "anthropic",
@@ -4251,7 +4251,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4267,7 +4267,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4283,7 +4283,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "database-design",
         "package-boundaries",
@@ -4305,7 +4305,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "editorial-review",
         "content-research",
@@ -4327,7 +4327,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "auth-security",
         "authentication",
@@ -4349,7 +4349,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4365,7 +4365,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4381,7 +4381,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4413,7 +4413,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "authentication",
         "authjs",
@@ -4434,8 +4434,8 @@
       "version": "1.0.0",
       "license": "MIT",
       "maintainer": "skills-library",
-      "compatibility": "Requires Node.js 22.17 or newer, Vite 8, and Svelte 5.56.4 or newer.",
-      "last_verified": "2026-11-20",
+      "compatibility": "Requires Node.js 22.17 or newer, Vite 8, and Svelte 5.57.1 or newer.",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4451,7 +4451,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4467,7 +4467,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS and a Tailwind CSS v4 project with the Tailwind CLI, PostCSS plugin, or Vite plugin.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "astro",
         "nextjs",
@@ -4488,7 +4488,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4504,7 +4504,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "debugging",
         "clean-code",
@@ -4526,7 +4526,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4564,7 +4564,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "core-web-vitals",
         "schema-jsonld",
@@ -4586,7 +4586,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4602,7 +4602,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "aws",
         "deployment",
@@ -4643,7 +4643,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "analytics",
         "content-decay",
@@ -4665,7 +4665,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4681,7 +4681,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS or later, TypeScript 7.x, and a TypeScript client; works best in a monorepo.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4697,7 +4697,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "monorepo",
         "nx",
@@ -4719,7 +4719,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4735,7 +4735,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4751,7 +4751,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js 24 LTS and the TypeScript compiler (tsc) for type checking and builds.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "astro",
         "changelog-management",
@@ -4773,7 +4773,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "api-client-generation",
         "api-design",
@@ -4795,7 +4795,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -4811,7 +4811,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "integration-testing",
         "changelog-management",
@@ -4865,7 +4865,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires a Vercel account, a Git repository, and network access to Vercel.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "deployment",
         "cloudflare-workers",
@@ -4997,7 +4997,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js and a Vite-based or ESM TypeScript project.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "astro",
         "database-design",
@@ -5019,7 +5019,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": "Requires Node.js ^22.18.0 or >=24.12.0 and a Vite-based project created with create-vue.",
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -5067,7 +5067,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": []
     },
     {
@@ -5155,7 +5155,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "auth-security",
         "authentication",
@@ -5177,7 +5177,7 @@
       "license": "MIT",
       "maintainer": "skills-library",
       "compatibility": null,
-      "last_verified": "2026-11-20",
+      "last_verified": "2026-11-22",
       "related": [
         "accessibility",
         "ai-image-generation",

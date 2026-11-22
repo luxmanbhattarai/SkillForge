@@ -335,7 +335,7 @@
     "Requires Node.js 24 LTS, a React project with Tailwind CSS v4, and the shadcn/ui CLI (npx shadcn@latest).": [
       "shadcn-ui"
     ],
-    "Requires Node.js 22.17 or newer, Vite 8, and Svelte 5.56.4 or newer.": [
+    "Requires Node.js 22.17 or newer, Vite 8, and Svelte 5.57.1 or newer.": [
       "sveltekit"
     ],
     "Requires Node.js 24 LTS and a Tailwind CSS v4 project with the Tailwind CLI, PostCSS plugin, or Vite plugin.": [
