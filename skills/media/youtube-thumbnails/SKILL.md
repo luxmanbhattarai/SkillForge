@@ -11,7 +11,7 @@ metadata:
   category: media
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # YouTube Thumbnails
@@ -224,7 +224,7 @@ Example layout at 3840x2160:
 Example resize step with Sharp (Node.js):
 
 ```js
-const sharp = require("sharp");
+import sharp from "sharp";
 
 await sharp("thumbnail-source.png")
   .resize(3840, 2160, { fit: "cover" })

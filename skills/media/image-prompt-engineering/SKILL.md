@@ -11,7 +11,7 @@ metadata:
   category: media
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Image Prompt Engineering
@@ -54,6 +54,9 @@ and prompt templates for consistent series of images.
   in how they handle style words, aspect settings, and negative prompts.
 - Any brand constraints: palette, style, and elements that must not appear.
 - Examples of images the requester likes, when available.
+- Conceptual skill; version range: none — prompt handling changes
+  with every image-model release, so check the linked docs for the
+  current model rather than relying on a pinned version.
 
 ## Official Documentation
 
@@ -61,7 +64,7 @@ and prompt templates for consistent series of images.
   structure, parameters, and style references for Midjourney.
 - [OpenAI platform docs](https://platform.openai.com/docs) — image
   model prompting guidance for OpenAI image tools.
-- [Google AI for Developers](https://ai.google.dev/) — image prompting
+- [Gemini image generation docs](https://aistudio.google.com/docs/image-generation) — image prompting
   guidance for Gemini image tools.
 - Compatibility: image models and their prompt handling change with
   every model release — wording, parameters, and negative-prompt support
@@ -247,7 +250,7 @@ No people, no hands, no text, no watermarks, no cluttered background.
   structure and parameters.
 - [OpenAI platform docs](https://platform.openai.com/docs) — image
   prompting guidance.
-- [Google AI for Developers](https://ai.google.dev/) — image prompting
+- [Gemini image generation docs](https://aistudio.google.com/docs/image-generation) — image prompting
   guidance.
 - Related skills in this repository: `ai-image-generation`,
   `blog-featured-images`, `youtube-thumbnails`, `brand-visual-consistency`.

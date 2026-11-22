@@ -11,7 +11,7 @@ metadata:
   category: media
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Image Compression
@@ -176,7 +176,7 @@ before compressing, batch processing, and verifying the result.
 Example Sharp script compressing a photograph for the web:
 
 ```js
-const sharp = require("sharp");
+import sharp from "sharp";
 
 await sharp("sourdough-starter-original.jpg")
   .resize(1600, 900, { fit: "cover" })
@@ -187,7 +187,7 @@ await sharp("sourdough-starter-original.jpg")
 Example Sharp script for a lossless graphic:
 
 ```js
-const sharp = require("sharp");
+import sharp from "sharp";
 
 await sharp("logo-source.png")
   .png({ compressionLevel: 9 })

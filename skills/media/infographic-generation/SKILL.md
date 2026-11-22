@@ -11,7 +11,7 @@ metadata:
   category: media
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Infographic Generation
@@ -53,6 +53,9 @@ accurate labels, and exporting a readable, accessible graphic.
   print.
 - The brand assets: palette, fonts, and logo.
 - A design or charting tool the team can use to build the graphic.
+- Conceptual skill; version range: none — no pinned tool or
+  platform version; the workflow applies to any charting or design
+  tool.
 
 ## Official Documentation
 

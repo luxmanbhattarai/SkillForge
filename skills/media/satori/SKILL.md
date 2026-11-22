@@ -15,7 +15,7 @@ metadata:
   category: media
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Satori
@@ -65,8 +65,8 @@ serverless and edge functions where a headless browser cannot.
   Grid, and block layout; Grid and block support arrived with the
   Taffy rewrite in Satori 0.37.0 (October 2026). Older Satori
   versions, including the one bundled inside `@vercel/og` 1.0.x
-  (which ships Satori 0.29.x), support Flexbox only — check the
-  installed Satori version before relying on Grid or block layout.
+  (1.0.3 ships Satori 0.33.5; earlier 1.0.x shipped 0.29.x),
+  support Flexbox only — check the installed Satori version before relying on Grid or block layout.
   `next/og` re-exports `@vercel/og`, so the same caveat applies
   there. Satori renders text as SVG `<path>` data by default
   (`embedFont: true`); set `embedFont: false` to emit `<text>`

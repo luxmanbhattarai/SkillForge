@@ -11,7 +11,7 @@ metadata:
   category: media
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Twitter Card Images
@@ -237,7 +237,7 @@ Example image layout at 1200x600:
 Example resize step with Sharp (Node.js):
 
 ```js
-const sharp = require("sharp");
+import sharp from "sharp";
 
 await sharp("card-source.png")
   .resize(1200, 600, { fit: "cover" })

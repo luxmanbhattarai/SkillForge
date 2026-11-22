@@ -11,7 +11,7 @@ metadata:
   category: media
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Image Format Conversion
@@ -184,7 +184,7 @@ and the conversion workflow for single files and batches.
 Example Sharp conversions (Node.js):
 
 ```js
-const sharp = require("sharp");
+import sharp from "sharp";
 
 // Photograph: JPEG source to WebP.
 await sharp("photo.jpg").webp({ quality: 82 }).toFile("photo.webp");

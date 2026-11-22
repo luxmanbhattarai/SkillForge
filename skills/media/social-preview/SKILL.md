@@ -11,7 +11,7 @@ metadata:
   category: media
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Social Preview
@@ -53,6 +53,10 @@ target platform is checked on its own.
 - Access to the page template or CMS, in case tags need fixing.
 - The expected title, description, and image for the page.
 - Knowledge of which image file each tag points to and its dimensions.
+- Conceptual skill; version range: none — applies to the current
+  platform preview tools and card specifications; platforms publish
+  no versioned spec, so re-check the linked debuggers before relying
+  on a behavior for an edge case.
 
 ## Official Documentation
 

@@ -11,7 +11,7 @@ metadata:
   category: media
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Blog Featured Images
@@ -210,7 +210,7 @@ Example responsive image markup for a hero slot:
 Example resize and compress step with Sharp (Node.js):
 
 ```js
-const sharp = require("sharp");
+import sharp from "sharp";
 
 await sharp("sourdough-starter-original.jpg")
   .resize(1600, 900, { fit: "cover" })

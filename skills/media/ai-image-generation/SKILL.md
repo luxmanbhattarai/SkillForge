@@ -11,7 +11,7 @@ metadata:
   category: media
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # AI Image Generation
@@ -50,6 +50,9 @@ delivering a correctly sized, correctly licensed file with alt text.
 - The target dimensions or aspect ratio for the placement.
 - Any brand constraints: palette, style, logo usage, and forbidden content.
 - Knowledge of where the file will be stored and what filename to use.
+- Conceptual skill; version range: none — image models change
+  frequently, so check the linked docs for the current model rather
+  than relying on a pinned version.
 
 ## Official Documentation
 
@@ -57,7 +60,7 @@ delivering a correctly sized, correctly licensed file with alt text.
   guides and usage policies for OpenAI image tools.
 - [Midjourney documentation](https://docs.midjourney.com/) — Midjourney
   parameters, styles, and community guidelines.
-- [Google AI for Developers](https://ai.google.dev/) — Gemini image
+- [Gemini image generation docs](https://aistudio.google.com/docs/image-generation) — Gemini image
   generation guides and safety documentation.
 - [Unsplash](https://unsplash.com/) — a stock-photo alternative when a
   real photograph is the better choice.
@@ -235,7 +238,7 @@ License: per the image tool's terms; verify before commercial reuse.
   generation guides and usage policies.
 - [Midjourney documentation](https://docs.midjourney.com/) — parameters
   and style guidance.
-- [Google AI for Developers](https://ai.google.dev/) — image generation
+- [Gemini image generation docs](https://aistudio.google.com/docs/image-generation) — image generation
   guides and safety documentation.
 - Related skills in this repository: `image-prompt-engineering`,
   `blog-featured-images`, `image-compression`, `image-format-conversion`,

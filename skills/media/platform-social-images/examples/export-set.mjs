@@ -1,4 +1,4 @@
-const sharp = require("sharp");
+import sharp from "sharp";
 
 // Shared image: 1200x630 JPEG, compressed under WhatsApp's 600 KB limit.
 await sharp("card-source.png")

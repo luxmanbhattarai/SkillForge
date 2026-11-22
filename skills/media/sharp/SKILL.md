@@ -15,7 +15,7 @@ metadata:
   category: media
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Sharp
@@ -55,7 +55,7 @@ post-processing.
 
 - Node.js 20.9.0 or newer (sharp 0.35.x requires Node-API v9; it
   also runs on Deno and Bun). Current stable: sharp 0.35.5
-  (October 2026), built on libvips 8.18 via sharp-libvips 1.3.4.
+  (September 2026), built on libvips 8.18 via sharp-libvips 1.3.4.
 - A platform with a prebuilt sharp binary (most modern macOS,
   Windows, and Linux systems need no additional install or runtime
   dependencies). In Docker, build on the same platform the image
@@ -231,7 +231,7 @@ post-processing.
 Resize and convert to WebP:
 
 ```js
-const sharp = require("sharp");
+import sharp from "sharp";
 
 await sharp("photo.jpg")
   .rotate()
@@ -243,7 +243,7 @@ await sharp("photo.jpg")
 Generate JPEG and AVIF variants from one input:
 
 ```js
-const sharp = require("sharp");
+import sharp from "sharp";
 
 const pipeline = sharp("photo.jpg").rotate().resize(1600);
 
@@ -254,7 +254,7 @@ await pipeline.clone().avif({ quality: 60 }).toFile("photo-1600.avif");
 Read metadata before processing:
 
 ```js
-const sharp = require("sharp");
+import sharp from "sharp";
 
 const metadata = await sharp("upload.jpg").metadata();
 // { format: "jpeg", width: 4000, height: 3000, space: "srgb", ... }
@@ -263,7 +263,7 @@ const metadata = await sharp("upload.jpg").metadata();
 Compress an OG image to a platform file-size limit:
 
 ```js
-const sharp = require("sharp");
+import sharp from "sharp";
 
 await sharp("og-source.png")
   .resize(1200, 630, { fit: "cover" })
