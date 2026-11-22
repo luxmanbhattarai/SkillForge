@@ -12,7 +12,7 @@ metadata:
   category: auth
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Session Management
@@ -131,7 +131,8 @@ Secure session cookie settings (framework-agnostic):
 Set-Cookie: session=$SESSION_ID; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400
 ```
 
-Session lifecycle in pseudocode-free outline form:
+Session lifecycle, in three separate steps (sign-in, per-request check,
+logout):
 
 ```ts
 // Sign-in: create a fresh session, never reuse a pre-login ID.
@@ -141,14 +142,18 @@ const session = await sessionStore.create({
   absoluteExpiresAt: hoursFromNow(24),
 });
 setSessionCookie(response, session.id);
+```
 
+```ts
 // Each request: load, check expiry, attach the user.
 const session = await sessionStore.get(sessionIdFromCookie);
 if (!session || session.isExpired()) {
   clearSessionCookie(response);
   throw new UnauthorizedError();
 }
+```
 
+```ts
 // Logout: delete server-side, then clear the cookie.
 await sessionStore.delete(session.id);
 clearSessionCookie(response);

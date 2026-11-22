@@ -13,7 +13,7 @@ metadata:
   category: auth
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Supabase Auth
@@ -69,7 +69,7 @@ user is not automatically an authorized user — the RLS policies decide.
 - [Supabase Auth overview](https://supabase.com/docs/guides/auth) — methods, JWT model, and the auth/authorization split.
 - [Creating a Supabase client for SSR](https://supabase.com/docs/guides/auth/server-side/nextjs) — `@supabase/ssr`, browser/server clients, the proxy refresh, and `getClaims` vs `getUser` vs `getSession`.
 - [Supabase Auth MFA](https://supabase.com/docs/guides/auth/auth-mfa) — TOTP and phone factors, enrollment, challenge/verify, and AAL enforcement in RLS.
-- [Passkey authentication](https://supabase.com/docs/guides/auth/passkeys) — WebAuthn passkeys (experimental), RP configuration, and the `auth.passkey` APIs.
+- [Passkey authentication](https://supabase.com/docs/guides/auth/passkeys) — WebAuthn passkeys, RP configuration, and the `auth.passkey` APIs.
 - [Integrating with Supabase Auth (Edge Functions)](https://supabase.com/docs/guides/functions/auth-legacy-jwt) — auth context and RLS in Edge Functions.
 
 ## Required Workflow
@@ -150,7 +150,7 @@ user is not automatically an authorized user — the RLS policies decide.
 - Passwords follow the `authentication` skill: check new passwords against
   a compromised-password blocklist (Supabase exposes leaked-password
   protection in the Dashboard), and do not impose composition rules.
-- Passkeys are experimental in Supabase Auth: see
+- Passkeys in Supabase Auth: see
   [references/passkeys.md](./references/passkeys.md).
 
 ### Testing Strategy

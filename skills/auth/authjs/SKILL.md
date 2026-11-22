@@ -13,7 +13,7 @@ metadata:
   category: auth
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Auth.js
@@ -271,7 +271,7 @@ Route handler and proxy (Next.js 16):
 
 Protecting a Server Component:
 
-  [examples/protect-server-component.ts](./examples/protect-server-component.ts).
+  [examples/protect-server-component.tsx](./examples/protect-server-component.tsx).
 
 ## Validation Checklist
 

@@ -13,7 +13,7 @@ metadata:
   category: auth
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Auth Security
@@ -49,7 +49,7 @@ security headers, and auditing auth code and logs for weaknesses.
 
 - [OWASP Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html)
 - [OWASP Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)
-- [OWASP Top Ten](https://owasp.org/www-project-top-ten/) — the 2025 edition is current (finalized January 2026); Broken Access Control remains A01.
+- [OWASP Top Ten](https://owasp.org/www-project-top-ten/) — the 2025 edition is current; Broken Access Control remains A01.
 - [OWASP ASVS](https://owasp.org/www-project-application-security-verification-standard/) — ASVS 5.0.0 (May 2025) is the current version; requirement numbering changed from 4.0.3, so cite requirements with their version prefix.
 - [OWASP CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
 

@@ -13,7 +13,7 @@ metadata:
   category: auth
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Passkeys
@@ -61,8 +61,9 @@ codes, MFA policy), see `mfa`.
 - HTTPS on every environment (WebAuthn requires a secure context;
   `localhost` is exempt for development).
 - A maintained WebAuthn library for the stack — for TypeScript,
-  `@simplewebauthn/server` and `@simplewebauthn/browser` (v13 current
- ; v13 requires Node 22+). Never implement
+  `@simplewebauthn/server` and `@simplewebauthn/browser` (v14 current:
+  server 14.1.0, browser 14.0.0 as of November 2026; v14 requires
+  Node 22+). Never implement
   the ceremonies by hand: challenge handling, CBOR parsing, and signature
   verification have subtle failure modes.
 - A server that can hold short-lived challenges (database row or cache

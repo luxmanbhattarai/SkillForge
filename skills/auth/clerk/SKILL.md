@@ -13,7 +13,7 @@ metadata:
   category: auth
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Clerk
@@ -267,7 +267,7 @@ Protecting a page and checking an organization role:
 
 Or, with the `protect()` primitive:
 
-  [examples/protect-primitive.ts](./examples/protect-primitive.ts).
+  [examples/protect-primitive.tsx](./examples/protect-primitive.tsx).
 
 Webhook handler with signature verification:
 
