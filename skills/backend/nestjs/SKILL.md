@@ -141,21 +141,8 @@ and ready for production.
 - Use interceptors for response transformation, logging, timeouts,
   and caching; use pipes for input transformation and validation.
   Do not put these concerns in controllers.
-- Use `@nestjs/config`'s `ConfigService` (or typed `registerAs`
-  configuration) for all environment access; never read
-  `process.env` directly in feature code.
-- Prefer the `node:http` adapter (`NodeAdapter`) for new projects:
-  the official docs recommend it from NestJS 12.3 as the fastest of
-  the three adapters, and it becomes the default in v13. Use
-  `FastifyAdapter` only when you need Fastify-specific plugins or
-  hooks, and the default Express adapter only when existing Express
-  middleware cannot move; switching adapters changes available
-  middleware.
-- Enable shutdown hooks (`app.enableShutdownHooks()`) so in-flight
-  requests and database connections close cleanly.
-- Follow the CLI's naming conventions (`*.controller.ts`,
-  `*.service.ts`, `*.module.ts`, `*.dto.ts`, `*.spec.ts`) so the
-  project stays navigable as it grows.
+- Runtime setup — `ConfigService`, `node:http` adapter, shutdown
+  hooks, CLI naming: see [references/runtime-setup.md](./references/runtime-setup.md).
 
 ### Testing Strategy
 
@@ -268,72 +255,7 @@ and ready for production.
 ## Examples
 
 A feature module with a controller, a service, and a validated DTO:
-
-```ts
-// create-order.dto.ts
-import { IsInt, IsPositive, IsString, Length } from "class-validator";
-
-export class CreateOrderDto {
-  @IsInt()
-  @IsPositive()
-  totalMinor!: number;
-
-  @IsString()
-  @Length(3, 3)
-  currency!: string;
-}
-```
-
-```ts
-// orders.service.ts
-import { Injectable } from "@nestjs/common";
-import { CreateOrderDto } from "./create-order.dto";
-
-@Injectable()
-export class OrdersService {
-  create(dto: CreateOrderDto) {
-    return { id: "ord_01", ...dto, status: "created" };
-  }
-}
-```
-
-```ts
-// orders.controller.ts
-import { Body, Controller, Post } from "@nestjs/common";
-import { CreateOrderDto } from "./create-order.dto";
-import { OrdersService } from "./orders.service";
-
-@Controller("orders")
-export class OrdersController {
-  constructor(private readonly orders: OrdersService) {}
-
-  @Post()
-  create(@Body() dto: CreateOrderDto) {
-    return this.orders.create(dto);
-  }
-}
-```
-
-```ts
-// main.ts — global validation pipe
-import { ValidationPipe } from "@nestjs/common";
-import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module";
-
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
-  app.enableShutdownHooks();
-  await app.listen(process.env.PORT ?? 3000);
-}
-void bootstrap();
-```
+  see [examples/feature-module.md](./examples/feature-module.md).
 
 ## Validation Checklist
 

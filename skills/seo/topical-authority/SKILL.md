@@ -64,7 +64,7 @@ positions or traffic is guaranteed.
 - An honest assessment of the site's expertise: a site should
   build authority on topics it genuinely knows, not topics it
   merely wants traffic from.
-- Conceptual skill; current stable as of 2026-11-20 — applies to the
+- Conceptual skill; version range: none — applies to the
   current Google Search guidance; Google publishes no
   topical-authority score or versioned metric; the official sources
   are linked in Official Documentation.
@@ -89,7 +89,7 @@ positions or traffic is guaranteed.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) —
   the policies that govern what can appear in results.
 
-Guidance current as of 2026-11-20. **Honesty note — read this
+**Honesty note — read this
 first:** Google publishes no topical-authority score, metric, or
 general ranking factor. The only system Google has named "topic
 authority" serves news queries, as linked above. Everything else
@@ -143,27 +143,11 @@ scores are estimates from private indexes, not Google data.
 
 ## Implementation Standards
 
-- **(Verified)** The site has a primary purpose or focus. Google's
-  helpful-content guidance asks whether the site has a primary
-  focus and whether content demonstrates first-hand expertise and
-  depth of knowledge; content created mainly to manipulate
-  rankings is the opposite of people-first content.
-- **(Verified)** Depth means substantial, complete coverage of the
-  topic, not word count. Google's self-assessment asks whether
-  content provides a substantial, complete, or comprehensive
-  description of the topic and insightful analysis beyond the
-  obvious.
-- **(Heuristic)** One pillar page per cluster, with spokes linking
-  back. Hub-and-spoke architecture is industry practice; Google
-  publishes no required site structure beyond clear organization
-  and crawlable links.
-- **(Heuristic)** One page per subtopic. This avoids
-  cannibalization and keeps the coverage map honest; it is a
-  planning rule, not a Google requirement.
-- **(Heuristic)** Complete one cluster before starting the next.
-  A finished cluster is a usable resource; five half-finished
-  clusters are not. This is a sequencing judgment, not a ranking
-  rule.
+- Verified authority principles — primary focus, substantial depth:
+  see [references/authority-principles.md](./references/authority-principles.md).
+- Cluster structure — one pillar per cluster, one page per subtopic,
+  finish a cluster before starting the next: see
+  [references/cluster-structure.md](./references/cluster-structure.md).
 - Every page in the cluster must be genuinely useful on its own.
   A spoke that exists only to fill the map — thin, derivative, or
   padded — weakens the cluster instead of strengthening it.
@@ -266,45 +250,15 @@ scores are estimates from private indexes, not Google data.
 Example coverage map for a sourdough topic (statuses are the
 site's own assessment, not a tool score):
 
-```text
-Topic: sourdough baking for home bakers
-Boundary: home baking with natural leavening. Excludes commercial
-  bakery operations and gluten-free baking.
-
-Subtopic                     Status    Target page
----------------------------  --------  ---------------------------
-Making a starter             covered   /sourdough-starter
-Feeding schedules            covered   /sourdough-feeding-schedule
-Starter troubleshooting      partial   /sourdough-wont-rise
-Flour choice                 missing   (planned) /best-bread-flour
-Baking schedules             missing   (planned) /sourdough-schedule
-Storing baked bread          missing   (planned) /storing-sourdough
-```
+  [examples/coverage-map.txt](./examples/coverage-map.txt).
 
 Example pillar-and-spoke structure for one cluster:
 
-```text
-/sourdough-guide (pillar: introduces sourdough baking, summarizes
-  each subtopic, links to every spoke)
-  ├── /sourdough-starter
-  ├── /sourdough-feeding-schedule
-  ├── /sourdough-wont-rise
-  ├── /best-bread-flour
-  └── /sourdough-schedule
-Each spoke links back to /sourdough-guide and to 1-2 sibling
-spokes where the reader would naturally go next.
-```
+  [examples/pillar-spoke.txt](./examples/pillar-spoke.txt).
 
 Example quarterly coverage check:
 
-```text
-- Subtopics covered: 8 of 12 (was 6 of 12 last quarter).
-- Queries with impressions in the sourdough section: up, per
-  Search Console, filtered to the /sourdough-guide/ section.
-- Gaps remaining: flour choice, baking schedules, storing bread.
-- Next cluster to complete: starter troubleshooting (one partial
-  page to refresh, one missing page to write).
-```
+  [examples/quarterly-check.txt](./examples/quarterly-check.txt).
 
 ## Validation Checklist
 

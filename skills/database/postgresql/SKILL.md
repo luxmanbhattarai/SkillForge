@@ -44,7 +44,7 @@ This skill covers practical PostgreSQL use for application developers: writing c
 - `psql` or an equivalent client for inspecting the database directly.
 - The connection string stored as an environment variable such as `$DATABASE_URL`, never committed to the repository.
 - Basic SQL knowledge: `SELECT`, `JOIN`, `GROUP BY`, and transactions.
-- Supported versions as of 2026-11-20: PostgreSQL 15, 16, 17, 18, and 19 (19.0 released 19 November 2026). PostgreSQL 14 reached end of life on 12 November 2026 and receives no more fixes; 13 and older are likewise unsupported. Do not rely on a feature without checking it exists in the version actually running.
+- Supported versions: PostgreSQL 15, 16, 17, 18, and 19 (19.0 released 19 November 2026). PostgreSQL 14 reached end of life on 12 November 2026 and receives no more fixes; 13 and older are likewise unsupported. Do not rely on a feature without checking it exists in the version actually running.
 
 ## Official Documentation
 

@@ -59,8 +59,8 @@ APIs it was explicitly granted.
 ## Prerequisites
 
 - Rust 1.90 or newer installed via rustup (the minimum supported Rust
-  version for Tauri 2.12). Tauri 2.12.x is the current stable line as
-  of 2026-11-20; Tauri 2.0 went stable on 2024-10-02. Check the
+  version for Tauri 2.12). Tauri 2.12.x is the current stable line;
+  Tauri 2.0 went stable on 2024-10-02. Check the
   official release notes for the newest patch before starting.
 - Platform toolchain: macOS needs Xcode Command Line Tools; Windows
   needs MSVC Build Tools and WebView2; Linux needs the WebKitGTK 4.1
@@ -160,19 +160,9 @@ APIs it was explicitly granted.
   I/O, and move CPU-heavy or blocking work to
   `tauri::async_runtime::spawn_blocking` so the webview IPC thread
   never stalls.
-- Capability files live in `src-tauri/capabilities/` as JSON or TOML,
-  with a `$schema` pointing at the generated desktop schema. Scope
-  windows by label (`"windows": ["main"]`); avoid `"*"` unless every
-  window genuinely needs the same access.
-- Prefer scoped filesystem permissions (`fs:allow-app-data-read`,
-  `fs:allow-app-data-write`, path-scoped `fs:scope-*`) over the
-  broad `fs:read-all` / `fs:write-all`. Broad permissions are a
-  development convenience, not a shipping configuration.
-- Shell access is allowlisted per command: `shell:allow-execute`
-  requires an explicit scope naming the binary and allowed arguments.
-  Wildcards are blocked by default. Opening URLs and files uses the
-  opener plugin (`opener:allow-open`); `shell:allow-open` is
-  deprecated since Tauri 2.1.
+- Capabilities and permissions — capability files, scoped filesystem
+  permissions, and shell allowlisting: see
+  [references/capabilities.md](./references/capabilities.md).
 - Plugin setup order matters: add the crate to `Cargo.toml`, register
   the plugin in `lib.rs` (`.plugin(...)`), and grant its permissions
   in a capability file. A missing step produces a "not allowed"
@@ -325,68 +315,17 @@ APIs it was explicitly granted.
 
 ## Examples
 
-A minimal command, its registration, and a frontend call:
-
-```rust
-// src-tauri/src/lib.rs
-use tauri::{AppHandle, Manager};
-
-#[tauri::command]
-fn greet(name: &str) -> Result<String, String> {
-    let name = name.trim();
-    if name.is_empty() || name.len() > 100 {
-        return Err("name must be 1-100 characters".to_string());
-    }
-    Ok(format!("Hello, {name}!"))
-}
-
-#[cfg_attr(mobile, tauri::mobile_entry_point)]
-pub fn run() {
-    tauri::Builder::default()
-        .plugin(tauri_plugin_dialog::init())
-        .invoke_handler(tauri::generate_handler![greet])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
-}
-```
-
-```ts
-// Frontend (TypeScript)
-import { invoke } from "@tauri-apps/api/core";
-
-const greeting = await invoke<string>("greet", { name: "Ada" });
-```
+A minimal command, its registration, and a frontend call: see
+  [examples/minimal-command.md](./examples/minimal-command.md).
 
 A capability file granting the main window dialog access and scoped
 app-data filesystem access:
 
-```json
-{
-  "$schema": "../gen/schemas/desktop-schema.json",
-  "identifier": "main-capability",
-  "description": "Permissions for the main window",
-  "windows": ["main"],
-  "permissions": [
-    "core:default",
-    "dialog:open",
-    "fs:allow-app-data-read",
-    "fs:allow-app-data-write"
-  ]
-}
-```
+  [assets/main-capability.json](./assets/main-capability.json).
 
 Checking for updates with the updater plugin:
 
-```ts
-import { check } from "@tauri-apps/plugin-updater";
-import { relaunch } from "@tauri-apps/plugin-process";
-
-const update = await check();
-if (update) {
-  await update.downloadAndInstall();
-  await relaunch();
-}
-```
+  [examples/check-updates.ts](./examples/check-updates.ts).
 
 ## Validation Checklist
 

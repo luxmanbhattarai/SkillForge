@@ -43,7 +43,7 @@ wanted in the toolchain.
 
 ## Prerequisites
 
-- The Hugo binary installed (current line 0.170.x as of 2026-11-20).
+- The Hugo binary installed (current line 0.170.x).
   Check the installed version with `hugo version`. There is only one
   Hugo binary: the extended edition was removed in Hugo v0.170.0
   (2026-11-13) along with LibSass, which had been deprecated since
@@ -122,6 +122,21 @@ wanted in the toolchain.
   LibSass is removed.
 - Output formats: enable RSS and sitemap by default; Hugo generates both
   automatically when configured.
+
+### Accessibility
+
+- Rendered HTML carries the semantics: real landmarks, one `h1`,
+  headings in order — check the shipped HTML, not just the source.
+- Route changes move focus to the new page heading or announce the
+  change via a live region; never leave focus on a removed link.
+- Hydration and islands must not break keyboard or screen-reader
+  behavior: the interactive page matches the server HTML.
+- Forms, dialogs, and menus use native elements or accessible
+  primitives; custom widgets follow the ARIA Authoring Practices Guide.
+- Images get `alt` (empty when decorative); loading states announce
+  via `role="status"`.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -250,6 +265,7 @@ Responsive image from a page bundle:
 - [ ] Images are processed to appropriate sizes with `alt` attributes.
 - [ ] No `safeHTML` is used on untrusted content.
 - [ ] The built site in `public/` matches the intended URL structure.
+- [ ] Accessibility: route changes move focus or announce; shipped HTML has landmarks and one h1.
 
 ## Expected Deliverables
 

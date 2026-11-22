@@ -112,6 +112,19 @@ before any writer sees it.
   error repeated across fifty briefs is worse than fifty slow
   hand-written ones.
 
+### Accessibility
+
+- Put accessibility requirements in the brief, the review checklist,
+  and the program standards: alt text, heading structure, link text,
+  plain language.
+- Every workflow stage owns a check: drafting (structure), editing
+  (plain language), publishing (alt text, links, tables).
+- Templates carry the requirements so they do not depend on memory.
+- Audit published content periodically: missing alt text, skipped
+  heading levels, and "click here" links regress silently.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Write the brief from the reader's perspective: what question brings them here, and what will they do after reading?
@@ -219,6 +232,7 @@ Example brief as a structured record (for automation pipelines):
 - [ ] For generated briefs: every required field is filled or flagged
       empty (never invented), the SERP snapshot date is recorded, and
       a human approved the brief before handoff.
+- [ ] Accessibility: brief/checklist/standards include alt text, headings, link text, plain language.
 
 ## Expected Deliverables
 

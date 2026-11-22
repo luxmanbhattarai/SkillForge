@@ -58,6 +58,7 @@ access.
   to every edge location immediately.
 - An understanding of key design: keys are strings, values are small
   (check the KV docs for current size limits).
+- Version range: Wrangler 4.x.
 
 ## Official Documentation
 

@@ -46,7 +46,7 @@ from project structure to a production build.
 ## Prerequisites
 
 - Node.js 24 LTS or 26 LTS installed. Node.js 26 is the newest LTS
-  line as of 2026-11-20; 24 and 22 remain in LTS. Next.js 16 requires
+  line; 24 and 22 remain in LTS. Next.js 16 requires
   Node.js 20.9 or newer at minimum (Node.js 18 is no longer supported).
 - A Next.js 16 project (current major line, Active LTS since
   2026-10-21); do not assume a minor version. New projects are created
@@ -143,6 +143,21 @@ from project structure to a production build.
   `NEXT_PUBLIC_` variables are exposed to the browser and must never
   hold secrets.
 
+### Accessibility
+
+- Rendered HTML carries the semantics: real landmarks, one `h1`,
+  headings in order — check the shipped HTML, not just the source.
+- Route changes move focus to the new page heading or announce the
+  change via a live region; never leave focus on a removed link.
+- Hydration and islands must not break keyboard or screen-reader
+  behavior: the interactive page matches the server HTML.
+- Forms, dialogs, and menus use native elements or accessible
+  primitives; custom widgets follow the ARIA Authoring Practices Guide.
+- Images get `alt` (empty when decorative); loading states announce
+  via `role="status"`.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Keep the client bundle small: move interactivity into small leaf
@@ -226,41 +241,7 @@ cache with time-based revalidation; without it the fetch would be
 uncached (Next.js 15+ default). With Cache Components enabled,
 use the `'use cache'` directive and `cacheLife` instead:
 
-```tsx
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Articles',
-  description: 'All articles on Example Site.',
-};
-
-interface Article {
-  id: string;
-  title: string;
-}
-
-async function getArticles(): Promise<Article[]> {
-  const response = await fetch('https://example.com/api/articles', {
-    next: { revalidate: 3600 },
-  });
-  if (!response.ok) throw new Error('Failed to load articles');
-  return response.json();
-}
-
-export default async function ArticlesPage() {
-  const articles = await getArticles();
-  return (
-    <main>
-      <h1>Articles</h1>
-      <ul>
-        {articles.map((article) => (
-          <li key={article.id}>{article.title}</li>
-        ))}
-      </ul>
-    </main>
-  );
-}
-```
+See [examples/articles-page.tsx](./examples/articles-page.tsx).
 
 Server action for a form mutation:
 
@@ -290,6 +271,7 @@ export async function subscribe(formData: FormData) {
 - [ ] Server actions validate input and revalidate affected paths.
 - [ ] No secrets appear in client components or `NEXT_PUBLIC_` variables.
 - [ ] Metadata is present on public pages.
+- [ ] Accessibility: route changes move focus or announce; shipped HTML has landmarks and one h1.
 
 ## Expected Deliverables
 

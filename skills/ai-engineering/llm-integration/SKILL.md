@@ -60,7 +60,7 @@ behaves predictably, fails gracefully, and can be measured and improved.
   secret manager (see `secrets-management`). Never hardcode keys.
 - A defined use case with a known input shape, output shape, and
   quality bar — "call an LLM" is not a specification.
-- The provider's current API surface. Current stable as of 2026-11-20: OpenAI's
+- The provider's current API surface: OpenAI's
   current API is the Responses API (Chat Completions remains
   supported); Anthropic's is the Claude Messages API with tool use;
   Google offers the Gemini API. Check the official model pages for
@@ -68,6 +68,7 @@ behaves predictably, fails gracefully, and can be measured and improved.
   frequently, and this skill does not pin them.
 - A way to measure: token usage, latency, and cost per request, from
   day one.
+- Version range: none — the skill does not pin provider API versions or model names; check the official model pages before choosing.
 
 ## Official Documentation
 
@@ -126,26 +127,9 @@ behaves predictably, fails gracefully, and can be measured and improved.
 
 ## Implementation Standards
 
-- Provider abstraction: the interface owns the request shape
-  (messages, tools, schema, options) and returns a normalized result
-  (text or parsed object, token usage, finish reason). Adapters
-  translate provider-specific errors into a small set of typed
-  errors: `RateLimited`, `Timeout`, `InvalidRequest`, `ProviderError`,
-  `ContentFiltered`.
-- Prompts are versioned artifacts: each prompt has an id, a version,
-  and a changelog entry. A prompt change is a code change — reviewed,
-  tested, and deployable independently of a model change where
-  possible.
-- Structured outputs: prefer strict JSON Schema mode over JSON mode.
-  JSON mode only guarantees valid JSON, not the shape. Always validate
-  parsed output in code; a schema guarantee is not a substitute for
-  validation of business rules (ranges, enums, required relations).
-- Tool calling: define tools with minimal, precise JSON schemas and
-  plain-language descriptions. Validate every tool argument before
-  executing. Cap tool turns (a small single-digit limit for simple
-  features) and total tokens per request. Never let the model call a
-  tool that performs an irreversible action without a confirmation
-  step in the application.
+- Provider and prompts — provider abstraction, versioned prompts,
+  structured outputs, tool calling: see
+  [references/provider-and-prompts.md](./references/provider-and-prompts.md).
 - Context management: measure tokens with the provider's tokenizer
   or counting endpoint before sending, never by guessing. Keep a
   fixed reserve for the response. When history must shrink, summarize
@@ -154,20 +138,8 @@ behaves predictably, fails gracefully, and can be measured and improved.
 - Streaming: stream to the user for interactive features, but still
   assemble and validate the full response server-side before acting
   on it. Never execute a tool call from a partial streamed chunk.
-- Retries: retry only 429 and 5xx errors and timeouts, with
-  exponential backoff, jitter, and a maximum of 3 attempts. Never
-  retry 400-class errors or content-filter refusals. Make tool
-  executions idempotent so a retried turn cannot double-apply an
-  effect.
-- Timeouts: set a per-request timeout (tuned to the model and use
-  case) and a shorter timeout for the first token when streaming.
-  A hung model call must never hang the request handler.
-- Cost controls: per-request and per-user token budgets, daily spend
-  alerts, and a kill switch. Log the cost estimate of every call.
-- Error handling: a model failure is a normal failure mode, not an
-  exception to crash on. Return a degraded response (cached answer,
-  simpler model, clear error message) and log the failure with the
-  request id.
+- Resilience — retries, timeouts, cost controls, error handling:
+  see [references/resilience.md](./references/resilience.md).
 
 ### Testing Strategy
 
@@ -281,56 +253,17 @@ behaves predictably, fails gracefully, and can be measured and improved.
 A provider abstraction in TypeScript — application code depends on
 this interface, never on a provider SDK:
 
-```ts
-export interface ChatMessage {
-  role: "system" | "user" | "assistant" | "tool";
-  content: string;
-}
-
-export interface CompletionResult {
-  text: string;
-  inputTokens: number;
-  outputTokens: number;
-  finishReason: "stop" | "length" | "tool_calls" | "filtered";
-}
-
-export interface LlmClient {
-  complete(messages: ChatMessage[], opts?: { maxTokens?: number }): Promise<CompletionResult>;
-  completeJson<T>(messages: ChatMessage[], schema: object): Promise<T>;
-}
-```
+  [examples/provider-adapter.ts](./examples/provider-adapter.ts).
 
 Structured output with the OpenAI Responses API (Python), following
 the official structured-outputs guide — the schema is defined in
 code and the result comes back parsed:
 
-```python
-from openai import OpenAI
-from pydantic import BaseModel
+  [examples/structured-output.py](./examples/structured-output.py).
 
-client = OpenAI()  # reads OPENAI_API_KEY from the environment
-
-
-class CalendarEvent(BaseModel):
-    title: str
-    date: str
-    participants: list[str]
-
-
-response = client.responses.parse(
-    model="gpt-6.2-astra",
-    input=[
-        {"role": "user", "content": "Lunch with Ana and Ben next Tuesday."},
-    ],
-    text_format=CalendarEvent,
-)
-
-event = response.output_parsed  # a validated CalendarEvent instance
-```
-
-The model identifier above is the one used in the official guide as
-of 2026-11-20; check the provider's current model page before
-copying it into production, and keep it in configuration.
+The model identifier above is the one used in the official guide;
+check the provider's current model page before copying it into
+production, and keep it in configuration.
 
 ## Validation Checklist
 

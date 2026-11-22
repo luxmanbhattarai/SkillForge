@@ -59,6 +59,7 @@ a diagnosis that does not confuse them, and a prioritized fix list.
   show lab data only.
 - A baseline reading taken before changes, so improvements can be
   proven.
+- Version range: PageSpeed Insights API v5.
 
 ## Official Documentation
 
@@ -111,6 +112,20 @@ a diagnosis that does not confuse them, and a prioritized fix list.
   strategy (mobile/desktop), because both affect the result.
   Lighthouse category scores: 90 or above is good, 50 to 89 needs
   improvement, below 50 is poor.
+
+### Accessibility
+
+- Read the accessibility category alongside performance: Lighthouse and
+  PageSpeed Insights report both, and a fast page can still exclude
+  people.
+- Layout stability is an accessibility issue: CLS disorients
+  screen-magnifier users and causes mis-taps.
+- Automated scores are a floor, not a pass: pair the audit with a
+  keyboard-only and screen-reader spot check.
+- Report accessibility findings with the same severity as performance
+  findings; do not bury them in an appendix.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -197,6 +212,7 @@ console.log('lab performance score:', score);
 - [ ] Fixes are prioritized by field impact, then lab savings.
 - [ ] A follow-up check date is set to confirm field-data movement
       after the fix ships.
+- [ ] Accessibility: audit reports the accessibility category with the same severity as performance.
 
 ## Expected Deliverables
 

@@ -41,7 +41,7 @@ execution in CI, and enabling remote caching.
 - A monorepo with a workspace tool already configured (pnpm workspaces is the recommended default).
 - Each package has the scripts Turborepo will run (`build`, `lint`, `test`, `typecheck`, `dev`).
 - Turborepo installed (the `turbo` package) at the repository root.
-- Supported versions (verified 2026-11-20): Turborepo 2.x is current
+- Supported versions: Turborepo 2.x is current
   (latest stable 2.11.x, November 2026). Turborepo 1.x is end-of-life
   and 3.0 is in canary. In 2.x the `turbo.json` top-level key is
   `tasks`; the 1.x `pipeline` key was renamed and must not be used.

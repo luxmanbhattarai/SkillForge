@@ -79,8 +79,6 @@ promises AI citations.
   LLM-friendly site files (not a Google requirement; see the note in
   Implementation Standards).
 
-Guidance current as of 2026-11-20.
-
 ## Required Workflow
 
 1. Confirm the foundations: the page is indexable, fast, and well
@@ -132,6 +130,17 @@ Guidance current as of 2026-11-20.
   not actually answer; that is keyword stuffing in a new format.
 - Content must remain written for humans first; a page optimized only
   for machines reads badly and fails both audiences.
+
+### Accessibility
+
+- The structure that serves answer engines serves people too: one `h1`,
+  headings in order, direct answers first.
+- Every image keeps its alt text; restructured content does not drop
+  text alternatives.
+- Link text describes its destination; direct-answer blocks are real
+  text, not images of text.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -233,6 +242,7 @@ these flour types; verify against the specific product before publishing.
 - [ ] Key content is in the rendered HTML, not behind interactions or
       images.
 - [ ] The page still reads well for a human reader.
+- [ ] Accessibility: heading outline valid; alt text kept through restructuring.
 
 ## Expected Deliverables
 

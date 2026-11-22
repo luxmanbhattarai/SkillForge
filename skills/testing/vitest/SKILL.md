@@ -48,7 +48,7 @@ reliable.
 ## Prerequisites
 
 - Node.js installed. Node.js 22, 24, and 26 are the active LTS lines
-  as of 2026-11-20; Node.js 20 reached end-of-life on 30 April 2026.
+ ; Node.js 20 reached end-of-life on 30 April 2026.
   Vitest 5.x is the current major (5.0 released 2026-09-03) and
   requires Node.js >= 22.12 and Vite >= 6.4; Vite is a peer
   dependency in v5, so Yarn users must install `vite` explicitly.

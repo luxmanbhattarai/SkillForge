@@ -121,6 +121,19 @@ text rules, per-page images, and preview verification.
 - A default OG image exists for the whole site so no shared page ever
   shows a random image or none at all.
 
+### Accessibility
+
+- Preview images carry their text alternative: `og:image:alt` (and
+  `twitter:image:alt`) describe the image for screen readers and
+  text-only clients.
+- Text in the preview is legible at the displayed size with 4.5:1
+  contrast; keep it short — previews render small.
+- The preview message does not depend on color alone.
+- Verify the preview before publishing: title, description, image, and
+  alt text all present and correct.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Make per-page OG images for the pages that get shared most: articles,
@@ -230,6 +243,7 @@ await sharp("og-source.png")
       intended image, title, and description.
 - [ ] A site-wide default OG image exists for pages without their own.
 - [ ] The image source or design is recorded for future updates.
+- [ ] Accessibility: og:image:alt / twitter:image:alt present; preview text legible.
 
 ## Expected Deliverables
 

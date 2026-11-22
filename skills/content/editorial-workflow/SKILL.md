@@ -57,7 +57,7 @@ unreviewed, or gets published twice by accident.
 - A publishing destination (CMS, site, or docs repo) and the ability
   to schedule or publish there.
 - The team's quality bar: which checks are mandatory before publish.
-- Conceptual skill; current stable as of 2026-11-20 — applies to
+- Conceptual skill; version range: none — applies to
   current CMS and publishing tooling; the workflow is tool-agnostic
   and pins no version; the Google guidance it enforces is linked in
   Official Documentation.

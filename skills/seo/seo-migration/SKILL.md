@@ -71,7 +71,7 @@ as a controlled, reversible operation with verification at each step.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — baseline for the migrated site.
 - [Sitemaps.org](https://www.sitemaps.org/) — sitemap format for the new URL set.
 
-Guidance current as of 2026-11-20. Since June 2026, Google's site move
+Since June 2026, Google's site move
 guide covers using the Change of Address tool for all subdomain variants
 (including www and non-www) during a domain migration; file the change
 for every variant, not just the canonical one.

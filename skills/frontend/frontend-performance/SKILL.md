@@ -121,6 +121,22 @@ weight, render-blocking resources, and layout stability.
   data (Lighthouse) for diagnosis. A good lab score with bad field data
   means the lab conditions do not match the users.
 
+### Accessibility
+
+- Do not trade accessibility for speed: lazy-loaded content must still
+  be keyboard-reachable and announced.
+- Layout stability is an accessibility issue: CLS disorients
+  screen-magnifier users and causes mis-taps; reserve space for
+  late-loading content.
+- Deferring scripts must not delay keyboard operability or leave
+  controls inert without a visible state.
+- Fonts: avoid invisible-text swaps that flash unstyled content; keep
+  text readable during load.
+- Reduced-motion users get the same content without the animation;
+  do not gate content behind motion.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Optimize for the slowest realistic user: a mid-range phone on a slow
@@ -240,6 +256,7 @@ document.querySelector('#dashboard-button')
 - [ ] Fonts are self-hosted with `font-display: swap` and limited weights.
 - [ ] The JavaScript bundle was analyzed and unused code removed.
 - [ ] Performance budgets are documented or enforced in CI.
+- [ ] Accessibility: lazy-loaded content stays keyboard-reachable; CLS does not disorient.
 
 ## Expected Deliverables
 

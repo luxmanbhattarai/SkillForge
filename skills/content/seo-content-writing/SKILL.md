@@ -81,6 +81,23 @@ crawlers. It never sacrifices readability for optimization.
 - Never promise a ranking, position, or traffic outcome. Any estimate must be labeled as an estimate.
 - Never invent search volume, difficulty, or competitor numbers. If a number is not from a real tool or source, do not state it.
 
+### Accessibility
+
+- Structure is an outline: one `h1`, headings in order, no skipped
+  levels — screen readers navigate by headings.
+- Every image gets alt text that conveys its meaning in context;
+  decorative images are marked decorative.
+- Link text describes its destination ("the 2026 Search Console
+  guide", not "click here").
+- Plain language: short sentences, defined terms, no jargon without an
+  explanation — readability is cognitive accessibility.
+- Color is never the only way information is conveyed in charts,
+  callouts, or emphasis.
+- Data in charts also appears as text or a table a screen reader can
+  follow.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Satisfy the searcher first: a page that answers the query well is the foundation; optimization is the polish.
@@ -142,6 +159,7 @@ Example heading structure for the same page:
 - [ ] Images have descriptive alt text.
 - [ ] No ranking or traffic promise appears anywhere.
 - [ ] The page passes the `editorial-review` checklist.
+- [ ] Accessibility: heading outline valid; alt text present; link text descriptive.
 
 ## Expected Deliverables
 

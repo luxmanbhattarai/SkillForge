@@ -25,7 +25,7 @@ Article, FAQPage, BreadcrumbList, Product, Organization, and WebSite —
 and validating it with Google's testing tools. Structured data can make
 a page eligible for rich results; it never guarantees them.
 
-> Retired features (verified 2026-11-20): `HowTo` rich results were
+> Retired features: `HowTo` rich results were
 > deprecated by Google in September 2023, and FAQ rich results stopped
 > appearing in Google Search on 7 May 2026 (documentation removed
 > June 2026). Both types remain valid schema.org vocabulary, but
@@ -59,7 +59,7 @@ a page eligible for rich results; it never guarantees them.
 - The schema.org type reference and Google's structured data feature
   guides (linked below).
 - Access to Google's Rich Results Test and Search Console for validation.
-- Guidance current as of 2026-11-20. Google retires rich result
+- Google retires rich result
   features regularly: besides FAQ (May 2026) and HowTo (September
   2023), Google removed the sitelinks search box (November 2024) and,
   in September 2025, the course info, estimated salary, learning

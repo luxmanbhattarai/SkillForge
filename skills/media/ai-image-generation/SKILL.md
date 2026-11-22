@@ -104,6 +104,19 @@ delivering a correctly sized, correctly licensed file with alt text.
 - Text inside generated images is unreliable. Keep in-image text to a few
   short words at most, and verify every character in the output.
 
+### Accessibility
+
+- Every generated image ships with its alt text (or a note that it is
+  decorative); alt text is part of the deliverable.
+- Prompt for legible text and sufficient contrast — generators garble
+  text and produce low-contrast art often; review every output.
+- Do not ask for the message in color alone; the image must read
+  clearly in grayscale.
+- Prefer images without embedded text; where text is needed, keep it
+  short and check it character by character.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Generate several variations and pick the strongest one rather than
@@ -206,6 +219,7 @@ License: per the image tool's terms; verify before commercial reuse.
 - [ ] The prompt, tool, and usage terms are recorded with the file.
 - [ ] The image is labeled AI-generated wherever it could be mistaken
       for a real photograph.
+- [ ] Accessibility: alt text ships with every image; generated text checked for legibility.
 
 ## Expected Deliverables
 

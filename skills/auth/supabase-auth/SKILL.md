@@ -59,7 +59,7 @@ user is not automatically an authorized user — the RLS policies decide.
 - HTTPS on every environment handling real credentials.
 - A custom SMTP provider configured before production: the built-in email
   service is rate-limited and not meant for production use.
-- Version note: current stable as of 2026-11-20 — the v2 client
+- Version range: the v2 client
   (`@supabase/supabase-js`) is the current stable major line; check
   the Supabase docs linked in Official Documentation for the newest
   minor before starting.
@@ -150,11 +150,8 @@ user is not automatically an authorized user — the RLS policies decide.
 - Passwords follow the `authentication` skill: check new passwords against
   a compromised-password blocklist (Supabase exposes leaked-password
   protection in the Dashboard), and do not impose composition rules.
-- Passkeys are experimental in Supabase Auth: the JavaScript client
-  requires opting in (`auth: { experimental: { passkey: true } }`) and
-  registration requires an existing, confirmed, non-anonymous user.
-  Passkeys are bound to the Relying Party ID (the bare domain), so choose
-  the production domain before users register credentials.
+- Passkeys are experimental in Supabase Auth: see
+  [references/passkeys.md](./references/passkeys.md).
 
 ### Testing Strategy
 
@@ -170,6 +167,25 @@ user is not automatically an authorized user — the RLS policies decide.
 - Test the OAuth callback and PKCE flow in staging, and test email
   links (confirmation, recovery, magic link) against the production
   SMTP provider before launch.
+
+### Accessibility
+
+- Labels are visible and associated (`for` / `id`); use `autocomplete`
+  tokens (`email`, `current-password`, `new-password`).
+- Errors identify the field in text, explain the fix, and are
+  announced (`role="alert"` or `aria-describedby`); do not rely on
+  color alone.
+- Password fields offer a show / hide toggle that is itself a labeled
+  button; do not block paste.
+- Sign-in must not require a cognitive function test (WCAG 3.3.8): no
+  memorizing codes across steps, no puzzle CAPTCHA without an
+  accessible alternative.
+- Keep the flow keyboard-only operable, including social sign-in
+  buttons and any dialogs.
+- On error, move focus to the error summary or the first invalid
+  field.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -251,65 +267,19 @@ user is not automatically an authorized user — the RLS policies decide.
 
 Sign-in with email and password (browser):
 
-```ts
-import { createClient } from "@/lib/supabase/client";
-
-const supabase = createClient();
-const { data, error } = await supabase.auth.signInWithPassword({
-  email: "user@example.com",
-  password, // from the sign-in form input — never a hardcoded literal
-});
-if (error) {
-  // Show a generic message; do not reveal whether the email exists.
-  throw new Error("Invalid email or password");
-}
-```
+  [examples/email-sign-in.ts](./examples/email-sign-in.ts).
 
 Server-side identity check (Server Component or Route Handler):
 
-```ts
-import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
-
-const supabase = await createClient();
-// getClaims() verifies the JWT; getSession() would not.
-const { data, error } = await supabase.auth.getClaims();
-if (error || !data?.claims) redirect("/login");
-```
+  [examples/server-identity-check.ts](./examples/server-identity-check.ts).
 
 Row Level Security policy (user-scoped reads):
 
-```sql
--- Enable RLS (deny-all until a policy exists), then allow owners to
--- read their own rows. (select auth.uid()) is evaluated once per query.
-alter table public.notes enable row level security;
-
-create policy "Owners can read their own notes"
-  on public.notes for select
-  to authenticated
-  using ((select auth.uid()) = user_id);
-```
+  [examples/rls-policy.sql](./examples/rls-policy.sql).
 
 MFA enrollment and verification (TOTP):
 
-```ts
-// Enroll: returns a QR code (totp.uri) and a secret; the user proves
-// enrollment by entering a valid code before the factor is verified.
-const { data: factor } = await supabase.auth.mfa.enroll({
-  factorType: "totp",
-  friendlyName: "Authenticator app",
-});
-
-// Sign-in challenge step: challenge, then verify the code from the app.
-const { data: challenge } =
-  await supabase.auth.mfa.challenge({ factorId: factor.id });
-const { data } = await supabase.auth.mfa.verify({
-  factorId: factor.id,
-  challengeId: challenge.id,
-  code: codeFromUser,
-});
-// A verified factor upgrades the session JWT to aal2.
-```
+  [examples/mfa-totp.ts](./examples/mfa-totp.ts).
 
 ## Validation Checklist
 
@@ -321,6 +291,7 @@ const { data } = await supabase.auth.mfa.verify({
 - [ ] Secret key used only from trusted servers; never in client code.
 - [ ] MFA (if in scope) enforced via the `aal` claim in RLS and server checks, not only in the UI.
 - [ ] Custom SMTP configured; redirect URL allowlist set to real origins; open sign-up disabled if the app is private.
+- [ ] Accessibility: labels and autocomplete set; errors announced and identify the field.
 
 ## Expected Deliverables
 

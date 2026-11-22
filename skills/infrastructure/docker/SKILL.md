@@ -52,14 +52,15 @@ containers that build reproducibly and run the same everywhere.
 - Docker Compose available (included with current Docker Desktop and
   Docker Engine installs). Use Compose v2 (`docker compose`); the
   standalone `docker-compose` v1 binary is end-of-life.
-- Base images: Node.js 22, 24, and 26 are the active LTS lines as of
-  2026-11-20 (26 is the newest LTS; `node:26-alpine` exists on Docker
+- Base images: Node.js 22, 24, and 26 are the active LTS lines
+  (26 is the newest LTS; `node:26-alpine` exists on Docker
   Hub). Node.js 20 reached end-of-life on 30 April 2026; do not base new
   images on it. Alpine images use musl libc, so verify native
   dependencies work there before choosing `-alpine` over `-slim`.
 - The application builds and runs outside Docker first; containerize a
   working application, not a broken one.
 - A `.dockerignore` file in the project root before the first build.
+- Version range: Docker Compose v2; Node.js 22, 24, or 26 LTS for base images.
 
 ## Official Documentation
 

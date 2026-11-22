@@ -121,6 +121,19 @@ target platform is checked on its own.
 - Record checks with dates. A preview verified months ago may be stale
   after a redesign or migration.
 
+### Accessibility
+
+- Preview images carry their text alternative: `og:image:alt` (and
+  `twitter:image:alt`) describe the image for screen readers and
+  text-only clients.
+- Text in the preview is legible at the displayed size with 4.5:1
+  contrast; keep it short — previews render small.
+- The preview message does not depend on color alone.
+- Verify the preview before publishing: title, description, image, and
+  alt text all present and correct.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Check previews before publishing, not after sharing the link
@@ -217,6 +230,7 @@ Fixes: updated og:image URL after the image was re-exported.
 - [ ] Stale caches were refreshed where a platform showed old content.
 - [ ] Tag or image fixes were followed by a re-check.
 - [ ] The result per platform was recorded with the check date.
+- [ ] Accessibility: og:image:alt / twitter:image:alt present; preview text legible.
 
 ## Expected Deliverables
 

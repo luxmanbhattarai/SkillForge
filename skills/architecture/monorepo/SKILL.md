@@ -47,7 +47,7 @@ grows.
   supported to 2029-04-30); Node.js 24 is in maintenance until
   2028-04-30. Node.js 20 and 25 are end-of-life. Pin the Node and
   package manager versions for the repository.
-- Supported versions (verified 2026-11-20): pnpm 12.x is current
+- Supported versions: pnpm 12.x is current
   (stable August 2026); pnpm 11 is supported until 2027-04-30; pnpm 10
   and earlier are unsupported. Turborepo 2.x is current (2.11.x,
   November 2026); Turborepo 1.x is end-of-life and 3.0 is in canary.

@@ -106,6 +106,22 @@ of any newer element or attribute before relying on it.
 - External links that open a new tab use `rel="noopener"` (and `noreferrer`
   when the referrer must not leak).
 
+### Accessibility
+
+- Choose the element that matches the meaning: `button` for actions,
+  `a` for navigation, `nav` / `main` / `header` / `footer` landmarks.
+- One `h1` per page; headings in order with no skipped levels — the
+  outline is the screen reader table of contents.
+- Forms: visible `<label>` associated with `for` / `id`; group related
+  controls with `fieldset` / `legend`.
+- Tables: `th` with `scope`, `caption` where the table needs a title;
+  never use tables for layout.
+- Images: descriptive `alt` for meaningful images, empty `alt` for
+  decorative ones; `figure` / `figcaption` for captioned figures.
+- Set `lang` on the page and on passages in another language.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Keep the DOM shallow: deep nesting slows parsing, styling, and
@@ -227,6 +243,7 @@ Accessible table with headers and caption:
 - [ ] No interactive element is nested inside another interactive element.
 - [ ] The W3C validator reports zero errors for the document.
 - [ ] External `target="_blank"` links carry `rel="noopener"`.
+- [ ] Accessibility: one h1, headings in order, labels associated, alt text present.
 
 ## Expected Deliverables
 

@@ -58,7 +58,7 @@ clicks; it never guarantees a position.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) —
   content and technical policies the page must meet.
 
-Guidance current as of 2026-11-20. Title length, meta description
+Title length, meta description
 length, and the one-H1 convention in this skill are display and
 clarity heuristics, not Google requirements: Google publishes no
 character limits for titles or descriptions and does not require a
@@ -117,6 +117,17 @@ single H1.
   of important text.
 - URLs: lowercase, hyphens between words, no session IDs or tracking
   parameters in the canonical URL, no unnecessary nesting.
+
+### Accessibility
+
+- Titles, headings, and alt text serve search and people at once:
+  unique descriptive titles, one `h1`, headings in order.
+- Link text describes its destination; images carry alt text that
+  conveys meaning, not keywords.
+- On-page elements are real markup: headings are `h1`–`h6`, not styled
+  `div`s; tables use header cells.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -203,6 +214,7 @@ Example image markup with descriptive alt text:
 - [ ] All meaningful images have descriptive alt text.
 - [ ] The canonical URL is short, lowercase, and free of tracking parameters.
 - [ ] Title, description, and headings appear in the rendered DOM.
+- [ ] Accessibility: titles unique; one h1; alt text meaningful.
 
 ## Expected Deliverables
 

@@ -76,6 +76,21 @@ plus backup codes and safe recovery flows, using maintained libraries.
 - Rate-limit verification attempts (a small number per minute per account) to block guessing.
 - Record which factor authenticated the session so sensitive actions can require a fresh factor.
 
+### Accessibility
+
+- Code entry allows paste and uses `autocomplete="one-time-code"`; do
+  not split codes into boxes that trap keyboard users.
+- Time limits on codes follow WCAG 2.2.1: warn before expiry and offer
+  a fresh code without losing the sign-in state.
+- Offer more than one second factor where possible; a factor only
+  sighted users can complete excludes people.
+- Enrollment instructions are text, not images of steps; backup codes
+  are provided as copyable text.
+- Errors name the problem ("That code expired — request a new one")
+  rather than a bare "Invalid".
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Prefer passkeys where the audience can use them: they resist phishing in a way TOTP codes do not.
@@ -156,6 +171,7 @@ const backupCodes = Array.from({ length: 10 }, () =>
 - [ ] Removing a factor requires a valid factor or the recovery path.
 - [ ] Verification attempts rate-limited.
 - [ ] Passkeys offered or explicitly deferred with a reason.
+- [ ] Accessibility: code entry allows paste; time limits warn and offer a fresh code.
 
 ## Expected Deliverables
 

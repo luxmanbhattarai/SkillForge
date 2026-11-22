@@ -73,8 +73,6 @@ conditions under which a page can be selected.
   special markup, content chunking, and rewriting just for AI.
 - [Schema.org](https://schema.org/) — the vocabulary for FAQPage, HowTo, and QAPage structured data.
 
-Guidance current as of 2026-11-20.
-
 ## Required Workflow
 
 1. Identify the question. Record the exact query, its intent
@@ -131,6 +129,17 @@ Guidance current as of 2026-11-20.
   requirements from memory.
 - Never promise or imply a ranking, snippet, or citation outcome in
   the page copy or in reports to stakeholders.
+
+### Accessibility
+
+- The structure that serves answer engines serves people too: one `h1`,
+  headings in order, direct answers first.
+- Every image keeps its alt text; restructured content does not drop
+  text alternatives.
+- Link text describes its destination; direct-answer blocks are real
+  text, not images of text.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -238,6 +247,7 @@ Google rich result since May 2026; still valid schema.org markup):
       deceptive content, useful primary content).
 - [ ] No copy on the page or in the report promises a snippet, AI
       Overview placement, or citation.
+- [ ] Accessibility: heading outline valid; alt text kept through restructuring.
 
 ## Expected Deliverables
 

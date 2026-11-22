@@ -159,6 +159,25 @@ the app's own code, covered by `authorization` and `rbac`.
   protected routes redirect to sign-in, and a revoked database session
   stops working immediately.
 
+### Accessibility
+
+- Labels are visible and associated (`for` / `id`); use `autocomplete`
+  tokens (`email`, `current-password`, `new-password`).
+- Errors identify the field in text, explain the fix, and are
+  announced (`role="alert"` or `aria-describedby`); do not rely on
+  color alone.
+- Password fields offer a show / hide toggle that is itself a labeled
+  button; do not block paste.
+- Sign-in must not require a cognitive function test (WCAG 3.3.8): no
+  memorizing codes across steps, no puzzle CAPTCHA without an
+  accessible alternative.
+- Keep the flow keyboard-only operable, including social sign-in
+  buttons and any dialogs.
+- On error, move focus to the error summary or the first invalid
+  field.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Prefer OAuth providers over Credentials: fewer passwords to protect, no
@@ -242,54 +261,17 @@ the app's own code, covered by `authorization` and `rbac`.
 
 Minimal v5 config with an OAuth provider and a database adapter:
 
-```ts
-// auth.ts — Auth.js v5. AUTH_GITHUB_ID and AUTH_GITHUB_SECRET are read
-// from the environment automatically; AUTH_SECRET is mandatory.
-import NextAuth from "next-auth";
-import GitHub from "next-auth/providers/github";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "./lib/prisma";
-
-export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: PrismaAdapter(prisma),
-  session: { strategy: "database" },
-  providers: [GitHub],
-  callbacks: {
-    // Database strategy: the callback receives { session, user }.
-    session({ session, user }) {
-      session.user.id = user.id;
-      return session;
-    },
-  },
-});
-```
+  [examples/auth-config.ts](./examples/auth-config.ts).
 
 Route handler and proxy (Next.js 16):
 
-```ts
-// app/api/auth/[...nextauth]/route.ts
-import { handlers } from "@/auth";
-export const { GET, POST } = handlers;
-```
+  [examples/route-handler.ts](./examples/route-handler.ts).
 
-```ts
-// proxy.ts — Next.js 16+. On Next.js 15 and below, use middleware.ts
-// with `export { auth as middleware }` instead.
-export { auth as proxy } from "@/auth";
-```
+  [examples/proxy.ts](./examples/proxy.ts).
 
 Protecting a Server Component:
 
-```ts
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
-
-export default async function DashboardPage() {
-  const session = await auth();
-  if (!session?.user) redirect("/api/auth/signin");
-  return <main>Signed in as {session.user.email}</main>;
-}
-```
+  [examples/protect-server-component.ts](./examples/protect-server-component.ts).
 
 ## Validation Checklist
 
@@ -301,6 +283,7 @@ export default async function DashboardPage() {
 - [ ] Every protected page, Route Handler, and Server Action checks `auth()` server-side.
 - [ ] Sign-in, sign-out, session refresh, and the main error paths verified end to end.
 - [ ] Roles and permissions enforced by app code, not assumed from Auth.js.
+- [ ] Accessibility: labels and autocomplete set; errors announced and identify the field.
 
 ## Expected Deliverables
 

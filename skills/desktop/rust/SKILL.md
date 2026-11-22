@@ -60,8 +60,8 @@ errors explicitly, and ships with its dependency tree audited.
 
 ## Prerequisites
 
-- Rust installed via rustup. The current stable release as of
-  2026-11-20 is Rust 1.100.0 (released 2026-11-12); Rust ships a new
+- Rust installed via rustup. The current stable release is Rust 1.100.0
+  (released 2026-11-12); Rust ships a new
   stable release every six weeks and only the latest stable is
   supported, so keep the toolchain current with `rustup update`.
 - Edition 2024 is the current edition (stable since Rust 1.85.0,
@@ -100,7 +100,7 @@ errors explicitly, and ships with its dependency tree audited.
 ## Required Workflow
 
 1. Confirm the toolchain: `rustc --version` and `cargo --version`
-   should report the current stable (1.100.0 as of 2026-11-20). Pin
+   should report the current stable (1.100.0). Pin
    the toolchain for the team with a `rust-toolchain.toml` containing
    a `channel` (usually `"stable"` or an exact version for
    reproducible CI).
@@ -177,21 +177,8 @@ errors explicitly, and ships with its dependency tree audited.
   -- -D warnings` in CI. Enable the pedantic clippy lints
   (`clippy::pedantic`) only if the team agrees to maintain them;
   otherwise the default lint set plus `-D warnings` is the standard.
-- `unsafe` guidelines: minimize `unsafe` blocks, wrap each one in a
-  safe abstraction, and document the safety contract in a
-  `// SAFETY:` comment stating what the caller must guarantee and why
-  the code upholds it. Audit `unsafe` in dependencies with
-  `cargo-geiger` style review when the code handles untrusted input;
-  prefer safe crates where one exists.
-- FFI basics: declare foreign functions in `unsafe extern` blocks
-  (Edition 2024), keep FFI types `#[repr(C)]`, never pass Rust
-  references or `String` across the boundary (use raw pointers and
-  lengths), and wrap every foreign call in a safe Rust function that
-  validates inputs and translates error codes into `Result`.
-- MSRV: if the project declares a minimum supported Rust version,
-  record it in `Cargo.toml` (`rust-version`) and test it in CI; do
-  not declare one by accident by using a newer feature without
-  checking.
+- Advanced topics — `unsafe` guidelines, FFI basics, and MSRV: see
+  [references/advanced-topics.md](./references/advanced-topics.md).
 
 ### Accessibility
 
@@ -327,80 +314,19 @@ errors explicitly, and ships with its dependency tree audited.
 
 An error type with `thiserror` and a fallible function:
 
-```rust
-use thiserror::Error;
-
-#[derive(Debug, Error)]
-pub enum NoteError {
-    #[error("note {0} not found")]
-    NotFound(u64),
-    #[error("storage error: {0}")]
-    Storage(#[from] std::io::Error),
-}
-
-fn load_note(id: u64) -> Result<String, NoteError> {
-    if id == 0 {
-        return Err(NoteError::NotFound(id));
-    }
-    let path = format!("notes/{id}.md");
-    Ok(std::fs::read_to_string(path)?)
-}
-```
+  [examples/error-type.rs](./examples/error-type.rs).
 
 Async work with Tokio, keeping blocking I/O off the runtime:
 
-```rust
-use tokio::task;
-
-async fn hash_file(path: &std::path::Path) -> std::io::Result<u64> {
-    let path = path.to_path_buf();
-    task::spawn_blocking(move || {
-        // Blocking file I/O runs on a dedicated thread pool.
-        let bytes = std::fs::read(path)?;
-        Ok(bytes.iter().fold(0u64, |acc, b| acc.wrapping_add(*b as u64)))
-    })
-    .await?
-}
-```
+  [examples/async-tokio.rs](./examples/async-tokio.rs).
 
 A workspace root `Cargo.toml` with shared configuration:
 
-```toml
-[workspace]
-members = ["app", "core"]
-resolver = "2"
-
-[workspace.package]
-edition = "2024"
-license = "MIT"
-
-[workspace.dependencies]
-tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }
-thiserror = "2"
-```
+  [assets/workspace-cargo.toml](./assets/workspace-cargo.toml).
 
 A unit test and a doc test:
 
-```rust
-/// Returns the file stem, or `None` for an empty name.
-///
-/// ```
-/// assert_eq!(crate::stem("notes.md"), Some("notes"));
-/// ```
-pub fn stem(name: &str) -> Option<&str> {
-    name.split('.').next().filter(|s| !s.is_empty())
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn empty_name_has_no_stem() {
-        assert_eq!(stem(""), None);
-    }
-}
-```
+  [examples/unit-and-doc-test.rs](./examples/unit-and-doc-test.rs).
 
 ## Validation Checklist
 

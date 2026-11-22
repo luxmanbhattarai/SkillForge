@@ -108,6 +108,21 @@ cropping, compression, alt text, and naming.
 - Record the image source and license in the article's notes or in a
   site image log so attribution can be checked later.
 
+### Accessibility
+
+- Every delivered image ships with its alt text (or a note that it is
+  decorative); alt text is part of the deliverable, not an
+  afterthought.
+- Text inside the image is legible at the displayed size, with 4.5:1
+  contrast; avoid text baked into images where real text can do the
+  job.
+- The message reads clearly in grayscale: do not encode meaning by
+  color alone.
+- Thumbnails stay readable at small sizes: one focal point, large
+  type, high contrast.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Pick an image that adds meaning, not decoration: a reader should be
@@ -214,6 +229,7 @@ await sharp("sourdough-starter-original.jpg")
 - [ ] The source and license are recorded.
 - [ ] The image renders correctly in the hero slot, list cards, and
       link preview.
+- [ ] Accessibility: alt text ships with every image; text in image legible at 4.5:1.
 
 ## Expected Deliverables
 

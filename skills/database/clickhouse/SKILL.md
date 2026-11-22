@@ -46,7 +46,7 @@ This skill guides the design, implementation, and operation of ClickHouse for on
 
 - A running ClickHouse server (self-managed or ClickHouse Cloud) with `clickhouse-client` or HTTP access, and Keeper (or ZooKeeper) for any replicated deployment.
 - Knowledge of the analytical questions the data must answer, the expected ingest rate, and the retention period.
-- Supported versions as of 2026-11-20: ClickHouse 26.10 is the current stable release (26.10.8.34, released 2026-11-20). ClickHouse ships monthly releases with calendar versioning (`YY.M.Patch.Build`); the long-term support (LTS) lines are 26.8 (supported until 2027-08-27) and 26.3 (supported until 2027-03-26). New production deployments should use the latest stable or the latest LTS; do not stay on an expired monthly line.
+- Supported versions: ClickHouse 26.10 is the current stable release (26.10.8.34, released 2026-11-20). ClickHouse ships monthly releases with calendar versioning (`YY.M.Patch.Build`); the long-term support (LTS) lines are 26.8 (supported until 2027-08-27) and 26.3 (supported until 2027-03-26). New production deployments should use the latest stable or the latest LTS; do not stay on an expired monthly line.
 - The native protocol ports are 9000 (plain) and 9440 (TLS); the HTTP interface listens on 8123 (plain) and 8443 (TLS) by default. Confirm the ports in the server configuration before connecting.
 - ClickHouse is Apache 2.0 licensed open source; ClickHouse Cloud is the vendor-managed offering.
 

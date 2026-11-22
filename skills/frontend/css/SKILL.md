@@ -108,6 +108,24 @@ or MDN before relying on anything newer than the fundamentals here.
 - Organize stylesheets by layer: tokens, base, layout, components,
   utilities. Keep one concern per file in larger projects.
 
+### Accessibility
+
+- Color contrast: text 4.5:1, large text and UI components 3:1 —
+  verify the actual rendered colors, not the palette swatches.
+- Visible focus: style `:focus-visible` on every interactive element;
+  never remove outlines without a replacement.
+- Honor `prefers-reduced-motion`: disable non-essential animation,
+  transitions, and parallax for users who ask for it.
+- Never convey information by color alone; pair color with text,
+  icon, or pattern.
+- Layouts reflow to 320px and survive 200% text resize without
+  clipping or overlap; never disable zoom.
+- Do not hide needed content from assistive technology with
+  `display: none`; use visually-hidden styles for screen-reader-only
+  text.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Let the cascade do the work: set defaults once on a parent and let
@@ -232,6 +250,7 @@ Two-column layout with grid, single column on narrow screens:
       overflow.
 - [ ] The stylesheet has no unused rules a linter or coverage check flags.
 - [ ] The page renders consistently in at least two browsers.
+- [ ] Accessibility: contrast meets 4.5:1/3:1; focus is visible; reduced motion is honored.
 
 ## Expected Deliverables
 

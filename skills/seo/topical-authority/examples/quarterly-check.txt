@@ -1,0 +1,6 @@
+- Subtopics covered: 8 of 12 (was 6 of 12 last quarter).
+- Queries with impressions in the sourdough section: up, per
+  Search Console, filtered to the /sourdough-guide/ section.
+- Gaps remaining: flour choice, baking schedules, storing bread.
+- Next cluster to complete: starter troubleshooting (one partial
+  page to refresh, one missing page to write).

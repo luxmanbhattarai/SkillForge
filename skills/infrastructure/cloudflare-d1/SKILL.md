@@ -57,6 +57,7 @@ correct query code that runs inside Workers through the D1 binding.
   queries.
 - Awareness that D1 is SQLite: it is relational and SQL-based, but it is
   not Postgres or MySQL, and some features differ.
+- Version range: Wrangler 4.x.
 
 ## Official Documentation
 

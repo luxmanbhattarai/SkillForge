@@ -118,6 +118,18 @@ fixes can be targeted instead of guessed.
 - Automate the checks where possible: a script that fetches pages
   and checks tags is repeatable; manual spot-checks are not.
 
+### Accessibility
+
+- Every page gets a unique, descriptive title — screen readers announce
+  it first (WCAG 2.4.2).
+- Preview images carry alt text: `og:image:alt` and `twitter:image:alt`.
+- Descriptions are plain text that makes sense out of context; they are
+  read aloud by assistive technology in link previews.
+- Validation checks titles and alt text, not just lengths and formats:
+  a present-but-empty title is a failure.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Run validation before every launch and after every template change.
@@ -219,6 +231,7 @@ A validation report entry:
       template.
 - [ ] The report lists issues with page, tag, current value, and
       expected value.
+- [ ] Accessibility: titles unique and descriptive; preview images carry alt text.
 
 ## Expected Deliverables
 

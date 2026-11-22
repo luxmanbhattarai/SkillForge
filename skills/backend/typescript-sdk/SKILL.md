@@ -125,22 +125,9 @@ tooling and packaging depth.
 
 ## Implementation Standards
 
-- `package.json` declares the public contract explicitly. Use an
-  `exports` map with the `types` condition first in each entry,
-  `import` and `require` conditions for dual format, and `default`
-  last. Declare `engines` (for example `>=20`, matching the oldest
-  Node.js line you test) and a `files` array listing only what ships
-  (`dist`, `README.md`, `LICENSE`).
-- The build emits ESM (`.mjs` or `.js` under `"type": "module"`),
-  CJS (`.cjs` or `.js` under `"type": "commonjs"`), and matching
-  declaration files (`.d.mts` / `.d.cts` or `.d.ts`). Never ship
-  JavaScript without declarations for a public SDK.
-- Enable `isolatedDeclarations` in `tsconfig.json` where the build
-  tool supports it, so every exported symbol has an explicit type
-  and declaration generation is fast and reliable.
-- Run `tsc --noEmit` in CI. esbuild- and Rolldown-based bundlers do
-  not type check; a green build without `tsc` proves nothing about
-  types.
+- Packaging — `package.json` contract, ESM/CJS build,
+  `isolatedDeclarations`, `tsc --noEmit` in CI: see
+  [references/packaging.md](./references/packaging.md).
 - Every public method is typed end to end: parameters, options, and
   return values. Use generics for paginated responses
   (`Page<T>`) and discriminated unions for response variants.
@@ -279,58 +266,12 @@ tooling and packaging depth.
 
 ## Examples
 
-A dual-format `package.json` and a tsdown config:
-
-```json
-{
-  "name": "@example/orders-sdk",
-  "version": "1.0.0",
-  "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "default": "./dist/index.js"
-    }
-  },
-  "files": ["dist", "README.md", "LICENSE"],
-  "engines": { "node": ">=20" },
-  "sideEffects": false
-}
-```
-
-```ts
-// tsdown.config.ts
-import { defineConfig } from "tsdown";
-
-export default defineConfig({
-  entry: ["src/index.ts"],
-  format: ["esm", "cjs"],
-  dts: true,
-  sourcemap: true,
-  clean: true,
-});
-```
+A dual-format `package.json` and a tsdown config: see
+  [examples/package-config.md](./examples/package-config.md).
 
 A lazy async-iterator paginator:
 
-```ts
-export async function* listAllOrders(
-  client: OrdersClient,
-  params: { limit?: number } = {},
-): AsyncGenerator<Order, void, undefined> {
-  let cursor: string | undefined;
-  do {
-    const page = await client.orders.list({ cursor, limit: params.limit });
-    yield* page.data;
-    cursor = page.nextCursor;
-  } while (cursor !== undefined);
-}
-```
+  [examples/lazy-paginator.ts](./examples/lazy-paginator.ts).
 
 Publish gates in CI (run after the build):
 

@@ -113,6 +113,21 @@ working page.
 - Use relative units (`rem`, `%`, `vw`, `cqw`) for layout dimensions;
   fixed pixel widths on containers are a last resort.
 
+### Accessibility
+
+- Layouts reflow to 320 CSS px with no two-dimensional scrolling
+  (WCAG 1.4.10).
+- Text resizes to 200% without clipping, overlap, or loss of function;
+  never disable zoom.
+- Touch targets are at least 24x24 CSS px (44x44 preferred); spacing
+  keeps adjacent targets distinct.
+- Content works in portrait and landscape; do not lock orientation.
+- Navigation collapses into a pattern keyboard and screen-reader users
+  can operate: a real button toggling a menu, focus managed on
+  open and close.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Design the narrow layout first in the mockup, not just in code: if the
@@ -231,6 +246,7 @@ Responsive image with `srcset`:
 - [ ] Images load at sizes appropriate to the viewport (checked in the
       network panel).
 - [ ] Wide tables and code blocks scroll within their own containers.
+- [ ] Accessibility: reflows to 320px; 200% zoom works; targets are at least 24x24px.
 
 ## Expected Deliverables
 

@@ -62,7 +62,7 @@ can be measured for retrieval quality and answer faithfulness.
   `llm-integration`).
 - A small set of real example questions with known-good answers, to
   evaluate against from the start (see `agent-evaluation`).
-- Conceptual skill; current stable as of 2026-11-20 — applies to the
+- Conceptual skill; version range: none — applies to the
   current vector stores, embedding APIs, and frameworks; check the
   release notes for the store and framework you choose (linked in
   Official Documentation) before pinning versions.
@@ -120,60 +120,14 @@ can be measured for retrieval quality and answer faithfulness.
 
 ## Implementation Standards
 
-- Chunking: prefer structure-aware splitting (by heading or
-  paragraph) over blind fixed-size windows; when fixed-size
-  splitting is needed, use overlap so facts at boundaries are not
-  split. Keep chunks small enough that several fit in the context
-  budget alongside the question — a chunk that eats the whole
-  budget is useless. Store the chunk's source document, section,
-  and position for citations.
-- Embeddings: choose the embedding model by the corpus language,
-  domain vocabulary, required recall, and cost — not by headline
-  benchmark scores. Prefer a model with a documented dimensionality
-  and a stable API; record the model name and version with the
-  index. Hosted embedding APIs are the default; local models make
-  sense when data cannot leave your infrastructure.
-- Vector store selection: decide on deployment (managed vs
-  self-hosted), scale, hybrid search needs, metadata filtering,
-  multi-tenancy, and data-residency requirements. Managed options
-  (Pinecone, Weaviate Cloud, Qdrant Cloud, Chroma Cloud) remove
-  operations work; self-hosted options (Weaviate, Qdrant, Chroma,
-  pgvector as a Postgres extension) keep data in your
-  infrastructure and suit smaller scale or existing Postgres
-  deployments. Record the decision and revisit it when scale or
-  requirements change.
-- Retrieval: always filter by access scope in the query itself,
-  never by post-filtering results the user should not have seen.
-  Retrieve more candidates than you will show the model (for
-  example top-20) and rerank down to the final set (for example
-  top-5) — cheap retrieval plus a reranker beats either alone.
-- Hybrid search: combine dense vector search with keyword (BM25)
-  search and fuse the rankings (for example reciprocal rank fusion)
-  when queries contain exact terms, codes, names, or ids that
-  embeddings blur. Test hybrid against dense-only on your own
-  questions; do not assume it is always better.
-- Reranking: use a cross-encoder or hosted reranker on the
-  candidate set when precision matters. Reranking is the cheapest
-  quality lever after chunking.
-- Context assembly: dedupe near-identical chunks, order by
-  relevance (best first), and cap the total context tokens with a
-  fixed budget. Include the citation id inline with each chunk so
-  the model can cite and the user can verify.
-- Grounding: the generation prompt must require the model to answer
-  only from the provided context and to say it does not know when
-  the context is insufficient. Refuse to answer from general
-  knowledge when the question is about your corpus — a confident
-  wrong answer is worse than no answer.
-- Citations: every factual claim in the answer maps to a cited
-  chunk. Verify citations mechanically where possible (the cited
-  chunk id exists in the retrieved set).
-- Index versioning: every index build records the embedding model,
-  chunking parameters, and source snapshot. A re-index is a
-  deployment: build the new index, evaluate it, then switch reads.
-- Failure handling: empty retrieval, low-score retrieval, and
-  embedding-service outages are normal cases. Define the behavior
-  for each (ask a clarifying question, fall back to keyword search,
-  fail with a clear message) instead of generating from nothing.
+- Indexing — structure-aware chunking, embeddings, vector store
+  selection: see [references/indexing.md](./references/indexing.md).
+- Retrieval — access-scoped queries, hybrid search, reranking: see
+  [references/retrieval.md](./references/retrieval.md).
+- Generation — context assembly, grounding, citations: see
+  [references/generation.md](./references/generation.md).
+- Operations — index versioning, failure handling: see
+  [references/operations.md](./references/operations.md).
 
 ### Testing Strategy
 
@@ -288,21 +242,7 @@ Indexing documents with LlamaIndex (Python), following the
 framework's own documented pattern — the high-level API handles
 chunking, embedding, and storage:
 
-```python
-from llama_index.core import Document, VectorStoreIndex
-
-documents = [
-    Document(
-        text="Refunds are issued within 14 days of the request.",
-        metadata={"source": "docs/refunds.md", "section": "Refunds"},
-    ),
-]
-
-index = VectorStoreIndex.from_documents(documents)
-query_engine = index.as_query_engine()
-response = query_engine.query("How long do refunds take?")
-print(response)  # grounded in the indexed document
-```
+  [examples/minimal-rag.py](./examples/minimal-rag.py).
 
 By default this embeds with the provider configured in settings;
 set `Settings.embed_model` explicitly to pin the embedding model

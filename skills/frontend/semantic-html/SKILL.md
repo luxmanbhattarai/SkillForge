@@ -102,6 +102,22 @@ navigate, search engines can understand, and future maintainers can read.
 - Never change an element's implicit role with an ARIA role unless the
   HTML-ARIA specification explicitly allows it for that element.
 
+### Accessibility
+
+- Choose the element that matches the meaning: `button` for actions,
+  `a` for navigation, `nav` / `main` / `header` / `footer` landmarks.
+- One `h1` per page; headings in order with no skipped levels — the
+  outline is the screen reader table of contents.
+- Forms: visible `<label>` associated with `for` / `id`; group related
+  controls with `fieldset` / `legend`.
+- Tables: `th` with `scope`, `caption` where the table needs a title;
+  never use tables for layout.
+- Images: descriptive `alt` for meaningful images, empty `alt` for
+  decorative ones; `figure` / `figcaption` for captioned figures.
+- Set `lang` on the page and on passages in another language.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Write the outline first, then the markup: headings and landmarks should
@@ -219,6 +235,7 @@ Name-value metadata with a description list:
 - [ ] The accessibility tree in developer tools shows the intended
       landmarks and roles.
 - [ ] No redundant ARIA roles duplicate an element's implicit role.
+- [ ] Accessibility: one h1, headings in order, labels associated, alt text present.
 
 ## Expected Deliverables
 

@@ -57,7 +57,7 @@ and when a platform needs its own export.
 - The page URL, title, and description the preview should show.
 - Brand assets (logo, palette, fonts) for the image design.
 - Access to the page template or CMS where meta tags are set.
-- Conceptual skill; current stable as of 2026-11-20 — applies to the
+- Conceptual skill; version range: none — applies to the
   current platform card specifications; platforms publish no versioned
   spec, so re-check the official validator tools linked in Official
   Documentation before relying on a dimension for an edge case.
@@ -259,50 +259,15 @@ platform publishes no size, the entry says so.
 Example tag set serving all platforms with one shared image plus a
 dedicated X export:
 
-```html
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://example.com/blog/sourdough-starter-smell/">
-<meta property="og:title" content="Why Your Sourdough Starter Smells Like Nail Polish Remover">
-<meta property="og:description" content="That sharp smell usually means your starter is hungry. Here is what it is telling you and how to fix it.">
-<meta property="og:image" content="https://example.com/images/og/sourdough-starter-smell.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Glass jar of bubbling sourdough starter on a wooden counter in morning light.">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://example.com/images/cards/sourdough-starter-smell.jpg">
-<meta name="twitter:image:alt" content="Glass jar of bubbling sourdough starter on a wooden counter in morning light.">
-```
+  [examples/og-tags.html](./examples/og-tags.html).
 
 Example export set from one design (with `sharp`):
 
-```js
-const sharp = require("sharp");
-
-// Shared image: 1200x630 JPEG, compressed under WhatsApp's 600 KB limit.
-await sharp("card-source.png")
-  .resize(1200, 630, { fit: "cover" })
-  .jpeg({ quality: 80, mozjpeg: true })
-  .toFile("sourdough-starter-smell-og.jpg");
-
-// Dedicated X export: exact 2:1.
-await sharp("card-source.png")
-  .resize(1200, 600, { fit: "cover" })
-  .jpeg({ quality: 80, mozjpeg: true })
-  .toFile("sourdough-starter-smell-card.jpg");
-```
+  [examples/export-set.mjs](./examples/export-set.mjs).
 
 Example per-platform check record:
 
-```text
-Page: https://example.com/blog/sourdough-starter-smell/
-Checked: 2026-11-20
-Facebook (Sharing Debugger): correct image, title, description.
-LinkedIn (Post Inspector): correct; full-width card, not thumbnail.
-X (composer draft): correct large card.
-WhatsApp (composer draft): correct preview within 10 seconds.
-Discord (test server): large image below text.
-Slack (private channel): correct unfurl.
-```
+  [examples/per-platform-check.txt](./examples/per-platform-check.txt).
 
 ## Validation Checklist
 

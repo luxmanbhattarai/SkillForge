@@ -118,6 +118,19 @@ and fewer support questions along the way.
   and direct observation. Do not rely on assumptions about what
   developers struggle with.
 
+### Accessibility
+
+- Error messages are readable by everyone: plain text, specific, and
+  actionable — never color-only status or an error code alone.
+- CLI and tooling output does not rely on color alone: pair color with
+  symbols or text so color-blind developers get the same signal.
+- Onboarding docs follow the documentation baseline: headings, link
+  text, alt text for diagrams.
+- Defaults and configuration are documented in text, not only in a
+  video or screenshot.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Watch a new developer use the project. Observation reveals
@@ -226,6 +239,7 @@ A minimal time-to-first-success measurement:
 - [ ] Fixes are verified with a fresh developer or clean
       environment.
 - [ ] A feedback loop is in place to catch future regressions.
+- [ ] Accessibility: errors are text, not color-only; CLI output pairs color with symbols or text.
 
 ## Expected Deliverables
 

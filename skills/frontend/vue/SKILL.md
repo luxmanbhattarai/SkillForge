@@ -49,7 +49,7 @@ shared state. It covers the full loop from scaffolding with
 
 - Node.js `^22.18.0 || >=24.12.0` installed (per the official quick
   start). Do not assume a minor version.
-- A Vue 3.5 project (current stable line as of 2026-11-20; latest
+- A Vue 3.5 project (current stable line; latest
   patch 3.5.46). Vue 3.6, with opt-in Vapor Mode, is in release
   candidate — do not use it for production work unless asked. Vue 2
   is end of life. New projects are created with
@@ -100,7 +100,7 @@ shared state. It covers the full loop from scaffolding with
 
 ## Implementation Standards
 
-- Vue 3.5 is the current stable line as of 2026-11-20. Use the
+- Vue 3.5 is the current stable line. Use the
   Composition API with `<script setup>` for all new components;
   the Options API is for maintaining legacy code only.
 - Reactivity: `ref` for single values (primitives and object
@@ -117,34 +117,9 @@ shared state. It covers the full loop from scaffolding with
 - Composables: functions named `use*` (for example `useArticles`)
   that encapsulate reactive state and lifecycle logic. Keep them
   focused, typed, and free of component-specific rendering.
-- Routing (Vue Router 5): create the router with `createRouter`
-  and `createWebHistory()` for clean URLs (the server must serve
-  `index.html` for unknown paths); use `createWebHashHistory()`
-  only when the server cannot do that. Lazy-load route components
-  with dynamic `import()`. Use navigation guards
-  (`beforeEnter`, global `beforeEach`) for auth checks, and
-  `definePage` file-based routing (via the `vue-router/vite`
-  plugin) when the project prefers routes from the file tree.
-  Experimental data loaders (`vue-router/experimental`) fetch
-  route data before render; treat them as experimental and check
-  the docs before relying on them.
-- State (Pinia 4): define stores with `defineStore`, preferring
-  the setup syntax (a function returning refs, computeds, and
-  functions) for consistency with the Composition API. Destructure
-  state and getters with `storeToRefs()` to keep reactivity; take
-  actions straight from the store. Keep stores focused per domain
-  (auth, cart, settings). Pinia 4 is ESM-only and requires
-  `@vue/devtools-api` installed alongside it.
-- Data fetching: fetch through a typed API layer or composable,
-  never ad-hoc in templates. Handle non-OK statuses, network
-  failure, and cancellation. For cached server state with retries
-  and background refetch, use TanStack Query's Vue adapter
-  (`@tanstack/vue-query`).
-- SSR concepts: Vue itself renders on the server with
-  `@vue/server-renderer`, but hand-rolled SSR is rarely worth it —
-  use `nuxt` when SSR, SSG, or hybrid rendering is required.
-  Server-rendered apps must avoid browser-only APIs during render
-  and keep per-request state out of module scope.
+- App architecture — Vue Router 5, Pinia 4 stores, data fetching,
+  and SSR concepts: see
+  [references/app-architecture.md](./references/app-architecture.md).
 - Templates: semantic HTML, `v-for` with a stable `:key` (an id
   from the data, never the index when the list can reorder),
   `v-if` for conditional rendering and `v-show` only when toggling
@@ -271,89 +246,15 @@ shared state. It covers the full loop from scaffolding with
 
 Component with state, a derived value, and data fetching:
 
-```vue
-<script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-
-interface Article {
-  id: string;
-  title: string;
-}
-
-const articles = ref<Article[]>([]);
-const error = ref<string | null>(null);
-const loading = ref(true);
-
-const count = computed(() => articles.value.length); // derived, not state
-
-onMounted(async () => {
-  try {
-    const response = await fetch('/api/articles');
-    if (!response.ok) throw new Error(`Request failed: ${response.status}`);
-    articles.value = (await response.json()) as Article[];
-  } catch (err: unknown) {
-    if (err instanceof Error) error.value = err.message;
-  } finally {
-    loading.value = false;
-  }
-});
-</script>
-
-<template>
-  <section aria-label="Articles">
-    <p v-if="loading">Loading articles…</p>
-    <p v-else-if="error" role="alert">Could not load articles: {{ error }}</p>
-    <template v-else>
-      <p>{{ count }} articles</p>
-      <ul>
-        <li v-for="article in articles" :key="article.id">{{ article.title }}</li>
-      </ul>
-      <p v-if="articles.length === 0">No articles yet.</p>
-    </template>
-  </section>
-</template>
-```
+  [examples/article-component.vue](./examples/article-component.vue).
 
 Pinia setup store:
 
-```ts
-// stores/counter.ts
-import { computed, ref } from 'vue';
-import { defineStore } from 'pinia';
-
-export const useCounterStore = defineStore('counter', () => {
-  const count = ref(0);
-  const doubled = computed(() => count.value * 2);
-  function increment() {
-    count.value++;
-  }
-  return { count, doubled, increment };
-});
-```
+  [examples/pinia-store.ts](./examples/pinia-store.ts).
 
 Lazy route with a guard:
 
-```ts
-// router/index.ts
-import { createRouter, createWebHistory } from 'vue-router';
-
-const router = createRouter({
-  history: createWebHistory(),
-  routes: [
-    { path: '/', component: () => import('../views/HomeView.vue') },
-    {
-      path: '/account',
-      component: () => import('../views/AccountView.vue'),
-      beforeEnter: (_to, _from, next) => {
-        // Check auth state here; the API still authorizes every request.
-        next();
-      },
-    },
-  ],
-});
-
-export default router;
-```
+  [examples/lazy-route.ts](./examples/lazy-route.ts).
 
 ## Validation Checklist
 

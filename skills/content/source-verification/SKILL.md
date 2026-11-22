@@ -57,7 +57,7 @@ claim true?" A true claim cited from a bad source is still a weak piece.
   topics need stricter sourcing than a baking guide.
 - Access to the web to check sources, authors, and publishers.
 - The publication date or "as of" date the sources must be current for.
-- Conceptual skill; current stable as of 2026-11-20 — applies to
+- Conceptual skill; version range: none — applies to
   current verification tools and standards; see the IFCN Code of
   Principles and the C2PA standard linked in Official Documentation.
 

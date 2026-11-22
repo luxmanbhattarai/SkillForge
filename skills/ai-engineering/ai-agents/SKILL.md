@@ -69,7 +69,7 @@ reliably and fails safely when it cannot.
   (LangChain 1.x) or LlamaIndex agents, or a hand-rolled loop. A
   hand-rolled loop is fine for one agent with a few tools; a
   framework pays off for memory, middleware, and multi-agent work.
-- Version note: current stable as of 2026-11-20 — LangChain 1.x is the
+- Version range: LangChain 1.x is the
   current stable major line for the agent harness; check the LangChain
   release notes linked in Official Documentation for the newest minor
   before starting.
@@ -136,19 +136,8 @@ reliably and fails safely when it cannot.
 
 ## Implementation Standards
 
-- Architectures:
-  - *ReAct (reason + act):* the model alternates brief reasoning
-    with tool calls until it can answer. The default for most
-    agents; simple, debuggable, and sufficient when the task fits
-    in one context window.
-  - *Plan-and-execute:* the model (or code) writes a plan, then
-    executes steps, replanning when a step fails. Use when the
-    task decomposes into dependent steps or needs an explicit plan
-    a human can review before execution starts.
-  - *Multi-agent:* a supervisor delegates to specialist subagents,
-    each in its own context. Use only when one agent's context or
-    tool set cannot hold the task — coordination overhead and
-    failure modes multiply with each agent.
+- Architectures — ReAct, plan-and-execute, multi-agent (when each
+  fits): see [references/architectures.md](./references/architectures.md).
 - Tool design: one tool per action, with a name, description, and
   schema a new colleague could use correctly. Tools are
   idempotent where the operation allows it. Tools return small,
@@ -311,31 +300,7 @@ A minimal agent with LangChain 1.x (`create_agent`), following the
 official agents documentation. The model is configured per
 deployment; the tool is an ordinary function:
 
-```python
-from langchain.agents import create_agent
-from langchain.tools import tool
-
-
-@tool
-def search_docs(query: str) -> str:
-    """Search the internal documentation for the given query.
-
-    Returns the most relevant passage, or an empty string.
-    """
-    return docs_search(query)  # your retrieval implementation
-
-
-agent = create_agent(
-    model=model,  # configured per deployment, e.g. "provider:model"
-    tools=[search_docs],
-    system_prompt="Answer from the documentation. Say when you do not know.",
-)
-
-result = agent.invoke(
-    {"messages": [{"role": "user", "content": "How do refunds work?"}]},
-    {"configurable": {"thread_id": "run-123"}},
-)
-```
+  [examples/minimal-agent.py](./examples/minimal-agent.py).
 
 Production additions, per the official docs: a low
 `recursion_limit` in the invoke config (the default is far too high

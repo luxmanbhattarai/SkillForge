@@ -66,7 +66,7 @@ modes are designed, and whose evolution does not break clients.
   does not repeat them.
 - Agreement on the deployment topology: one service or many, behind
   a gateway or direct, single region or multi-region.
-- Conceptual skill; current stable as of 2026-11-20 — applies to
+- Conceptual skill; version range: none — applies to
   current API frameworks; the standards it builds on (RFC 9110, RFC
   9111, RFC 9457, OpenAPI) are linked in Official Documentation; check
   the OpenAPI Specification changelog for the newest version before
@@ -128,35 +128,11 @@ modes are designed, and whose evolution does not break clients.
 
 ## Implementation Standards
 
-- One versioning strategy, applied consistently. URI versioning
-  (`/v1/orders`) is the simplest to operate and cache; header or
-  media-type versioning hides the version from the URL but complicates
-  routing, caching, and debugging. Never mix strategies in one API.
-  Never remove a field or change a field's meaning in a released
-  version: add, deprecate with a `Deprecation` header and a sunset
-  date, then remove in a new major version.
-- Pagination is mandatory on every collection endpoint. Prefer
-  cursor-based pagination for large or frequently-changing
-  collections (stable under inserts, no deep-offset cost); offset
-  pagination is acceptable only for small, stable collections.
-  Cap page sizes server-side and document the cap.
-- Filtering, sorting, and field selection follow one convention
-  across the API (query parameters for REST), and every filterable
-  field is indexed or explicitly documented as unindexed.
-- Errors use RFC 9457 problem details (`application/problem+json`)
-  with `type`, `title`, `status`, and `detail`, plus an
-  extension member for machine-readable error codes. The same
-  error type always maps to the same status code. Never return
-  stack traces, internal identifiers, or database errors.
-- Every mutating endpoint that a client may retry accepts an
-  `Idempotency-Key` header. The server stores the key with the
-  request fingerprint and the response, returns the stored response
-  for a replayed key, and rejects a key reused with a different
-  request body. Keys expire after a documented window.
-- Validation happens at the boundary, before any business logic,
-  and rejects unknown fields. A validation failure returns `400`
-  (or `422`) with the problem detail and the failing fields; it
-  never returns `500`.
+- API surface — one versioning strategy, mandatory pagination,
+  one filtering/sorting convention, RFC 9457 errors: see
+  [references/api-surface.md](./references/api-surface.md).
+- Reliability — idempotency keys and boundary validation: see
+  [references/reliability.md](./references/reliability.md).
 - Authentication is separate from authorization: authentication
   establishes identity (OAuth 2.0 / OpenID Connect tokens or API
   keys for machine clients), authorization checks scopes and
@@ -176,20 +152,9 @@ modes are designed, and whose evolution does not break clients.
   secret), retried with exponential backoff, and idempotent on the
   receiver's side via event ids. Delivery is at-least-once unless
   the design proves otherwise; document the guarantee.
-- Background jobs are idempotent, retryable with backoff, and
-  observable (queue depth, failure rate, dead-letter handling).
-  A job that cannot be retried safely is a design bug. See
-  `queues` and `background-jobs`.
-- Every outbound call has a timeout, a retry policy with backoff
-  and jitter, and a circuit breaker. Retries apply only to
-  idempotent operations or to requests with an idempotency key.
-- Timeouts are set end to end: the client timeout exceeds the
-  server timeout, which exceeds the sum of downstream timeouts,
-  so failures surface as controlled errors instead of hung
-  requests.
-- Distributed transactions are avoided: prefer sagas (compensating
-  actions) or an outbox pattern over two-phase commit, and design
-  each step to be retryable and idempotent.
+- Reliability — background jobs, outbound timeouts and retries,
+  end-to-end timeouts, sagas: see
+  [references/reliability.md](./references/reliability.md).
 - The API contract is the source of truth for clients: breaking
   changes require a new version, a changelog entry, and advance
   notice to consumers.
@@ -331,50 +296,14 @@ modes are designed, and whose evolution does not break clients.
 A problem-details error response (RFC 9457) returned consistently
 by every endpoint:
 
-```json
-{
-  "type": "https://api.example.com/problems/validation-error",
-  "title": "Validation failed",
-  "status": 400,
-  "detail": "The request body failed validation.",
-  "requestId": "req_01J8X7Q2K9",
-  "errors": [
-    { "field": "totalMinor", "message": "must be a positive integer" }
-  ]
-}
-```
+  [examples/problem-details.json](./examples/problem-details.json).
 
-An idempotent retry flow, in words rather than code, since the
-mechanics belong to the framework skill:
-
-1. The client generates a unique `Idempotency-Key` (a UUID) and
-   sends it with the `POST /v1/orders` request.
-2. The server hashes the key with the request body, stores the pair
-   before executing the operation, executes once, and stores the
-   response against the key.
-3. A retry with the same key and body returns the stored response
-   with the original status code; the operation does not run again.
-4. A retry with the same key but a different body returns `422`
-   Unprocessable Content, because the key is already bound to
-   another request. A retry that arrives while the original request
-   is still in progress returns `409` Conflict instead.
-5. Keys expire after a documented window (for example 24 hours),
-   after which the same key may be reused for a new request.
+An idempotent retry flow: see
+  [references/idempotent-retry.md](./references/idempotent-retry.md).
 
 A cursor-paginated collection response:
 
-```json
-{
-  "data": [
-    { "id": "ord_01", "totalMinor": 1299, "currency": "USD" }
-  ],
-  "page": {
-    "nextCursor": "eyJpZCI6Im9yZF8wMSJ9",
-    "hasMore": true,
-    "pageSize": 50
-  }
-}
-```
+  [examples/cursor-page.json](./examples/cursor-page.json).
 
 ## Validation Checklist
 

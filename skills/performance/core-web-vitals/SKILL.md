@@ -60,6 +60,7 @@ data rather than a single lab run.
   (CrUX) data only exists for URLs and origins with enough visitors.
 - A baseline measurement taken before changes, so improvements can be
   proven rather than assumed.
+- Version range: web-vitals 6.x; Node.js 24 LTS or 26 LTS for CLI tooling.
 
 ## Official Documentation
 
@@ -104,7 +105,7 @@ data rather than a single lab run.
 - Judge success on field data (p75 across real users), not on a single
   lab score. A good Lighthouse score does not guarantee good field
   metrics, and vice versa.
-- Google's published "good" thresholds, current as of 2026-11-20:
+- Google's published "good" thresholds:
   LCP 2.5 seconds or less, INP 200 milliseconds or less, CLS 0.1 or
   less, measured at p75. Re-check these thresholds against web.dev
   before quoting them in a report.
@@ -124,6 +125,20 @@ data rather than a single lab run.
   with fallback fonts sized to match.
 - Every fix must be measurable: state which metric it targets and the
   expected direction of change before implementing it.
+
+### Accessibility
+
+- Layout stability is an accessibility issue: CLS disorients
+  screen-magnifier users and causes mis-taps; treat a CLS failure as
+  excluding people, not just a score.
+- INP measures responsiveness for every input — keyboard and
+  assistive-technology input included; test with keyboard, not just a
+  mouse.
+- Optimizations must not break accessibility: lazy loading, deferred
+  scripts, and font swaps keep content keyboard-reachable and
+  announced.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -225,6 +240,7 @@ Reserve space for an image so it cannot cause layout shift:
       to check it once enough data has accumulated.
 - [ ] No fix introduced a regression in another metric or in
       accessibility.
+- [ ] Accessibility: CLS treated as excluding users; INP tested with keyboard input.
 
 ## Expected Deliverables
 

@@ -49,7 +49,7 @@ them reliably in CI. It is the recommended tool behind the
 ## Prerequisites
 
 - Node.js installed: use Node.js 22, 24, or 26. Playwright 1.65
-  (current as of 2026-11-20; 1.65.1 released 2026-11-13) no longer
+  (current; 1.65.1 released 2026-11-13) no longer
   tests on Node.js 20, which reached end-of-life on 30 April 2026.
 - Playwright installed, plus its browser binaries (installed with the
   Playwright install command).
@@ -113,6 +113,19 @@ them reliably in CI. It is the recommended tool behind the
 - Keep the number of browser projects small: run the full matrix
   (Chromium, Firefox, WebKit) on release branches and Chromium-only on
   every pull request if the suite is slow.
+
+### Accessibility
+
+- Include keyboard-only journeys: the critical flows work without a
+  mouse, with focus always visible.
+- Run axe in the E2E suite (`@axe-core/playwright` for Playwright) on
+  every critical page; fail the build on violations.
+- Assert accessible names and roles, not just visible text: `getByRole`
+  queries prove the page is operable by assistive technology.
+- Test at 200% zoom and a 320px viewport for at least the critical
+  flows.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -221,6 +234,7 @@ test("user can log in with valid credentials", async ({ page }) => {
       the HTML report.
 - [ ] CI runs the suite with retries and uploads failure artifacts.
 - [ ] Auth state files and test credentials are not committed.
+- [ ] Accessibility: keyboard-only journeys pass; axe runs on critical pages.
 
 ## Expected Deliverables
 

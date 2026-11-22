@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling >= 1.33"]
+build-backend = "hatchling.build"
+
+[project]
+name = "orders-sdk"
+version = "1.0.0"
+description = "Client SDK for the Example Orders API"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = ["httpx >= 0.28"]
+
+[project.urls]
+Homepage = "https://example.com/orders-sdk"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/orders_sdk"]
+
+[dependency-groups]
+dev = ["pytest >= 9", "pytest-httpx", "mypy >= 2"]

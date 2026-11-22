@@ -69,7 +69,7 @@ this one before the server (or client) touches production.
 - A threat model for the deployment: who runs the servers, who
   connects to them, what the tools can reach, and what damage a
   malicious or misused tool could do.
-- The current MCP specification. As of 2026-11-20 the current
+- The current MCP specification. the current
   revision is dated 2026-07-28; the TypeScript SDK v2
   (`@modelcontextprotocol/server`) implements it. Check the
   official docs for the current revision before relying on
@@ -143,117 +143,14 @@ this one before the server (or client) touches production.
   templates from a server are untrusted input to the client
   until the server is verified; even then, treat their contents
   as data, not instructions.
-- Server verification. Maintain an allowlist of approved servers
-  with pinned versions and a named owner per server. Verify the
-  publisher and the distribution channel; a lookalike server
-  name is a real attack (name squatting). Review the tool list
-  on every update — a server update that adds a broad tool is a
-  security event. For local servers, one-click install flows
-  must show the exact command, untruncated, and get explicit
-  approval before running it.
-- Tool authorization. Every tool invocation is authorized
-  against the caller's identity and the tool's required scope.
-  Authorization is checked at call time, not only at connect
-  time, so a revoked permission takes effect immediately. A tool
-  that the caller is not authorized for must not appear in the
-  tool list at all — do not advertise capabilities the caller
-  cannot use.
-- Permission scoping per tool. Each tool declares the minimum
-  scope it needs, and scopes are narrow (a single directory, a
-  single repository, read-only where possible). Avoid broad
-  scopes such as full filesystem or admin access. Start with the
-  smallest scope that works and expand only on a documented need.
-- Least privilege. Servers run with the minimum OS, network, and
-  API permissions their tools require. A file tool reaches only
-  its configured directories (resolve symlinks and reject path
-  traversal); a network tool reaches only its allowlisted hosts.
-  Credentials held by a server are scoped to that server's job,
-  one credential per server, never shared across servers.
-- Input validation. The server validates every tool argument
-  against its schema before acting: types, ranges, formats, and
-  allowlists. Reject unknown fields. Apply business rules the
-  schema cannot express (for example, "this user may only touch
-  their own records"). Rate-limit tool calls per client so a
-  runaway agent cannot flood the server or its upstream systems.
-- Output sanitization. Tool results are capped in size and
-  scrubbed of secrets, tokens, and credentials before they are
-  returned. Error messages describe what went wrong without
-  leaking internal paths, stack traces, or upstream credentials.
-  Large results are paginated; a tool that returns megabytes
-  wastes the model's context and widens the injection surface.
-- Secret handling. Stdio servers obtain credentials from the
-  environment, not from the authorization flow (the
-  specification says stdio implementations should not use the
-  OAuth profile). Remote servers accept only tokens issued for
-  them: validate the audience (RFC 8707 resource indicators),
-  issuer, expiry, and scope on every request. Token passthrough
-  — accepting a token issued for another service and forwarding
-  it downstream — is forbidden by the specification: it breaks
-  the audience boundary and turns the server into a confused
-  deputy. Never return secrets in tool results, resources, or
-  logs. See `secrets-management`.
-- Transport security. Remote servers use TLS (Streamable HTTP
-  over HTTPS) with no plaintext fallback. OAuth metadata URLs
-  must be HTTPS in production (loopback `http://` only for local
-  development). Clients fetching OAuth metadata from
-  server-supplied URLs must defend against SSRF: validate URLs,
-  block private and link-local addresses (including cloud
-  metadata endpoints), resolve DNS safely, and do not follow
-  redirects to internal addresses.
-- Authorization (remote servers). Follow the specification's
-  OAuth 2.1 profile: the protected server acts as an OAuth 2.1
-  resource server, publishes Protected Resource Metadata
-  (RFC 9728), and clients discover the authorization server from
-  it. Use the authorization code flow with PKCE and validate the
-  issuer (RFC 9207) to prevent mix-up attacks. Prefer Client ID
-  Metadata Documents for client registration; Dynamic Client
-  Registration is deprecated in the current revision. Proxy
-  servers that front third-party APIs must implement per-client
-  consent before forwarding to the third-party authorization
-  server, with exact redirect-URI matching, single-use short-lived
-  `state` values, and CSRF-protected consent pages — otherwise a
-  malicious client can steal authorization codes through the
-  proxy's static client id (the confused deputy attack the
-  official security guide documents).
-- User confirmation. Consequential actions (writes, deletes,
-  sends, payments, permission changes) require explicit user
-  confirmation in the client before the tool runs. The
-  confirmation shows the tool name, the exact arguments, and the
-  expected effect. A rejection ends that action; the agent must
-  not route around it. The specification states there should
-  always be a human able to deny tool invocations.
-- Audit logging. Log every tool invocation: timestamp, caller
-  identity, server, tool name, arguments (redacted where
-  sensitive), duration, outcome, and approval decision. Logs go
-  to a tamper-resistant store with a retention policy. Never log
-  secrets or full payloads that may contain them. Alert on
-  anomalies: unusual tools, unusual hours, high failure rates,
-  or repeated authorization denials.
-- Untrusted content handling. Tool results, resource contents,
-  and prompt templates are data, not instructions. The client
-  and the agent must never follow instructions found inside
-  them, and must never let them expand permissions, exfiltrate
-  data, or trigger further tool calls on their own. Delimit
-  untrusted content when presenting it to the model, and strip
-  or neutralize instruction-like text in high-risk flows.
-- Tool poisoning. A malicious or compromised server can poison
-  the agent through tool descriptions (instructions hidden in
-  descriptions), through description changes after approval (the
-  "rug pull": approve a benign tool, then update its description
-  to add instructions), or through name shadowing (a malicious
-  tool with the same name as a trusted one). Defenses: verify
-  servers, pin versions, re-review tool descriptions on update,
-  treat descriptions as untrusted, and never let a description
-  alone grant authority.
-- Prompt injection. Direct injection (the user types
-  instructions) and indirect injection (instructions hidden in
-  retrieved documents, web pages, tickets, or tool results) both
-  target the agent through MCP. Controls: instruction hierarchy
-  (system instructions outrank tool content), delimiting,
-  output validation, approval gates for consequential actions,
-  and least-privilege tools so a successful injection has little
-  to reach. No single control stops injection; defense in depth
-  does.
+- Server-side controls — server verification, tool authorization,
+  permission scoping, least privilege, input validation, output
+  sanitization, secret handling, transport security, and
+  remote-server authorization: see
+  [references/server-controls.md](./references/server-controls.md).
+- Client-side and human controls — user confirmation, audit logging,
+  untrusted content handling, tool poisoning, and prompt injection:
+  see [references/client-controls.md](./references/client-controls.md).
 
 ### Testing Strategy
 
@@ -357,53 +254,12 @@ the SDK v2 style from `mcp-development` — the schema is the first
 line of defense, and the handler enforces the business rule
 (scoped directory) before acting:
 
-```ts
-import { McpServer } from "@modelcontextprotocol/server";
-import * as z from "zod/v4";
-import path from "node:path";
-
-const ALLOWED_DIR = "/srv/docs"; // the only directory this tool may read
-
-const server = new McpServer({ name: "docs-server", version: "1.0.0" });
-
-server.registerTool(
-  "read_doc",
-  {
-    description: "Reads a document from the docs directory.",
-    inputSchema: z.object({
-      name: z.string().min(1).max(128).describe("File name, no path separators"),
-    }),
-  },
-  async ({ name }) => {
-    if (name.includes("/") || name.includes("\\") || name.includes("..")) {
-      return { content: [{ type: "text", text: "Invalid file name." }], isError: true };
-    }
-    const resolved = path.resolve(ALLOWED_DIR, name);
-    if (!resolved.startsWith(ALLOWED_DIR + path.sep)) {
-      return { content: [{ type: "text", text: "Access denied." }], isError: true };
-    }
-    const text = await readFileWithinLimit(resolved); // capped size, errors as results
-    return { content: [{ type: "text", text }] };
-  },
-);
-```
+  [examples/validated-tool.ts](./examples/validated-tool.ts).
 
 An audit log record for a tool invocation (JSON, written to a
 tamper-resistant store; arguments redacted where sensitive):
 
-```json
-{
-  "timestamp": "2026-11-20T13:00:00Z",
-  "run_id": "run-9f2c",
-  "user_id": "user-42",
-  "server": "docs-server@1.0.0",
-  "tool": "read_doc",
-  "arguments": { "name": "refunds.md" },
-  "approved_by": "user-42",
-  "outcome": "success",
-  "duration_ms": 41
-}
-```
+  [examples/audit-record.json](./examples/audit-record.json).
 
 ## Validation Checklist
 

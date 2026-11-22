@@ -113,6 +113,18 @@ Policy as a safety net.
   steal the session token; this is mitigation, not a fix.
 - CSP is a safety net, not a substitute for encoding. Deploy both.
 
+### Accessibility
+
+- Sanitizer configuration must preserve accessibility attributes:
+  `alt`, `aria-*`, `role`, `for` / `id`, and `lang` survive
+  sanitization.
+- Test the sanitizer against accessible markup: a policy that strips
+  `aria-label` or `alt` breaks the page it protects.
+- Encoding output must not double-encode alt text or labels into
+  unreadable entities for assistive technology.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Treat all user input as untrusted, including content from other
@@ -218,6 +230,7 @@ function isSafeLinkUrl(url: string): boolean {
 - [ ] Session cookies use the `HttpOnly` flag.
 - [ ] A regression test asserts a representative payload is
       neutralized.
+- [ ] Accessibility: sanitizer preserves alt, aria-*, role, for/id, and lang.
 
 ## Expected Deliverables
 

@@ -1,0 +1,9 @@
+Week of 2026-11-16 (Search Console, US, English, all devices)
+- Clicks: 1,240 (prev week 1,310; same week last year 980).
+- Impressions: 48,200 (prev week 49,100).
+- Status Dashboard: November 2026 core update began 10 Nov,
+  still rolling out — no judgments until it completes + 1 week.
+- Largest move: /sourdough-wont-rise/ avg position 4.1 -> 6.8
+  for "sourdough won't rise"; impressions steady. SERP check:
+  a video carousel now appears above organic results.
+- Action: none this week; re-check after the update completes.

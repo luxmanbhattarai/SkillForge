@@ -62,10 +62,10 @@ state lives in version control and the cluster converges to it.
   cluster; keep the kubectl minor version within one minor of the
   cluster's server version.
 - Kubernetes 1.37 is the current stable minor (released 2026-08-26;
-  latest patch 1.37.2 as of 2026-10-28); supported minors are 1.37,
+  latest patch 1.37.2 at last verification); supported minors are 1.37,
   1.36, and 1.35. Version 1.34 reached end of life on 2026-10-27.
   New clusters should use a supported minor.
-- Helm 4 for packaging (4.3.2 was the latest release as of 2026-11-13);
+- Helm 4 for packaging (4.3.2 was the latest release at last verification);
   Helm 3 receives security fixes only until 2027-02-10 and should not
   be used for new work.
 - Container images published to a registry the cluster can reach.
@@ -234,116 +234,25 @@ state lives in version control and the cluster converges to it.
 A minimal Deployment with probes, resources, and a non-root security
 context:
 
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: web
-  namespace: production
-  labels:
-    app.kubernetes.io/name: web
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: web
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: web
-    spec:
-      securityContext:
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
-      containers:
-        - name: web
-          image: ghcr.io/example/web:1.4.2
-          ports:
-            - containerPort: 8080
-          resources:
-            requests:
-              cpu: "250m"
-              memory: "256Mi"
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 5
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 15
-            periodSeconds: 20
-```
+  [examples/deployment.yaml](./examples/deployment.yaml).
 
 A Service exposing the Deployment inside the cluster:
 
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: web
-  namespace: production
-spec:
-  selector:
-    app.kubernetes.io/name: web
-  ports:
-    - port: 80
-      targetPort: 8080
-```
+  [examples/service.yaml](./examples/service.yaml).
 
 A HorizontalPodAutoscaler scaling on CPU utilization:
 
-```yaml
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: web
-  namespace: production
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: web
-  minReplicas: 3
-  maxReplicas: 10
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 70
-```
+  [examples/hpa.yaml](./examples/hpa.yaml).
 
 Essential kubectl commands:
 
-```bash
-kubectl config current-context
-kubectl apply --dry-run=server -f deployment.yaml
-kubectl apply -f deployment.yaml
-kubectl rollout status deployment/web -n production
-kubectl get pods -n production
-kubectl logs -f deployment/web -n production
-kubectl describe pod <pod-name> -n production
-kubectl rollout undo deployment/web -n production
-```
+  [scripts/kubectl-essentials.sh](./scripts/kubectl-essentials.sh).
 
 Install a chart with Helm, pinned to a chart version. `--version` pins
 the version only for repository and OCI chart references; for a local
 chart directory the version comes from the chart's own `Chart.yaml`:
 
-```bash
-helm upgrade --install my-app oci://ghcr.io/example/charts/my-app \
-  --namespace production --create-namespace \
-  --version 1.4.2 --values values-production.yaml
-```
+  [scripts/helm-install.sh](./scripts/helm-install.sh).
 
 ## Validation Checklist
 

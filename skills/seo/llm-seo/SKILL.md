@@ -77,8 +77,6 @@ promising it.
 - [Schema.org](https://schema.org/) — structured data vocabulary that helps machines interpret page content.
 - [llms.txt](https://llmstxt.org/) — the emerging convention for an LLM-oriented site index file.
 
-Guidance current as of 2026-11-20.
-
 ## Required Workflow
 
 1. Establish the baseline. Check current AI referral traffic in
@@ -136,6 +134,17 @@ Guidance current as of 2026-11-20.
 - Never claim a page "will be cited" or "ranks in AI search" in
   reports or copy. Report observed citations and referral traffic
   only, and label any estimate as an estimate.
+
+### Accessibility
+
+- The structure that serves answer engines serves people too: one `h1`,
+  headings in order, direct answers first.
+- Every image keeps its alt text; restructured content does not drop
+  text alternatives.
+- Link text describes its destination; direct-answer blocks are real
+  text, not images of text.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -242,6 +251,7 @@ Allow: /
       recorded before changes.
 - [ ] No report or page copy promises AI citation, AI ranking, or a
       specific AI visibility outcome.
+- [ ] Accessibility: heading outline valid; alt text kept through restructuring.
 
 ## Expected Deliverables
 

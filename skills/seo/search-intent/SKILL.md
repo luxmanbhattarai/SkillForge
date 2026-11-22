@@ -64,7 +64,7 @@ evidence, then maps each intent to the content type that serves it.
 - [SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide) —
   Google's guidance on understanding what users want.
 
-Guidance current as of 2026-11-20. Intent labels (informational,
+Intent labels (informational,
 navigational, commercial, transactional) are an industry taxonomy,
 not Google-published categories; the SERP is the evidence for them.
 

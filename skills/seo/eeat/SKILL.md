@@ -71,8 +71,6 @@ outcome.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — the quality baseline, including E-E-A-T concepts.
 - [Schema.org](https://schema.org/) — Person, Organization, and author properties for structured data.
 
-Guidance current as of 2026-11-20.
-
 ## Required Workflow
 
 1. Identify the trust-sensitive content. List YMYL pages and pages
@@ -121,6 +119,17 @@ Guidance current as of 2026-11-20.
 - YMYL content is reviewed by someone qualified in the topic before
   publication, and the review is recorded (reviewer name and date
   where appropriate).
+
+### Accessibility
+
+- Trust signals are perceivable: author bios, credentials, and reviews
+  are real structured text, not images of text or screenshots.
+- Author pages and about pages follow the content baseline: headings
+  in order, alt text, descriptive link text.
+- Review displays do not rely on color or stars alone; the rating is
+  also text ("4.5 out of 5").
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -233,6 +242,7 @@ links clearly.
 - [ ] Person and Organization structured data matches the visible
       pages.
 - [ ] No personal contact details are published without consent.
+- [ ] Accessibility: trust signals are real text; ratings expressed in text, not stars alone.
 
 ## Expected Deliverables
 

@@ -232,61 +232,15 @@ serverless and edge functions where a headless browser cannot.
 
 Basic Satori render with fonts:
 
-```tsx
-import satori from "satori";
-import { readFile } from "node:fs/promises";
-
-const fontData = await readFile("./fonts/Inter-Regular.ttf");
-
-const svg = await satori(
-  <div
-    style={{
-      display: "flex",
-      width: "100%",
-      height: "100%",
-      alignItems: "center",
-      justifyContent: "center",
-      background: "#fff8ec",
-      color: "#1a1a1a",
-      fontFamily: "Inter",
-      fontSize: 64,
-    }}
-  >
-    Hungry Starter?
-  </div>,
-  {
-    width: 1200,
-    height: 630,
-    fonts: [{ name: "Inter", data: fontData, weight: 400, style: "normal" }],
-  },
-);
-```
+  [examples/basic-render.tsx](./examples/basic-render.tsx).
 
 Rasterize the SVG to PNG with `resvg`:
 
-```js
-import { Resvg } from "@resvg/resvg-js";
-
-const resvg = new Resvg(svg, { fitTo: { mode: "width", value: 1200 } });
-const png = resvg.render().asPng();
-```
+  [examples/rasterize-png.mjs](./examples/rasterize-png.mjs).
 
 Next.js route with `ImageResponse` (Satori + resvg built in):
 
-```tsx
-import { ImageResponse } from "next/og";
-
-export async function GET() {
-  return new ImageResponse(
-    (
-      <div style={{ display: "flex", fontSize: 64, background: "white" }}>
-        Hungry Starter?
-      </div>
-    ),
-    { width: 1200, height: 630 },
-  );
-}
-```
+  [examples/image-response-route.tsx](./examples/image-response-route.tsx).
 
 ## Validation Checklist
 

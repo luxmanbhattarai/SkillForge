@@ -112,6 +112,20 @@ states the facts.
 - Date-stamp or version-stamp docs that depend on a version, and
   state which version the docs describe.
 
+### Accessibility
+
+- Docs are structured documents: one `h1`, headings in order, no
+  skipped levels — readers navigate by headings.
+- Diagrams and screenshots get alt text or a text description of what
+  they show; code samples are real text, never screenshots of code.
+- Link text describes its destination; tables use header cells.
+- Plain language: define terms on first use, keep sentences short, put
+  the outcome first.
+- Examples work without color: do not mark required / optional or
+  old / new by color alone.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Write the tutorial first: it forces you to experience the product
@@ -213,6 +227,7 @@ A reference page structure:
       reviewer who does not checked clarity.
 - [ ] No credentials, tokens, or internal URLs appear in the docs.
 - [ ] A maintenance rule ties doc updates to code changes.
+- [ ] Accessibility: heading outline valid; diagrams have text descriptions; code is real text.
 
 ## Expected Deliverables
 

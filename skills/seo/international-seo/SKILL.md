@@ -76,7 +76,7 @@ that market well, with real localized content and support.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — baseline quality and technical requirements for all versions.
 - [Sitemaps.org](https://www.sitemaps.org/) — sitemap format for international URL sets.
 
-Guidance current as of 2026-11-20. Deprecated approach to avoid:
+Deprecated approach to avoid:
 Search Console's International Targeting report and its country
 targeting setting were deprecated in November 2022 — there is no
 Search Console setting that geotargets a site anymore. Geotargeting
@@ -141,6 +141,18 @@ subdomains), hreflang, and local signals.
   redirected; never redirect Googlebot to a different locale.
 - Each version's sitemap lists only that version's URLs, with
   hreflang entries pointing at the other versions.
+
+### Accessibility
+
+- Every language version declares its language (`lang`) so screen
+  readers pronounce it correctly.
+- Translated pages keep their structure: headings, alt text, and link
+  text are translated, not left in the source language.
+- Language switchers are real controls with accessible names ("English",
+  "Deutsch") — not flag icons alone.
+- Right-to-left versions mirror navigation and reading order.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -242,6 +254,7 @@ notes:
 - [ ] Currency, units, and date formats match each market.
 - [ ] Search Console properties or segments exist per market, and
       each version is being crawled and indexed.
+- [ ] Accessibility: lang declared per version; language switcher is a named control.
 
 ## Expected Deliverables
 

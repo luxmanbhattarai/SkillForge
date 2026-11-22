@@ -1,0 +1,6 @@
+Page: /sourdough-wont-rise/
+Diagnosis: stale facts + missing subtopic (cold-kitchen fixes).
+Evidence: clicks and impressions falling for 4 months; SERP check
+  2026-11-20 shows top results covering cold-kitchen fixes.
+Decision: refresh (medium scope) — hand to content-refresh with
+  this diagnosis. Re-check 2026-12-18.

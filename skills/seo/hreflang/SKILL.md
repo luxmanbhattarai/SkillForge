@@ -78,8 +78,6 @@ a version is missing.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — baseline for indexable, localized pages.
 - [Sitemaps.org](https://www.sitemaps.org/) — sitemap format for carrying hreflang in XML sitemaps.
 
-Guidance current as of 2026-11-20.
-
 ## Required Workflow
 
 1. Map the versions. Build a table of every page and its URL in each

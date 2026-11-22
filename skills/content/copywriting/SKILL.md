@@ -78,6 +78,23 @@ into a customer, subscriber, or user.
 - Disclosures required by law (affiliate relationships, paid endorsements, material terms) appear clearly, near the claim they relate to.
 - Copy must be accessible: sufficient color contrast for CTA buttons, real text (not images of text) for key claims, and descriptive link text.
 
+### Accessibility
+
+- Structure is an outline: one `h1`, headings in order, no skipped
+  levels — screen readers navigate by headings.
+- Every image gets alt text that conveys its meaning in context;
+  decorative images are marked decorative.
+- Link text describes its destination ("the 2026 Search Console
+  guide", not "click here").
+- Plain language: short sentences, defined terms, no jargon without an
+  explanation — readability is cognitive accessibility.
+- Color is never the only way information is conveyed in charts,
+  callouts, or emphasis.
+- Data in charts also appears as text or a table a screen reader can
+  follow.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Write to one person, not a crowd: "you" beats "users" or "customers."
@@ -143,6 +160,7 @@ After:  "Never lose a sourdough starter again"
 - [ ] The CTA is a specific verb phrase and appears where the reader can act.
 - [ ] Required disclosures are present and near the claims they relate to.
 - [ ] The copy passes the `editorial-review` checklist.
+- [ ] Accessibility: heading outline valid; alt text present; link text descriptive.
 
 ## Expected Deliverables
 

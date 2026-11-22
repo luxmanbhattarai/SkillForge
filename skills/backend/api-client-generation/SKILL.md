@@ -124,48 +124,15 @@ API by construction, regenerated on every contract change.
 
 ## Implementation Standards
 
-- Generator selection:
+- Generator selection (which generator for which stack): see
+  [references/generator-selection.md](./references/generator-selection.md).
 
-  | Need | Generator |
-  | --- | --- |
-  | Many languages from one spec, or server stubs | OpenAPI Generator 7.x |
-  | TypeScript with React Query / SWR / Angular / MSW / Zod | orval 8.x |
-  | TypeScript with a plugin-based, tree-shakeable SDK | hey-api `@hey-api/openapi-ts` 0.99.x |
-  | TypeScript types only, with a tiny runtime client | openapi-typescript 7.x + openapi-fetch |
-
-- Pin the generator version exactly (no `^` or `~` ranges) in
-  `package.json` / the lockfile, and record the version in the
-  generated output's header comment where the generator supports
-  it. Upgrades are deliberate, reviewed changes.
-- Generated code lives in one dedicated directory (for example
-  `src/generated/`), clearly marked as generated, and is never
-  hand-edited. Custom behavior goes in a hand-written wrapper
-  module that imports the generated code.
-- Mark generated files as generated for tooling: add them to
-  `.gitattributes` with `linguist-generated=true`, exclude them
-  from linting and coverage, and do not review them line by line
-  in pull requests — review the spec diff and the config instead.
-- Generate from a pinned spec: a committed file, or a versioned
-  URL with an exact version. Never generate from a floating
-  "latest" URL in CI; a spec change then changes the client
-  without a reviewable diff.
-- Keep the generator configuration in the repository next to the
-  spec, and generate with one command (`npm run generate` or
-  equivalent) that any developer and CI can run identically.
-- Treat the spec as the single source of truth: type names,
-  operation IDs, and descriptions in generated code come from the
-  spec. Improve naming in the spec (`operationId`, schema names),
-  not with post-processing.
-- When the API versions, version the generated client with it.
-  Run a breaking-change check (`oasdiff breaking`) between the old
-  and new spec before regenerating, and surface breaking changes
-  in the pull request.
-- If a generator cannot express something the API needs (custom
-  auth flows, streaming, multipart edge cases), wrap the generated
-  client in a hand-written layer rather than patching generated
-  output or forking the generator's templates. Template forks are
-  a maintenance liability; use them only as a last resort and
-  document the fork.
+- Generation workflow — pinned versions, generated-code layout,
+  pinned spec source, checked-in config: see
+  [references/generation-workflow.md](./references/generation-workflow.md).
+- Spec discipline — spec as source of truth, versioning with the
+  API, handling generator gaps: see
+  [references/spec-discipline.md](./references/spec-discipline.md).
 
 ### Testing Strategy
 
@@ -282,49 +249,19 @@ API by construction, regenerated on every contract change.
 
 An orval configuration (TypeScript, fetch client):
 
-```ts
-// orval.config.ts
-export default {
-  petstore: {
-    input: "./openapi.bundled.yaml",
-    output: {
-      target: "./src/generated/petstore.ts",
-      client: "fetch",
-      mock: false,
-    },
-  },
-};
-```
+  [examples/orval-config.ts](./examples/orval-config.ts).
 
 A hey-api configuration (plugin-based):
 
-```ts
-// openapi-ts.config.ts
-import { defineConfig } from "@hey-api/openapi-ts";
-
-export default defineConfig({
-  input: "./openapi.bundled.yaml",
-  output: "./src/generated",
-  plugins: ["@hey-api/client-fetch", "@hey-api/typescript"],
-});
-```
+  [examples/hey-api-config.ts](./examples/hey-api-config.ts).
 
 OpenAPI Generator via the npm wrapper (TypeScript fetch client):
 
-```bash
-npx @openapitools/openapi-generator-cli generate \
-  -i ./openapi.bundled.yaml \
-  -g typescript-fetch \
-  -o ./src/generated \
-  --config ./openapi-generator-config.json
-```
+  [scripts/openapi-generator.sh](./scripts/openapi-generator.sh).
 
 A CI drift check (regenerate and fail on differences):
 
-```bash
-npm run generate
-git diff --exit-code -- src/generated/
-```
+  [scripts/drift-check.sh](./scripts/drift-check.sh).
 
 ## Validation Checklist
 

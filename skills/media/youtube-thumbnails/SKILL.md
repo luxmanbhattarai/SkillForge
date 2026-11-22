@@ -124,6 +124,21 @@ channel.
 - The thumbnail must be honest about the video. Misleading thumbnails
   damage trust and can violate YouTube's policies on misleading content.
 
+### Accessibility
+
+- Every delivered image ships with its alt text (or a note that it is
+  decorative); alt text is part of the deliverable, not an
+  afterthought.
+- Text inside the image is legible at the displayed size, with 4.5:1
+  contrast; avoid text baked into images where real text can do the
+  job.
+- The message reads clearly in grayscale: do not encode meaning by
+  color alone.
+- Thumbnails stay readable at small sizes: one focal point, large
+  type, high contrast.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Use a real frame from the video as the base when possible; viewers
@@ -230,6 +245,7 @@ await sharp("thumbnail-source.png")
 - [ ] The thumbnail was checked at small sizes and on a phone.
 - [ ] The thumbnail honestly represents the video's content.
 - [ ] The thumbnail was uploaded and renders on the video page.
+- [ ] Accessibility: alt text ships with every image; text in image legible at 4.5:1.
 
 ## Expected Deliverables
 

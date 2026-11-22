@@ -110,6 +110,19 @@ and prompt templates for consistent series of images.
 - Record the tool the prompt was written for. A prompt tuned for one
   image model may behave differently on another.
 
+### Accessibility
+
+- Every generated image ships with its alt text (or a note that it is
+  decorative); alt text is part of the deliverable.
+- Prompt for legible text and sufficient contrast — generators garble
+  text and produce low-contrast art often; review every output.
+- Do not ask for the message in color alone; the image must read
+  clearly in grayscale.
+- Prefer images without embedded text; where text is needed, keep it
+  short and check it character by character.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Start from a reference image when one exists: describe what makes it
@@ -217,6 +230,7 @@ No people, no hands, no text, no watermarks, no cluttered background.
       character, or unsafe content.
 - [ ] The prompt is delivered as a copyable block with notes on what to
       vary.
+- [ ] Accessibility: alt text ships with every image; generated text checked for legibility.
 
 ## Expected Deliverables
 

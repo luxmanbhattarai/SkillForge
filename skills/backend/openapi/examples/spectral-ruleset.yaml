@@ -1,0 +1,11 @@
+# .spectral.yaml
+extends: [[spectral:oas, recommended]]
+rules:
+  operationId-camelcase:
+    message: operationId must be camelCase
+    given: $.paths[*][*].operationId
+    severity: error
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[a-z][a-zA-Z0-9]*$"

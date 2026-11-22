@@ -64,6 +64,7 @@ limiting, and real-time collaboration that KV and D1 cannot do correctly.
   (`ctx.storage.sql`). The backend is fixed when the class is created.
   Wrangler 4.x is the current major version.
 - Familiarity with the Workers runtime and the `cloudflare-workers` skill.
+- Version range: Wrangler 4.x.
 
 ## Official Documentation
 

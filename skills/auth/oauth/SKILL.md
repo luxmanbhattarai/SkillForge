@@ -79,6 +79,19 @@ flow with PKCE, with tokens stored and refreshed safely.
 - Token storage: server-side, encrypted at rest, scoped to the user and provider; access tokens in memory or short-lived cache only.
 - Clock skew: allow a small leeway (a minute or two) when checking token expiry.
 
+### Accessibility
+
+- The consent screen is itself accessible: real buttons, labeled scopes
+  in plain language, keyboard-operable approve / deny.
+- Redirects preserve context: after returning from the provider, focus
+  lands on a sensible place and the user is told what happened.
+- Errors from the provider are surfaced in text with a next step, not
+  a bare error code.
+- Do not use popups that trap focus or break screen-reader context;
+  prefer full-page redirects or properly managed dialogs.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Prefer a maintained OAuth client library for the stack over hand-rolling the exchange; hand-roll only the parts the library cannot do.
@@ -155,6 +168,7 @@ https://provider.example/authorize
 - [ ] Refresh flow handles expiry and rotation; refresh failure signs the user out cleanly.
 - [ ] Error paths tested: user denies consent, invalid state, expired code.
 - [ ] Minimum scopes requested and documented.
+- [ ] Accessibility: consent screen keyboard-operable; redirects preserve context.
 
 ## Expected Deliverables
 

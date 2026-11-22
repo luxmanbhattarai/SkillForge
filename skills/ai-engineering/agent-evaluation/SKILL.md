@@ -66,7 +66,7 @@ before your users find out.
   measure, so the comparison is meaningful.
 - A budget: evals cost model calls. Know the cost per full run
   and who pays for it.
-- Conceptual skill; current stable as of 2026-11-20 — applies to the
+- Conceptual skill; version range: none — applies to the
   current eval harnesses and provider APIs; see the release notes for
   the tools linked in Official Documentation before adopting a hosted
   eval platform.
@@ -130,72 +130,10 @@ before your users find out.
 
 ## Implementation Standards
 
-- Evaluation datasets: cases are versioned files (JSONL or
-  equivalent) with an id, input, expected output or success
-  criteria, and metadata (source, category, difficulty). Datasets
-  live in version control alongside the code they evaluate.
-  Production-derived cases are anonymized; secrets and PII are
-  removed before a case enters the dataset.
-- Task-based evals: grade the outcome, not the transcript. A
-  task passes when the end state is correct (the right answer,
-  the right tool called with the right arguments, the right file
-  changed) — not when the agent's reasoning looked good. Where
-  the end state is hard to check mechanically, define a rubric
-  and grade against it.
-- LLM-as-judge: use a judge model with a written rubric, a
-  defined output format (structured output), and a fixed
-  temperature. Calibrate the judge against human labels on a
-  sample before trusting it, and re-calibrate when the judge
-  model or rubric changes. Know the limits: judges prefer
-  longer answers, prefer their own model's style, are sensitive
-  to the order of options, and are non-deterministic. Mitigate
-  by grading blind (no model identity), randomizing option
-  order, using a judge from a different model family than the
-  system under test where possible, and treating judge scores
-  as signals, not ground truth. Never let the system under test
-  grade itself as the only judge.
-- Hallucination testing: include cases where the correct answer
-  is "I don't know" (questions about facts not in the corpus, or
-  about events after the cutoff), and grade whether the system
-  abstains instead of inventing. For RAG, verify every cited
-  claim against the cited chunk: a citation that does not
-  support the claim is a failure. Adversarial cases (loaded
-  questions, false premises, contradictory documents) belong in
-  the suite.
-- Regression evals: a fixed suite runs on every change to
-  prompts, models, tools, or retrieval. Thresholds are set per
-  metric from the baseline; a drop beyond the threshold blocks
-  the change. Small suites are noisy — report confidence along
-  with the score, and do not treat a one-case swing as a
-  regression.
-- Metrics: report task pass rate (primary), tool-use accuracy
-  (right tool, right arguments), retrieval metrics for RAG
-  (whether the needed chunk was retrieved; whether the answer
-  stayed faithful to it), latency (median and p95 per task),
-  cost per task (tokens and currency), and refusal correctness
-  (refused when it should, answered when it should). Track
-  metrics per category, not just in aggregate — a rising average
-  can hide a collapsing category.
-- Eval harnesses: prefer a small in-repository harness (a runner,
-  graders, and a reporter) over a hosted platform for the core
-  regression suite, so evals run in CI without external
-  dependencies beyond the model APIs. Hosted platforms
-  (LangSmith and similar) complement it with tracing, datasets,
-  and annotation queues. Avoid building on a platform that is
-  being retired — see the OpenAI Evals deprecation note above.
-- CI integration: a fast smoke subset runs on every pull request
-  (minutes, not hours); the full suite runs nightly or on
-  release. Eval jobs need model API keys as CI secrets, a cost
-  cap per run, and flaky-eval handling (retry once, then report
-  as flaky rather than failing the build on noise). Results are
-  stored as build artifacts with traces. See `ci-cd` and
-  `github-actions`.
-- Human review sampling: sample production traffic on a schedule
-  (a fixed number of runs per week, stratified by category and
-  including failures and low-confidence outputs). Reviewers use
-  the same rubric as the judges; disagreement between humans and
-  judges is itself a signal to fix the rubric or the judge.
-  Confirmed failures become new eval cases.
+- Eval methods — versioned datasets, task-based evals, LLM-as-judge,
+  hallucination testing: see [references/eval-methods.md](./references/eval-methods.md).
+- Eval operations — regression suites, metrics, harnesses, CI, human
+  review sampling: see [references/eval-operations.md](./references/eval-operations.md).
 
 ### Testing Strategy
 
@@ -304,29 +242,7 @@ A minimal harness sketch (Python): run each case, grade with
 deterministic checks, report the pass rate. Real harnesses add
 judges, traces, and reporting — but this shape is enough to start:
 
-```python
-import json
-
-
-def grade(case, answer, citations):
-    if case.get("expected_behavior") == "abstain":
-        return "don't know" in answer.lower()
-    ok = all(s in answer for s in case.get("expected_contains", []))
-    if case.get("must_cite"):
-        ok = ok and len(citations) > 0
-    return ok
-
-
-def run_suite(cases_path, run_system):
-    cases = [json.loads(line) for line in open(cases_path)]
-    results = []
-    for case in cases:
-        answer, citations = run_system(case["input"])
-        results.append(grade(case, answer, citations))
-    passed = sum(results)
-    print(f"{passed}/{len(results)} passed ({passed / len(results):.0%})")
-    return passed / len(results)
-```
+  [examples/minimal-harness.py](./examples/minimal-harness.py).
 
 ## Validation Checklist
 

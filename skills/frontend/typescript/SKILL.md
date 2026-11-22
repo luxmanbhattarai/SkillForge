@@ -45,10 +45,10 @@ the code ever runs.
 
 ## Prerequisites
 
-- Node.js 24 LTS or 26 LTS installed (26 is the newest LTS line as
-  of 2026-11-20; 24 and 22 remain in LTS).
-- TypeScript 7.x installed in the project (current major line as of
-  2026-11-20; 7.0 released 2026-07-08 as a native Go port of the
+- Node.js 24 LTS or 26 LTS installed (26 is the newest LTS line;
+  24 and 22 remain in LTS).
+- TypeScript 7.x installed in the project (current major line;
+  7.0 released 2026-07-08 as a native Go port of the
   compiler, same `typescript` package and `tsc` command, roughly 10x
   faster builds). Do not assume a minor version. TypeScript 6.0
   (2026-03-23) was the bridge release from the JavaScript compiler:

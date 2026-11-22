@@ -132,6 +132,18 @@ the content — instead of a bare link or a badly cropped image.
   does not reliably execute JavaScript, so tags injected
   client-side may not be seen.
 
+### Accessibility
+
+- Every page gets a unique, descriptive title — screen readers announce
+  it first (WCAG 2.4.2).
+- Preview images carry alt text: `og:image:alt` and `twitter:image:alt`.
+- Descriptions are plain text that makes sense out of context; they are
+  read aloud by assistive technology in link previews.
+- Validation checks titles and alt text, not just lengths and formats:
+  a present-but-empty title is a failure.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Use `summary_large_image` for articles and landing pages: the
@@ -227,6 +239,7 @@ Twitter Card tags for a general page with a small summary card:
 - [ ] The card was tested in the X post composer (or a
       third-party preview tool).
 - [ ] Open Graph tags are also present as a fallback.
+- [ ] Accessibility: titles unique and descriptive; preview images carry alt text.
 
 ## Expected Deliverables
 

@@ -105,6 +105,19 @@ critical journeys — and cover those journeys well.
 - Failures must produce artifacts: a screenshot, a trace, or a video,
   and the console errors from the page.
 
+### Accessibility
+
+- Include keyboard-only journeys: the critical flows work without a
+  mouse, with focus always visible.
+- Run axe in the E2E suite (`@axe-core/playwright` for Playwright) on
+  every critical page; fail the build on violations.
+- Assert accessible names and roles, not just visible text: `getByRole`
+  queries prove the page is operable by assistive technology.
+- Test at 200% zoom and a 320px viewport for at least the critical
+  flows.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Test the journey, not the page: one test follows a user from intent
@@ -194,6 +207,7 @@ Journey selection checklist (write one line per journey):
 - [ ] Tests are independent and pass in parallel with isolated state.
 - [ ] Failures produce a screenshot or trace and page console output.
 - [ ] The suite runs in CI against a production-like build.
+- [ ] Accessibility: keyboard-only journeys pass; axe runs on critical pages.
 
 ## Expected Deliverables
 

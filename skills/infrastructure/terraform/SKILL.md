@@ -56,8 +56,8 @@ reviewable, repeatable, and safe to change in teams.
 
 ## Prerequisites
 
-- Terraform CLI installed; 1.17.2 was the latest stable release as of
-  2026-11-11 (1.17.0, released 2026-10-21, made Terraform Policy
+- Terraform CLI installed; 1.17.2 was the latest stable release at last
+  verification (1.17.0, released 2026-10-21, made Terraform Policy
   generally available and added the `-minimal-refresh` planning option).
   Pin the CLI version per project (for example with `tfenv` or a
   container image) and declare `required_version` in every root module.
@@ -240,69 +240,19 @@ reviewable, repeatable, and safe to change in teams.
 Root module with version constraints and an S3 backend using native
 locking:
 
-```hcl
-terraform {
-  required_version = "~> 1.17.0"
-
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 6.0"
-    }
-  }
-
-  backend "s3" {
-    bucket       = "my-terraform-state"
-    key          = "prod/terraform.tfstate"
-    region       = "us-east-1"
-    encrypt      = true
-    use_lockfile = true
-  }
-}
-```
+  [examples/root-module.tf](./examples/root-module.tf).
 
 A module call with a sensitive variable:
 
-```hcl
-module "database" {
-  source = "./modules/database"
-
-  environment     = "production"
-  instance_class  = "db.t4g.medium"
-  master_password = var.db_master_password
-}
-
-variable "db_master_password" {
-  type      = string
-  sensitive = true
-}
-```
+  [examples/module-call.tf](./examples/module-call.tf).
 
 Importing an existing bucket with a configuration-driven import block:
 
-```hcl
-import {
-  to = aws_s3_bucket.existing
-  id = "my-existing-bucket"
-}
-
-resource "aws_s3_bucket" "existing" {
-  bucket = "my-existing-bucket"
-}
-```
+  [examples/import-block.tf](./examples/import-block.tf).
 
 Core workflow commands:
 
-```bash
-terraform init
-terraform fmt -recursive
-terraform validate
-terraform plan -out=tfplan
-terraform apply tfplan
-terraform state list
-terraform workspace new staging
-terraform test
-```
+  [scripts/core-commands.sh](./scripts/core-commands.sh).
 
 ## Validation Checklist
 

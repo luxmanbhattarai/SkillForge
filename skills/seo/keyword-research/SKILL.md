@@ -62,7 +62,7 @@ and must always be labeled as estimates.
 - [Google Search Console](https://search.google.com/search-console/about) —
   the Performance report shows real queries the site already appears for.
 
-Guidance current as of 2026-11-20. Volume and difficulty figures from
+Volume and difficulty figures from
 keyword tools are third-party estimates, not Google data; treat every
 such number as an estimate with a named source.
 

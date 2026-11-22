@@ -45,7 +45,7 @@ This skill covers database connection pooling: keeping a bounded, healthy set of
 - Knowledge of the deployment shape: number of application processes, replicas, workers, and serverless concurrency.
 - Access to the database's connection statistics (active, idle, waiting) and the application's pool metrics if available.
 - The driver or ORM's pool configuration for the project.
-- Supported versions as of 2026-11-20: PostgreSQL 15–19, MySQL 8.4/9.7 LTS (see the engine skills for version detail).
+- Supported versions: PostgreSQL 15–19, MySQL 8.4/9.7 LTS (see the engine skills for version detail).
 
 ## Official Documentation
 

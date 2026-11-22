@@ -44,7 +44,7 @@ This skill covers practical MySQL use for application developers: writing correc
 - The `mysql` command-line client or an equivalent client for inspecting the database directly.
 - The connection string stored as an environment variable such as `$DATABASE_URL`, never committed to the repository.
 - Basic SQL knowledge: `SELECT`, `JOIN`, `GROUP BY`, and transactions.
-- Supported versions as of 2026-11-20: MySQL 8.4 LTS and 9.7 LTS (Innovation releases use calendar versions, currently 26.10). MySQL 8.0 reached end of life on 30 April 2026 (final release 8.0.46) and 5.7 is long unsupported; upgrade 8.0 to 8.4 LTS first — skipping an LTS series is not supported.
+- Supported versions: MySQL 8.4 LTS and 9.7 LTS (Innovation releases use calendar versions, currently 26.10). MySQL 8.0 reached end of life on 30 April 2026 (final release 8.0.46) and 5.7 is long unsupported; upgrade 8.0 to 8.4 LTS first — skipping an LTS series is not supported.
 - This skill targets Oracle MySQL. MariaDB has diverged from MySQL, so some syntax here (for example the row-alias upsert) does not apply to MariaDB; check MariaDB's own documentation when the target is MariaDB.
 
 ## Official Documentation

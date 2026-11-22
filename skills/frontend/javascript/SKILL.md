@@ -45,12 +45,13 @@ written under it behaves predictably in current browsers and in Node.js.
 ## Prerequisites
 
 - A current browser or Node.js 24 LTS or 26 LTS to run the code;
-  Node.js 26 is the newest LTS line as of 2026-11-20, and 24 and 22
+  Node.js 26 is the newest LTS line, and 24 and 22
   remain in LTS.
 - The HTML the script operates on (see `html`); scripts should enhance
   working markup, not replace it.
 - A module-aware setup (a bundler, or `<script type="module">` in the
   browser) when using ES modules.
+- Version range: Node.js 24 LTS or 26 LTS; a current browser.
 
 ## Official Documentation
 
@@ -108,6 +109,25 @@ written under it behaves predictably in current browsers and in Node.js.
   checks.
 - Strict mode is on by default in modules; do not rely on sloppy-mode
   behavior anywhere.
+
+### Accessibility
+
+- Every mouse interaction has a keyboard equivalent: `click` handlers
+  on real buttons, `keydown` for custom widgets (Enter / Space to
+  activate, arrows where the pattern needs them).
+- Manage focus explicitly after DOM updates: move focus to new
+  content, return it when dialogs close, never leave it on a removed
+  element.
+- Announce dynamic changes with live regions (`role="status"` /
+  `role="alert"`); do not rely on silent DOM updates.
+- Do not break native semantics with JavaScript: no `div` with
+  `onClick` where a `button` works; no positive `tabindex`.
+- Respect `prefers-reduced-motion` for JS-driven animation; provide
+  pause controls for motion that lasts over five seconds.
+- Validate with keyboard only and a screen reader, not just by
+  watching the screen.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -242,6 +262,7 @@ searchInput.addEventListener('input', debounce((event) => {
 - [ ] The code runs without console errors in the target browser or
       Node.js version.
 - [ ] Heavy work is debounced, throttled, or moved off the main thread.
+- [ ] Accessibility: full flow works keyboard-only; dynamic changes are announced.
 
 ## Expected Deliverables
 

@@ -126,6 +126,18 @@ degrades gracefully when a field is empty.
   markup; strip markup before using a field in a title or
   description.
 
+### Accessibility
+
+- Every page gets a unique, descriptive title — screen readers announce
+  it first (WCAG 2.4.2).
+- Preview images carry alt text: `og:image:alt` and `twitter:image:alt`.
+- Descriptions are plain text that makes sense out of context; they are
+  read aloud by assistive technology in link previews.
+- Validation checks titles and alt text, not just lengths and formats:
+  a present-but-empty title is a failure.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Store the site-wide defaults (site name, default description,
@@ -230,6 +242,7 @@ Rendering the metadata in a server-side head component:
       long title).
 - [ ] Rendered HTML was verified for each content type.
 - [ ] Sharing debuggers were run on at least one page per type.
+- [ ] Accessibility: titles unique and descriptive; preview images carry alt text.
 
 ## Expected Deliverables
 

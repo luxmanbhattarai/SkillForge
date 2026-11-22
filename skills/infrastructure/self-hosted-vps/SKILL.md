@@ -59,8 +59,8 @@ limits stated honestly.
 
 ## Prerequisites
 
-- A VPS with root or sudo access. Use a current Ubuntu LTS (26.04 as
-  of 2026-11-20) or Debian stable; avoid end-of-life releases.
+- A VPS with root or sudo access. Use a current Ubuntu LTS (26.04)
+  or Debian stable; avoid end-of-life releases.
 - A domain name whose DNS you control, with an A (and AAAA, when the
   server has IPv6) record pointing at the server, for TLS.
 - SSH access from your own machine with a key pair; generate one with
@@ -69,7 +69,7 @@ limits stated honestly.
   (see `docker`), so the server runs the same image you tested.
 - Docker Engine and Docker Compose v2 installed on the server, or a
   plan to install them from Docker's official packages.
-- Current stable as of 2026-11-20. Caddy is the recommended reverse
+- Caddy is the recommended reverse
   proxy for a new setup because it provisions and renews TLS
   certificates automatically; Nginx is the alternative when its
   ecosystem or specific modules are required.
@@ -285,109 +285,26 @@ limits stated honestly.
 
 ## Examples
 
-Harden SSH with a drop-in configuration file:
-
-```ini
-# /etc/ssh/sshd_config.d/hardening.conf
-PermitRootLogin no
-PasswordAuthentication no
-PubkeyAuthentication yes
-PermitEmptyPasswords no
-MaxAuthTries 3
-LoginGraceTime 30
-```
-
-```bash
-sudo sshd -t
-sudo systemctl restart ssh.service
-```
+Harden SSH with a drop-in configuration file: see
+  [examples/ssh-hardening.md](./examples/ssh-hardening.md).
 
 Minimal UFW setup (allow SSH before enabling):
 
-```bash
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw allow OpenSSH
-sudo ufw allow 80,443/tcp
-sudo ufw enable
-sudo ufw status verbose
-```
+  [scripts/setup-ufw.sh](./scripts/setup-ufw.sh).
 
-A minimal Caddyfile: automatic HTTPS and a reverse proxy to the app:
+A minimal Caddyfile (automatic HTTPS and a reverse proxy): see
+  [examples/caddy-proxy.md](./examples/caddy-proxy.md).
 
-```caddyfile
-example.com {
-    reverse_proxy localhost:3000
-}
-```
-
-Apply it without dropping connections:
-
-```bash
-sudo caddy validate --config /etc/caddy/Caddyfile
-sudo systemctl reload caddy
-```
-
-The same proxy in Nginx, with TLS provided by Certbot:
-
-```nginx
-server {
-    listen 80;
-    server_name example.com;
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_set_header Host              $host;
-        proxy_set_header X-Real-IP         $remote_addr;
-        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
-
-```bash
-sudo nginx -t && sudo systemctl reload nginx
-```
+The same proxy in Nginx, with TLS provided by Certbot: see
+  [examples/nginx-proxy.md](./examples/nginx-proxy.md).
 
 A Compose file for the app and its database:
 
-```yaml
-services:
-  app:
-    image: my-app:${APP_VERSION:?Set APP_VERSION to a Git commit SHA}
-    restart: unless-stopped
-    env_file:
-      - .env
-    ports:
-      - "127.0.0.1:3000:3000"
-    depends_on:
-      db:
-        condition: service_healthy
-  db:
-    image: postgres:17-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-volumes:
-  db-data:
-```
+  [assets/compose.yaml](./assets/compose.yaml).
 
 Deploy a new version, and roll back to the previous one:
 
-```bash
-# Deploy: pull the new image and recreate the app container
-APP_VERSION=<new-commit-sha> docker compose up -d app
-
-# Roll back: redeploy the previous known-good image
-APP_VERSION=<previous-commit-sha> docker compose up -d app
-```
+  [scripts/deploy.sh](./scripts/deploy.sh).
 
 Back up the database on a schedule (systemd timer or cron):
 

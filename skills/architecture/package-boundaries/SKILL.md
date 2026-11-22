@@ -44,7 +44,7 @@ acyclic and understandable.
 
 - The packages or modules exist (or are being created) and their responsibilities are roughly known.
 - A lint or build tool is available to enforce rules (ESLint for JavaScript/TypeScript, or a small script).
-- Supported versions (verified 2026-11-20): ESLint 10.x is current
+- Version range: ESLint 10.x is current
   (released February 2026). Boundary rules are written as ESLint flat
   config (`eslint.config.js`); the eslintrc system (`.eslintrc.*`,
   `.eslintignore`, `ESLINT_USE_FLAT_CONFIG`) was removed entirely in

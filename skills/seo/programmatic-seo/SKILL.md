@@ -75,7 +75,7 @@ better than a generic page could, or it should not exist.
 - [Google Search Central](https://developers.google.com/search) — current guidance on helpful content and spam policies.
 - [Schema.org](https://schema.org/) — structured data vocabulary for templated page types.
 
-Guidance current as of 2026-11-20. Google's spam policy on this is
+Google's spam policy on this is
 "scaled content abuse" (strengthened in the March 2024 spam policy
 update): mass-producing pages primarily to manipulate rankings, with
 little or no value to users, violates the policy regardless of whether
@@ -133,6 +133,20 @@ is what keeps a programmatic program on the right side of that line.
   on that page, using generic example values only in documentation,
   never fabricated ratings, reviews, or business details in
   production schema.
+
+### Accessibility
+
+- Template accessibility multiplies: one inaccessible template ships
+  thousands of inaccessible pages — audit the template, not just a
+  sample page.
+- Generated titles, headings, and alt text are unique and descriptive
+  per page; templated alt text that repeats a filename is a failure.
+- Data-driven tables use header cells; data-driven images carry
+  generated alt text from the record, not a generic string.
+- Validate the template with axe and a keyboard-only pass before
+  generating at scale.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -236,6 +250,7 @@ average loaf price of ${{avg_loaf_price_usd}} (data as of
       fabricated ratings or reviews.
 - [ ] Staged launch is monitored in Search Console before the next
       batch ships.
+- [ ] Accessibility: template audited with axe and keyboard; generated alt text unique per page.
 
 ## Expected Deliverables
 

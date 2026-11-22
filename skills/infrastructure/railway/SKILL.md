@@ -65,13 +65,14 @@ reproducible, observable, and reversible.
 - A Dockerfile only when the default builder cannot detect the project;
   Railway's Railpack builder auto-detects most frameworks, and a
   `Dockerfile` at the service root is used automatically when present.
-- Current stable as of 2026-11-20. Railway's `railway.json` and
+- Railway's `railway.json` and
   `railway.toml` config-as-code files are deprecated in favor of
   Infrastructure as Code (a `.railway/railway.ts` file managed with
   `railway config plan` and `railway config apply`); do not start a new
   service on the old files. Existing Config as Code files stop being
   read on 2026-12-01 (hard cutoff); migrate with
   `railway config migrate` before then.
+- Version range: none — Railway is a managed platform with no pinned version.
 
 ## Official Documentation
 
@@ -232,53 +233,27 @@ reproducible, observable, and reversible.
 
 Install the CLI, authenticate, and deploy the current directory:
 
-```bash
-npm install -g @railway/cli
-railway login
-railway init        # or: railway link, for an existing project
-railway up          # build and deploy the current directory
-railway logs        # stream runtime logs
-```
+  [scripts/deploy.sh](./scripts/deploy.sh).
 
 Add a managed PostgreSQL database and reference it from the app:
 
-```bash
-railway add --database postgres
-railway variables set 'DATABASE_URL=${{Postgres.DATABASE_URL}}'
-```
+  [scripts/add-postgres.sh](./scripts/add-postgres.sh).
 
 Set a variable and run a one-off command with the service's environment:
 
-```bash
-railway variables set NODE_ENV=production
-railway run npm run db:migrate
-```
+  [scripts/set-variable.sh](./scripts/set-variable.sh).
 
 Check what is linked, then redeploy the same code after a variable change:
 
-```bash
-railway status
-railway redeploy
-```
+  [scripts/redeploy.sh](./scripts/redeploy.sh).
 
 A minimal `Dockerfile` that respects Railway's injected port:
 
-```dockerfile
-FROM node:26-alpine
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci --omit=dev
-COPY . .
-USER node
-CMD ["node", "index.js"]
-```
+  [examples/Dockerfile](./examples/Dockerfile).
 
 The application reads the port at runtime (never hardcode it):
 
-```js
-const port = process.env.PORT || 3000;
-app.listen(port, "0.0.0.0");
-```
+  [examples/read-port.js](./examples/read-port.js).
 
 ## Validation Checklist
 

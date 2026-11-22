@@ -1,0 +1,10 @@
+{
+  "type": "https://api.example.com/problems/validation-error",
+  "title": "Validation failed",
+  "status": 400,
+  "detail": "The request body failed validation.",
+  "requestId": "req_01J8X7Q2K9",
+  "errors": [
+    { "field": "totalMinor", "message": "must be a positive integer" }
+  ]
+}

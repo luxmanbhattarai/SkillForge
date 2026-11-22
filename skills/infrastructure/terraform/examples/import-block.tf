@@ -1,0 +1,8 @@
+import {
+  to = aws_s3_bucket.existing
+  id = "my-existing-bucket"
+}
+
+resource "aws_s3_bucket" "existing" {
+  bucket = "my-existing-bucket"
+}

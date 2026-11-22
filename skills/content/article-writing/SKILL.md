@@ -79,6 +79,23 @@ need to stand up to scrutiny — not quick opinion posts.
 - Length serves the topic: cover the subject fully, then stop. Padding to hit a word count is a defect.
 - Use the active voice by default and address the reader directly ("you") unless the brief says otherwise.
 
+### Accessibility
+
+- Structure is an outline: one `h1`, headings in order, no skipped
+  levels — screen readers navigate by headings.
+- Every image gets alt text that conveys its meaning in context;
+  decorative images are marked decorative.
+- Link text describes its destination ("the 2026 Search Console
+  guide", not "click here").
+- Plain language: short sentences, defined terms, no jargon without an
+  explanation — readability is cognitive accessibility.
+- Color is never the only way information is conveyed in charts,
+  callouts, or emphasis.
+- Data in charts also appears as text or a table a screen reader can
+  follow.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Lead with the answer, then explain: readers decide in seconds whether to stay.
@@ -142,6 +159,7 @@ A 1:1:1 ratio means equal weights of starter, flour, and water...
 - [ ] Paragraphs are short and each carries one idea.
 - [ ] The conclusion summarizes takeaways and gives a next step.
 - [ ] The draft passes the `editorial-review` checklist.
+- [ ] Accessibility: heading outline valid; alt text present; link text descriptive.
 
 ## Expected Deliverables
 

@@ -79,6 +79,20 @@ READMEs, and treats every code sample as a promise that must work.
 - Screenshots and diagrams are used only where text cannot convey the information, and every image has alt text.
 - Docs carry a last-updated date and the product version they describe.
 
+### Accessibility
+
+- Docs are structured documents: one `h1`, headings in order, no
+  skipped levels — readers navigate by headings.
+- Diagrams and screenshots get alt text or a text description of what
+  they show; code samples are real text, never screenshots of code.
+- Link text describes its destination; tables use header cells.
+- Plain language: define terms on first use, keep sentences short, put
+  the outcome first.
+- Examples work without color: do not mark required / optional or
+  old / new by color alone.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Write the shortest doc that lets the reader succeed; completeness means covering the task, not every detail.
@@ -154,6 +168,7 @@ This guide installs the TypeScript compiler and verifies it runs.
 - [ ] Versions are stated with a date or verified against an official source.
 - [ ] The doc carries a last-updated date and product version.
 - [ ] A second person or a fresh run-through has followed the steps.
+- [ ] Accessibility: heading outline valid; diagrams have text descriptions; code is real text.
 
 ## Expected Deliverables
 

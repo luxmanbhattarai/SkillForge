@@ -79,6 +79,18 @@ and structuring the result for both readers and search engines.
 - The FAQ does not duplicate content that already exists on the site; it links to it.
 - Questions are ordered by topic or reader journey, not randomly.
 
+### Accessibility
+
+- FAQ pages use real structure: headings per question, answers as
+  text — not an image of text or a single wall of prose.
+- Expandable answers (accordions) use a real button with
+  `aria-expanded` and keyboard support; the answer stays reachable by
+  assistive technology whether open or closed.
+- Questions are phrased as users ask them; answers start with the
+  direct answer.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Keep the FAQ focused: 5-10 questions per page section, and a dedicated FAQ page for more.
@@ -163,6 +175,7 @@ Example FAQPage structured data (generic example values):
 - [ ] Answers do not duplicate content that exists elsewhere on the site.
 - [ ] FAQ structured data, if used, matches the visible Q&A exactly.
 - [ ] The FAQ passes the `editorial-review` checklist.
+- [ ] Accessibility: accordions keyboard-operable with aria-expanded; answers are real text.
 
 ## Expected Deliverables
 

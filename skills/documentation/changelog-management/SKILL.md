@@ -114,6 +114,20 @@ to do anything?" without making the reader dig through commit history.
   correction in the next release rather than editing the old entry
   silently.
 
+### Accessibility
+
+- Docs are structured documents: one `h1`, headings in order, no
+  skipped levels — readers navigate by headings.
+- Diagrams and screenshots get alt text or a text description of what
+  they show; code samples are real text, never screenshots of code.
+- Link text describes its destination; tables use header cells.
+- Plain language: define terms on first use, keep sentences short, put
+  the outcome first.
+- Examples work without color: do not mark required / optional or
+  old / new by color alone.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Update the changelog in the same pull request as the change, so
@@ -217,6 +231,7 @@ A breaking-change entry with a migration path:
       the changes.
 - [ ] Dates are in ISO format (YYYY-MM-DD).
 - [ ] The changelog was reviewed as part of the release.
+- [ ] Accessibility: heading outline valid; diagrams have text descriptions; code is real text.
 
 ## Expected Deliverables
 

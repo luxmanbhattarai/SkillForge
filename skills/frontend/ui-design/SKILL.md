@@ -113,6 +113,22 @@ interface at a glance or have to work to use it.
 - Consistency: the same element looks and behaves the same everywhere;
   a new pattern needs a reason to exist.
 
+### Accessibility
+
+- Design the accessible states, not just the default: focus, hover,
+  active, disabled, error — each visibly distinguishable.
+- Contrast is a design constraint: text 4.5:1, large text and UI
+  components 3:1, checked on the actual palette.
+- Target size: 24x24 CSS px minimum, 44x44 preferred; do not design
+  controls smaller than a fingertip.
+- Never encode meaning by color alone; pair color with text, icon,
+  or shape.
+- Specify keyboard order and focus behavior in the design handoff,
+  not as an afterthought.
+- Motion in the design has a reduced-motion alternative.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Design for the content, not the container: a layout that only works
@@ -230,6 +246,7 @@ last, with generous spacing and a single accent:
 - [ ] The design works at the smallest and largest target widths with
       real content.
 - [ ] A fresh reviewer can complete the screen's main task without help.
+- [ ] Accessibility: focus/hover/disabled/error states designed; contrast and target sizes meet thresholds.
 
 ## Expected Deliverables
 

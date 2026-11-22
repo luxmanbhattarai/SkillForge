@@ -80,6 +80,19 @@ output is a decision-making artifact, not a pile of article ideas.
 - Plans must account for maintenance: budget at least 20% of publishing capacity for updates and refreshes.
 - Never plan content around a topic the site cannot cover with genuine expertise or first-hand experience.
 
+### Accessibility
+
+- Put accessibility requirements in the brief, the review checklist,
+  and the program standards: alt text, heading structure, link text,
+  plain language.
+- Every workflow stage owns a check: drafting (structure), editing
+  (plain language), publishing (alt text, links, tables).
+- Templates carry the requirements so they do not depend on memory.
+- Audit published content periodically: missing alt text, skipped
+  heading levels, and "click here" links regress silently.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Start narrow: one cluster done well beats five clusters half-finished, especially on a new site.
@@ -139,6 +152,7 @@ Example calendar row:
 - [ ] The calendar has dates, owners, and a sustainable cadence.
 - [ ] Governance rules cover approval, review, update, and retirement.
 - [ ] At least 20% of capacity is reserved for maintenance.
+- [ ] Accessibility: brief/checklist/standards include alt text, headings, link text, plain language.
 
 ## Expected Deliverables
 

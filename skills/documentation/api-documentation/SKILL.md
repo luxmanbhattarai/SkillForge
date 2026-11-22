@@ -119,6 +119,20 @@ that actually run — so developers do not have to guess or ask.
 - Do not document endpoints that do not exist, parameters that are
   not accepted, or behavior that is not implemented.
 
+### Accessibility
+
+- Docs are structured documents: one `h1`, headings in order, no
+  skipped levels — readers navigate by headings.
+- Diagrams and screenshots get alt text or a text description of what
+  they show; code samples are real text, never screenshots of code.
+- Link text describes its destination; tables use header cells.
+- Plain language: define terms on first use, keep sentences short, put
+  the outcome first.
+- Examples work without color: do not mark required / optional or
+  old / new by color alone.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Put the getting-started guide first and keep it short: a developer
@@ -235,6 +249,7 @@ An error response example:
 - [ ] The API version the docs describe is stated.
 - [ ] A reviewer who has not used the API made a successful call
       following only the docs.
+- [ ] Accessibility: heading outline valid; diagrams have text descriptions; code is real text.
 
 ## Expected Deliverables
 

@@ -1,0 +1,17 @@
+Page                     Clicks     Impressions  Diagnosis
+                         16-mo trend 16-mo trend
+-----------------------  ----------- ------------ ----------------
+/sourdough-wont-rise/    falling     falling      Stale facts; top
+                                                 results now cover
+                                                 cold-kitchen fixes
+                                                 this page lacks.
+/best-bread-flour/       falling     steady       SERP now shows a
+                                                 shopping unit above
+                                                 organic results.
+/starter-ratio/          falling     falling      Cannibalization:
+                                                 /sourdough-starter/
+                                                 also ranks for
+                                                 "starter ratio".
+/bread-history/          falling     falling      Demand decline;
+                                                 Trends shows the
+                                                 topic fading.

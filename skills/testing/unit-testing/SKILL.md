@@ -108,6 +108,19 @@ reports into regression tests.
 - Use factories or small builders for test data instead of copying large
   literal objects into every test.
 
+### Accessibility
+
+- For components, test the accessible contract: roles, names, and states
+  via `getByRole` and accessible queries — not implementation details.
+- Run `jest-axe` (or the framework axe integration) on component output
+  where the stack supports it.
+- Test keyboard interaction: Enter / Space activation, arrow-key
+  navigation, Escape to close.
+- Test error and empty states: they are announced and identify the
+  problem.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Write the test before the fix when debugging: a failing test proves
@@ -212,6 +225,7 @@ describe("isExpired", () => {
 - [ ] The full unit suite runs in under a minute (or is split sensibly).
 - [ ] Coverage of the touched files is reported; uncovered branches are
       intentional and noted.
+- [ ] Accessibility: component tests assert roles/names; keyboard interaction tested.
 
 ## Expected Deliverables
 

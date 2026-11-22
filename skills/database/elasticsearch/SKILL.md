@@ -45,7 +45,7 @@ This skill guides the design, implementation, and operation of Elasticsearch for
 
 - A running Elasticsearch cluster (self-managed or Elastic Cloud) with access to the REST API, plus Kibana or the API for inspection.
 - Knowledge of the documents to be indexed, the queries they must answer, and the expected index size and growth.
-- Supported versions as of 2026-11-20: Elasticsearch 9.5 is the current stable line (9.5.6, released 2026-11-02); 9.4.9 is also maintained. Elasticsearch 8.19 (8.19.25) is the long-support 8.x line, supported until 2027-07-15. Version 9.6.0 is announced but not yet released — do not target it. Elasticsearch 9 requires a fresh look at the breaking changes from 8.x; check the release notes before upgrading.
+- Supported versions: Elasticsearch 9.5 is the current stable line (9.5.6, released 2026-11-02); 9.4.9 is also maintained. Elasticsearch 8.19 (8.19.25) is the long-support 8.x line, supported until 2027-07-15. Version 9.6.0 is announced but not yet released — do not target it. Elasticsearch 9 requires a fresh look at the breaking changes from 8.x; check the release notes before upgrading.
 - Licensing: since 2024 the source is available under a choice of AGPLv3, SSPL, or the Elastic License v2; the default distribution ships under the Elastic License. Confirm the license implications for your use case before adopting.
 - Elasticsearch 9 ships with security on by default (TLS between nodes, authentication required) and a bundled JDK; do not disable the defaults to "simplify" a deployment.
 

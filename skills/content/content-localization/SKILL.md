@@ -82,6 +82,21 @@ which audience.
 - Legal and regulatory content (privacy, terms, health, finance) is reviewed by someone qualified in the target jurisdiction, not just translated.
 - The localized version records which source version it was translated from, so drift can be detected.
 
+### Accessibility
+
+- Translated content keeps its structure: headings, lists, and alt text
+  are translated too, not left in the source language.
+- The page declares its language (`lang`) and passages in another
+  language are marked, so screen readers pronounce them correctly.
+- Right-to-left layouts mirror navigation and reading order; do not
+  hardcode left / right positioning.
+- Translated alt text conveys the image meaning in the target language
+  and culture, not a literal word-for-word rendering.
+- Dates, numbers, and currencies follow the locale and are marked up
+  as text, not images, so screen readers announce them correctly.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Localize the pages that matter most to the new market first, not the whole site at once.
@@ -140,6 +155,7 @@ starter" localized as "masa madre" per glossary.
 - [ ] The glossary is updated with new terms.
 - [ ] The source version the localization was based on is recorded.
 - [ ] `editorial-review` has passed on the localized version.
+- [ ] Accessibility: lang declared; alt text and structure translated; RTL mirrored.
 
 ## Expected Deliverables
 

@@ -113,6 +113,19 @@ that represents the page well wherever it lands.
 - Do not assume all platforms render previews identically. Test the
   shared link on each platform that matters.
 
+### Accessibility
+
+- Share buttons are real buttons with accessible names ("Share on X",
+  not an icon alone) and keyboard support.
+- Copy-link feedback is announced (`role="status"`), not shown by
+  color change alone.
+- Share dialogs trap focus while open and return focus to the trigger
+  on close.
+- Preview metadata includes `og:image:alt` so the shared preview is
+  described for screen-reader users.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Put share buttons where readers finish the content (end of an
@@ -232,6 +245,7 @@ async function copyLink(url, button) {
 - [ ] Share buttons are accessible (real links or buttons with
       names).
 - [ ] No third-party share widget scripts are loaded.
+- [ ] Accessibility: share buttons named and keyboard-operable; copy feedback announced.
 
 ## Expected Deliverables
 

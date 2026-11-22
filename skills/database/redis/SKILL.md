@@ -46,7 +46,7 @@ This skill guides the design, implementation, and operation of Redis as an in-me
 - A running Redis server or a managed Redis service, plus `redis-cli` and a client library for the application language (redis-py, node-redis, Jedis/Lettuce, go-redis).
 - Knowledge of the access patterns the workload needs: which keys are read, written, and scanned, and how often.
 - An estimate of dataset size and growth, so memory limits and the persistence strategy can be set honestly.
-- Supported versions as of 2026-11-20: Redis 8.10 is the current stable line (8.10.3, released 2026-10-26); 8.8 and 8.6 also receive patches. Redis 8.0 reaches end of support on 2026-12-01 — do not start new deployments on 8.0. Redis 7.2 and earlier are BSD-licensed; 7.4 is available only under RSALv2/SSPLv1; Redis 8 and later are tri-licensed (RSALv2, SSPLv1, or AGPLv3, your choice).
+- Supported versions: Redis 8.10 is the current stable line (8.10.3, released 2026-10-26); 8.8 and 8.6 also receive patches. Redis 8.0 reaches end of support on 2026-12-01 — do not start new deployments on 8.0. Redis 7.2 and earlier are BSD-licensed; 7.4 is available only under RSALv2/SSPLv1; Redis 8 and later are tri-licensed (RSALv2, SSPLv1, or AGPLv3, your choice).
 - Redis 8 folds the former Redis Stack modules into the server: JSON, Time Series, probabilistic data types, the Query Engine, and Vector Sets are built in. The Array data structure and the `INCREX` rate limiter arrived in 8.8; compact hashes and the `BACKUP` command arrived in 8.10.
 
 ## Official Documentation

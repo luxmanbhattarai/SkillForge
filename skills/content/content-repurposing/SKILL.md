@@ -77,6 +77,20 @@ will serve.
 - The source piece is linked from repurposed pieces where the channel allows links.
 - No piece is published on a channel whose audience would not care about it; repurposing is not spam.
 
+### Accessibility
+
+- Every target format carries its own accessibility: video gets
+  captions and a transcript, audio gets a transcript, images get alt
+  text.
+- Repurposed charts and infographics include the underlying data as
+  text or a table.
+- Social posts do not rely on text baked into images; the post text
+  carries the message.
+- Links in repurposed content describe their destination in each
+  format context.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Start with the best-performing source pieces; repurposing is leverage, and leverage works best on strength.
@@ -142,6 +156,7 @@ Full guide: [link to article]
 - [ ] Attribution and licenses are respected for third-party material.
 - [ ] The source is linked where the channel allows it.
 - [ ] Publish dates are spread out, not all at once.
+- [ ] Accessibility: each format carries its alternative (captions, transcript, alt text).
 
 ## Expected Deliverables
 

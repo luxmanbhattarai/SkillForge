@@ -52,7 +52,7 @@ from scaffolding with `npm create nuxt` to a production deployment.
 - Node.js ^22.22.3, ^24.15.0, or >=26.0.0 (the `nuxt` package
   engines range; the Nuxt CLI v4 floor of v22.21/v24.11 is lower, so
   do not rely on it). Do not assume a minor version.
-- A Nuxt 4 project (current major line as of 2026-11-20; latest
+- A Nuxt 4 project (current major line; latest
   release 4.6.4, a security release from 2026-11-02 — upgrade
   promptly if the project is behind it). Nuxt 4 runs on Vite 8 and
   Vue Router 5. Nuxt 3 reached end of life on 2026-07-31 and
@@ -105,37 +105,8 @@ from scaffolding with `npm create nuxt` to a production deployment.
   `app/composables/`, `app/middleware/`, `app/plugins/`); server
   code lives in `server/`. Do not import Vue app code into
   `server/` or server-only code into the app.
-- Routing: file-based, powered by Vue Router 5. Dynamic segments
-  use `[id].vue`; optional parameters use `[[id]].vue`; catch-all
-  routes use `[...slug].vue`. Nested routes render through
-  `<NuxtPage />` in a parent page. Layouts are selected with
-  `definePageMeta({ layout: 'name' })`; the default layout is
-  `app/layouts/default.vue`. Route middleware (named in
-  `app/middleware/`, or inline with `definePageMeta`) runs before
-  navigation; global middleware must be registered in
-  `nuxt.config.ts`.
-- Data fetching: `useFetch(url, options)` wraps `useAsyncData`
-  and `$fetch`, generates a request key, and transfers the server
-  result to the client in the payload so hydration does not
-  refetch. `useAsyncData(key, handler)` gives fine-grained control
-  with an explicit key. `await` the call when navigation must wait
-  for the data; omit it (or use `lazy: true`) and handle `status`
-  and `error` yourself when it must not block. `data`, `status`,
-  and `error` are refs. Use `createUseFetch` for a custom
-  `useFetch` with preset defaults (base URL, auth headers).
-  Never call `useFetch`/`useAsyncData` conditionally or outside
-  `setup`, a plugin, or route middleware.
-- Server routes: each file under `server/api/` exports a default
-  handler defined with `defineHandler` imported from `nuxt/server`
-  (introduced in Nuxt 4.6; `defineEventHandler` is an alias).
-  Handlers may return JSON, a `Promise`, or a `Response`. Suffix
-  file names with the method (`.get.ts`, `.post.ts`) to restrict
-  it. Dynamic parameters use `[name].ts` and are read with
-  `getRouterParam` (or `getRouterParams` for all of them) imported
-  from `nuxt/server`. Shared server helpers live in
-  `server/utils/` and are auto-imported; import from anywhere in
-  `server/` with the `#server` alias. `server/middleware/` runs
-  on every request before routes.
+- Routing, data, and server — file-based routing, `useFetch`, and
+  server routes: see [references/routing-data-server.md](./references/routing-data-server.md).
 - Rendering: SSR is the default. Prerender with `routeRules` or
   `nuxt generate` for static output; disable SSR globally with
   `ssr: false` only for a pure SPA. Hybrid rendering via
@@ -146,15 +117,8 @@ from scaffolding with `npm create nuxt` to a production deployment.
   state, use Pinia through the official `@pinia/nuxt` module.
   Never keep per-request state in module scope — it leaks between
   requests on the server.
-- Modules: add functionality through Nuxt modules in the `modules`
-  array of `nuxt.config.ts` (for example `@nuxt/image` for
-  optimized images, `@nuxt/content` for file-based content,
-  `@pinia/nuxt` for Pinia). Prefer maintained official modules
-  over hand-rolled equivalents.
-- Configuration: `runtimeConfig` holds secrets (server-only) and
-  `runtimeConfig.public` holds values safe for the browser. Never
-  put a secret under `public`. `appConfig` holds public,
-  build-time configuration.
+- Extending Nuxt — modules and `runtimeConfig`: see
+  [references/extending-nuxt.md](./references/extending-nuxt.md).
 - SEO: `useHead` for titles and meta, `useSeoMeta` /
   `useServerSeoMeta` for Open Graph and Twitter cards.
 - Types: Nuxt generates types for auto-imports, routes, and
@@ -287,61 +251,15 @@ from scaffolding with `npm create nuxt` to a production deployment.
 
 Page with data fetching and SEO metadata:
 
-```vue
-<!-- app/pages/articles/[id].vue -->
-<script setup lang="ts">
-const route = useRoute();
-const id = computed(() => route.params.id as string);
-
-const { data: article, status, error } = await useFetch(
-  () => `/api/articles/${id.value}`,
-  { pick: ['title', 'body'] },
-);
-
-useSeoMeta({
-  title: () => article.value?.title ?? 'Article',
-  description: () => article.value?.body?.slice(0, 160) ?? '',
-});
-</script>
-
-<template>
-  <article v-if="status === 'success' && article">
-    <h1>{{ article.title }}</h1>
-    <p>{{ article.body }}</p>
-  </article>
-  <p v-else-if="status === 'pending'">Loading article…</p>
-  <p v-else role="alert">Could not load this article.</p>
-</template>
-```
+  [examples/page-with-seo.vue](./examples/page-with-seo.vue).
 
 Server API route with validation:
 
-```ts
-// server/api/articles/[id].get.ts
-import { defineHandler, getRouterParam, createError } from 'nuxt/server';
-
-export default defineHandler((event) => {
-  const id = getRouterParam(event, 'id');
-  if (!id || !/^[a-z0-9-]+$/i.test(id)) {
-    throw createError({ status: 400, statusText: 'Invalid article id.' });
-  }
-  // Load the article from the database here; 404 when missing.
-  return { id, title: 'Example article', body: 'Example body.' };
-});
-```
+  [examples/api-route.ts](./examples/api-route.ts).
 
 Route rules for hybrid rendering:
 
-```ts
-// nuxt.config.ts
-export default defineNuxtConfig({
-  routeRules: {
-    '/': { prerender: true },
-    '/articles/**': { swr: 3600 },
-    '/admin/**': { ssr: true, headers: { 'Cache-Control': 'private, no-store' } },
-  },
-});
-```
+  [examples/route-rules.ts](./examples/route-rules.ts).
 
 ## Validation Checklist
 

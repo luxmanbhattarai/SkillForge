@@ -134,18 +134,8 @@ at each resource — see `authorization` and `rbac` for the concepts.
   data from the session token over maintaining a synced user table when
   the data fits (Clerk's guidance: metadata up to roughly 1.2 KB belongs
   in the token; larger app data belongs in the app's own database).
-- Metadata has three buckets with different trust levels: `publicMetadata`
-  (readable by the client, writable server-side only — the right place for
-  roles), `privateMetadata` (server-side only), and `unsafeMetadata`
-  (editable by the user from the client — never use it for authorization).
-- Machine access (API keys, machine-to-machine tokens, OAuth tokens) is
-  checked with the same `auth()` call using the `acceptsToken` option;
-  do not build a parallel API-key system unless the product needs one.
-- Webhook handlers verify the Svix signature on the raw body before doing
-  anything else, using Clerk's documented `verifyWebhook` helper (from
-  `@clerk/backend/webhooks`, which reads the signing secret from
-  `CLERK_WEBHOOK_SIGNING_SECRET`) or the `svix` package. Unverified
-  webhook requests are rejected.
+- Metadata trust, machine access, and webhook verification: see
+  [references/metadata-machine-webhooks.md](./references/metadata-machine-webhooks.md).
 
 ### Testing Strategy
 
@@ -167,6 +157,25 @@ at each resource — see `authorization` and `rbac` for the concepts.
   development instance): each enabled method works, and machine
   access via `acceptsToken` accepts valid tokens and rejects
   tokens with insufficient scope.
+
+### Accessibility
+
+- Labels are visible and associated (`for` / `id`); use `autocomplete`
+  tokens (`email`, `current-password`, `new-password`).
+- Errors identify the field in text, explain the fix, and are
+  announced (`role="alert"` or `aria-describedby`); do not rely on
+  color alone.
+- Password fields offer a show / hide toggle that is itself a labeled
+  button; do not block paste.
+- Sign-in must not require a cognitive function test (WCAG 3.3.8): no
+  memorizing codes across steps, no puzzle CAPTCHA without an
+  accessible alternative.
+- Keep the flow keyboard-only operable, including social sign-in
+  buttons and any dialogs.
+- On error, move focus to the error summary or the first invalid
+  field.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -250,59 +259,19 @@ at each resource — see `authorization` and `rbac` for the concepts.
 Middleware (Next.js 16 — name the file `proxy.ts`; on Next.js 15 and below
 use `middleware.ts` with identical contents):
 
-```ts
-// proxy.ts
-import { clerkMiddleware } from "@clerk/nextjs/server";
-
-export default clerkMiddleware();
-```
+  [examples/proxy-middleware.ts](./examples/proxy-middleware.ts).
 
 Protecting a page and checking an organization role:
 
-```tsx
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
-
-export default async function AdminPage() {
-  const { orgId, orgRole } = await auth();
-  if (!orgId) redirect("/select-org");
-  if (orgRole !== "org:admin") redirect("/unauthorized");
-  return <main>Organization admin area</main>;
-}
-```
+  [examples/protect-page.tsx](./examples/protect-page.tsx).
 
 Or, with the `protect()` primitive:
 
-```ts
-import { auth } from "@clerk/nextjs/server";
-
-export default async function BillingPage() {
-  const { userId } = await auth.protect();
-  // userId is guaranteed present here; unauthenticated users are redirected.
-  return <main>Billing for {userId}</main>;
-}
-```
+  [examples/protect-primitive.ts](./examples/protect-primitive.ts).
 
 Webhook handler with signature verification:
 
-```ts
-// app/api/webhooks/clerk/route.ts
-import { verifyWebhook } from "@clerk/backend/webhooks";
-
-export async function POST(request: Request) {
-  let event;
-  try {
-    // verifyWebhook reads the signing secret from
-    // CLERK_WEBHOOK_SIGNING_SECRET; it throws on a bad signature.
-    event = await verifyWebhook(request);
-  } catch {
-    return new Response("Invalid signature", { status: 400 });
-  }
-  // event.type is e.g. "user.created"; upsert by event.data.id and
-  // dedupe on the Svix message id — deliveries are at-least-once.
-  return new Response("ok");
-}
-```
+  [examples/webhook-handler.ts](./examples/webhook-handler.ts).
 
 ## Validation Checklist
 
@@ -314,6 +283,7 @@ export async function POST(request: Request) {
 - [ ] Webhook endpoint verifies the Svix signature and upserts idempotently (if syncing).
 - [ ] Sign-up, sign-in, sign-out, organization, and webhook flows verified end to end.
 - [ ] Pricing tier confirmed on clerk.com for the features the app uses.
+- [ ] Accessibility: labels and autocomplete set; errors announced and identify the field.
 
 ## Expected Deliverables
 

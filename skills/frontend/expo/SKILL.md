@@ -56,7 +56,7 @@ a store release.
 - Node.js 22.13 or newer on the 22 line, 24.3 or newer on the 24
   line, or Node.js 26 and later (the SDK 58 tooling requirement;
   odd-numbered releases such as 23 and 25 are not supported).
-- An Expo project on SDK 58 (current stable as of 2026-11-20,
+- An Expo project on SDK 58 (current stable,
   released 2026-10-15; built for iOS 27 and ships React Native
   0.88). SDK 57 (React Native 0.86) is the previous release. New
   projects are created with `npx create-expo-app@latest`, which
@@ -116,7 +116,7 @@ a store release.
 
 ## Implementation Standards
 
-- SDK 58 is the current stable line as of 2026-11-20. Keep the
+- SDK 58 is the current stable line. Keep the
   project on the latest SDK; upgrade one SDK at a time with
   `npx expo install expo@^<sdk>.0.0 --fix` followed by
   `npx expo-doctor@latest`, and read the changelog's breaking
@@ -147,20 +147,8 @@ a store release.
   with a small store; server state with TanStack Query or `fetch`
   in a typed API layer. The same rules as `react-native` apply —
   every screen handles loading, empty, error, and offline states.
-- Updates: EAS Update delivers JavaScript and asset changes
-  over the air. Native code, SDK, or config-plugin changes always
-  need a new build. Publish updates to a channel that matches the
-  build's channel, and sign updates with code signing so only your
-  updates can be applied.
-- Push notifications: use `expo-notifications`. Remote push
-  requires a development build (it is unavailable in Expo Go on
-  Android from SDK 53). Register the Expo push token with
-  `getExpoPushTokenAsync({ projectId })`, send it to your server,
-  and send through the Expo Push Service or directly via FCM/APNs.
-- Web output: choose the `web.output` target deliberately —
-  `single` (SPA), `static` (prerendered pages), or `server`
-  (per-request rendering with API routes) — and deploy the matching
-  artifacts.
+- Distribution — EAS Update, push notifications, and web output: see
+  [references/distribution.md](./references/distribution.md).
 
 ### Accessibility
 
@@ -295,62 +283,15 @@ a store release.
 
 Root layout with a stack navigator (Expo Router):
 
-```tsx
-// app/_layout.tsx
-import { Stack } from 'expo-router';
-
-export default function RootLayout() {
-  return (
-    <Stack>
-      <Stack.Screen name="index" options={{ title: 'Articles' }} />
-      <Stack.Screen name="article/[id]" options={{ title: 'Article' }} />
-    </Stack>
-  );
-}
-```
+  [examples/root-layout.tsx](./examples/root-layout.tsx).
 
 Registering for push notifications (development build required):
 
-```tsx
-import { useEffect, useState } from 'react';
-import Constants from 'expo-constants';
-import * as Notifications from 'expo-notifications';
-
-async function registerForPushNotifications(): Promise<string | null> {
-  const { status } = await Notifications.requestPermissionsAsync();
-  if (status !== 'granted') return null;
-  const projectId = Constants.expoConfig?.extra?.eas?.projectId;
-  if (typeof projectId !== 'string') return null;
-  const token = await Notifications.getExpoPushTokenAsync({ projectId });
-  return token.data;
-}
-
-export function usePushToken() {
-  const [token, setToken] = useState<string | null>(null);
-  useEffect(() => {
-    registerForPushNotifications().then(setToken);
-  }, []);
-  return token;
-}
-```
+  [examples/push-registration.tsx](./examples/push-registration.tsx).
 
 EAS build profiles (`eas.json`):
 
-```json
-{
-  "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
-    "preview": {
-      "distribution": "internal",
-      "android": { "buildType": "apk" }
-    },
-    "production": {}
-  }
-}
-```
+  [assets/eas.json](./assets/eas.json).
 
 ## Validation Checklist
 

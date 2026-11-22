@@ -57,6 +57,7 @@ efficiently.
   difference between public and private buckets.
 - For S3-compatible access from outside Workers: R2 API tokens created in
   the Cloudflare dashboard.
+- Version range: Wrangler 4.x.
 
 ## Official Documentation
 

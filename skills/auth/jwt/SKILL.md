@@ -44,6 +44,7 @@ hand-rolled crypto.
 - A signing key: an asymmetric key pair (RS256/ES256) for tokens verified by other parties, or a strong secret (HS256) only when issuer and verifier are the same service.
 - Agreement on the claims the token carries and the issuer/audience values.
 - HTTPS on every environment that transmits tokens.
+- Version range: jose 6.x (the API shown also works on 5.x).
 
 ## Official Documentation
 

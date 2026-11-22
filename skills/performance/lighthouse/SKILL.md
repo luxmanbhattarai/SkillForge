@@ -113,6 +113,20 @@ ranked by estimated impact — not a single number treated as a verdict.
 - Use `--output=json --output-path=./report.json` for machine-readable
   results, and `--view` to open the HTML report locally.
 
+### Accessibility
+
+- Read the accessibility category alongside performance: Lighthouse and
+  PageSpeed Insights report both, and a fast page can still exclude
+  people.
+- Layout stability is an accessibility issue: CLS disorients
+  screen-magnifier users and causes mis-taps.
+- Automated scores are a floor, not a pass: pair the audit with a
+  keyboard-only and screen-reader spot check.
+- Report accessibility findings with the same severity as performance
+  findings; do not bury them in an appendix.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Audit the pages users actually visit, starting with the highest-
@@ -195,6 +209,7 @@ npx lighthouse https://example.com/ \
 - [ ] Each recommended fix is mapped to a concrete change or skill.
 - [ ] Re-audit after fixes uses the same conditions as the baseline.
 - [ ] Reports are archived (JSON at minimum) with date and conditions.
+- [ ] Accessibility: audit reports the accessibility category with the same severity as performance.
 
 ## Expected Deliverables
 

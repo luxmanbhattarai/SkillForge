@@ -47,7 +47,7 @@ down where everyone can find them.
 
 - Agreement on the project's language, package manager, and runtime
   (for example, Node.js 26 LTS, TypeScript 7.x, pnpm 12).
-- Supported versions (verified 2026-11-20): Node.js 26 LTS is the
+- Supported versions: Node.js 26 LTS is the
   current line (Active LTS since 2026-10-28, supported to 2029-04-30);
   Node.js 24 is in maintenance until 2028-04-30; Node.js 20 and 25 are
   end-of-life and must not be targeted. TypeScript 7.x is current

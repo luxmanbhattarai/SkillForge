@@ -48,11 +48,11 @@ to write content for.
 
 ## Prerequisites
 
-- Node.js 24 LTS or 26 LTS installed (26 is the newest LTS line as
-  of 2026-11-20; 24 and 22 remain in LTS). Astro 7 requires Node.js
+- Node.js 24 LTS or 26 LTS installed (26 is the newest LTS line;
+  24 and 22 remain in LTS). Astro 7 requires Node.js
   22.12 or newer at minimum (22.23.4 or newer from Astro 7.4.2);
   check the local, CI, and hosting Node versions before upgrading.
-- An Astro 7 project (current major line as of 2026-11-20, released
+- An Astro 7 project (current major line, released
   2026-06-22, built on Vite 8 and Zod 4); do not assume a minor
   version. New projects are created with `npm create astro@latest`;
   upgrade existing projects with `npx @astrojs/upgrade`.
@@ -74,6 +74,11 @@ to write content for.
 - [Upgrade to Astro v6](https://docs.astro.build/en/guides/upgrade-to/v6/) —
   Zod 4, the `astro/zod` import, and the removal of legacy content
   collections support.
+- [View transitions](https://docs.astro.build/en/guides/view-transitions/) —
+  the `<ClientRouter />` component and native cross-document
+  transitions.
+- [Routing reference](https://docs.astro.build/en/reference/routing-reference/) —
+  `prerender` defaults per output mode and `getStaticPaths()`.
 
 ## Required Workflow
 
@@ -98,7 +103,7 @@ to write content for.
 
 ## Implementation Standards
 
-- Astro 7 is the current major line as of 2026-11-20. Follow the docs at
+- Astro 7 is the current major line. Follow the docs at
   docs.astro.build for the current APIs; do not rely on pre-5.0 patterns
   such as the legacy content collections configuration file location
   (`src/content/config.ts` without loaders — legacy support was
@@ -126,13 +131,31 @@ to write content for.
   global styles in `src/styles/` imported from a layout.
 - Images: use the `Image` component from `astro:assets` for local images
   so they are resized and converted at build time; always provide `alt`.
-- Links: use plain `a` tags with relative paths for internal navigation;
-  Astro has no router component.
+- Links: use plain `a` tags with relative paths for internal navigation.
+  For client-side routing with view transitions, add `<ClientRouter />`
+  from `astro:transitions` to the shared `<head>` or layout (added in
+  Astro 5.0); native cross-document view transitions are the
+  no-JavaScript alternative. Opt a link out with `data-astro-reload`.
 - Environment variables: server-only variables are accessed in
   frontmatter; `PUBLIC_` prefixed variables are exposed to client code
   and must never hold secrets.
 - Configuration: `astro.config.mjs` holds integrations, the output mode,
   and the site URL; keep it minimal and commented.
+
+### Accessibility
+
+- Rendered HTML carries the semantics: real landmarks, one `h1`,
+  headings in order — check the shipped HTML, not just the source.
+- Route changes move focus to the new page heading or announce the
+  change via a live region; never leave focus on a removed link.
+- Hydration and islands must not break keyboard or screen-reader
+  behavior: the interactive page matches the server HTML.
+- Forms, dialogs, and menus use native elements or accessible
+  primitives; custom widgets follow the ARIA Authoring Practices Guide.
+- Images get `alt` (empty when decorative); loading states announce
+  via `role="status"`.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -146,8 +169,12 @@ to write content for.
 - Keep frontmatter scripts small: move data logic into `src/lib/` modules
   and import them.
 - Use `Astro.props` with a TypeScript interface for component props.
-- Prefer `getStaticPaths()` with `prerender` for dynamic routes in static
-  output so every page is built at build time.
+- Dynamic routes in static output must export `getStaticPaths()` — it
+  enumerates every page to build at build time (the build fails without
+  it). `prerender` is already `true` by default in static output, so
+  there is nothing to add; it only becomes a choice in server mode,
+  where `export const prerender = true` opts a route into prerendering
+  and `prerender = false` renders it on demand (needs an adapter).
 - Add an RSS feed and a sitemap with the official `@astrojs/rss` and
   `@astrojs/sitemap` integrations for content sites.
 - Set the `site` option in `astro.config.mjs` so canonical URLs, the
@@ -203,76 +230,13 @@ to write content for.
 
 A layout component with slots and props:
 
-```astro
----
-// src/layouts/BaseLayout.astro
-interface Props {
-  title: string;
-  description?: string;
-}
-
-const { title, description = 'Example Site' } = Astro.props;
----
-
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-  </head>
-  <body>
-    <slot />
-  </body>
-</html>
-```
+  [examples/base-layout.astro](./examples/base-layout.astro).
 
 A content collection schema and a listing page:
 
-```ts
-// src/content.config.ts
-import { defineCollection } from 'astro:content';
-import { z } from 'astro/zod';
-import { glob } from 'astro/loaders';
+  [examples/content-collection.ts](./examples/content-collection.ts).
 
-const blog = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    pubDate: z.coerce.date(),
-    draft: z.boolean().default(false),
-  }),
-});
-
-export const collections = { blog };
-```
-
-```astro
----
-// src/pages/blog/index.astro
-import { getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-
-const posts = (await getCollection('blog'))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
----
-
-<BaseLayout title="Blog">
-  <main>
-    <h1>Blog</h1>
-    <ul>
-      {posts.map((post) => (
-        <li>
-          <a href={`/blog/${post.id}/`}>{post.data.title}</a>
-        </li>
-      ))}
-    </ul>
-  </main>
-</BaseLayout>
-```
+  [examples/blog-listing.astro](./examples/blog-listing.astro).
 
 ## Validation Checklist
 
@@ -284,6 +248,7 @@ const posts = (await getCollection('blog'))
 - [ ] Images use the `Image` component with `alt` attributes.
 - [ ] The `site` URL is set in `astro.config.mjs`.
 - [ ] No secrets appear in client code or `PUBLIC_` variables.
+- [ ] Accessibility: route changes move focus or announce; shipped HTML has landmarks and one h1.
 
 ## Expected Deliverables
 

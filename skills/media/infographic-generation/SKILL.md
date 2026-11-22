@@ -108,6 +108,19 @@ accurate labels, and exporting a readable, accessible graphic.
   are unreadable there, simplify the graphic rather than shrinking
   the type further.
 
+### Accessibility
+
+- Every infographic ships with a text alternative: the underlying data
+  as a table or a written summary of the findings.
+- Do not encode data by color alone: label series directly, use
+  patterns or shapes alongside color.
+- Text in the graphic is legible at the published size, with 4.5:1
+  contrast; body copy lives in the page, not in the image.
+- Reading order is logical: a screen-reader user following the text
+  alternative gets the same story in the same order.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Show the data, then the interpretation: the chart first, the
@@ -213,6 +226,7 @@ Source line: present on the graphic
 - [ ] The graphic is readable at its real display size, including on
       a phone.
 - [ ] A text alternative or data table accompanies the graphic.
+- [ ] Accessibility: data available as text/table; series not encoded by color alone.
 
 ## Expected Deliverables
 

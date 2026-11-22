@@ -56,6 +56,7 @@ but a plan — what to fix first, why, and how to prove it worked.
 - Tools: a Chromium browser with DevTools, Node.js 24 LTS for CLI
   tooling (Node.js 26 is the newer LTS since October 2026), and
   access to PageSpeed Insights.
+- Version range: Node.js 24 LTS or 26 LTS for CLI tooling.
 
 ## Official Documentation
 
@@ -111,6 +112,20 @@ but a plan — what to fix first, why, and how to prove it worked.
   figure.
 - The report must include a verification plan: what to re-measure,
   when, and what counts as success.
+
+### Accessibility
+
+- Read the accessibility category alongside performance: Lighthouse and
+  PageSpeed Insights report both, and a fast page can still exclude
+  people.
+- Layout stability is an accessibility issue: CLS disorients
+  screen-magnifier users and causes mis-taps.
+- Automated scores are a floor, not a pass: pair the audit with a
+  keyboard-only and screen-reader spot check.
+- Report accessibility findings with the same severity as performance
+  findings; do not bury them in an appendix.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -203,6 +218,7 @@ A recommendation entry with impact, effort, and verification:
 - [ ] The report includes a verification plan and a re-audit date.
 - [ ] No invented numbers appear in the report; uncertain impacts
       are labeled as estimates.
+- [ ] Accessibility: audit reports the accessibility category with the same severity as performance.
 
 ## Expected Deliverables
 

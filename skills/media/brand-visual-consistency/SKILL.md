@@ -119,6 +119,19 @@ work, and auditing existing visuals for drift.
 - Changes to the system are recorded with a date and a reason, and
   templates are updated at the same time as the rules.
 
+### Accessibility
+
+- The brand palette meets contrast: text colors pair with backgrounds
+  at 4.5:1, UI colors at 3:1 — check every pairing the system allows.
+- Typography stays legible: minimum sizes, sufficient line height, and
+  no all-caps blocks of body text.
+- The brand system provides an accessible alternative for every
+  color-coded meaning (icons, labels, patterns).
+- Document the accessible pairings in the brand guide so teams do not
+  invent low-contrast combinations.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Write the visual rules down in one short document; a system that
@@ -226,6 +239,7 @@ with the standard cream background and the hero template.
 - [ ] On-image text meets the contrast and readability rules.
 - [ ] Existing visuals were audited and drift was fixed in priority order.
 - [ ] Templates and assets live in one shared, access-controlled location.
+- [ ] Accessibility: palette pairings meet 4.5:1/3:1; meanings have non-color alternatives.
 
 ## Expected Deliverables
 

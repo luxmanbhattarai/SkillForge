@@ -112,6 +112,20 @@ understand what the project does — without asking anyone.
 - Do not include credentials, tokens, internal URLs, or personal
   data in the README.
 
+### Accessibility
+
+- Docs are structured documents: one `h1`, headings in order, no
+  skipped levels — readers navigate by headings.
+- Diagrams and screenshots get alt text or a text description of what
+  they show; code samples are real text, never screenshots of code.
+- Link text describes its destination; tables use header cells.
+- Plain language: define terms on first use, keep sentences short, put
+  the outcome first.
+- Examples work without color: do not mark required / optional or
+  old / new by color alone.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Lead with the value, not the technology: what the reader can do
@@ -236,6 +250,7 @@ versioned, and ready to install into any project.
       it.
 - [ ] A stranger reviewed the README and could follow the quick
       start.
+- [ ] Accessibility: heading outline valid; diagrams have text descriptions; code is real text.
 
 ## Expected Deliverables
 

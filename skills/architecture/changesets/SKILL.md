@@ -49,7 +49,7 @@ and prereleases, and CI release automation.
 
 - A JavaScript/TypeScript repository with workspaces configured (pnpm, npm, or Yarn workspaces) for a monorepo; a single-package repository needs no workspace setup.
 - The packages to be released are identified; private packages (apps, internal tooling) are marked `"private": true` so Changesets skips them.
-- Supported versions (verified 2026-11-20): Changesets v3 is current
+- Supported versions: Changesets v3 is current
   (`@changesets/cli` 3.0.3; v3 released August 2026). CLI v2 is on a
   maintenance branch; new projects must use v3. CLI v3 pairs with
   `changesets/action` v2; CLI v2 pairs with `changesets/action` v1 —

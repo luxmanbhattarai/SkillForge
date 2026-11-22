@@ -1,0 +1,17 @@
+services:
+  - type: worker
+    name: my-worker
+    runtime: node
+    buildCommand: npm ci && npm run build
+    startCommand: npm run worker
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: my-db
+          property: connectionString
+  - type: cron
+    name: nightly-report
+    runtime: node
+    schedule: "0 2 * * *"
+    buildCommand: npm ci
+    startCommand: npm run report

@@ -76,8 +76,6 @@ responsibilities separate.
 - [Google Search Central](https://developers.google.com/search) — Google's guidance on sitemaps and robots.txt.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — crawlability baseline.
 
-Guidance current as of 2026-11-20.
-
 ## Required Workflow
 
 1. Inventory URLs. Generate the full list of canonical, indexable

@@ -78,6 +78,25 @@ maintained library, with secure password handling and sensible defaults.
 - Sessions follow the `session-management` skill: httpOnly, secure, sameSite cookies.
 - Normalize emails to lowercase and trim whitespace before lookup and storage.
 
+### Accessibility
+
+- Labels are visible and associated (`for` / `id`); use `autocomplete`
+  tokens (`email`, `current-password`, `new-password`).
+- Errors identify the field in text, explain the fix, and are
+  announced (`role="alert"` or `aria-describedby`); do not rely on
+  color alone.
+- Password fields offer a show / hide toggle that is itself a labeled
+  button; do not block paste.
+- Sign-in must not require a cognitive function test (WCAG 3.3.8): no
+  memorizing codes across steps, no puzzle CAPTCHA without an
+  accessible alternative.
+- Keep the flow keyboard-only operable, including social sign-in
+  buttons and any dialogs.
+- On error, move focus to the error summary or the first invalid
+  field.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Offer social sign-in alongside email/password to reduce password friction, using the `oauth` skill.
@@ -145,6 +164,7 @@ async function signIn(email: string, password: string) {
 - [ ] Protected routes and API endpoints reject unauthenticated requests server-side.
 - [ ] Sessions invalidated on password change; reset and verification tokens single-use and expiring.
 - [ ] Rate limiting in place on sign-in, sign-up, and reset endpoints.
+- [ ] Accessibility: labels and autocomplete set; errors announced and identify the field.
 
 ## Expected Deliverables
 

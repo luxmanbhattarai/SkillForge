@@ -83,6 +83,23 @@ the most important of the four aspects.
 - No fake reviews, testimonials, credentials, or endorsements. No invented expert quotes.
 - Content is reviewed by a qualified person for YMYL topics; the reviewer's name and role are shown where the site does so.
 
+### Accessibility
+
+- Structure is an outline: one `h1`, headings in order, no skipped
+  levels — screen readers navigate by headings.
+- Every image gets alt text that conveys its meaning in context;
+  decorative images are marked decorative.
+- Link text describes its destination ("the 2026 Search Console
+  guide", not "click here").
+- Plain language: short sentences, defined terms, no jargon without an
+  explanation — readability is cognitive accessibility.
+- Color is never the only way information is conveyed in charts,
+  callouts, or emphasis.
+- Data in charts also appears as text or a table a screen reader can
+  follow.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Show experience through detail: the specific tool used, the exact mistake made, the result observed. Vague claims of experience convince no one.
@@ -143,6 +160,7 @@ will change these numbers — measure yours before picking a schedule.
 - [ ] The site has an about page and contact information.
 - [ ] No fabricated experience, credentials, reviews, or quotes appear.
 - [ ] `fact-checking` and `editorial-review` have both passed.
+- [ ] Accessibility: heading outline valid; alt text present; link text descriptive.
 
 ## Expected Deliverables
 

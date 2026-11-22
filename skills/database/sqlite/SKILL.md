@@ -44,7 +44,7 @@ This skill covers practical SQLite use: getting the most from a single-file embe
 - A decision about where the database file lives (a writable directory, backed up with the application data).
 - Basic SQL knowledge: `SELECT`, `JOIN`, `GROUP BY`, and transactions.
 - Awareness of the deployment model: one process, one file, one writer at a time.
-- Current release as of 2026-11-20: SQLite 3.51.3 (13 March 2026), which fixes a WAL-reset corruption bug — use 3.51.3 or later. Check the version actually in use with `SELECT sqlite_version();`, because the version bundled with a language runtime or operating system is often older than the latest release. `STRICT` tables need SQLite 3.37.0 or later.
+- Current release: SQLite 3.51.3 (13 March 2026), which fixes a WAL-reset corruption bug — use 3.51.3 or later. Check the version actually in use with `SELECT sqlite_version();`, because the version bundled with a language runtime or operating system is often older than the latest release. `STRICT` tables need SQLite 3.37.0 or later.
 
 ## Official Documentation
 

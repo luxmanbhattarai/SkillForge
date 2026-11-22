@@ -62,8 +62,6 @@ it identifies problems and the fixes that address them.
 - [Schema.org](https://schema.org/) — the vocabulary reference for
   structured data checks.
 
-Guidance current as of 2026-11-20.
-
 ## Required Workflow
 
 1. Confirm scope: domain(s) included, sample size for large sites, and
@@ -103,6 +101,18 @@ Guidance current as of 2026-11-20.
   estimate.
 - Group duplicate findings by root cause (one template bug, not 500 page
   findings) and count affected pages.
+
+### Accessibility
+
+- The audit includes accessibility checks: missing alt text, skipped
+  heading levels, duplicate titles, "click here" links, and missing
+  `lang`.
+- Report accessibility findings as defects with severity, not asides —
+  they affect real users, not just rankings.
+- Pair the crawl with a manual spot check: automated crawlers cannot
+  judge alt-text quality or heading logic.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -187,6 +197,7 @@ Example severity summary table:
 - [ ] Findings are grouped by root cause, not duplicated per page.
 - [ ] The report states the crawl date, sample size, and method.
 - [ ] No ranking outcome is promised anywhere in the report.
+- [ ] Accessibility: audit covers alt text, headings, titles, link text, and lang.
 
 ## Expected Deliverables
 

@@ -78,6 +78,23 @@ and honest.
 - No new claims are introduced during editing. If an edit needs a fact, it is flagged for `fact-checking`.
 - Contractions, direct address, and short sentences are used where the voice allows them.
 
+### Accessibility
+
+- Structure is an outline: one `h1`, headings in order, no skipped
+  levels — screen readers navigate by headings.
+- Every image gets alt text that conveys its meaning in context;
+  decorative images are marked decorative.
+- Link text describes its destination ("the 2026 Search Console
+  guide", not "click here").
+- Plain language: short sentences, defined terms, no jargon without an
+  explanation — readability is cognitive accessibility.
+- Color is never the only way information is conveyed in charts,
+  callouts, or emphasis.
+- Data in charts also appears as text or a table a screen reader can
+  follow.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Edit in passes: one pass for structure, one for sentences, one for voice. Trying to fix everything at once misses things.
@@ -140,6 +157,7 @@ Example filler checklist to search for:
 - [ ] No new claims were introduced during editing.
 - [ ] Facts and meaning are unchanged from the original draft.
 - [ ] The draft reads naturally aloud.
+- [ ] Accessibility: heading outline valid; alt text present; link text descriptive.
 
 ## Expected Deliverables
 

@@ -124,6 +124,20 @@ largest contentful paint, and where no image causes layout shift.
   generate optimized variants at build time or on demand, never by
   overwriting the originals.
 
+### Accessibility
+
+- Lazy-loaded images keep their `alt` text and dimensions: reserve
+  space to avoid layout shift, and do not lazy-load images above the
+  fold.
+- Responsive images serve the right size without hiding content from
+  keyboard or screen-reader users.
+- Compression must not make text in images illegible; check the
+  smallest served size.
+- Decorative images stay decorative after optimization: empty `alt`,
+  no filename leaking as a name.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Automate the pipeline (build plugin or image CDN) instead of
@@ -232,6 +246,7 @@ for (const width of [800, 1200, 1600]) {
       no image causes layout shift.
 - [ ] Compressed output was visually checked for quality loss.
 - [ ] Page weight and LCP improved against the baseline.
+- [ ] Accessibility: lazy images keep alt text and reserved space; text stays legible.
 
 ## Expected Deliverables
 

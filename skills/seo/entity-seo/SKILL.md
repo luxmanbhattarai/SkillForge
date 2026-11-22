@@ -70,7 +70,7 @@ ranking, or an AI citation.
 - Access to Search Console to check rich result reports.
 - Optional: a Google Cloud API key for the Knowledge Graph Search
   API, for entity lookups.
-- Conceptual skill; current stable as of 2026-11-20 — applies to the
+- Conceptual skill; version range: none — applies to the
   current Google structured-data guidance; see the Organization and
   ProfilePage documentation linked in Official Documentation;
   schema.org vocabulary versions are not pinned.
@@ -105,7 +105,7 @@ ranking, or an AI citation.
   console; Bing's Webmaster Guidelines advise using clear,
   consistent entity names with no ambiguous references.
 
-Guidance current as of 2026-11-20. Google publishes no guide called
+Google publishes no guide called
 "entity SEO" — the term is industry shorthand. This skill labels
 each claim: **(Verified)** means stated in the official sources
 above; **(Heuristic)** means industry interpretation or practice
@@ -155,37 +155,12 @@ panel, a ranking, or a citation in an AI answer.
 
 ## Implementation Standards
 
-- **(Verified)** One canonical page per entity. Google's
-  Organization guidance recommends placing organization markup on
-  the home page or a single page that describes the organization,
-  such as the About page; `ProfilePage` requires the page's
-  primary focus to be a single person or organization affiliated
-  with the site.
-- **(Verified)** Use the most specific schema.org subtype that
-  matches the organization (Google's Organization guidance), and
-  the correct type for a profile page — `Person` or
-  `Organization` — defaulting to `Person` only when the type is
-  genuinely unknown.
-- **(Verified)** Markup describes only content visible on the
-  page. Never mark up facts, profiles, or relationships that a
-  visitor cannot see on that page.
-- **(Verified)** `sameAs` lists pages that identify the same
-  entity. Google states it can make general use of the `sameAs`
-  property; a `sameAs` link to a different entity is misinformation.
-- **(Heuristic)** Keep the entity's name, spelling, and key facts
-  identical across the site, social profiles, and listings. No
-  search engine publishes a rule requiring this, but consistent
-  identity is the mechanism by which disambiguation works in
-  practice.
-- **(Heuristic)** Link entity mentions to the canonical entity
-  page. Internal links with descriptive anchors help readers and
-  crawlers connect mentions to the entity; no search engine
-  guarantees this changes how the entity is understood.
-- Never invent credentials, affiliations, awards, or identifiers
-  for an entity. Every fact in markup must be true and checkable.
-- Never claim a knowledge panel, a ranking improvement, or an AI
-  citation as the outcome of entity work. Google does not
-  guarantee any of these.
+- Verified markup rules — one canonical page, specific subtypes,
+  visible-only markup, `sameAs`: see
+  [references/markup-rules.md](./references/markup-rules.md).
+- Heuristic and honesty rules — consistent naming, linked mentions,
+  no invented credentials or promised outcomes: see
+  [references/entity-hygiene.md](./references/entity-hygiene.md).
 
 ### Testing Strategy
 
@@ -279,47 +254,16 @@ panel, a ranking, or a citation in an AI answer.
 
 Organization markup for a fictional bakery (visible facts only):
 
-```json
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://example-baking.com/#organization",
-  "name": "Acme Baking Co.",
-  "url": "https://example-baking.com/",
-  "logo": "https://example-baking.com/logo.png",
-  "description": "A Portland bakery specializing in naturally leavened bread.",
-  "sameAs": [
-    "https://www.wikidata.org/wiki/Q12345678",
-    "https://www.linkedin.com/company/acme-baking-co"
-  ]
-}
-```
+  [examples/organization-markup.json](./examples/organization-markup.json).
 
 Author page markup (`ProfilePage` with `mainEntity`):
 
-```json
-{
-  "@context": "https://schema.org",
-  "@type": "ProfilePage",
-  "mainEntity": {
-    "@type": "Person",
-    "name": "Jane Baker",
-    "jobTitle": "Head Baker",
-    "description": "Jane Baker has baked professionally for 12 years and leads recipe development at Acme Baking Co.",
-    "sameAs": ["https://www.linkedin.com/in/janebaker"]
-  }
-}
-```
+  [examples/author-page-markup.json](./examples/author-page-markup.json).
 
 Knowledge Graph Search API lookup (key from the environment, never
 hardcoded):
 
-```bash
-curl -s -G "https://kgsearch.googleapis.com/v1/entities:search" \
-  --data-urlencode "query=Acme Baking Co." \
-  --data-urlencode "limit=5" \
-  --data-urlencode "key=$KG_API_KEY"
-```
+  [scripts/kg-search.sh](./scripts/kg-search.sh).
 
 The response lists matching entities with `@id` (for example
 `kg:/m/0dl567`), `name`, `description`, and `resultScore`. A match

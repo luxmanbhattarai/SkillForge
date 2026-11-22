@@ -1,0 +1,9 @@
+/sourdough-guide (pillar: introduces sourdough baking, summarizes
+  each subtopic, links to every spoke)
+  ├── /sourdough-starter
+  ├── /sourdough-feeding-schedule
+  ├── /sourdough-wont-rise
+  ├── /best-bread-flour
+  └── /sourdough-schedule
+Each spoke links back to /sourdough-guide and to 1-2 sibling
+spokes where the reader would naturally go next.

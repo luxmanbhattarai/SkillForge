@@ -47,13 +47,14 @@ that the team can modify freely instead of a black-box dependency.
 
 ## Prerequisites
 
-- Node.js 24 LTS or 26 LTS installed (26 is the newest LTS line as
-  of 2026-11-20; 24 and 22 remain in LTS).
+- Node.js 24 LTS or 26 LTS installed (26 is the newest LTS line;
+  24 and 22 remain in LTS).
 - A React project with Tailwind CSS v4 configured (see `tailwind-css`).
 - The `cn` utility (a `clsx` + `tailwind-merge` helper) in the project,
   normally created by the CLI during setup.
 - A CSS variables-based theme: shadcn/ui components style themselves from
   CSS variables defined in the project's stylesheet.
+- Version range: Tailwind CSS v4; Node.js 24 LTS or 26 LTS.
 
 ## Official Documentation
 
@@ -121,6 +122,23 @@ that the team can modify freely instead of a black-box dependency.
   style choices the CLI needs for future `add` commands.
 - When a component's Radix dependency updates, check the shadcn/ui docs
   for changes to the component source before upgrading.
+
+### Accessibility
+
+- Radix primitives ship accessible behavior (focus traps, keyboard
+  interaction, ARIA); do not strip it by overriding roles or removing
+  event handlers.
+- Every component keeps an accessible name: visible label text where
+  possible, `aria-label` only for icon-only controls.
+- Composition must not break semantics: a `Dialog` trigger stays a
+  `button`; do not wrap interactive components in another interactive
+  element.
+- Theming keeps contrast: custom colors still meet 4.5:1 for text and
+  3:1 for UI components.
+- Verify the composed result with keyboard only and a screen reader;
+  primitives do not guarantee the composition is accessible.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -192,78 +210,18 @@ that the team can modify freely instead of a black-box dependency.
 
 Adding components with the CLI:
 
-```bash
-npx shadcn@latest init
-npx shadcn@latest add button dialog input label
-```
+  [scripts/add-components.sh](./scripts/add-components.sh).
 
 Composing a dialog:
 
-```tsx
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-
-export function DeleteAccountDialog() {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="destructive">Delete account</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Delete your account?</DialogTitle>
-          <DialogDescription>
-            This permanently removes your account and its data.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="flex justify-end gap-2">
-          <Button variant="outline">Cancel</Button>
-          <Button variant="destructive">Delete</Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
-```
+  [examples/composing-dialog.tsx](./examples/composing-dialog.tsx).
 
 Theme variables in the global stylesheet (Tailwind v4). The `@theme
 inline` block is required: it is what turns the CSS variables into
 Tailwind utilities such as `bg-background`. Without it the variables
 exist but no component utility is generated:
 
-```css
-@import "tailwindcss";
-
-@custom-variant dark (&:where(.dark, .dark *));
-
-:root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --primary: oklch(0.488 0.243 264.376);
-  --primary-foreground: oklch(0.985 0 0);
-  --radius: 0.5rem;
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --radius-lg: var(--radius);
-}
-```
+  [examples/theme-variables.css](./examples/theme-variables.css).
 
 ## Validation Checklist
 
@@ -274,6 +232,7 @@ exist but no component utility is generated:
 - [ ] Forms show accessible labels and error messages.
 - [ ] No `dangerouslySetInnerHTML` is used on untrusted content.
 - [ ] Only components the project uses are present in `components/ui/`.
+- [ ] Accessibility: primitives keyboard/ARIA behavior intact; contrast meets thresholds.
 
 ## Expected Deliverables
 

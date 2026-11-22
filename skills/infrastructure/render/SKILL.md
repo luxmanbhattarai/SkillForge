@@ -71,7 +71,7 @@ setup that deploys with zero downtime and rolls back in one step.
 - For Blueprints: a `render.yaml` file at the repository root (or a
   custom path configured during Blueprint setup).
 - For Blueprint validation: the Render CLI, version 2.7.0 or later.
-- Current stable as of 2026-11-20. Plan-dependent features (persistent
+- Plan-dependent features (persistent
   disks, pre-deploy commands, autoscaling, preview environments) are
   noted where they apply; confirm the current plan details on Render's
   pricing page before relying on them.
@@ -139,21 +139,11 @@ setup that deploys with zero downtime and rolls back in one step.
 - One service per deployable thing: web service, background worker,
   and cron job are separate services, sharing configuration through
   environment groups.
-- Keep the Blueprint as the source of truth when one exists: services,
-  databases, and environment groups are declared in `render.yaml`, and
-  dashboard-only drift is avoided.
-- Treat the service filesystem as ephemeral: anything that must survive
-  a deploy lives on a persistent disk or in a managed datastore.
-- Use the internal database URL for services in the same region; the
-  external URL traverses the public internet and is slower.
-- Make database migrations backward compatible: a rollback reuses the
-  target deploy's build artifact, start command, and environment
-  variables, but it does not revert the database, the disk, or
-  environment group values.
-- Handle `SIGTERM` gracefully: after traffic switches to the new
-  instance, the old instance has 60 seconds before Render sends
-  `SIGTERM`, then a configurable shutdown delay (default 30 seconds,
-  up to 300 seconds via `maxShutdownDelaySeconds`) before `SIGKILL`.
+- Blueprint basics — Blueprint as source of truth, ephemeral
+  filesystem, internal database URL: see
+  [references/blueprint-basics.md](./references/blueprint-basics.md).
+- Deploy safety — backward-compatible migrations, graceful shutdown:
+  see [references/deploy-safety.md](./references/deploy-safety.md).
 - Keep secrets out of `render.yaml` and out of the repository; use
   `sync: false` for values filled in from the dashboard.
 - Use preview environments for pull requests when the project uses
@@ -262,66 +252,19 @@ setup that deploys with zero downtime and rolls back in one step.
 
 A minimal `render.yaml` Blueprint for a web service and a database:
 
-```yaml
-services:
-  - type: web
-    name: my-app
-    runtime: node
-    buildCommand: npm ci && npm run build
-    startCommand: npm start
-    preDeployCommand: npm run db:migrate
-    healthCheckPath: /health
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: DATABASE_URL
-        fromDatabase:
-          name: my-db
-          property: connectionString
-      - key: SESSION_SECRET
-        generateValue: true
-      - key: STRIPE_API_KEY
-        sync: false
-
-databases:
-  - name: my-db
-    plan: starter
-```
+  [assets/render.yaml](./assets/render.yaml).
 
 Validate the Blueprint before syncing:
 
-```bash
-render blueprints validate render.yaml
-```
+  [scripts/validate-blueprint.sh](./scripts/validate-blueprint.sh).
 
 A cron job and a background worker in the same Blueprint:
 
-```yaml
-services:
-  - type: worker
-    name: my-worker
-    runtime: node
-    buildCommand: npm ci && npm run build
-    startCommand: npm run worker
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: my-db
-          property: connectionString
-  - type: cron
-    name: nightly-report
-    runtime: node
-    schedule: "0 2 * * *"
-    buildCommand: npm ci
-    startCommand: npm run report
-```
+  [assets/render-cron-worker.yaml](./assets/render-cron-worker.yaml).
 
 Verify a deployment after it goes live:
 
-```bash
-curl -s -o /dev/null -w "%{http_code}\n" https://my-app.onrender.com/health
-curl -s -o /dev/null -w "%{http_code}\n" https://my-app.onrender.com/
-```
+  [scripts/verify-deploy.sh](./scripts/verify-deploy.sh).
 
 ## Validation Checklist
 

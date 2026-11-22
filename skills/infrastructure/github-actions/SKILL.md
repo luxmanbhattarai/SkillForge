@@ -52,13 +52,13 @@ request. It produces workflows that are fast, secure, and easy to debug.
   Settings, Secrets and variables, Actions.
 - Familiarity with YAML and the repository's build and test commands.
 - Action versions: `actions/checkout` and `actions/setup-node` are at
-  v7 as of 2026-11-20 (setup-node v7.1.0). v5 moved both actions to
+  v7 (setup-node v7.1.0). v5 moved both actions to
   the Node.js 24 runtime (self-hosted runners need v2.327.1 or
   later); v6 changed checkout's credential storage and limited
   setup-node's automatic caching to npm; v7 migrated internals to
   ESM. v4 and earlier run on Node.js 20, which reached end-of-life
   on 30 April 2026 — do not use v4 for new workflows.
-- Node.js 22, 24, and 26 are the active LTS lines as of 2026-11-20;
+- Node.js 22, 24, and 26 are the active LTS lines;
   use one of them for `node-version`.
 
 ## Official Documentation

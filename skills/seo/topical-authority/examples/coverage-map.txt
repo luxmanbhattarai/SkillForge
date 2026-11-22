@@ -1,0 +1,12 @@
+Topic: sourdough baking for home bakers
+Boundary: home baking with natural leavening. Excludes commercial
+  bakery operations and gluten-free baking.
+
+Subtopic                     Status    Target page
+---------------------------  --------  ---------------------------
+Making a starter             covered   /sourdough-starter
+Feeding schedules            covered   /sourdough-feeding-schedule
+Starter troubleshooting      partial   /sourdough-wont-rise
+Flour choice                 missing   (planned) /best-bread-flour
+Baking schedules             missing   (planned) /sourdough-schedule
+Storing baked bread          missing   (planned) /storing-sourdough

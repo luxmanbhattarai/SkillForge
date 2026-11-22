@@ -54,7 +54,7 @@ production deployment.
 - Node.js v22.17 or newer, Vite v8.0.12 or newer, Svelte v5.56.4
   or newer, and TypeScript v6 for typed projects (the minimums
   SvelteKit 3 requires). Do not assume a minor version.
-- A SvelteKit 3 project (current major line as of 2026-11-20,
+- A SvelteKit 3 project (current major line,
   released 2026-10-01). SvelteKit 2.x still receives patches but is
   not the target for new work; new projects are created with
   `npx sv create <name>`.
@@ -136,33 +136,17 @@ production deployment.
   submitted values; use `redirect` after a successful mutation
   where a fresh page state is wanted. Always validate and
   sanitize `request.formData()` on the server.
-- Endpoints: `+server.js` files export HTTP method handlers
-  (`GET`, `POST`, ...) returning a `Response`. Keep them thin and
-  validate every request.
-- Page options: export `prerender`, `ssr`, and `csr` from
-  `+page.js` / `+layout.js` to control rendering per route. SSR is
-  the default; prerender content pages; disable `ssr` only for
-  pages that cannot render on the server.
+- Endpoints and page rendering options (`+server.js`,
+  `prerender`/`ssr`/`csr`): see
+  [references/endpoints-and-rendering.md](./references/endpoints-and-rendering.md).
 - State: Svelte 5 runes — `$state` for reactive state, `$derived`
   for computed values, `$effect` for synchronization with external
   systems. Shared state lives in a `.svelte.js` / `.svelte.ts`
   module exporting rune-backed state. Do not use Svelte 4 stores
   (`writable`, `$app/stores`) in new code; `$app/stores` was
   removed in SvelteKit 3.
-- Environment variables: private values via `$env/static/private`
-  or `$env/dynamic/private` (server-only files only); public
-  values via `$env/static/public` or `$env/dynamic/public` with a
-  `PUBLIC_` prefix. Never import a private env module into client
-  code — the build fails, and for good reason.
-- Hooks: `src/hooks.server.js` (`handle`, `handleError`,
-  `handleFetch`) and `src/hooks.client.js` for cross-cutting
-  request behavior. Keep auth checks in hooks or server `load`,
-  not in components.
-- Adapters: pick one official adapter for the target —
-  `@sveltejs/adapter-auto` for zero-config platforms,
-  `adapter-node` for a Node server, `adapter-static` for SSG,
-  `adapter-vercel`, `adapter-netlify`, `adapter-cloudflare`, or
-  `adapter-bun`. Only one adapter is active at a time.
+- Server and deployment — environment variables, hooks, adapters:
+  see [references/server-and-deployment.md](./references/server-and-deployment.md).
 
 ### Accessibility
 
@@ -290,73 +274,15 @@ production deployment.
 
 Server `load` with typed data and error handling:
 
-```ts
-// src/routes/blog/[slug]/+page.server.ts
-import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
-
-export const load: PageServerLoad = async ({ params, fetch }) => {
-  const response = await fetch(`/api/posts/${params.slug}`);
-  if (response.status === 404) error(404, 'Post not found');
-  if (!response.ok) error(500, 'Failed to load post');
-  const post = await response.json();
-  return { post };
-};
-```
+  [examples/server-load.ts](./examples/server-load.ts).
 
 Page component with runes and a form action:
 
-```svelte
-<!-- src/routes/newsletter/+page.svelte -->
-<script lang="ts">
-  import { enhance } from '$app/forms';
-  import type { PageProps } from './$types';
-
-  let { form }: PageProps = $props();
-  let subscribed = $state(false);
-</script>
-
-{#if form?.success}
-  <p role="status">Subscribed — check your inbox.</p>
-{:else}
-  <form
-    method="POST"
-    use:enhance={() => {
-      return async ({ update }) => {
-        await update();
-        subscribed = true;
-      };
-    }}
-  >
-    <label for="email">Email address</label>
-    <input id="email" name="email" type="email" required />
-    {#if form?.error}
-      <p role="alert">{form.error}</p>
-    {/if}
-    <button type="submit" disabled={subscribed}>Subscribe</button>
-  </form>
-{/if}
-```
+  [examples/page-runes.svelte](./examples/page-runes.svelte).
 
 Form action with server-side validation:
 
-```ts
-// src/routes/newsletter/+page.server.ts
-import { fail } from '@sveltejs/kit';
-import type { Actions } from './$types';
-
-export const actions: Actions = {
-  default: async ({ request }) => {
-    const data = await request.formData();
-    const email = data.get('email');
-    if (typeof email !== 'string' || !email.includes('@')) {
-      return fail(400, { email: '', error: 'Enter a valid email address.' });
-    }
-    // Store the subscription on the server here.
-    return { success: true };
-  },
-};
-```
+  [examples/form-action.ts](./examples/form-action.ts).
 
 ## Validation Checklist
 

@@ -77,6 +77,23 @@ because the page's existing authority is preserved.
 - Internal links are updated to point to current pages; links to retired pages are removed or retargeted.
 - The refresh preserves what works: sections that are accurate and performing stay untouched.
 
+### Accessibility
+
+- Structure is an outline: one `h1`, headings in order, no skipped
+  levels — screen readers navigate by headings.
+- Every image gets alt text that conveys its meaning in context;
+  decorative images are marked decorative.
+- Link text describes its destination ("the 2026 Search Console
+  guide", not "click here").
+- Plain language: short sentences, defined terms, no jargon without an
+  explanation — readability is cognitive accessibility.
+- Color is never the only way information is conveyed in charts,
+  callouts, or emphasis.
+- Data in charts also appears as text or a table a screen reader can
+  follow.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Refresh the pages that matter most first: high-traffic pages, pages that drive conversions, and pages whose facts go stale fastest.
@@ -139,6 +156,7 @@ to the new feeding-schedule page, update meta description.
 - [ ] The URL is unchanged.
 - [ ] The refresh is recorded in the changelog note.
 - [ ] `fact-checking` and `editorial-review` have passed.
+- [ ] Accessibility: heading outline valid; alt text present; link text descriptive.
 
 ## Expected Deliverables
 

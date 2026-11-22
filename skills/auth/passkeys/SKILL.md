@@ -62,7 +62,7 @@ codes, MFA policy), see `mfa`.
   `localhost` is exempt for development).
 - A maintained WebAuthn library for the stack — for TypeScript,
   `@simplewebauthn/server` and `@simplewebauthn/browser` (v13 current
-  as of 2026-11-20; v13 requires Node 22+). Never implement
+ ; v13 requires Node 22+). Never implement
   the ceremonies by hand: challenge handling, CBOR parsing, and signature
   verification have subtle failure modes.
 - A server that can hold short-lived challenges (database row or cache
@@ -143,33 +143,10 @@ codes, MFA policy), see `mfa`.
 - `user.id` is an opaque, random, per-user value (not an email, username,
   or sequential ID). The human-readable `user.name` and `user.displayName`
   are what the authenticator shows.
-- Request discoverable credentials (`residentKey: "required"` in
-  `authenticatorSelection`) for passkey sign-in, so the user does not
-  have to type an identifier first. Request `userVerification: "preferred"`
-  so platform biometrics are used when available without excluding
-  authenticators that cannot verify the user.
-- Attestation conveyance defaults to `"none"` for consumer apps: the
-  server does not need to know which authenticator model created the
-  credential. Verify attestation only when the product genuinely needs
-  authenticator provenance (for example enterprise device policy), and
-  then against a maintained trust store — never invent attestation
-  checks.
-- Store the signature counter and update it on each authentication. Treat
-  a counter that goes backwards as a cloning signal to investigate, not
-  as an automatic lockout: synced (multi-device) passkeys do not
-  increment counters reliably, so the counter is a weak signal for them
-  and a strong one only for single-device credentials.
-- Keep credential records small and queryable by credential ID (indexed)
-  and by user. Store public keys only; the private key never leaves the
-  authenticator, and the server must never ask for it.
-- Related Origin Requests (Level 3) let one passkey work across a small
-  set of related origins (for example `example.com` and `app.example.com`
-  when they are genuinely the same RP). Use them only for origins the
-  product actually controls, and verify the current browser support
-  before relying on them.
-- Sessions after a passkey ceremony follow `session-management`:
-  httpOnly, secure, sameSite cookies, server-side sessions when
-  revocation matters.
+- Credential lifecycle — discoverable credentials, attestation,
+  signature counter, credential storage, Related Origin Requests,
+  and post-ceremony sessions: see
+  [references/credential-lifecycle.md](./references/credential-lifecycle.md).
 
 ### Testing Strategy
 
@@ -185,6 +162,19 @@ codes, MFA policy), see `mfa`.
 - Test the fallback: a device or browser without a platform
   authenticator still reaches a working sign-in path instead of a dead
   end.
+
+### Accessibility
+
+- Registration and sign-in prompts are explained in plain text before
+  the browser dialog appears, so users know what to expect.
+- Always offer a fallback sign-in method; not every device or user can
+  use passkeys.
+- Errors (no passkey found, ceremony cancelled, device unsupported)
+  are explained in text with a next step.
+- Manage-passkey screens list credentials with human-readable names
+  (device, date added) and labeled remove buttons.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -283,76 +273,11 @@ codes, MFA policy), see `mfa`.
 Server: registration options and verification with SimpleWebAuthn
 (TypeScript; challenge storage and the credential store are the app's):
 
-```ts
-import {
-  generateRegistrationOptions,
-  verifyRegistrationResponse,
-  generateAuthenticationOptions,
-  verifyAuthenticationResponse,
-} from "@simplewebauthn/server";
-
-const rpName = "My App";
-const rpID = "example.com"; // Bare domain; credentials are bound to it.
-const origin = `https://${rpID}`;
-
-// Registration step 1: options for the browser to pass to the authenticator.
-const options = await generateRegistrationOptions({
-  rpName,
-  rpID,
-  userID: user.webauthnId, // Opaque random ID, not the email.
-  userName: user.email,
-  userDisplayName: user.name,
-  authenticatorSelection: {
-    residentKey: "required", // Discoverable credential (a passkey).
-    userVerification: "preferred",
-  },
-});
-// Store options.challenge (single-use, short TTL) against the session.
-
-// Registration step 2: verify the authenticator's response.
-const verification = await verifyRegistrationResponse({
-  response: bodyFromClient,
-  expectedChallenge: storedChallenge,
-  expectedOrigin: origin,
-  expectedRPID: rpID,
-});
-if (verification.verified && verification.registrationInfo) {
-  const { credential } = verification.registrationInfo;
-  // Store credential.id, credential.publicKey, credential.counter,
-  // credential.transports, and credentialDeviceType/backup flags.
-}
-```
+  [examples/server-ceremonies.ts](./examples/server-ceremonies.ts).
 
 Browser: registration and authentication with SimpleWebAuthn:
 
-```ts
-import {
-  startRegistration,
-  startAuthentication,
-  browserSupportsWebAuthn,
-} from "@simplewebauthn/browser";
-
-if (!browserSupportsWebAuthn()) {
-  // Show the password (or other) sign-in path instead.
-}
-
-// Registration: fetch options, run the ceremony, post the response.
-const options = await (await fetch("/auth/passkeys/register/options")).json();
-const response = await startRegistration({ optionsJSON: options });
-await fetch("/auth/passkeys/register/verify", {
-  method: "POST",
-  body: JSON.stringify(response),
-});
-
-// Authentication: same shape, with an empty allowCredentials list on the
-// server so the authenticator offers the user's discoverable credentials.
-const authOptions = await (await fetch("/auth/passkeys/login/options")).json();
-const assertion = await startAuthentication({ optionsJSON: authOptions });
-await fetch("/auth/passkeys/login/verify", {
-  method: "POST",
-  body: JSON.stringify(assertion),
-});
-```
+  [examples/browser-webauthn.ts](./examples/browser-webauthn.ts).
 
 ## Validation Checklist
 
@@ -366,6 +291,7 @@ await fetch("/auth/passkeys/login/verify", {
 - [ ] Recovery path defined and tested; it cannot silently bypass passkey security.
 - [ ] `user.id` is opaque; no private key material is ever stored or requested.
 - [ ] Sessions after the ceremony follow `session-management`.
+- [ ] Accessibility: fallback sign-in offered; errors explained with a next step.
 
 ## Expected Deliverables
 

@@ -46,7 +46,7 @@ This skill guides the design, implementation, and operation of OpenSearch for fu
 
 - A running OpenSearch cluster (self-managed, Docker, or Amazon OpenSearch Service) with access to the REST API, plus OpenSearch Dashboards for inspection.
 - Knowledge of the documents to be indexed, the queries they must answer, and the expected index size and growth.
-- Supported versions as of 2026-11-20: OpenSearch 3.10.0 is the current stable release (2026-11-16). OpenSearch 3.6 is the first long-term support (LTS) release, with a minimum of 18 months of support under the OpenSearch Software Foundation's LTS program (announced 2026-04-16). The 2.19 line still receives maintenance patches (2.19.7, 2026-10-20), but new deployments should start on 3.x.
+- Supported versions: OpenSearch 3.10.0 is the current stable release (2026-11-16). OpenSearch 3.6 is the first long-term support (LTS) release, with a minimum of 18 months of support under the OpenSearch Software Foundation's LTS program (announced 2026-04-16). The 2.19 line still receives maintenance patches (2.19.7, 2026-10-20), but new deployments should start on 3.x.
 - Licensing and governance: OpenSearch is Apache 2.0 throughout, including its plugins, with no paid feature tier. Since 2024-09-16 it has been governed by the OpenSearch Software Foundation, a Linux Foundation project.
 - The Security plugin is enabled by default in the standard distribution; the demo certificates it ships with are for local development only and must be replaced before any real deployment.
 

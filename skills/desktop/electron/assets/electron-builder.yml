@@ -1,0 +1,19 @@
+# electron-builder.yml
+appId: com.example.notes
+productName: Notes
+files:
+  - dist/**
+  - main.js
+  - preload.js
+mac:
+  target:
+    - dmg
+    - zip
+  hardenedRuntime: true
+  entitlements: entitlements.mac.plist
+win:
+  target: nsis
+linux:
+  target:
+    - AppImage
+    - deb

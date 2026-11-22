@@ -51,7 +51,7 @@ it makes pages eligible for them and keeps the markup trustworthy.
   Results Test.
 - Knowledge of which rich result features matter for the site's goals
   (articles, products, FAQs, breadcrumbs, videos).
-- Guidance current as of 2026-11-20. Google retires rich result
+- Google retires rich result
   features regularly: FAQ rich results stopped appearing on
   7 May 2026, HowTo was deprecated in September 2023, the sitelinks
   search box was removed in November 2024, and the course info,
@@ -132,7 +132,7 @@ it makes pages eligible for them and keeps the markup trustworthy.
   reinventing or contradicting the existing markup.
 - Watch Google's search gallery for feature changes; a retired feature
   means markup that no longer earns anything and can be simplified.
-  Retired as of 2026-11-20: FAQ and HowTo rich results, the sitelinks
+  Retired: FAQ and HowTo rich results, the sitelinks
   search box, and the course info, estimated salary, learning video,
   special announcement, and vehicle listing features. Breadcrumb rich
   results appear on desktop search results only (since January 2025).

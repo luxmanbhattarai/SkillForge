@@ -45,7 +45,7 @@ This skill covers reliable database backup and recovery: choosing a backup strat
 - A written RPO (how much data loss is acceptable) and RTO (how long recovery may take), agreed with the people who own the service.
 - A storage location for backups that is separate from the database server, with its own access controls.
 - A test environment where restores can be rehearsed without touching production.
-- Supported versions as of 2026-11-20: PostgreSQL 15–19, MySQL 8.4/9.7 LTS, MongoDB 7.0/8.0/8.3/9.0, SQLite 3.51 (see the engine skills for version detail). Keep the backup tool at the same major version as the server: a dump taken by a newer major version may not restore on an older server.
+- Supported versions: PostgreSQL 15–19, MySQL 8.4/9.7 LTS, MongoDB 7.0/8.0/8.3/9.0, SQLite 3.51 (see the engine skills for version detail). Keep the backup tool at the same major version as the server: a dump taken by a newer major version may not restore on an older server.
 
 ## Official Documentation
 

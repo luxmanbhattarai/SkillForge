@@ -76,6 +76,23 @@ finishes and shares.
 - No invented anecdotes, fake testimonials, or fabricated personal experiences.
 - Every post ends with exactly one primary call to action.
 
+### Accessibility
+
+- Structure is an outline: one `h1`, headings in order, no skipped
+  levels — screen readers navigate by headings.
+- Every image gets alt text that conveys its meaning in context;
+  decorative images are marked decorative.
+- Link text describes its destination ("the 2026 Search Console
+  guide", not "click here").
+- Plain language: short sentences, defined terms, no jargon without an
+  explanation — readability is cognitive accessibility.
+- Color is never the only way information is conveyed in charts,
+  callouts, or emphasis.
+- Data in charts also appears as text or a table a screen reader can
+  follow.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Write the headline last: it is easier to title a finished post than to write to a title.
@@ -135,6 +152,7 @@ delete the rest. Then watch what happens to the posts that remain.
 - [ ] The post ends with one clear call to action.
 - [ ] Title, meta description, and internal links are in place.
 - [ ] The post passes the `editorial-review` checklist.
+- [ ] Accessibility: heading outline valid; alt text present; link text descriptive.
 
 ## Expected Deliverables
 

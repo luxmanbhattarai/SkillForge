@@ -77,6 +77,19 @@ security headers, and auditing auth code and logs for weaknesses.
 - HTTPS is mandatory; HSTS is enabled with a long max-age and includeSubDomains where the domain setup allows it.
 - Dependencies that handle auth (the auth library, JWT library, crypto) are kept current and monitored for advisories.
 
+### Accessibility
+
+- CAPTCHAs and bot challenges must have an accessible alternative: a
+  challenge only sighted users can pass excludes people (WCAG 3.3.8).
+- Rate-limit and lockout messages explain what happened and when to
+  retry, in text — not a bare status code.
+- Security errors must not leak information, but they must still be
+  usable; document the chosen trade-off either way.
+- Do not lock out assistive-technology users with behavior checks that
+  flag keyboard navigation or screen-reader timing as bot-like.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Prefer the framework's or auth library's built-in protections over custom implementations.
@@ -150,6 +163,7 @@ Secrets handling rules (checklist form):
 - [ ] API keys scoped, hashed, expirable, and revocable.
 - [ ] Auth events logged (without secrets) and monitored for spikes.
 - [ ] Incident playbook exists for credential leaks.
+- [ ] Accessibility: challenges have an accessible alternative; lockout messages explain next steps.
 
 ## Expected Deliverables
 

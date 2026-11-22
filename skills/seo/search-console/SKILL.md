@@ -73,7 +73,7 @@ pairs it with analytics for the full traffic picture.
 - [Google Search Central](https://developers.google.com/search) — guidance on Search Console reports and site management.
 - [Search Console Help](https://support.google.com/webmasters/) — report definitions and troubleshooting.
 
-Guidance current as of 2026-11-20. Two recent changes to know: AI Mode
+Two recent changes to know: AI Mode
 traffic counts towards the totals in the Performance report (since
 June 2025), and Search Console has a Generative AI performance report
 for measuring how content performs in Google's generative AI features

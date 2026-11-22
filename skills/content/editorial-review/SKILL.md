@@ -88,6 +88,19 @@ Verdict rules:
 - **Publish with fixes**: points 1-4 (accuracy, intent, claims, references) all pass, and the remaining fixes are minor (metadata, links, formatting).
 - **Revise**: any of points 1-4 fails, or three or more points need fixes.
 
+### Accessibility
+
+- Put accessibility requirements in the brief, the review checklist,
+  and the program standards: alt text, heading structure, link text,
+  plain language.
+- Every workflow stage owns a check: drafting (structure), editing
+  (plain language), publishing (alt text, links, tables).
+- Templates carry the requirements so they do not depend on memory.
+- Audit published content periodically: missing alt text, skipped
+  heading levels, and "click here" links regress silently.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Review against the brief, not against personal taste: a draft that meets the brief and the checklist passes, even if the reviewer would have written it differently.
@@ -152,6 +165,7 @@ Verdict: Publish with fixes (points 4 and 8).
 - [ ] The review report states the verdict and the required fixes.
 - [ ] Fixes were applied and re-checked before publishing.
 - [ ] The review is recorded with date, reviewer, and verdict.
+- [ ] Accessibility: brief/checklist/standards include alt text, headings, link text, plain language.
 
 ## Expected Deliverables
 

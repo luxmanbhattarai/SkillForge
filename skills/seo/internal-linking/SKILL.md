@@ -62,7 +62,7 @@ content that already exists.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) —
   technical and content policies.
 
-Guidance current as of 2026-11-20. The three-click depth target in
+The three-click depth target in
 this skill is an industry heuristic, not a Google requirement.
 
 ## Required Workflow
@@ -110,6 +110,17 @@ this skill is an industry heuristic, not a Google requirement.
   parameterized version of a URL.
 - `nofollow` is not used on internal links to control authority flow;
   it is reserved for untrusted or paid external links.
+
+### Accessibility
+
+- Link text describes its destination (WCAG 2.4.4): "the 2026 Search
+  Console guide", not "click here" or a bare URL.
+- Links in navigation and content are real anchors, keyboard-focusable,
+  with visible focus.
+- Do not overload pages with links to the same destination under
+  different text — screen-reader users hear every one.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -201,6 +212,7 @@ in `schema-jsonld`):
 - [ ] Anchor text is descriptive and varied, not generic or stuffed.
 - [ ] Breadcrumbs exist on deep pages.
 - [ ] A re-crawl after changes confirms the structure.
+- [ ] Accessibility: link text describes its destination; links are real anchors.
 
 ## Expected Deliverables
 

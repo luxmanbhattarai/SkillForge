@@ -46,15 +46,16 @@ utility-heavy markup maintainable.
 
 ## Prerequisites
 
-- Node.js 24 LTS or 26 LTS installed (26 is the newest LTS line as
-  of 2026-11-20; 24 and 22 remain in LTS).
-- A Tailwind CSS v4 project (current major line as of 2026-11-20); do not
+- Node.js 24 LTS or 26 LTS installed (26 is the newest LTS line;
+  24 and 22 remain in LTS).
+- A Tailwind CSS v4 project (current major line); do not
   assume a minor version. Tailwind v4 is CSS-first: configuration lives
   in CSS with `@theme`, not in a JavaScript config file.
 - A build integration: the Vite plugin, the PostCSS plugin, or the
   standalone CLI, as documented on tailwindcss.com.
 - Familiarity with `css` fundamentals: the utility names map directly to
   CSS properties.
+- Version range: Tailwind CSS v4; Node.js 24 LTS or 26 LTS.
 
 ## Official Documentation
 
@@ -89,7 +90,7 @@ utility-heavy markup maintainable.
 
 ## Implementation Standards
 
-- Tailwind CSS v4 is the current major line as of 2026-11-20. Use the
+- Tailwind CSS v4 is the current major line. Use the
   CSS-first configuration: `@import "tailwindcss";` plus `@theme` blocks.
   The JavaScript `tailwind.config.js` file is the v3 approach and is not
   needed in v4.
@@ -117,6 +118,24 @@ utility-heavy markup maintainable.
   repeated patterns.
 - `@apply` is available in v4 but should be used sparingly; prefer real
   components over CSS abstractions of utility lists.
+
+### Accessibility
+
+- Color contrast: text 4.5:1, large text and UI components 3:1 —
+  verify the actual rendered colors, not the palette swatches.
+- Visible focus: style `:focus-visible` on every interactive element;
+  never remove outlines without a replacement.
+- Honor `prefers-reduced-motion`: disable non-essential animation,
+  transitions, and parallax for users who ask for it.
+- Never convey information by color alone; pair color with text,
+  icon, or pattern.
+- Layouts reflow to 320px and survive 200% text resize without
+  clipping or overlap; never disable zoom.
+- Do not hide needed content from assistive technology with
+  `display: none`; use visually-hidden styles for screen-reader-only
+  text.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -231,6 +250,7 @@ Responsive card grid with dark mode:
 - [ ] Interactive elements have `focus-visible:` styles.
 - [ ] Repeated utility combinations are extracted into components.
 - [ ] No dynamically constructed class names are hiding from the scanner.
+- [ ] Accessibility: contrast meets 4.5:1/3:1; focus is visible; reduced motion is honored.
 
 ## Expected Deliverables
 

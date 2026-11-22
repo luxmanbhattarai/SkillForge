@@ -71,8 +71,6 @@ and users on slow connections who need it small.
 - [Sitemaps.org](https://www.sitemaps.org/) — sitemap format for image entries.
 - [Schema.org](https://schema.org/) — ImageObject and product or article image properties.
 
-Guidance current as of 2026-11-20.
-
 ## Required Workflow
 
 1. Inventory the images. List the images on the target pages, noting
@@ -130,6 +128,17 @@ Guidance current as of 2026-11-20.
 - Image structured data (ImageObject, or the `image` property on
   Article, Product, or Recipe) uses the same image URL that the page
   displays, with accurate metadata.
+
+### Accessibility
+
+- Alt text serves search and people at once: describe the image meaning
+  in context, not a keyword-stuffed filename.
+- Filenames and alt text are different jobs: the filename helps
+  discovery, the alt text helps the person.
+- Do not sacrifice alt-text quality for keywords; a truthful
+  description ranks and reads better.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -242,6 +251,7 @@ An image entry in an XML sitemap:
 - [ ] Images are crawlable: HTTPS URLs allowed by robots.txt.
 - [ ] No important text is baked into images.
 - [ ] Image structured data, where used, matches the displayed image.
+- [ ] Accessibility: alt text describes meaning, not keywords.
 
 ## Expected Deliverables
 

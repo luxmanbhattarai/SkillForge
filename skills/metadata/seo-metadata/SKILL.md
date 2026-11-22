@@ -122,6 +122,18 @@ budget on the right URLs.
   output), not injected only by client-side JavaScript, so crawlers
   see it on first fetch.
 
+### Accessibility
+
+- Every page gets a unique, descriptive title — screen readers announce
+  it first (WCAG 2.4.2).
+- Preview images carry alt text: `og:image:alt` and `twitter:image:alt`.
+- Descriptions are plain text that makes sense out of context; they are
+  read aloud by assistive technology in link previews.
+- Validation checks titles and alt text, not just lengths and formats:
+  a present-but-empty title is a failure.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Write titles for people first: clear, specific, and honest.
@@ -214,6 +226,7 @@ A page that should not be indexed:
       JavaScript runs.
 - [ ] A post-deploy check date is set to verify pickup in Search
       Console.
+- [ ] Accessibility: titles unique and descriptive; preview images carry alt text.
 
 ## Expected Deliverables
 

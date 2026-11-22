@@ -1,0 +1,8 @@
+Page: https://example.com/blog/sourdough-starter-smell/
+Checked: 2026-11-20
+Facebook (Sharing Debugger): correct image, title, description.
+LinkedIn (Post Inspector): correct; full-width card, not thumbnail.
+X (composer draft): correct large card.
+WhatsApp (composer draft): correct preview within 10 seconds.
+Discord (test server): large image below text.
+Slack (private channel): correct unfurl.

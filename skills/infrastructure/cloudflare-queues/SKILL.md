@@ -59,6 +59,7 @@ park unprocessable messages in a dead-letter queue.
   `max_batch_size` 10, `max_batch_timeout` 5 seconds, `max_retries` 3.
   `max_concurrency` and `retry_delay` are also available for tuning.
   Wrangler 4.x is the current major version.
+- Version range: Wrangler 4.x.
 
 ## Official Documentation
 

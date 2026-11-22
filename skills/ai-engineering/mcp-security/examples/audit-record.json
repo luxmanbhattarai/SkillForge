@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-11-20T13:00:00Z",
+  "run_id": "run-9f2c",
+  "user_id": "user-42",
+  "server": "docs-server@1.0.0",
+  "tool": "read_doc",
+  "arguments": { "name": "refunds.md" },
+  "approved_by": "user-42",
+  "outcome": "success",
+  "duration_ms": 41
+}

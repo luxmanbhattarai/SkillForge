@@ -51,7 +51,7 @@ monorepo tool.
 - Node.js 26 LTS is the current line (Active LTS since 2026-10-28,
   supported to 2029-04-30); Node.js 24 is in maintenance until
   2028-04-30. Node.js 20 and 25 are end-of-life.
-- Supported versions (verified 2026-11-20): Nx 24.x is current
+- Supported versions: Nx 24.x is current
   (v24 released 2026-10-21; latest stable 24.0.6, November 2026). Nx
   23 and 22 are in LTS; earlier majors are unsupported. Nx releases a
   new major every six months (around April and October); each major

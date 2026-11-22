@@ -1,0 +1,11 @@
+[workspace]
+members = ["app", "core"]
+resolver = "2"
+
+[workspace.package]
+edition = "2024"
+license = "MIT"
+
+[workspace.dependencies]
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }
+thiserror = "2"

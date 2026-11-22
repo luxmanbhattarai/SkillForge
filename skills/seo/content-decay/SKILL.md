@@ -67,7 +67,7 @@ is `content-refresh`.
 - The page's target query and intent, or a way to determine them.
 - A change log for the site (redesigns, migrations, template
   changes) so decay is not confused with a site change.
-- Conceptual skill; current stable as of 2026-11-20 — applies to the
+- Conceptual skill; version range: none — applies to the
   current Search Console reporting; Google publishes no versioned
   decay metric; the thresholds in this skill are working rules, and
   the official guidance is linked in Official Documentation.
@@ -103,7 +103,7 @@ is `content-refresh`.
   Google's quality guidance for judging whether a page still
   serves its readers.
 
-Guidance current as of 2026-11-20. Google publishes no "content
+Google publishes no "content
 decay" metric or threshold: what counts as decay is a judgment
 from the site's own data, and the thresholds in this skill (such as
 the comparison windows) are working rules, labeled as such. No
@@ -181,33 +181,11 @@ diagnosis here promises a recovery in rankings or traffic.
   anomalies, updates, seasonality, and site-wide causes. Acting
   on an unexamined decline risks "fixing" a page that was never
   broken.
-- **Refresh** when the topic is still relevant, the page has
-  history (links, past traffic, an established URL), and the
-  diagnosis is fixable: stale facts, thin coverage, or an intent
-  shift the page can be updated to meet. The URL does not change.
-- **Redirect** (permanent 301) when a better page already covers
-  the same intent and the decaying page's value is mostly its
-  links and history. Redirect to the closest matching page, never
-  to the homepage. Keep the redirect in place; removing it
-  strands the old URL.
-- **Remove** (404, 410, or `noindex`) only as a last resort, when
-  the content cannot be salvaged and no better page covers the
-  topic — Google's core-updates guidance says the same. Remove
-  only after checking the page has no meaningful links, traffic,
-  or internal references; update the internal links that pointed
-  to it.
-- **Monitor** when the diagnosis is unclear, the decline is small,
-  or an update is still rolling out. Monitoring is a decision,
-  with a re-check date — not neglect.
-- Never delete a page during or immediately after a core update
-  rollout; wait until the rollout completes plus at least a full
-  week, per Google's guidance, before judging the page.
-- Never refresh a page by changing its last-updated date without
-  changing its content.
-- Cannibalization is fixed by choosing one owner page per query:
-  refresh the owner, and redirect or re-target the others.
-- Record every decision with its reason and date in the decay log;
-  a decision without a recorded reason cannot be reviewed later.
+- Decision actions — refresh, redirect (301), remove (404/410/noindex),
+  monitor: see [references/decision-actions.md](./references/decision-actions.md).
+- Guardrails — never-delete windows, honest refreshes,
+  cannibalization, the decay log: see
+  [references/guardrails.md](./references/guardrails.md).
 
 ### Testing Strategy
 
@@ -291,36 +269,11 @@ diagnosis here promises a recovery in rankings or traffic.
 Example decay diagnosis table (figures are illustrative of the
 format, not benchmarks):
 
-```text
-Page                     Clicks     Impressions  Diagnosis
-                         16-mo trend 16-mo trend
------------------------  ----------- ------------ ----------------
-/sourdough-wont-rise/    falling     falling      Stale facts; top
-                                                 results now cover
-                                                 cold-kitchen fixes
-                                                 this page lacks.
-/best-bread-flour/       falling     steady       SERP now shows a
-                                                 shopping unit above
-                                                 organic results.
-/starter-ratio/          falling     falling      Cannibalization:
-                                                 /sourdough-starter/
-                                                 also ranks for
-                                                 "starter ratio".
-/bread-history/          falling     falling      Demand decline;
-                                                 Trends shows the
-                                                 topic fading.
-```
+  [examples/decay-check.txt](./examples/decay-check.txt).
 
 Example decision record:
 
-```text
-Page: /sourdough-wont-rise/
-Diagnosis: stale facts + missing subtopic (cold-kitchen fixes).
-Evidence: clicks and impressions falling for 4 months; SERP check
-  2026-11-20 shows top results covering cold-kitchen fixes.
-Decision: refresh (medium scope) — hand to content-refresh with
-  this diagnosis. Re-check 2026-12-18.
-```
+  [examples/decision-record.txt](./examples/decision-record.txt).
 
 ## Validation Checklist
 

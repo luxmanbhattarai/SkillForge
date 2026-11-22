@@ -58,7 +58,7 @@ optimization, and sustainability.
 
 - An AWS account with a defined home Region and billing alerts enabled.
 - AWS CLI v2 installed (the current major version; 2.41.0 was the latest
-  release as of 2026-11-17) and authenticated, preferably through IAM
+  release at last verification) and authenticated, preferably through IAM
   Identity Center (`aws configure sso`) rather than long-term access keys.
 - The target Region(s) and Availability Zones decided, with data-residency
   and latency requirements understood.
@@ -221,52 +221,28 @@ optimization, and sustainability.
 
 Confirm identity and Region before doing anything else:
 
-```bash
-aws sts get-caller-identity
-aws configure get region
-```
+  [scripts/check-identity.sh](./scripts/check-identity.sh).
 
 Create a VPC with a private CIDR range (from the official VPC tutorial):
 
-```bash
-aws ec2 create-vpc --cidr-block 10.0.0.0/16 \
-  --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=MyVPC}]'
-```
+  [scripts/create-vpc.sh](./scripts/create-vpc.sh).
 
 Create a subnet in one Availability Zone:
 
-```bash
-aws ec2 create-subnet --vpc-id vpc-0123456789abcdef0 \
-  --cidr-block 10.0.1.0/24 --availability-zone us-east-1a \
-  --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=Private-Subnet-AZ1}]'
-```
+  [scripts/create-subnet.sh](./scripts/create-subnet.sh).
 
 Store a secret and read it back (never print secrets in CI logs):
 
-```bash
-aws secretsmanager create-secret --name prod/app/db-password \
-  --secret-string '{"username":"app","password":"CHANGE_ME"}'
-aws secretsmanager get-secret-value --secret-id prod/app/db-password \
-  --query SecretString --output text
-```
+  [scripts/store-secret.sh](./scripts/store-secret.sh).
 
 Tail Lambda logs in real time:
 
-```bash
-aws logs tail /aws/lambda/my-function --follow
-```
+  [scripts/tail-lambda-logs.sh](./scripts/tail-lambda-logs.sh).
 
 Create a CloudWatch alarm on 5xx errors from an Application Load
 Balancer, notifying an SNS topic:
 
-```bash
-aws cloudwatch put-metric-alarm --alarm-name prod-alb-5xx \
-  --namespace AWS/ApplicationELB --metric-name HTTPCode_Target_5XX_Count \
-  --statistic Sum --period 300 --threshold 10 \
-  --comparison-operator GreaterThanThreshold --evaluation-periods 1 \
-  --dimensions Name=LoadBalancer,Value=app/my-alb/0123456789abcdef \
-  --alarm-actions arn:aws:sns:us-east-1:123456789012:alerts
-```
+  [scripts/create-5xx-alarm.sh](./scripts/create-5xx-alarm.sh).
 
 ## Validation Checklist
 

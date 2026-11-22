@@ -1,0 +1,11 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "mainEntity": {
+    "@type": "Person",
+    "name": "Jane Baker",
+    "jobTitle": "Head Baker",
+    "description": "Jane Baker has baked professionally for 12 years and leads recipe development at Acme Baking Co.",
+    "sameAs": ["https://www.linkedin.com/in/janebaker"]
+  }
+}

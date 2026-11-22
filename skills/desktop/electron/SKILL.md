@@ -61,12 +61,12 @@ for macOS, Windows, and Linux.
 
 ## Prerequisites
 
-- Node.js LTS installed (26 is the current LTS line as of
-  2026-11-20; see `nodejs`). npm or another Node package manager.
+- Node.js LTS installed (26 is the current LTS line;
+  see `nodejs`). npm or another Node package manager.
 - Electron follows an eight-week major release cycle matching
   Chromium Extended Stable, and the Electron team supports the
-  latest three stable major versions. The current stable as of
-  2026-11-20 is 45.x (released 2026-10-20); check the official
+  latest three stable major versions. The current stable is 45.x
+  (released 2026-10-20); check the official
   release timeline for the newest stable before starting, and never
   start a new app on an end-of-life major.
 - For distribution: an Apple Developer account and a Developer ID
@@ -75,6 +75,7 @@ for macOS, Windows, and Linux.
   Linux packages need no signing.
 - Familiarity with JavaScript or TypeScript, Node.js, and Chromium
   developer tools.
+- Version range: Electron 45.x; Node.js 26 LTS.
 
 ## Official Documentation
 
@@ -188,25 +189,10 @@ for macOS, Windows, and Linux.
   isolation enabled.
 - Use `ses.setPermissionRequestHandler()` in every session that
   loads remote content, denying permissions the app does not need.
-- Store secrets with `safeStorage` (OS keychain-backed encryption),
-  never in `localStorage`, plain files, or renderer-accessible
-  state. Use the asynchronous methods (`isAsyncEncryptionAvailable()`,
-  `encryptStringAsync()`, `decryptStringAsync()`): the synchronous
-  methods are deprecated in Electron 45 and removed in Electron 46.
-  See `secrets-management`.
-- Keep the main process responsive: heavy work runs in a utility
-  process, a worker thread, or a child process — never on the main
-  process event loop, which also drives window management.
-- Database access belongs in the main process: run SQLite (or
-  another embedded store) behind IPC handlers, never from the
-  renderer. See `sqlite` for schema and query guidance.
-- TypeScript is the recommended language for new Electron apps;
-  type the preload bridge API and share the types with the renderer
-  so a missing or renamed channel is a compile error, not a runtime
-  failure. See `typescript`.
-- Pin the Electron version in `package.json` and upgrade majors
-  deliberately: read the breaking-changes notes for each major
-  crossed, and test the security defaults after every upgrade.
+- Implementation notes — secrets storage (`safeStorage`),
+  main-process responsiveness, database placement, TypeScript,
+  and version pinning: see
+  [references/implementation-notes.md](./references/implementation-notes.md).
 
 ### Accessibility
 
@@ -351,90 +337,16 @@ for macOS, Windows, and Linux.
 
 ## Examples
 
-A secure main window, preload bridge, and IPC handler:
-
-```js
-// main.js
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
-const path = require("node:path");
-
-function createWindow() {
-  const win = new BrowserWindow({
-    width: 900,
-    height: 700,
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-      contextIsolation: true,
-      nodeIntegration: false,
-      sandbox: true,
-    },
-  });
-  win.loadFile("index.html");
-}
-
-ipcMain.handle("dialog:openFile", async () => {
-  const { canceled, filePaths } = await dialog.showOpenDialog({
-    properties: ["openFile"],
-  });
-  if (canceled) return null;
-  return filePaths[0];
-});
-
-app.whenReady().then(createWindow);
-```
-
-```js
-// preload.js
-const { contextBridge, ipcRenderer } = require("electron");
-
-contextBridge.exposeInMainWorld("electronAPI", {
-  openFile: () => ipcRenderer.invoke("dialog:openFile"),
-});
-```
-
-```js
-// renderer.js — the only Electron surface the page can see
-const filePath = await window.electronAPI.openFile();
-```
+A secure main window, preload bridge, and IPC handler: see
+  [examples/secure-main-window.md](./examples/secure-main-window.md).
 
 Minimal electron-builder configuration for all three platforms:
 
-```yaml
-# electron-builder.yml
-appId: com.example.notes
-productName: Notes
-files:
-  - dist/**
-  - main.js
-  - preload.js
-mac:
-  target:
-    - dmg
-    - zip
-  hardenedRuntime: true
-  entitlements: entitlements.mac.plist
-win:
-  target: nsis
-linux:
-  target:
-    - AppImage
-    - deb
-```
+  [assets/electron-builder.yml](./assets/electron-builder.yml).
 
 Checking for updates with the built-in updater:
 
-```js
-// main.js
-const { autoUpdater } = require("electron");
-
-autoUpdater.setFeedURL({
-  url: "https://update.example.com/darwin/1.0.0",
-});
-autoUpdater.on("update-downloaded", () => {
-  autoUpdater.quitAndInstall();
-});
-app.whenReady().then(() => autoUpdater.checkForUpdates());
-```
+  [examples/auto-updater.js](./examples/auto-updater.js).
 
 ## Validation Checklist
 

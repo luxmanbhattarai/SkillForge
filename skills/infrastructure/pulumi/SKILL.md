@@ -58,8 +58,8 @@ safe to change in teams.
 
 ## Prerequisites
 
-- Pulumi CLI installed; 3.277.0 was the current stable version as of
-  2026-11-18 (see the official CLI versions page). Run
+- Pulumi CLI installed; 3.277.0 was the current stable version at last
+  verification (see the official CLI versions page). Run
   `pulumi version` to confirm, and keep the CLI and the language SDKs
   at matching versions.
 - A language runtime for the chosen language (Node.js for TypeScript,
@@ -225,25 +225,9 @@ safe to change in teams.
 
 ## Pulumi and Terraform: factual comparison points
 
-- Language: Pulumi programs are written in general-purpose languages
-  (TypeScript, Python, Go, .NET, Java) or in YAML or HCL; Terraform
-  uses HCL, its own declarative language.
-- State: both keep state; Pulumi's default backend is Pulumi Cloud,
-  with DIY backends (S3, Azure Blob Storage, Google Cloud Storage,
-  PostgreSQL, filesystem); Terraform uses remote backends or HCP
-  Terraform.
-- Licensing: the Pulumi CLI and core SDKs are Apache License 2.0;
-  Terraform has been Business Source License 1.1 since version 1.6.
-- Testing: Pulumi programs are tested with the language's own test
-  frameworks plus Pulumi's mocking support; Terraform has
-  `terraform test` and `check` blocks.
-- Policy: Pulumi uses CrossGuard policy packs (TypeScript, Python, or
-  OPA Rego); Terraform uses Terraform Policy (generally available in
-  1.17) and Sentinel on HCP Terraform and Terraform Enterprise.
-- Choose on team fit: a team fluent in TypeScript or Python that wants
-  loops, functions, and unit tests in its infrastructure will usually
-  prefer Pulumi; a team that wants a declarative DSL and the broadest
-  provider catalog will usually prefer Terraform.
+Factual comparison points (language, state, licensing, testing,
+  policy, team fit): see
+  [references/pulumi-vs-terraform.md](./references/pulumi-vs-terraform.md).
 
 ## Common Mistakes
 
@@ -275,91 +259,20 @@ and encryption. Bucket settings are separate resources in the current
 provider — the inline `versioning`, `serverSideEncryptionConfiguration`,
 and `acl` arguments on `aws.s3.Bucket` are deprecated:
 
-```ts
-import * as pulumi from "@pulumi/pulumi";
-import * as aws from "@pulumi/aws";
-
-const bucket = new aws.s3.Bucket("app-bucket");
-
-new aws.s3.BucketVersioning("app-bucket-versioning", {
-  bucket: bucket.id,
-  versioningConfiguration: { status: "Enabled" },
-});
-
-new aws.s3.BucketServerSideEncryptionConfiguration("app-bucket-encryption", {
-  bucket: bucket.id,
-  rules: [{
-    applyServerSideEncryptionByDefault: { sseAlgorithm: "AES256" },
-  }],
-});
-
-export const bucketName = bucket.id;
-```
+  [examples/s3-bucket.ts](./examples/s3-bucket.ts).
 
 A component that wraps a reusable pattern (TypeScript):
 
-```ts
-import * as pulumi from "@pulumi/pulumi";
-import * as aws from "@pulumi/aws";
-
-export class PrivateBucket extends pulumi.ComponentResource {
-  public readonly bucket: aws.s3.Bucket;
-
-  constructor(name: string, opts?: pulumi.ComponentResourceOptions) {
-    super("example:storage:PrivateBucket", name, {}, opts);
-    this.bucket = new aws.s3.Bucket(name, {}, { parent: this });
-    new aws.s3.BucketAcl(name, {
-      bucket: this.bucket.id,
-      acl: "private",
-    }, { parent: this });
-    new aws.s3.BucketVersioning(name, {
-      bucket: this.bucket.id,
-      versioningConfiguration: { status: "Enabled" },
-    }, { parent: this });
-    this.registerOutputs({ bucketName: this.bucket.id });
-  }
-}
-```
+  [examples/reusable-component.ts](./examples/reusable-component.ts).
 
 A CrossGuard policy pack rule that forbids public S3 buckets
 (TypeScript):
 
-```ts
-import * as aws from "@pulumi/aws";
-import { PolicyPack, validateResourceOfType } from "@pulumi/policy";
-
-new PolicyPack("acme-baseline", {
-  policies: [
-    {
-      name: "s3-no-public-read",
-      description: "S3 buckets must not allow public read access.",
-      enforcementLevel: "mandatory",
-      validateResource: validateResourceOfType(
-        aws.s3.BucketAcl,
-        (acl, args, reportViolation) => {
-          if (acl.acl === "public-read") {
-            reportViolation("S3 buckets must not use the public-read ACL.");
-          }
-        },
-      ),
-    },
-  ],
-});
-```
+  [examples/crossguard-policy.ts](./examples/crossguard-policy.ts).
 
 Core workflow commands:
 
-```bash
-pulumi login
-pulumi stack init dev
-pulumi config set region us-east-1
-pulumi config set dbPassword --secret
-pulumi preview --diff
-pulumi up
-pulumi stack output
-pulumi refresh
-pulumi destroy
-```
+  [scripts/core-commands.sh](./scripts/core-commands.sh).
 
 ## Validation Checklist
 

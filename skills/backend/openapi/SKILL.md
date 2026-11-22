@@ -294,104 +294,11 @@ tests from a single source of truth.
 
 A minimal valid OpenAPI 3.1 document:
 
-```yaml
-openapi: 3.1.0
-info:
-  title: Orders API
-  version: 1.0.0
-  description: Create and list customer orders.
-servers:
-  - url: https://api.example.com/v1
-paths:
-  /orders:
-    get:
-      operationId: listOrders
-      summary: List orders
-      tags: [orders]
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: "#/components/parameters/CursorParam"
-      responses:
-        "200":
-          description: A page of orders.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OrderPage"
-              examples:
-                oneOrder:
-                  value:
-                    data:
-                      - id: ord_01
-                        status: paid
-                    next_cursor: null
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-components:
-  parameters:
-    CursorParam:
-      name: cursor
-      in: query
-      schema:
-        type: [string, "null"]
-  schemas:
-    OrderPage:
-      type: object
-      required: [data]
-      properties:
-        data:
-          type: array
-          items:
-            $ref: "#/components/schemas/Order"
-        next_cursor:
-          type: [string, "null"]
-    Order:
-      type: object
-      required: [id, status]
-      properties:
-        id:
-          type: string
-        status:
-          type: string
-          enum: [paid, pending, cancelled]
-    Error:
-      type: object
-      required: [code, message]
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-  responses:
-    Unauthorized:
-      description: Missing or invalid credentials.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-```
+  [examples/minimal-openapi.yaml](./examples/minimal-openapi.yaml).
 
 A Spectral ruleset extending the recommended OpenAPI rules:
 
-```yaml
-# .spectral.yaml
-extends: [[spectral:oas, recommended]]
-rules:
-  operationId-camelcase:
-    message: operationId must be camelCase
-    given: $.paths[*][*].operationId
-    severity: error
-    then:
-      function: pattern
-      functionOptions:
-        match: "^[a-z][a-zA-Z0-9]*$"
-```
+  [examples/spectral-ruleset.yaml](./examples/spectral-ruleset.yaml).
 
 Lint, bundle, mock, and contract-test:
 

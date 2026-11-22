@@ -48,6 +48,7 @@ revocation, sensible expiry, and clean logout.
 
 - [OWASP Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html) — the reference for secure session design.
 - [OWASP Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html) — session handling after login.
+- [NIST SP 800-63B-4 — Authentication and Authenticator Management](https://pages.nist.gov/800-63-4/sp800-63b.html) — reauthentication timeout guidance (no more than 30 days at AAL1).
 - [MDN: Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie) — cookie attributes and their behavior.
 
 ## Required Workflow
@@ -73,6 +74,19 @@ revocation, sensible expiry, and clean logout.
 - The store lookup is indexed on the session ID; expired sessions are cleaned up by a background job.
 - "Remember me" uses a separate long-lived token with its own rotation and revocation, never a long-lived session cookie.
 - Concurrent sessions are allowed by default; limit them only when the product requires it, and tell the user which devices are signed in.
+
+### Accessibility
+
+- Warn before a session expires and offer a way to extend it
+  (WCAG 2.2.1); never silently drop a user mid-task.
+- Re-authentication preserves the user’s work: form data, scroll
+  position, and destination survive the round trip.
+- Timeout messages are announced and explain what happened and what to
+  do next.
+- "Remember me" and session-length choices are labeled controls, not
+  silent defaults.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -150,6 +164,7 @@ clearSessionCookie(response);
 - [ ] "Sign out everywhere" deletes all of the user's sessions.
 - [ ] Sessions invalidated on password change.
 - [ ] Expired sessions cleaned up by a background job.
+- [ ] Accessibility: expiry warns before logout; re-auth preserves the user’s work.
 
 ## Expected Deliverables
 

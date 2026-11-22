@@ -47,7 +47,7 @@ This skill covers securing a database and the data in it: authenticating and aut
 - A list of who and what needs database access: application services, background workers, analysts, administrators.
 - Knowledge of what sensitive data the database holds and which regulations or policies apply to it.
 - Access to the database server configuration and the deployment's secret management.
-- Supported versions as of 2026-11-20: PostgreSQL 15–19, MySQL 8.4/9.7 LTS, MongoDB 7.0/8.0/8.3/9.0, SQLite 3.51 (see the engine skills for version detail). The examples use PostgreSQL syntax.
+- Supported versions: PostgreSQL 15–19, MySQL 8.4/9.7 LTS, MongoDB 7.0/8.0/8.3/9.0, SQLite 3.51 (see the engine skills for version detail). The examples use PostgreSQL syntax.
 
 ## Official Documentation
 

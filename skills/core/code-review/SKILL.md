@@ -89,6 +89,19 @@ on the change, not the author.
 - Automated checks (tests, lint, type-check) run before human review;
   humans review what automation cannot judge.
 
+### Accessibility
+
+- When a change touches UI, review it for accessibility: keyboard
+  operability, visible focus, labels, alt text, contrast.
+- Check that new components expose name, role, and state; flag `div`
+  with `onClick`, missing labels, and color-only status.
+- Ask for the manual test, not just the automated one: "Did you tab
+  through it?" catches what axe misses.
+- Review error messages and empty states too — they are user-facing
+  text.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Start with the highest-risk parts: security-sensitive code, data
@@ -161,6 +174,7 @@ easier to extend. Not blocking — fine to leave as is.
 - [ ] Security-sensitive code has been checked against the checklist.
 - [ ] Feedback is specific, kind, and distinguishes blocking from optional.
 - [ ] No approval was given for unread or untested code.
+- [ ] Accessibility: UI changes reviewed for keyboard, focus, labels, alt text, contrast.
 
 ## Expected Deliverables
 

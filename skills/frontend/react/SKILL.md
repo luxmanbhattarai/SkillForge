@@ -46,7 +46,7 @@ and the common pitfalls that make React apps slow or buggy.
 ## Prerequisites
 
 - Node.js 24 LTS or 26 LTS and a React 19 project (current major line
-  as of 2026-11-20; 26 is the newest Node.js LTS line, 24 and 22
+ ; 26 is the newest Node.js LTS line, 24 and 22
   remain in LTS); do not assume a minor version. React 19.2 (October
   2025) added the `<Activity>` component (hide a subtree while
   preserving its state) and the `useEffectEvent` hook (non-reactive
@@ -87,7 +87,7 @@ and the common pitfalls that make React apps slow or buggy.
 ## Implementation Standards
 
 - Function components only; no class components in new code.
-- React 19 is the current major line as of 2026-11-20. Use the hooks and
+- React 19 is the current major line. Use the hooks and
   APIs documented for React 19 on react.dev; do not rely on legacy
   patterns such as `UNSAFE_` lifecycle methods.
 - Hooks rules: call hooks only at the top level of a component or custom
@@ -123,6 +123,21 @@ and the common pitfalls that make React apps slow or buggy.
   real cost; premature memoization adds complexity without benefit.
 - Components return JSX with semantic HTML (see `semantic-html`); a
   component is not an excuse for `div` soup.
+
+### Accessibility
+
+- Components expose name, role, and state: use semantic elements and
+  pass `aria-*` props through — do not swallow them in wrappers.
+- Manage focus with refs: dialogs trap focus and return it on close;
+  route changes move focus to the new heading.
+- Event handlers pair mouse and keyboard: `onClick` on a real
+  `button`, `onKeyDown` for custom widget keys (arrows, Escape).
+- Portals render dialogs and menus where screen readers can reach
+  them, with `aria-modal` and focus trapping.
+- State changes users need to know about are announced via live
+  regions, not silent re-renders.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -199,78 +214,11 @@ and the common pitfalls that make React apps slow or buggy.
 
 Component with state, derived values, and an effect with cleanup:
 
-```tsx
-import { useEffect, useState } from 'react';
-
-interface Article {
-  id: string;
-  title: string;
-}
-
-export function ArticleList() {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch('/api/articles', { signal: controller.signal })
-      .then((response) => {
-        if (!response.ok) throw new Error(`Request failed: ${response.status}`);
-        return response.json();
-      })
-      .then(setArticles)
-      .catch((err: unknown) => {
-        if (err instanceof Error && err.name !== 'AbortError') {
-          setError(err.message);
-        }
-      });
-    return () => controller.abort();
-  }, []);
-
-  const count = articles.length; // derived, not state
-
-  if (error) return <p role="alert">Could not load articles: {error}</p>;
-
-  return (
-    <section aria-label="Articles">
-      <p>{count} articles</p>
-      <ul>
-        {articles.map((article) => (
-          <li key={article.id}>{article.title}</li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-```
+  [examples/state-effect.tsx](./examples/state-effect.tsx).
 
 Controlled form input:
 
-```tsx
-import { useState } from 'react';
-
-export function SearchBox({ onSearch }: { onSearch: (query: string) => void }) {
-  const [query, setQuery] = useState('');
-
-  return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        onSearch(query);
-      }}
-    >
-      <label htmlFor="search">Search articles</label>
-      <input
-        id="search"
-        type="search"
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-      />
-      <button type="submit">Search</button>
-    </form>
-  );
-}
-```
+  [examples/controlled-form.tsx](./examples/controlled-form.tsx).
 
 ## Validation Checklist
 
@@ -283,6 +231,7 @@ export function SearchBox({ onSearch }: { onSearch: (query: string) => void }) {
 - [ ] Loading, empty, and error states are all rendered.
 - [ ] No `dangerouslySetInnerHTML` is used on unsanitized content.
 - [ ] State is not mutated directly anywhere.
+- [ ] Accessibility: components expose name/role/state; focus is managed on dialogs and route changes.
 
 ## Expected Deliverables
 

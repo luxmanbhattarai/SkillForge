@@ -55,7 +55,7 @@ the App Store and Google Play.
 
 - Node.js 22 LTS or newer installed. React Native 0.84 and later
   require Node.js v22.11 or newer; do not assume a minor version.
-- A React Native 0.88 project (current stable as of 2026-11-20,
+- A React Native 0.88 project (current stable,
   released 2026-10-19; ships React 19.3 and Metro 0.87). Versions
   0.85.x and earlier are unsupported. New projects are created with
   `npx @react-native-community/cli@latest init <Name>`.
@@ -117,39 +117,11 @@ the App Store and Google Play.
 - TypeScript everywhere: type props, navigation params (declare a
   param list type per navigator), and API responses. Validate API
   payloads at runtime before rendering them.
-- Navigation: React Navigation 7.x. Prefer the static configuration
-  API (`createStaticNavigation`) for new navigators; it gives typed
-  routes and deep linking from one configuration object. Use the
-  native stack navigator (`@react-navigation/native-stack`) for
-  platform-native transitions. Keep exactly one navigation container
-  at the app root.
-- State: `useState`/`useReducer` for local state; a small store
-  library (Zustand is the common choice) for shared client state;
-  TanStack Query for server state (caching, retries, background
-  refetch). Do not duplicate server data into a client store.
-- Data fetching: fetch through a typed API layer, not ad-hoc `fetch`
-  calls in components. Every request handles non-OK statuses, network
-  failure, and cancellation on unmount.
-- Lists: `FlatList` or `SectionList` for anything that can grow;
-  `ScrollView` only for short, fixed content. Provide `keyExtractor`
-  with a stable id, and `getItemLayout` when rows have fixed height.
-- Styling: `StyleSheet.create` for static styles; avoid creating
-  style objects inside render. Respect safe areas with
-  `react-native-safe-area-context`, not hardcoded insets.
-- Images: always set explicit dimensions or `aspectRatio`; use the
-  platform-appropriate resize mode and remote image caching for
-  lists. Never render full-resolution photos into small thumbnails.
-- Native modules: write TurboModules (Kotlin for Android, Swift or
-  Objective-C++ for iOS) behind a typed TypeScript spec. Keep native
-  code minimal — one responsibility per module — and expose errors
-  as typed rejections, not crashes.
-- Platform differences go in `Platform.select` or `.ios.`/`.android.`
-  files, decided once per component, not scattered through JSX.
-- Secrets: never hardcode API keys, tokens, or credentials in
-  JavaScript or native source. Tokens live in secure storage
-  (iOS Keychain / Android Keystore via a maintained library such as
-  `react-native-keychain`); configuration that is not secret lives in
-  build config.
+- Building the app — React Navigation 7, state, data fetching,
+  lists, styling, images: see
+  [references/app-building.md](./references/app-building.md).
+- Native and platform — TurboModules, `Platform.select`, secrets:
+  see [references/native-and-platform.md](./references/native-and-platform.md).
 
 ### Accessibility
 
@@ -279,76 +251,11 @@ the App Store and Google Play.
 
 Screen with a typed list, data fetching, and accessibility props:
 
-```tsx
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View } from 'react-native';
-
-interface Article {
-  id: string;
-  title: string;
-}
-
-export function ArticleListScreen() {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch('https://example.com/api/articles', { signal: controller.signal })
-      .then((response) => {
-        if (!response.ok) throw new Error(`Request failed: ${response.status}`);
-        return response.json() as Promise<Article[]>;
-      })
-      .then(setArticles)
-      .catch((err: unknown) => {
-        if (err instanceof Error && err.name !== 'AbortError') {
-          setError(err.message);
-        }
-      })
-      .finally(() => setLoading(false));
-    return () => controller.abort();
-  }, []);
-
-  if (loading) return <ActivityIndicator accessibilityLabel="Loading articles" />;
-  if (error) return <Text role="alert">Could not load articles: {error}</Text>;
-
-  return (
-    <FlatList
-      data={articles}
-      keyExtractor={(article) => article.id}
-      ListEmptyComponent={<Text>No articles yet.</Text>}
-      renderItem={({ item }) => (
-        <View accessible accessibilityRole="button" accessibilityLabel={item.title}>
-          <Text>{item.title}</Text>
-        </View>
-      )}
-    />
-  );
-}
-```
+  [examples/article-screen.tsx](./examples/article-screen.tsx).
 
 Static navigation configuration (React Navigation 7):
 
-```tsx
-import { createStaticNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { HomeScreen } from './screens/HomeScreen';
-import { DetailsScreen } from './screens/DetailsScreen';
-
-const RootStack = createNativeStackNavigator({
-  screens: {
-    Home: HomeScreen,
-    Details: DetailsScreen,
-  },
-});
-
-const Navigation = createStaticNavigation(RootStack);
-
-export default function App() {
-  return <Navigation />;
-}
-```
+  [examples/static-navigation.tsx](./examples/static-navigation.tsx).
 
 ## Validation Checklist
 

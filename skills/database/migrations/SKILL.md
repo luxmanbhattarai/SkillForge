@@ -44,7 +44,7 @@ This skill covers safe database schema evolution: writing versioned, reviewable,
 - A copy of production-like data to test migrations against, or at least a staging database with realistic row counts.
 - Knowledge of which database engine is in use and which DDL operations lock or rewrite tables on that engine.
 - A deployment process that runs migrations in order, exactly once, before or alongside the application deploy.
-- Supported versions as of 2026-11-20: PostgreSQL 15–19, MySQL 8.4/9.7 LTS, SQLite 3.51, Prisma ORM 7, Drizzle ORM 0.45. Version-specific DDL behaviour matters: PostgreSQL 11 and later add a column with a constant default without rewriting the table, and MySQL 8.0.12 and later support instant `ADD COLUMN` in most cases — but the add-nullable, backfill, constrain sequence is still the safe default on large tables.
+- Supported versions: PostgreSQL 15–19, MySQL 8.4/9.7 LTS, SQLite 3.51, Prisma ORM 7, Drizzle ORM 0.45. Version-specific DDL behaviour matters: PostgreSQL 11 and later add a column with a constant default without rewriting the table, and MySQL 8.0.12 and later support instant `ADD COLUMN` in most cases — but the add-nullable, backfill, constrain sequence is still the safe default on large tables.
 
 ## Official Documentation
 

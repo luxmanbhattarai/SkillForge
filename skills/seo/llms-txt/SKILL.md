@@ -31,8 +31,8 @@ search visibility, or any ranking outcome. Google has stated explicitly
 (June 2026) that llms.txt files "aren't needed for Google Search (and
 won't negatively or positively impact your visibility or rankings)".
 
-This skill follows llms.txt v2 of the proposal (current as of
-2026-11-20): the file may sit at the site root or at any subpath (for
+This skill follows llms.txt v2 of the proposal: the file may sit at
+the site root or at any subpath (for
 example `/docs/llms.txt`), covering the pages under that path, and the
 proposal now also covers markdown versions of pages and link relations
 for discovering them. `llms-full.txt` is a v1-era convention not in the
@@ -71,6 +71,7 @@ v2 spec; it is still used by some sites, but treat it as legacy.
   order, with a one-line description of each.
 - Knowledge of which pages must NOT be listed (drafts, private,
   outdated, or low-value pages).
+- Version range: llms.txt v2 of the proposal.
 
 ## Official Documentation
 
@@ -80,7 +81,7 @@ v2 spec; it is still used by some sites, but treat it as legacy.
   Google's official guidance, including its June 2026 clarification
   that llms.txt files are not needed for Google Search.
 
-Guidance current as of 2026-11-20 (llms.txt v2 of the proposal).
+Covers llms.txt v2 of the proposal.
 
 ## Required Workflow
 

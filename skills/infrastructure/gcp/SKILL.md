@@ -64,7 +64,7 @@ following Google Cloud's own architecture and security guidance.
 - A Google Cloud project (or organization with folders per environment)
   with billing enabled and a budget alert configured.
 - Google Cloud CLI (`gcloud`) installed and authenticated; 594.0.0 was
-  the latest release as of 2026-11-17. Run `gcloud components update`
+  the latest release at last verification. Run `gcloud components update`
   to stay current (tarball installs; package-manager installs update
   through the package manager), and `gcloud auth login` plus
   `gcloud config set project PROJECT_ID` before working.
@@ -127,27 +127,11 @@ following Google Cloud's own architecture and security guidance.
 
 ## Implementation Standards
 
-- Every resource is created by infrastructure as code and carries the
-  agreed labels; console-created resources are treated as drift.
-- Production workloads run in private subnets across at least two
-  zones; only load balancers and Cloud Run ingress accept public
-  traffic.
-- Data at rest is encrypted with Google-managed keys by default; use
-  customer-managed keys (CMEK) via Cloud KMS where the workload's
-  compliance needs them.
-- Cloud Storage buckets are private by default (uniform bucket-level
-  access enabled); public access requires an explicit, reviewed
-  exception.
-- Databases use automated backups with a defined retention period, and
-  production databases are highly available (regional Cloud SQL,
-  multi-region Spanner or Firestore where needed).
-- All state-changing work goes through a reviewed change (pull request
-  or pipeline approval), never through direct console edits in
-  production.
-- Use managed services over self-managed equivalents when the managed
-  service meets the requirement; it removes undifferentiated operations.
-- Pin the provider and CLI versions used by pipelines so builds are
-  reproducible.
+- Platform basics — IaC, private subnets, change review, managed
+  services, pinned versions: see
+  [references/platform-basics.md](./references/platform-basics.md).
+- Data protection — encryption, private buckets, backups: see
+  [references/data-protection.md](./references/data-protection.md).
 
 ### Testing Strategy
 
@@ -254,56 +238,29 @@ following Google Cloud's own architecture and security guidance.
 
 Confirm identity and project before doing anything else:
 
-```bash
-gcloud auth list
-gcloud config get-value project
-```
+  [scripts/check-identity.sh](./scripts/check-identity.sh).
 
 Deploy a containerized service to Cloud Run. Images live in Artifact
 Registry — Container Registry (`gcr.io`) stopped accepting writes on
 18 March 2025, so new projects must not use it:
 
-```bash
-gcloud artifacts repositories create my-service \
-  --repository-format=docker --location=us-central1
-
-gcloud run deploy my-service \
-  --image us-central1-docker.pkg.dev/PROJECT_ID/my-service/my-service:1.0.0 \
-  --region us-central1 \
-  --allow-unauthenticated \
-  --max-instances 10
-```
+  [scripts/create-project.sh](./scripts/create-project.sh).
 
 Create a secret and grant a service account access to it:
 
-```bash
-echo -n "CHANGE_ME" | gcloud secrets create db-password --data-file=-
-gcloud secrets add-iam-policy-binding db-password \
-  --member="serviceAccount:my-service@PROJECT_ID.iam.gserviceaccount.com" \
-  --role="roles/secretmanager.secretAccessor"
-```
+  [scripts/create-secret.sh](./scripts/create-secret.sh).
 
 Create a regional GKE cluster (Autopilot manages the nodes):
 
-```bash
-gcloud container clusters create-auto my-cluster \
-  --region us-central1 \
-  --project PROJECT_ID
-```
+  [scripts/create-gke-cluster.sh](./scripts/create-gke-cluster.sh).
 
 Copy a file to Cloud Storage:
 
-```bash
-gcloud storage cp ./dist/app.tar.gz gs://my-bucket/releases/
-```
+  [scripts/copy-to-gcs.sh](./scripts/copy-to-gcs.sh).
 
 Tail Cloud Run logs:
 
-```bash
-gcloud logging read \
-  'resource.type="cloud_run_revision" resource.labels.service_name="my-service"' \
-  --limit 50 --format json
-```
+  [scripts/tail-cloud-run-logs.sh](./scripts/tail-cloud-run-logs.sh).
 
 ## Validation Checklist
 

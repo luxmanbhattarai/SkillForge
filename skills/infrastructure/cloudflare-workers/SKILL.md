@@ -46,8 +46,8 @@ code, and deploy reliably to production.
 
 ## Prerequisites
 
-- Node.js installed (22, 24, and 26 are the active LTS lines as of
-  2026-11-20; Node.js 26 "Lithium" is the newest LTS. Node.js 20
+- Node.js installed (22, 24, and 26 are the active LTS lines;
+  Node.js 26 "Lithium" is the newest LTS. Node.js 20
   reached end-of-life on 30 April 2026).
 - Wrangler 4.x installed, either globally or as a project dev
   dependency. Wrangler 4 is the current major version; in v4, commands
@@ -59,6 +59,7 @@ code, and deploy reliably to production.
 - Understanding that Workers run on V8 isolates, not on Node.js: no
   filesystem access, no long-lived processes, no native Node.js modules
   unless the runtime provides a compatibility layer.
+- Version range: Wrangler 4.x; Node.js 22, 24, or 26 LTS.
 
 ## Official Documentation
 

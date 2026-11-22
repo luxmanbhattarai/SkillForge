@@ -71,8 +71,6 @@ signals conflict, so this skill keeps every signal consistent.
   then rel="canonical", then sitemap) and best practices.
 - [Google Search Essentials](https://developers.google.com/search/docs/essentials) — duplicate content and crawlability baseline.
 
-Guidance current as of 2026-11-20.
-
 ## Required Workflow
 
 1. Inventory duplicates. Crawl the site (or review Search Console's

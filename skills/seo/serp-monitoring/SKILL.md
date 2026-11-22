@@ -65,7 +65,7 @@ waiting. It tracks; it never promises a position.
 - A named owner for the weekly review and the monthly report.
 - A baseline: the site's current clicks, impressions, and average
   position by page and query, recorded before monitoring starts.
-- Conceptual skill; current stable as of 2026-11-20 — applies to the
+- Conceptual skill; version range: none — applies to the
   current Search Console API and reporting; see the Search Analytics
   API reference linked in Official Documentation; rank trackers are
   third-party tools with no pinned version.
@@ -103,7 +103,7 @@ waiting. It tracks; it never promises a position.
   console, with its own search performance report; Search Console
   covers Google only.
 
-Guidance current as of 2026-11-20. Search Console data lags by a
+Search Console data lags by a
 day or more (typically 2-3 days for API data) and covers the last
 16 months. Rank-tracker positions are measurements of a
 personalized, localized SERP at one moment — they are estimates
@@ -298,43 +298,16 @@ source. Nothing here promises a ranking position or a time frame.
 
 Example weekly monitoring note:
 
-```text
-Week of 2026-11-16 (Search Console, US, English, all devices)
-- Clicks: 1,240 (prev week 1,310; same week last year 980).
-- Impressions: 48,200 (prev week 49,100).
-- Status Dashboard: November 2026 core update began 10 Nov,
-  still rolling out — no judgments until it completes + 1 week.
-- Largest move: /sourdough-wont-rise/ avg position 4.1 -> 6.8
-  for "sourdough won't rise"; impressions steady. SERP check:
-  a video carousel now appears above organic results.
-- Action: none this week; re-check after the update completes.
-```
+  [examples/weekly-note.txt](./examples/weekly-note.txt).
 
 Example Search Analytics API query body (POST to
 `/sites/{siteUrl}/searchAnalytics/query`):
 
-```json
-{
-  "startDate": "2026-11-13",
-  "endDate": "2026-11-19",
-  "dimensions": ["query", "page"],
-  "rowLimit": 1000
-}
-```
+  [examples/searchanalytics-query.json](./examples/searchanalytics-query.json).
 
 Example monthly report outline:
 
-```md
-## Monthly SERP report — November 2026
-
-- Summary: clicks, impressions, average position vs. October
-  and vs. November 2025, split branded / non-branded.
-- Movers: top 5 queries gained, top 5 lost, with the page and
-  the likely cause (update, feature change, content change).
-- SERP features: new or changed features on priority queries.
-- Competitors: domains that gained or lost visibility.
-- Actions taken and planned, with owners and dates.
-```
+  [assets/monthly-report-template.md](./assets/monthly-report-template.md).
 
 ## Validation Checklist
 

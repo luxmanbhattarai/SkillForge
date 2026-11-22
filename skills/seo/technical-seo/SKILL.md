@@ -69,8 +69,6 @@ prevent a site from competing.
 - [Web Vitals](https://web.dev/vitals/) — definitions and thresholds for
   Core Web Vitals.
 
-Guidance current as of 2026-11-20.
-
 ## Required Workflow
 
 1. Verify the basics: the site serves over HTTPS, the canonical domain
@@ -114,7 +112,7 @@ Guidance current as of 2026-11-20.
   content that only exists after user interaction is not reliably indexed.
 - Core Web Vitals: aim for Google's published "good" thresholds for LCP,
   INP, and CLS on the main templates; treat failing templates as defects.
-  The "good" thresholds (web.dev, verified 2026-11-20) are: Largest
+  The "good" thresholds (web.dev) are: Largest
   Contentful Paint at or under 2.5 seconds, Interaction to Next Paint
   at or under 200 milliseconds, and Cumulative Layout Shift at or under
   0.1 — assessed at the 75th percentile of real-user (CrUX) data over
@@ -125,6 +123,17 @@ Guidance current as of 2026-11-20.
   sitemap index for large sites, and list only indexable URLs.
 - `robots.txt`: block only what must not be crawled (admin, search
   results, faceted filters); never block CSS or JavaScript resources.
+
+### Accessibility
+
+- Never disable viewport zoom (`user-scalable=no`, `maximum-scale=1`):
+  it fails WCAG 1.4.4 and harms low-vision users.
+- Mobile-friendliness and accessibility overlap: tap targets, reflow,
+  and readable text sizes serve both.
+- Semantic structure serves crawlers and assistive technology alike:
+  real headings, landmarks, and `lang`.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
 
 ## Best Practices
 
@@ -223,6 +232,7 @@ Redirect 301 /old-page https://example.com/new-page
       pages.
 - [ ] Core Web Vitals meet Google's "good" thresholds on main templates.
 - [ ] Mobile version serves the same content and metadata as desktop.
+- [ ] Accessibility: viewport zoom not disabled; tap targets and reflow verified.
 
 ## Expected Deliverables
 

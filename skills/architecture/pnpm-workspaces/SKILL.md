@@ -42,7 +42,7 @@ running commands across packages.
 
 - pnpm installed and the version pinned (`packageManager` in the root `package.json`).
 - The monorepo layout decided: which directories hold apps and packages.
-- Supported versions (verified 2026-11-20): pnpm 12.x is current
+- Supported versions: pnpm 12.x is current
   (stable August 2026; a Rust rewrite that keeps pnpm 11's commands,
   flags, settings, and lockfile format, so upgrading needs no
   migration). pnpm 11 is supported until 2027-04-30; pnpm 10 and

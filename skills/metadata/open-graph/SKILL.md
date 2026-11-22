@@ -118,6 +118,18 @@ a cropped title.
   crawlers generally do not execute JavaScript, so tags injected
   client-side will not be seen.
 
+### Accessibility
+
+- Every page gets a unique, descriptive title — screen readers announce
+  it first (WCAG 2.4.2).
+- Preview images carry alt text: `og:image:alt` and `twitter:image:alt`.
+- Descriptions are plain text that makes sense out of context; they are
+  read aloud by assistive technology in link previews.
+- Validation checks titles and alt text, not just lengths and formats:
+  a present-but-empty title is a failure.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Design preview images as a template: consistent branding, the
@@ -217,6 +229,7 @@ Open Graph tags for a general page with a fallback image:
 - [ ] The preview was tested with a sharing debugger on at least
       one platform.
 - [ ] A fallback image exists for pages without a specific image.
+- [ ] Accessibility: titles unique and descriptive; preview images carry alt text.
 
 ## Expected Deliverables
 

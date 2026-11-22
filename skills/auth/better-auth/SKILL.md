@@ -75,6 +75,25 @@ and database migrations applied.
 - Type the session payload: extend the user and session types through the library's documented inference instead of casting.
 - Social providers need the provider's client ID and secret from the secret manager, plus the provider callback URL registered in the provider console.
 
+### Accessibility
+
+- Labels are visible and associated (`for` / `id`); use `autocomplete`
+  tokens (`email`, `current-password`, `new-password`).
+- Errors identify the field in text, explain the fix, and are
+  announced (`role="alert"` or `aria-describedby`); do not rely on
+  color alone.
+- Password fields offer a show / hide toggle that is itself a labeled
+  button; do not block paste.
+- Sign-in must not require a cognitive function test (WCAG 3.3.8): no
+  memorizing codes across steps, no puzzle CAPTCHA without an
+  accessible alternative.
+- Keep the flow keyboard-only operable, including social sign-in
+  buttons and any dialogs.
+- On error, move focus to the error summary or the first invalid
+  field.
+- Shared baseline: `docs/ACCESSIBILITY-STANDARDS.md` (WCAG 2.2 AA);
+  the full audit workflow lives in the `accessibility` skill.
+
 ## Best Practices
 
 - Enable email verification for sign-up flows that send anything sensitive, and rate-limit verification requests.
@@ -150,6 +169,7 @@ export const { signIn, signOut, useSession } = authClient;
 - [ ] Protected routes reject unauthenticated requests on the server.
 - [ ] Secrets come from the environment; none appear in source control.
 - [ ] Cookie settings are secure in production (secure, httpOnly, sameSite).
+- [ ] Accessibility: labels and autocomplete set; errors announced and identify the field.
 
 ## Expected Deliverables
 
