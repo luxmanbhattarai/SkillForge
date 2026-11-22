@@ -13,7 +13,7 @@ metadata:
   category: content
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Content Research
@@ -47,6 +47,7 @@ between an article that informs and one that merely sounds informed.
 - The audience's level, so research matches what they need (beginner vs. expert).
 - Access to the web and, where relevant, to academic, government, or industry sources.
 - The brief or outline, if one exists, so research covers the planned sections.
+- Conceptual skill; version range: none — no versioned tool, package, or platform dependency.
 
 ## Official Documentation
 

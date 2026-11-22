@@ -13,7 +13,7 @@ metadata:
   category: content
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Content Refresh
@@ -47,6 +47,7 @@ because the page's existing authority is preserved.
 - The page's target keyword and intent, or a way to determine them.
 - Access to analytics or Search Console data showing how the page performs (helpful, not required).
 - Current sources for the facts the page states.
+- Conceptual skill; version range: none — no versioned tool, package, or platform dependency.
 
 ## Official Documentation
 

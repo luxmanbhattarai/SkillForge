@@ -13,7 +13,7 @@ metadata:
   category: content
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Human Editing
@@ -47,6 +47,7 @@ and honest.
 - The target voice: the author's voice, the brand voice, or a sample of writing to match.
 - The audience and purpose, so edits serve the reader, not just style.
 - Any facts or claims in the draft that must not be altered in meaning during the edit.
+- Conceptual skill; version range: none — no versioned tool, package, or platform dependency.
 
 ## Official Documentation
 

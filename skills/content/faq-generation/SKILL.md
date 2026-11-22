@@ -13,7 +13,7 @@ metadata:
   category: content
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # FAQ Generation
@@ -46,6 +46,7 @@ and structuring the result for both readers and search engines.
 - The topic and audience, so answers match their level.
 - Accurate answers or access to the people and sources that can provide them.
 - The page or site where the FAQ will live, and whether FAQ structured data applies.
+- Conceptual skill; version range: none — Google Search is a managed platform with no pinned version, and the skill depends on no versioned tool or package.
 
 ## Official Documentation
 

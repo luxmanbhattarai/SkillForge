@@ -14,7 +14,7 @@ metadata:
   category: content
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # E-E-A-T Writing
@@ -52,6 +52,7 @@ the most important of the four aspects.
 - The author's real credentials, experience, and first-hand involvement with the topic.
 - Access to authoritative sources for the topic (official guidance, peer-reviewed work, primary data).
 - The site's about page, author pages, and contact information, or a plan to create them.
+- Conceptual skill; version range: none — Google Search is a managed platform with no pinned version, and the skill depends on no versioned tool or package.
 
 ## Official Documentation
 

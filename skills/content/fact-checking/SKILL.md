@@ -12,7 +12,7 @@ metadata:
   category: content
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Fact-Checking
@@ -45,6 +45,7 @@ between a draft and a published error.
 - Access to the web and to primary sources (official docs, original studies, government data).
 - The publication date or "as of" date the draft's facts should be true for.
 - Knowledge of which claims matter most (legal, medical, and financial claims need the strictest checks).
+- Conceptual skill; version range: none — no versioned tool, package, or platform dependency.
 
 ## Official Documentation
 

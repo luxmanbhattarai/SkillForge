@@ -13,7 +13,7 @@ metadata:
   category: content
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Content Brief
@@ -49,6 +49,7 @@ the wrong thing.
 - The target keyword and intent, when the piece is meant to rank.
 - Any sources, data, or subject-matter experts the writer should use.
 - Deadline and target length, or the freedom to propose them.
+- Conceptual skill; version range: none — no versioned tool, package, or platform dependency.
 
 ## Official Documentation
 

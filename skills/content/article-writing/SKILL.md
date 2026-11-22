@@ -12,7 +12,7 @@ metadata:
   category: content
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Article Writing
@@ -46,6 +46,7 @@ need to stand up to scrutiny — not quick opinion posts.
 - Research material or access to sources (`content-research` can supply this).
 - The site's voice and style rules, if any exist.
 - Target keyword and intent, when the article is meant to rank for a query.
+- Conceptual skill; version range: none — no versioned tool, package, or platform dependency.
 
 ## Official Documentation
 

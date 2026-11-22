@@ -13,7 +13,7 @@ metadata:
   category: content
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # SEO Content Writing
@@ -47,6 +47,7 @@ crawlers. It never sacrifices readability for optimization.
 - A brief or outline, including the page type and the subtopics to cover.
 - Knowledge of the site's existing pages, to avoid targeting a keyword another page already owns.
 - The site's metadata and internal-linking conventions.
+- Conceptual skill; version range: none — Google Search is a managed platform with no pinned version, and the skill depends on no versioned tool or package.
 
 ## Official Documentation
 

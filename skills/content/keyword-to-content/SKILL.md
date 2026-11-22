@@ -12,7 +12,7 @@ metadata:
   category: content
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Keyword to Content
@@ -45,6 +45,7 @@ brief an agent or writer can execute without further research into intent.
 - Knowledge of the site's existing pages, so the keyword is not mapped to a page that already targets it.
 - Access to search results for the keyword (to read intent from what ranks) or a clear description of the audience.
 - The site's topic cluster map, if one exists, so the new page lands in the right cluster.
+- Conceptual skill; version range: none — Google Search is a managed platform with no pinned version, and the skill depends on no versioned tool or package.
 
 ## Official Documentation
 

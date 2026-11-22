@@ -13,7 +13,7 @@ metadata:
   category: content
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Technical Writing
@@ -127,7 +127,7 @@ READMEs, and treats every code sample as a promise that must work.
 
 Example how-to structure:
 
-```md
+````md
 # Install TypeScript
 
 This guide installs the TypeScript compiler and verifies it runs.
@@ -156,7 +156,7 @@ This guide installs the TypeScript compiler and verifies it runs.
 ## Troubleshooting
 
 - `command not found`: check that the npm global bin directory is on your PATH.
-```
+````
 
 ## Validation Checklist
 

@@ -12,7 +12,7 @@ metadata:
   category: content
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Blog Writing
@@ -46,6 +46,7 @@ finishes and shares.
 - The target reader and the blog's voice (casual, expert, humorous, or a mix).
 - Any facts, quotes, or links the post must include.
 - The desired length and the call to action, if the post has one.
+- Conceptual skill; version range: none — no versioned tool, package, or platform dependency.
 
 ## Official Documentation
 

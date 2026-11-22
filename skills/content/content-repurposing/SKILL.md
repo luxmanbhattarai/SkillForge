@@ -14,7 +14,7 @@ metadata:
   category: content
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Content Repurposing
@@ -48,6 +48,7 @@ will serve.
 - The target formats and channels, and who the audience is on each.
 - The key ideas, data, and quotes in the source that are worth carrying over.
 - Brand and voice rules for each channel, if they differ.
+- Conceptual skill; version range: none — no versioned tool, package, or platform dependency.
 
 ## Official Documentation
 

@@ -13,7 +13,7 @@ metadata:
   category: content
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Content Strategy
@@ -50,6 +50,7 @@ output is a decision-making artifact, not a pile of article ideas.
 - Access to existing content inventory, or an empty site and a blank slate.
 - Analytics or Search Console access when auditing an existing site (helpful, not required).
 - Publishing capacity: how many pieces per week or month the team can realistically ship.
+- Conceptual skill; version range: none — no versioned tool, package, or platform dependency.
 
 ## Official Documentation
 

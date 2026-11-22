@@ -14,7 +14,7 @@ metadata:
   category: content
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Editorial Review
@@ -47,6 +47,7 @@ with fixes, or send back for revision. Nothing ships until it passes.
 - The brief or outline the draft was written against, so the review can check it against the assignment.
 - The target keyword and intent, when the piece is meant to rank.
 - Access to the sources the draft cites, so references can be checked.
+- Conceptual skill; version range: none — no versioned tool, package, or platform dependency.
 
 ## Official Documentation
 
