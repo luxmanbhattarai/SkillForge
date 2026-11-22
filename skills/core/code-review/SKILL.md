@@ -12,7 +12,7 @@ metadata:
   category: core
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Code Review
@@ -44,6 +44,9 @@ on the change, not the author.
 - The pull request has a description explaining what changed and why.
 - Access to the diff, the tests, and the surrounding code.
 - The project's coding standards and review expectations.
+- Conceptual skill; version range: none — applies to any language and
+  platform; the review guides linked in Official Documentation are
+  versionless.
 
 ## Official Documentation
 

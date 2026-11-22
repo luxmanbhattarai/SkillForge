@@ -13,7 +13,7 @@ metadata:
   category: core
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Design Patterns
@@ -49,6 +49,9 @@ or an Adapter, they already know how it behaves.
   modern languages (for example, iterators and callbacks) and should not
   be reimplemented.
 - The codebase's existing conventions for where shared abstractions live.
+- Conceptual skill; version range: none — patterns are
+  language-independent; the catalogues linked in Official Documentation
+  are versionless.
 
 ## Official Documentation
 

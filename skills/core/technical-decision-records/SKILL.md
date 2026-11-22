@@ -13,7 +13,7 @@ metadata:
   category: core
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Technical Decision Records
@@ -52,6 +52,8 @@ deliberate choice.
 - A numbering scheme for ADR files (for example `0001-use-postgres.md`).
 - Knowledge of the decision's context: the options considered and the
   constraints that shaped the choice.
+- Conceptual skill; version range: none — the ADR format is versionless;
+  see the templates linked in Official Documentation.
 
 ## Official Documentation
 

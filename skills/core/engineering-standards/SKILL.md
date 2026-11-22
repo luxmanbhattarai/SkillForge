@@ -12,7 +12,7 @@ metadata:
   category: core
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Engineering Standards
@@ -55,8 +55,8 @@ down where everyone can find them.
   release — tooling that uses the compiler's programmatic API
   (typescript-eslint, framework template type-checking) stays on 6.x
   until 7.1 ships the new API; 5.x is superseded. pnpm 12.x is current;
-  pnpm 11 is supported until 2027-04-30; pnpm 10 and earlier are
-  unsupported.
+  pnpm 11 and pnpm 10 are supported until 2027-04-30; pnpm 9 and earlier
+  are unsupported.
 - Access to the repository settings and CI configuration.
 - Knowledge of the team's size and workflow (solo, small team, or
   many contributors).

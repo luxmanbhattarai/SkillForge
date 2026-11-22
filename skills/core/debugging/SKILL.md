@@ -12,7 +12,7 @@ metadata:
   category: core
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Debugging
@@ -47,6 +47,9 @@ The outcome is a fix you can explain and a bug that cannot silently return.
 - The ability to run the code and its tests locally.
 - Version control history, so recent changes can be inspected and bisected.
 - The error message, stack trace, or observed misbehaviour, quoted exactly.
+- Conceptual skill; version range: none — applies to any language and
+  runtime; the debugger guides linked in Official Documentation cover
+  current tooling.
 
 ## Official Documentation
 

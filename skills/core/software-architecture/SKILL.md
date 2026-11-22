@@ -13,7 +13,7 @@ metadata:
   category: core
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Software Architecture
@@ -50,6 +50,9 @@ against and review.
   budget, availability target, data sensitivity, and team size.
 - Access to the existing codebase and deployment setup when changing an
   existing system.
+- Conceptual skill; version range: none — applies to any stack; the C4
+  model and Twelve-Factor principles linked in Official Documentation
+  are versionless.
 
 ## Official Documentation
 

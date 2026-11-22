@@ -12,7 +12,7 @@ metadata:
   category: core
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Performance
@@ -47,6 +47,9 @@ here is driven by data and checked against a target.
 - A reproducible workload or benchmark that represents real usage.
 - Access to profiling and monitoring tools for the stack in use.
 - A baseline measurement taken before any change.
+- Conceptual skill; version range: none — applies to any stack; the
+  Core Web Vitals thresholds it cites are the current Google thresholds
+  (see Official Documentation).
 
 ## Official Documentation
 

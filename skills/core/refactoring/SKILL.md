@@ -13,7 +13,7 @@ metadata:
   category: core
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Refactoring
@@ -50,6 +50,8 @@ by tests, so the code is never left in a broken intermediate state.
   add characterisation tests first.
 - Version control, with the work done in small, committable steps.
 - A clear scope: which code is being refactored and what "done" means.
+- Conceptual skill; version range: none — applies to any language; the
+  catalogues linked in Official Documentation are versionless.
 
 ## Official Documentation
 

@@ -12,7 +12,7 @@ metadata:
   category: core
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Clean Code
@@ -45,6 +45,8 @@ by how much effort it costs the next reader.
 - A working test suite, or at least a way to verify behaviour after
   editing (see `tdd`).
 - Familiarity with the codebase's existing naming conventions.
+- Conceptual skill; version range: none — applies to any language; the
+  style guides linked in Official Documentation are versionless.
 
 ## Official Documentation
 
