@@ -1,6 +1,6 @@
 {
   "name": "skillforge",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A universal, production-grade AI Agent Skills library covering software engineering, frontend/backend, databases, auth, infrastructure, SEO, content, and media.",
   "keywords": [
     "agent-skills",

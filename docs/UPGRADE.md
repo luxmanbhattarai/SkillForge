@@ -1,7 +1,7 @@
 # Upgrade Guide
 
 How to upgrade SkillForge — installed skills day to day, and the
-library itself from v1.0.0 to the production-upgrade branch.
+library itself from v1.0.0 to v1.1.0 on `main`.
 
 ## Upgrading installed skills
 

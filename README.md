@@ -9,8 +9,7 @@ any agent implementing the Agent Skills standard) reusable skills they can
 discover and apply across projects — instead of reinventing instructions in
 every repo.
 
-> **Status:** v1.0.0 released 2026-11-20. The production upgrade (branch
-> `feat/skillforge-production-upgrade`, unreleased) brings the library to
+> **Status:** v1.1.0 released 2026-11-21. The library holds
 > **277 skills** — **228 original** and **49 upstream** — across
 > **18 categories**, plus **24 agents** and **16 workflows**. Counts on
 > this page are verified against `registry/`; run
