@@ -13,7 +13,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js ^22.22.3, ^24.15.0, or >=26.0.0 and a Nuxt 4 project.
 ---
 

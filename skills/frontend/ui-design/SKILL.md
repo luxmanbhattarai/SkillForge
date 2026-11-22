@@ -12,7 +12,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # UI Design
@@ -44,6 +44,8 @@ interface at a glance or have to work to use it.
 
 ## Prerequisites
 
+- Version range: none — this skill covers design principles, not a
+  versioned package or tool.
 - Knowledge of the content, the user, and the task the interface must
   support; design without a user task is decoration.
 - The brand constraints that exist (logo, brand colors, tone), if any.

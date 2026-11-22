@@ -12,7 +12,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Responsive Design
@@ -47,6 +47,8 @@ working page.
 
 ## Prerequisites
 
+- Version range: none — this skill covers CSS and HTML standards, not
+  a versioned package.
 - Valid HTML (see `html`) and working base CSS (see `css`).
 - The viewport meta tag in the document head; without it, mobile browsers
   render a desktop-width layout.
@@ -98,10 +100,11 @@ working page.
 - Fluid type and spacing: use `clamp()` so text and gaps scale smoothly
   between breakpoints instead of jumping.
 - Touch targets: interactive elements are at least 44 by 44 CSS pixels
-  as the practical target (WCAG 2.2 AAA criterion 2.5.5, and the iOS /
-  Android platform guideline), with adequate spacing between adjacent
-  targets. The WCAG 2.2 AA minimum is 24 by 24 CSS pixels
-  (criterion 2.5.8, with a spacing exception).
+  as the practical target (WCAG 2.2 AAA criterion 2.5.5, and the iOS
+  platform guideline; Android's Material guideline is 48 by 48 dp),
+  with adequate spacing between adjacent targets. The WCAG 2.2 AA
+  minimum is 24 by 24 CSS pixels (criterion 2.5.8, with a spacing
+  exception).
 - No horizontal scrolling on the page itself at any width from 320px up;
   only deliberate inner containers (tables, code) may scroll horizontally.
 - Line length: body text stays between roughly 45 and 75 characters per

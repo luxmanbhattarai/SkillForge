@@ -12,7 +12,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # HTML
@@ -45,6 +45,8 @@ markup foundation.
 
 ## Prerequisites
 
+- Version range: none — HTML is a living standard with no version
+  numbers (see Official Documentation below).
 - A text editor and a way to open the page in a browser for inspection.
 - Knowledge of the page's content and purpose before choosing elements.
 - If the markup lives in a framework template, that framework's project

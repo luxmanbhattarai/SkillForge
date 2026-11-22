@@ -12,7 +12,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js 24 LTS and a Tailwind CSS v4 project with the Tailwind CLI, PostCSS plugin, or Vite plugin.
 ---
 
@@ -186,8 +186,9 @@ utility-heavy markup maintainable.
 ## Common Mistakes
 
 - Using v3 configuration (`tailwind.config.js`) in a v4 project — v4 is
-  CSS-first; the JavaScript config is ignored unless the compatibility
-  package is installed.
+  CSS-first and no longer auto-detects a JavaScript config; load one
+  explicitly with the `@config` directive if it is still needed, and
+  prefer `@theme` for new configuration.
 - String-concatenated class names (`'text-' + color`) — the scanner
   cannot see them, so no CSS is generated. Write full class names.
 - Arbitrary values everywhere — defeats the design system. Add tokens to

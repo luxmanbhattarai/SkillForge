@@ -12,7 +12,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js ^22.18.0 or >=24.12.0 and a Vite-based project created with create-vue.
 ---
 

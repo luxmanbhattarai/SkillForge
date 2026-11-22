@@ -13,7 +13,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js 22.13+, 24.3+, or 26+ (odd-numbered releases unsupported) and an Expo account for EAS cloud builds, updates, and submissions.
 ---
 

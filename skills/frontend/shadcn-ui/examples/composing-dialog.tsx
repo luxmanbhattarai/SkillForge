@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -22,7 +23,9 @@ export function DeleteAccountDialog() {
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-end gap-2">
-          <Button variant="outline">Cancel</Button>
+          <DialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
           <Button variant="destructive">Delete</Button>
         </div>
       </DialogContent>

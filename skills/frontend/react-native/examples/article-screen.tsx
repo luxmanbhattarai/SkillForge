@@ -37,7 +37,7 @@ export function ArticleListScreen() {
       keyExtractor={(article) => article.id}
       ListEmptyComponent={<Text>No articles yet.</Text>}
       renderItem={({ item }) => (
-        <View accessible accessibilityRole="button" accessibilityLabel={item.title}>
+        <View accessible accessibilityLabel={item.title}>
           <Text>{item.title}</Text>
         </View>
       )}

@@ -12,7 +12,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Frontend Performance
@@ -47,6 +47,8 @@ weight, render-blocking resources, and layout stability.
 
 ## Prerequisites
 
+- Version range: none — this skill covers web standards and measurement
+  tools (Core Web Vitals, Lighthouse), not a versioned package.
 - The page running in a browser, ideally in production or a
   production-like environment; development builds are not representative.
 - A measurement tool: Lighthouse (in Chrome DevTools), PageSpeed Insights,

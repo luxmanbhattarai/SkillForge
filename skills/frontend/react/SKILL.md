@@ -12,7 +12,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js 24 LTS and a React 19 project set up with a bundler or framework such as Vite or Next.js.
 ---
 
@@ -45,8 +45,8 @@ and the common pitfalls that make React apps slow or buggy.
 
 ## Prerequisites
 
-- Node.js 24 LTS or 26 LTS and a React 19 project (current major line
- ; 26 is the newest Node.js LTS line, 24 and 22
+- Node.js 24 LTS or 26 LTS and a React 19 project (current major line;
+  26 is the newest Node.js LTS line, 24 and 22
   remain in LTS); do not assume a minor version. React 19.2 (October
   2025) added the `<Activity>` component (hide a subtree while
   preserving its state) and the `useEffectEvent` hook (non-reactive

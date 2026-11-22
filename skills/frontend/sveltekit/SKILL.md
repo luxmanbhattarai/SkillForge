@@ -13,8 +13,8 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
-compatibility: Requires Node.js 22.17 or newer, Vite 8, and Svelte 5.56.4 or newer.
+  last_verified: "2026-11-22"
+compatibility: Requires Node.js 22.17 or newer, Vite 8, and Svelte 5.57.1 or newer.
 ---
 
 # SvelteKit
@@ -51,7 +51,7 @@ production deployment.
 
 ## Prerequisites
 
-- Node.js v22.17 or newer, Vite v8.0.12 or newer, Svelte v5.56.4
+- Node.js v22.17 or newer, Vite v8.0.12 or newer, Svelte v5.57.1
   or newer, and TypeScript v6 for typed projects (the minimums
   SvelteKit 3 requires). Do not assume a minor version.
 - A SvelteKit 3 project (current major line,
@@ -185,8 +185,9 @@ production deployment.
   and supports streaming with promises.
 - Stream slow data: return a promise from `load` and await it in
   the component with `{#await}`, so the shell renders immediately.
-- Use `invalidate` / `invalidateAll` from `$app/navigation` to
-  refresh `load` data after a mutation instead of a full reload.
+- Use `invalidate` / `refreshAll` from `$app/navigation` to
+  refresh `load` data after a mutation instead of a full reload
+  (`invalidateAll` is deprecated in favour of `refreshAll`).
 - Prefetch links the user is likely to follow with
   `data-sveltekit-preload-data="hover"` on navigation-heavy pages.
 - Keep `+page.server.js` files free of client imports and
@@ -240,7 +241,7 @@ production deployment.
   lazy loading for below-the-fold content (see
   `frontend-performance`).
 - Invalidate narrowly: `invalidate(url)` re-runs only the `load`
-  functions that depend on that URL; `invalidateAll` re-runs
+  functions that depend on that URL; `refreshAll` re-runs
   everything and should be rare.
 - Adapter choice affects latency: edge adapters serve closer to
   users; a Node adapter on one region adds round-trips for distant

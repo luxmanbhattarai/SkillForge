@@ -11,7 +11,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js 24 LTS and the TypeScript compiler (tsc) for type checking and builds.
 ---
 
@@ -124,11 +124,12 @@ the code ever runs.
 - Keep `tsconfig.json` paths and module resolution consistent with the
   bundler (`moduleResolution: "bundler"` for Vite-style projects,
   `"nodenext"` for Node.js-first projects). The legacy `"node"`
-  (node10) and `"classic"` resolutions were deprecated in TypeScript
-  6.0 — do not use them in new projects. Also avoid other options
-  deprecated in 6.0 and removed in 7.0: `target: "es5"`,
-  `--downlevelIteration`, `--baseUrl`, `--outFile`, and the `amd`,
-  `umd`, and `systemjs` module values.
+  (node10) resolution was deprecated in TypeScript 6.0 and `"classic"`
+  was removed outright — do not use them in new projects. Also avoid
+  other options deprecated in 6.0 and removed in 7.0: `target: "es5"`,
+  `--downlevelIteration`, `--baseUrl`, and the `amd`,
+  `umd`, and `systemjs` module values. `--outFile` was removed
+  outright in 6.0; use a bundler to concatenate output instead.
 - TypeScript 7.0 ships no programmatic compiler API (one is expected
   in 7.1). Tooling that drives the compiler API (for example
   typescript-eslint) runs against TypeScript 6.0 via the

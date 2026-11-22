@@ -7,7 +7,7 @@ export const actions: Actions = {
     const data = await request.formData();
     const email = data.get('email');
     if (typeof email !== 'string' || !email.includes('@')) {
-      return fail(400, { email: '', error: 'Enter a valid email address.' });
+      return fail(400, { email: typeof email === 'string' ? email : '', error: 'Enter a valid email address.' });
     }
     // Store the subscription on the server here.
     return { success: true };

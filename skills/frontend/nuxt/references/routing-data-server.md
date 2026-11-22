@@ -21,8 +21,9 @@
   Never call `useFetch`/`useAsyncData` conditionally or outside
   `setup`, a plugin, or route middleware.
 - Server routes: each file under `server/api/` exports a default
-  handler defined with `defineHandler` imported from `nuxt/server`
-  (introduced in Nuxt 4.6; `defineEventHandler` is an alias).
+  handler defined with `defineEventHandler` imported from `nuxt/server`
+  (introduced in Nuxt 4.6; `defineHandler` is the newer name for the
+  same helper, available from Nuxt 4.7).
   Handlers may return JSON, a `Promise`, or a `Response`. Suffix
   file names with the method (`.get.ts`, `.post.ts`) to restrict
   it. Dynamic parameters use `[name].ts` and are read with

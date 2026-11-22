@@ -12,7 +12,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js 24 LTS and a Next.js 16 project; deployment targets may need a hosting account.
 ---
 
@@ -49,9 +49,9 @@ from project structure to a production build.
   line; 24 and 22 remain in LTS. Next.js 16 requires
   Node.js 20.9 or newer at minimum (Node.js 18 is no longer supported).
 - A Next.js 16 project (current major line, Active LTS since
-  2026-10-21); do not assume a minor version. New projects are created
-  with `npx create-next-app@latest`. Next.js 15 is in Maintenance LTS;
-  14 and earlier are unsupported. Turbopack is the default bundler in
+  2025-10-21); do not assume a minor version. New projects are created
+  with `npx create-next-app@latest`. Next.js 15 reached end of support
+  on 2026-10-21; 15 and earlier are unsupported. Turbopack is the default bundler in
   16 — do not add a `--turbopack` flag, and move any Turbopack config
   from `experimental.turbopack` to the top-level `turbopack` key.
 - Familiarity with `react` and `typescript`; the App Router assumes both.

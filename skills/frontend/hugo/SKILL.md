@@ -11,7 +11,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires the Hugo binary installed on the machine building the site; Sass/SCSS support needs a separate Dart Sass install (see Prerequisites).
 ---
 
@@ -129,8 +129,9 @@ wanted in the toolchain.
   headings in order — check the shipped HTML, not just the source.
 - Route changes move focus to the new page heading or announce the
   change via a live region; never leave focus on a removed link.
-- Hydration and islands must not break keyboard or screen-reader
-  behavior: the interactive page matches the server HTML.
+- Client-side enhancements (search, menus, theme toggles) must not
+  break keyboard or screen-reader behavior: the page works without
+  JavaScript, and enhanced behavior matches the static HTML.
 - Forms, dialogs, and menus use native elements or accessible
   primitives; custom widgets follow the ARIA Authoring Practices Guide.
 - Images get `alt` (empty when decorative); loading states announce

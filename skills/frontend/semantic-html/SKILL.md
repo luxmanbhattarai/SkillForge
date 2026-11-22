@@ -12,7 +12,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Semantic HTML
@@ -43,6 +43,8 @@ navigate, search engines can understand, and future maintainers can read.
 
 ## Prerequisites
 
+- Version range: none — HTML is a living standard with no version
+  numbers (see `html` and Official Documentation below).
 - The page content and its logical structure (what is a header, a section,
   an aside, a navigation block).
 - Familiarity with the base rules in `html` (valid markup, headings,

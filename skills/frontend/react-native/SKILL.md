@@ -14,7 +14,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js 22 LTS; Xcode on macOS for iOS builds and Android Studio for Android builds.
 ---
 

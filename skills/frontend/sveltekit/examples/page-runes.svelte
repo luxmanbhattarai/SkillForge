@@ -13,9 +13,9 @@
   <form
     method="POST"
     use:enhance={() => {
-      return async ({ update }) => {
+      return async ({ result, update }) => {
         await update();
-        subscribed = true;
+        if (result.type === 'success') subscribed = true;
       };
     }}
   >

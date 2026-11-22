@@ -12,7 +12,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # CSS
@@ -45,6 +45,8 @@ frontend styling skill builds on.
 
 ## Prerequisites
 
+- Version range: none — CSS has no version numbers; it is a set of
+  modules that advance independently (see Official Documentation below).
 - Valid HTML to style (see `html`); CSS cannot fix broken markup.
 - Knowledge of the design intent: layout, spacing scale, colors, and type
   scale the stylesheet must implement.

@@ -12,7 +12,7 @@ metadata:
   category: frontend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Modern CSS
@@ -47,6 +47,8 @@ cascade that is explicit rather than accidental.
 
 ## Prerequisites
 
+- Version range: none — CSS has no version numbers; features are
+  adopted per browser-support target (see Official Documentation below).
 - Solid grounding in the `css` skill: selectors, specificity, flexbox,
   grid, and custom properties.
 - Knowledge of the project's browser support target, so each feature can
