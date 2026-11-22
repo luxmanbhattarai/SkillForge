@@ -1,0 +1,433 @@
+{
+  "format": "skillforge-quality-snapshot",
+  "version": 1,
+  "generated": "2026-11-22T02:42:12.997Z",
+  "commit": {
+    "hash": "80e5894",
+    "short": "80e5894",
+    "date": "2026-11-22T02:37:35+00:00",
+    "branch": "feat/production-hardening"
+  },
+  "metrics": {
+    "counts.totalSkills": {
+      "value": 277,
+      "source": "registry/skills.json"
+    },
+    "counts.originalSkills": {
+      "value": 228,
+      "source": "registry/skills.json"
+    },
+    "counts.upstreamSkills": {
+      "value": 49,
+      "source": "registry/skills.json"
+    },
+    "counts.categories": {
+      "value": 18,
+      "source": "registry/skills.json"
+    },
+    "counts.agents": {
+      "value": 24,
+      "source": "registry/agents.json"
+    },
+    "counts.workflows": {
+      "value": 16,
+      "source": "registry/workflows.json"
+    },
+    "score.meanOverall": {
+      "value": 88,
+      "source": "scripts/score-skills.mjs --json"
+    },
+    "score.accuracy": {
+      "value": 100,
+      "source": "scripts/score-skills.mjs --json"
+    },
+    "score.completeness": {
+      "value": 100,
+      "source": "scripts/score-skills.mjs --json"
+    },
+    "score.actionability": {
+      "value": 89,
+      "source": "scripts/score-skills.mjs --json"
+    },
+    "score.security": {
+      "value": 95,
+      "source": "scripts/score-skills.mjs --json"
+    },
+    "score.testing": {
+      "value": 37,
+      "source": "scripts/score-skills.mjs --json"
+    },
+    "score.documentation": {
+      "value": 99,
+      "source": "scripts/score-skills.mjs --json"
+    },
+    "score.versioning": {
+      "value": 82,
+      "source": "scripts/score-skills.mjs --json"
+    },
+    "score.maintainability": {
+      "value": 100,
+      "source": "scripts/score-skills.mjs --json"
+    },
+    "score.critical": {
+      "value": 0,
+      "source": "scripts/score-skills.mjs --json"
+    },
+    "score.scored": {
+      "value": 228,
+      "source": "scripts/score-skills.mjs --json"
+    },
+    "score.below70": {
+      "value": 0,
+      "source": "scripts/score-skills.mjs --json",
+      "detail": {
+        "threshold": 70
+      }
+    },
+    "a11y.coveragePct": {
+      "value": 100,
+      "source": "scripts/score-skills.mjs --json (accessibility flags)",
+      "detail": {
+        "applicable": 62,
+        "withContent": 62
+      }
+    },
+    "flags.totalFlagged": {
+      "value": 82,
+      "source": "scripts/score-skills.mjs --json (per-skill flags)"
+    },
+    "flags.flaggedPct": {
+      "value": 36,
+      "source": "scripts/score-skills.mjs --json (per-skill flags)"
+    },
+    "flags.versioning": {
+      "value": 82,
+      "source": "scripts/score-skills.mjs --json (per-skill flags)"
+    },
+    "categoryMean.ai-engineering": {
+      "value": 96,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.architecture": {
+      "value": 87.3,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.auth": {
+      "value": 89.9,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.backend": {
+      "value": 91.8,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.content": {
+      "value": 77.7,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.core": {
+      "value": 85.5,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.database": {
+      "value": 89.2,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.desktop": {
+      "value": 97.3,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.documentation": {
+      "value": 83.8,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.frontend": {
+      "value": 88.4,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.infrastructure": {
+      "value": 90.8,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.media": {
+      "value": 88.1,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.metadata": {
+      "value": 86.3,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.performance": {
+      "value": 88.4,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.security": {
+      "value": 87.9,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.seo": {
+      "value": 84.6,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "categoryMean.testing": {
+      "value": 92.6,
+      "source": "scripts/score-skills.mjs --json (per-skill overall)"
+    },
+    "verification.verifiedPct": {
+      "value": 92.1,
+      "source": "sources/verification-status.json",
+      "detail": {
+        "total": 277,
+        "verified": 255,
+        "withLimitations": 16,
+        "needsCorrection": 6,
+        "unverified": 0
+      }
+    },
+    "verification.needsCorrection": {
+      "value": 6,
+      "source": "sources/verification-status.json"
+    },
+    "verification.withLimitations": {
+      "value": 16,
+      "source": "sources/verification-status.json"
+    },
+    "verification.unverified": {
+      "value": 0,
+      "source": "sources/verification-status.json"
+    },
+    "security.findings": {
+      "value": 0,
+      "source": "scripts/security-scan.mjs --json"
+    },
+    "security.scannedTextFiles": {
+      "value": 1389,
+      "source": "scripts/security-scan.mjs --json"
+    },
+    "links.brokenInternal": {
+      "value": 0,
+      "source": "scripts/check-links.mjs (offline)"
+    },
+    "links.internalChecked": {
+      "value": 262,
+      "source": "scripts/check-links.mjs (offline)"
+    },
+    "links.externalListed": {
+      "value": 609,
+      "source": "scripts/check-links.mjs (offline)"
+    },
+    "validation.errors": {
+      "value": 0,
+      "source": "scripts/validate-skills.mjs"
+    },
+    "validation.warnings": {
+      "value": 5,
+      "source": "scripts/validate-skills.mjs"
+    },
+    "validation.skillsChecked": {
+      "value": 277,
+      "source": "scripts/validate-skills.mjs"
+    },
+    "freshness.verifiedWithin365dPct": {
+      "value": 100,
+      "source": "registry/skills.json last_verified vs commit date",
+      "detail": {
+        "referenceDate": "2026-11-22",
+        "dated": 277
+      }
+    },
+    "freshness.missingLastVerified": {
+      "value": 0,
+      "source": "registry/skills.json last_verified"
+    },
+    "tests.passed": {
+      "value": 648,
+      "source": "node --test (TAP summary)"
+    },
+    "tests.failed": {
+      "value": 0,
+      "source": "node --test (TAP summary)"
+    },
+    "tests.passRate": {
+      "value": 100,
+      "source": "node --test (TAP summary)"
+    },
+    "tests.skipped": {
+      "value": 14,
+      "source": "node --test (TAP summary)"
+    },
+    "evals.passRate": {
+      "value": 100,
+      "source": "evals/reports/latest.json",
+      "detail": {
+        "provider": "mock",
+        "generated": "2026-11-22T02:40:14.773Z"
+      }
+    },
+    "evals.total": {
+      "value": 463,
+      "source": "evals/reports/latest.json"
+    },
+    "evals.failed": {
+      "value": 0,
+      "source": "evals/reports/latest.json"
+    },
+    "freshness.report": {
+      "value": true,
+      "source": "ai/quality/freshness-report.json",
+      "detail": {
+        "total": 277,
+        "byBand": {
+          "FRESH": 268,
+          "AGING": 3,
+          "STALE": 6,
+          "CRITICAL": 0,
+          "UNVERIFIED": 0
+        },
+        "changedAfterVerification": 42,
+        "gitAvailable": true,
+        "linksReportUsed": false,
+        "scores": {
+          "lowest": 66.4,
+          "highest": 99.9,
+          "mean": 95.9
+        }
+      }
+    },
+    "a11y.docCoveragePct": {
+      "value": 100,
+      "source": "sources/accessibility-classification.json + ### Accessibility subsection rule",
+      "detail": {
+        "applicable": 95,
+        "withGuidance": 95
+      }
+    },
+    "a11y.applicableSkills": {
+      "value": 95,
+      "source": "sources/accessibility-classification.json"
+    },
+    "a11y.withGuidance": {
+      "value": 95,
+      "source": "sources/accessibility-classification.json + ### Accessibility subsection rule"
+    },
+    "disclosure.coveragePct": {
+      "value": 19.3,
+      "source": "ai/quality/disclosure-coverage.json"
+    },
+    "disclosure.medianBodyLines": {
+      "value": 247,
+      "source": "ai/quality/disclosure-coverage.json"
+    },
+    "disclosure.maxBodyLines": {
+      "value": 400,
+      "source": "ai/quality/disclosure-coverage.json"
+    },
+    "disclosure.skillsWithSubdirs": {
+      "value": 44,
+      "source": "ai/quality/disclosure-coverage.json"
+    }
+  },
+  "details": {
+    "categories": {
+      "ai-engineering": {
+        "n": 5,
+        "meanOverall": 96,
+        "flagged": 0
+      },
+      "architecture": {
+        "n": 12,
+        "meanOverall": 87.3,
+        "flagged": 4
+      },
+      "auth": {
+        "n": 14,
+        "meanOverall": 89.9,
+        "flagged": 0
+      },
+      "backend": {
+        "n": 21,
+        "meanOverall": 91.8,
+        "flagged": 0
+      },
+      "content": {
+        "n": 19,
+        "meanOverall": 77.7,
+        "flagged": 14
+      },
+      "core": {
+        "n": 11,
+        "meanOverall": 85.5,
+        "flagged": 8
+      },
+      "database": {
+        "n": 18,
+        "meanOverall": 89.2,
+        "flagged": 1
+      },
+      "desktop": {
+        "n": 3,
+        "meanOverall": 97.3,
+        "flagged": 0
+      },
+      "documentation": {
+        "n": 5,
+        "meanOverall": 83.8,
+        "flagged": 3
+      },
+      "frontend": {
+        "n": 21,
+        "meanOverall": 88.4,
+        "flagged": 7
+      },
+      "infrastructure": {
+        "n": 22,
+        "meanOverall": 90.8,
+        "flagged": 4
+      },
+      "media": {
+        "n": 16,
+        "meanOverall": 88.1,
+        "flagged": 4
+      },
+      "metadata": {
+        "n": 6,
+        "meanOverall": 86.3,
+        "flagged": 5
+      },
+      "performance": {
+        "n": 8,
+        "meanOverall": 88.4,
+        "flagged": 1
+      },
+      "security": {
+        "n": 8,
+        "meanOverall": 87.9,
+        "flagged": 6
+      },
+      "seo": {
+        "n": 31,
+        "meanOverall": 84.6,
+        "flagged": 21
+      },
+      "testing": {
+        "n": 8,
+        "meanOverall": 92.6,
+        "flagged": 4
+      }
+    },
+    "flags": {
+      "histogram": {
+        "versioning: no version info in Prerequisites": 82
+      },
+      "byType": {
+        "versioning": 82
+      },
+      "totalFlagged": 82
+    },
+    "a11y": {
+      "applicable": 95,
+      "withGuidance": 95,
+      "lacking": []
+    }
+  },
+  "unavailable": []
+}

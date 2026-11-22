@@ -1,0 +1,2262 @@
+{
+  "generated": "2026-11-22",
+  "commit": "80e589445e040e59c03cc1ac6b696f603373c3f5",
+  "summary": {
+    "total": 228,
+    "medianLines": 247,
+    "maxLines": 400,
+    "minLines": 142,
+    "overBudget": 28,
+    "withFolders": 44,
+    "byFolder": {
+      "references": 28,
+      "scripts": 12,
+      "assets": 9,
+      "examples": 40
+    },
+    "byStatus": {
+      "disclosed": 16,
+      "disclosed-over-budget": 28,
+      "single-file": 184
+    }
+  },
+  "longest": [
+    {
+      "path": "skills/desktop/electron/SKILL.md",
+      "lines": 400,
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/desktop/rust/SKILL.md",
+      "lines": 372,
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/desktop/tauri/SKILL.md",
+      "lines": 372,
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/backend/python-sdk/SKILL.md",
+      "lines": 362,
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/infrastructure/self-hosted-vps/SKILL.md",
+      "lines": 359,
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/backend/openapi/SKILL.md",
+      "lines": 358,
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/backend/advanced-api-architecture/SKILL.md",
+      "lines": 356,
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/seo/serp-monitoring/SKILL.md",
+      "lines": 355,
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/ai-engineering/ai-agents/SKILL.md",
+      "lines": 349,
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/frontend/expo/SKILL.md",
+      "lines": 345,
+      "status": "disclosed-over-budget"
+    }
+  ],
+  "skills": [
+    {
+      "path": "skills/ai-engineering/agent-evaluation/SKILL.md",
+      "name": "agent-evaluation",
+      "category": "ai-engineering",
+      "lines": 289,
+      "bodyLines": 271,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/ai-engineering/ai-agents/SKILL.md",
+      "name": "ai-agents",
+      "category": "ai-engineering",
+      "lines": 349,
+      "bodyLines": 331,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/ai-engineering/llm-integration/SKILL.md",
+      "name": "llm-integration",
+      "category": "ai-engineering",
+      "lines": 308,
+      "bodyLines": 290,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/ai-engineering/mcp-security/SKILL.md",
+      "name": "mcp-security",
+      "category": "ai-engineering",
+      "lines": 308,
+      "bodyLines": 287,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/ai-engineering/rag/SKILL.md",
+      "name": "rag",
+      "category": "ai-engineering",
+      "lines": 296,
+      "bodyLines": 278,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/architecture/changesets/SKILL.md",
+      "name": "changesets",
+      "category": "architecture",
+      "lines": 252,
+      "bodyLines": 234,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/architecture/dependency-management/SKILL.md",
+      "name": "dependency-management",
+      "category": "architecture",
+      "lines": 231,
+      "bodyLines": 215,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/architecture/domain-driven-design/SKILL.md",
+      "name": "domain-driven-design",
+      "category": "architecture",
+      "lines": 197,
+      "bodyLines": 181,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/architecture/microservices/SKILL.md",
+      "name": "microservices",
+      "category": "architecture",
+      "lines": 162,
+      "bodyLines": 146,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/architecture/modular-monolith/SKILL.md",
+      "name": "modular-monolith",
+      "category": "architecture",
+      "lines": 162,
+      "bodyLines": 146,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/architecture/monorepo/SKILL.md",
+      "name": "monorepo",
+      "category": "architecture",
+      "lines": 178,
+      "bodyLines": 162,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/architecture/nx/SKILL.md",
+      "name": "nx",
+      "category": "architecture",
+      "lines": 256,
+      "bodyLines": 239,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/architecture/package-boundaries/SKILL.md",
+      "name": "package-boundaries",
+      "category": "architecture",
+      "lines": 182,
+      "bodyLines": 165,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/architecture/pnpm-workspaces/SKILL.md",
+      "name": "pnpm-workspaces",
+      "category": "architecture",
+      "lines": 185,
+      "bodyLines": 169,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/architecture/release-management/SKILL.md",
+      "name": "release-management",
+      "category": "architecture",
+      "lines": 199,
+      "bodyLines": 181,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/architecture/system-design/SKILL.md",
+      "name": "system-design",
+      "category": "architecture",
+      "lines": 171,
+      "bodyLines": 154,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/architecture/turborepo/SKILL.md",
+      "name": "turborepo",
+      "category": "architecture",
+      "lines": 188,
+      "bodyLines": 173,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/auth/auth-security/SKILL.md",
+      "name": "auth-security",
+      "category": "auth",
+      "lines": 180,
+      "bodyLines": 163,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/auth/authentication/SKILL.md",
+      "name": "authentication",
+      "category": "auth",
+      "lines": 182,
+      "bodyLines": 165,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/auth/authjs/SKILL.md",
+      "name": "authjs",
+      "category": "auth",
+      "lines": 301,
+      "bodyLines": 284,
+      "folders": [
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/auth/authorization/SKILL.md",
+      "name": "authorization",
+      "category": "auth",
+      "lines": 164,
+      "bodyLines": 148,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/auth/better-auth/SKILL.md",
+      "name": "better-auth",
+      "category": "auth",
+      "lines": 185,
+      "bodyLines": 169,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/auth/clerk/SKILL.md",
+      "name": "clerk",
+      "category": "auth",
+      "lines": 303,
+      "bodyLines": 286,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/auth/jwt/SKILL.md",
+      "name": "jwt",
+      "category": "auth",
+      "lines": 163,
+      "bodyLines": 147,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/auth/mfa/SKILL.md",
+      "name": "mfa",
+      "category": "auth",
+      "lines": 189,
+      "bodyLines": 173,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/auth/multi-tenancy/SKILL.md",
+      "name": "multi-tenancy",
+      "category": "auth",
+      "lines": 172,
+      "bodyLines": 155,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/auth/oauth/SKILL.md",
+      "name": "oauth",
+      "category": "auth",
+      "lines": 188,
+      "bodyLines": 172,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/auth/passkeys/SKILL.md",
+      "name": "passkeys",
+      "category": "auth",
+      "lines": 311,
+      "bodyLines": 294,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/auth/rbac/SKILL.md",
+      "name": "rbac",
+      "category": "auth",
+      "lines": 168,
+      "bodyLines": 152,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/auth/session-management/SKILL.md",
+      "name": "session-management",
+      "category": "auth",
+      "lines": 180,
+      "bodyLines": 164,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/auth/supabase-auth/SKILL.md",
+      "name": "supabase-auth",
+      "category": "auth",
+      "lines": 309,
+      "bodyLines": 292,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/backend/advanced-api-architecture/SKILL.md",
+      "name": "advanced-api-architecture",
+      "category": "backend",
+      "lines": 356,
+      "bodyLines": 338,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/backend/api-client-generation/SKILL.md",
+      "name": "api-client-generation",
+      "category": "backend",
+      "lines": 310,
+      "bodyLines": 292,
+      "folders": [
+        "references",
+        "scripts",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/backend/api-design/SKILL.md",
+      "name": "api-design",
+      "category": "backend",
+      "lines": 267,
+      "bodyLines": 252,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/backend/background-jobs/SKILL.md",
+      "name": "background-jobs",
+      "category": "backend",
+      "lines": 243,
+      "bodyLines": 227,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/backend/caching/SKILL.md",
+      "name": "caching",
+      "category": "backend",
+      "lines": 239,
+      "bodyLines": 223,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/backend/express/SKILL.md",
+      "name": "express",
+      "category": "backend",
+      "lines": 317,
+      "bodyLines": 299,
+      "folders": [
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/backend/fastify/SKILL.md",
+      "name": "fastify",
+      "category": "backend",
+      "lines": 323,
+      "bodyLines": 305,
+      "folders": [
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/backend/graphql/SKILL.md",
+      "name": "graphql",
+      "category": "backend",
+      "lines": 269,
+      "bodyLines": 253,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/backend/hono/SKILL.md",
+      "name": "hono",
+      "category": "backend",
+      "lines": 244,
+      "bodyLines": 227,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/backend/mcp-development/SKILL.md",
+      "name": "mcp-development",
+      "category": "backend",
+      "lines": 273,
+      "bodyLines": 257,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/backend/nestjs/SKILL.md",
+      "name": "nestjs",
+      "category": "backend",
+      "lines": 303,
+      "bodyLines": 285,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/backend/nodejs/SKILL.md",
+      "name": "nodejs",
+      "category": "backend",
+      "lines": 261,
+      "bodyLines": 244,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/backend/openapi/SKILL.md",
+      "name": "openapi",
+      "category": "backend",
+      "lines": 358,
+      "bodyLines": 341,
+      "folders": [
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/backend/package-development/SKILL.md",
+      "name": "package-development",
+      "category": "backend",
+      "lines": 265,
+      "bodyLines": 249,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/backend/python-sdk/SKILL.md",
+      "name": "python-sdk",
+      "category": "backend",
+      "lines": 362,
+      "bodyLines": 344,
+      "folders": [
+        "references",
+        "assets",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/backend/queues/SKILL.md",
+      "name": "queues",
+      "category": "backend",
+      "lines": 242,
+      "bodyLines": 226,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/backend/rate-limiting/SKILL.md",
+      "name": "rate-limiting",
+      "category": "backend",
+      "lines": 263,
+      "bodyLines": 247,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/backend/rest-api/SKILL.md",
+      "name": "rest-api",
+      "category": "backend",
+      "lines": 247,
+      "bodyLines": 231,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/backend/sdk-development/SKILL.md",
+      "name": "sdk-development",
+      "category": "backend",
+      "lines": 268,
+      "bodyLines": 252,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/backend/trpc/SKILL.md",
+      "name": "trpc",
+      "category": "backend",
+      "lines": 243,
+      "bodyLines": 227,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/backend/typescript-sdk/SKILL.md",
+      "name": "typescript-sdk",
+      "category": "backend",
+      "lines": 334,
+      "bodyLines": 316,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/content/article-writing/SKILL.md",
+      "name": "article-writing",
+      "category": "content",
+      "lines": 175,
+      "bodyLines": 159,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/blog-writing/SKILL.md",
+      "name": "blog-writing",
+      "category": "content",
+      "lines": 167,
+      "bodyLines": 151,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/content-brief/SKILL.md",
+      "name": "content-brief",
+      "category": "content",
+      "lines": 246,
+      "bodyLines": 229,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/content-localization/SKILL.md",
+      "name": "content-localization",
+      "category": "content",
+      "lines": 171,
+      "bodyLines": 154,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/content-refresh/SKILL.md",
+      "name": "content-refresh",
+      "category": "content",
+      "lines": 171,
+      "bodyLines": 154,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/content-repurposing/SKILL.md",
+      "name": "content-repurposing",
+      "category": "content",
+      "lines": 171,
+      "bodyLines": 153,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/content-research/SKILL.md",
+      "name": "content-research",
+      "category": "content",
+      "lines": 148,
+      "bodyLines": 131,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/content-strategy/SKILL.md",
+      "name": "content-strategy",
+      "category": "content",
+      "lines": 169,
+      "bodyLines": 152,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/copywriting/SKILL.md",
+      "name": "copywriting",
+      "category": "content",
+      "lines": 175,
+      "bodyLines": 158,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/editorial-review/SKILL.md",
+      "name": "editorial-review",
+      "category": "content",
+      "lines": 180,
+      "bodyLines": 162,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/editorial-workflow/SKILL.md",
+      "name": "editorial-workflow",
+      "category": "content",
+      "lines": 258,
+      "bodyLines": 240,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/eeat-writing/SKILL.md",
+      "name": "eeat-writing",
+      "category": "content",
+      "lines": 175,
+      "bodyLines": 157,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/fact-checking/SKILL.md",
+      "name": "fact-checking",
+      "category": "content",
+      "lines": 142,
+      "bodyLines": 126,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/faq-generation/SKILL.md",
+      "name": "faq-generation",
+      "category": "content",
+      "lines": 190,
+      "bodyLines": 173,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/human-editing/SKILL.md",
+      "name": "human-editing",
+      "category": "content",
+      "lines": 171,
+      "bodyLines": 154,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/keyword-to-content/SKILL.md",
+      "name": "keyword-to-content",
+      "category": "content",
+      "lines": 147,
+      "bodyLines": 131,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/seo-content-writing/SKILL.md",
+      "name": "seo-content-writing",
+      "category": "content",
+      "lines": 176,
+      "bodyLines": 159,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/source-verification/SKILL.md",
+      "name": "source-verification",
+      "category": "content",
+      "lines": 264,
+      "bodyLines": 244,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/content/technical-writing/SKILL.md",
+      "name": "technical-writing",
+      "category": "content",
+      "lines": 184,
+      "bodyLines": 167,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/core/clean-code/SKILL.md",
+      "name": "clean-code",
+      "category": "core",
+      "lines": 206,
+      "bodyLines": 190,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/core/code-review/SKILL.md",
+      "name": "code-review",
+      "category": "core",
+      "lines": 192,
+      "bodyLines": 176,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/core/debugging/SKILL.md",
+      "name": "debugging",
+      "category": "core",
+      "lines": 194,
+      "bodyLines": 178,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/core/design-patterns/SKILL.md",
+      "name": "design-patterns",
+      "category": "core",
+      "lines": 218,
+      "bodyLines": 201,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/core/engineering-standards/SKILL.md",
+      "name": "engineering-standards",
+      "category": "core",
+      "lines": 222,
+      "bodyLines": 206,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/core/performance/SKILL.md",
+      "name": "performance",
+      "category": "core",
+      "lines": 209,
+      "bodyLines": 193,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/core/refactoring/SKILL.md",
+      "name": "refactoring",
+      "category": "core",
+      "lines": 194,
+      "bodyLines": 177,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/core/security/SKILL.md",
+      "name": "security",
+      "category": "core",
+      "lines": 224,
+      "bodyLines": 208,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/core/software-architecture/SKILL.md",
+      "name": "software-architecture",
+      "category": "core",
+      "lines": 208,
+      "bodyLines": 191,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/core/tdd/SKILL.md",
+      "name": "tdd",
+      "category": "core",
+      "lines": 210,
+      "bodyLines": 194,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/core/technical-decision-records/SKILL.md",
+      "name": "technical-decision-records",
+      "category": "core",
+      "lines": 215,
+      "bodyLines": 198,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/backup-recovery/SKILL.md",
+      "name": "backup-recovery",
+      "category": "database",
+      "lines": 167,
+      "bodyLines": 150,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/clickhouse/SKILL.md",
+      "name": "clickhouse",
+      "category": "database",
+      "lines": 277,
+      "bodyLines": 258,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/connection-pooling/SKILL.md",
+      "name": "connection-pooling",
+      "category": "database",
+      "lines": 169,
+      "bodyLines": 151,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/database-design/SKILL.md",
+      "name": "database-design",
+      "category": "database",
+      "lines": 185,
+      "bodyLines": 168,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/database-security/SKILL.md",
+      "name": "database-security",
+      "category": "database",
+      "lines": 178,
+      "bodyLines": 160,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/drizzle/SKILL.md",
+      "name": "drizzle",
+      "category": "database",
+      "lines": 193,
+      "bodyLines": 176,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/elasticsearch/SKILL.md",
+      "name": "elasticsearch",
+      "category": "database",
+      "lines": 253,
+      "bodyLines": 235,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/indexing/SKILL.md",
+      "name": "indexing",
+      "category": "database",
+      "lines": 171,
+      "bodyLines": 154,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/migrations/SKILL.md",
+      "name": "migrations",
+      "category": "database",
+      "lines": 168,
+      "bodyLines": 151,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/mongodb/SKILL.md",
+      "name": "mongodb",
+      "category": "database",
+      "lines": 180,
+      "bodyLines": 163,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/mysql/SKILL.md",
+      "name": "mysql",
+      "category": "database",
+      "lines": 168,
+      "bodyLines": 151,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/opensearch/SKILL.md",
+      "name": "opensearch",
+      "category": "database",
+      "lines": 275,
+      "bodyLines": 257,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/postgresql/SKILL.md",
+      "name": "postgresql",
+      "category": "database",
+      "lines": 177,
+      "bodyLines": 160,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/prisma/SKILL.md",
+      "name": "prisma",
+      "category": "database",
+      "lines": 200,
+      "bodyLines": 183,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/redis/SKILL.md",
+      "name": "redis",
+      "category": "database",
+      "lines": 230,
+      "bodyLines": 212,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/sql-optimization/SKILL.md",
+      "name": "sql-optimization",
+      "category": "database",
+      "lines": 166,
+      "bodyLines": 150,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/sqlite/SKILL.md",
+      "name": "sqlite",
+      "category": "database",
+      "lines": 168,
+      "bodyLines": 151,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/database/transactions/SKILL.md",
+      "name": "transactions",
+      "category": "database",
+      "lines": 174,
+      "bodyLines": 157,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/desktop/electron/SKILL.md",
+      "name": "electron",
+      "category": "desktop",
+      "lines": 400,
+      "bodyLines": 380,
+      "folders": [
+        "references",
+        "assets",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/desktop/rust/SKILL.md",
+      "name": "rust",
+      "category": "desktop",
+      "lines": 372,
+      "bodyLines": 352,
+      "folders": [
+        "references",
+        "assets",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/desktop/tauri/SKILL.md",
+      "name": "tauri",
+      "category": "desktop",
+      "lines": 372,
+      "bodyLines": 354,
+      "folders": [
+        "references",
+        "assets",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/documentation/api-documentation/SKILL.md",
+      "name": "api-documentation",
+      "category": "documentation",
+      "lines": 275,
+      "bodyLines": 259,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/documentation/changelog-management/SKILL.md",
+      "name": "changelog-management",
+      "category": "documentation",
+      "lines": 251,
+      "bodyLines": 234,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/documentation/developer-experience/SKILL.md",
+      "name": "developer-experience",
+      "category": "documentation",
+      "lines": 261,
+      "bodyLines": 244,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/documentation/readme-engineering/SKILL.md",
+      "name": "readme-engineering",
+      "category": "documentation",
+      "lines": 273,
+      "bodyLines": 256,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/documentation/technical-documentation/SKILL.md",
+      "name": "technical-documentation",
+      "category": "documentation",
+      "lines": 248,
+      "bodyLines": 231,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/frontend/accessibility/SKILL.md",
+      "name": "accessibility",
+      "category": "frontend",
+      "lines": 278,
+      "bodyLines": 262,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/frontend/astro/SKILL.md",
+      "name": "astro",
+      "category": "frontend",
+      "lines": 269,
+      "bodyLines": 252,
+      "folders": [
+        "examples"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/frontend/css/SKILL.md",
+      "name": "css",
+      "category": "frontend",
+      "lines": 270,
+      "bodyLines": 254,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/frontend/expo/SKILL.md",
+      "name": "expo",
+      "category": "frontend",
+      "lines": 345,
+      "bodyLines": 327,
+      "folders": [
+        "references",
+        "assets",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/frontend/frontend-performance/SKILL.md",
+      "name": "frontend-performance",
+      "category": "frontend",
+      "lines": 275,
+      "bodyLines": 259,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/frontend/html/SKILL.md",
+      "name": "html",
+      "category": "frontend",
+      "lines": 265,
+      "bodyLines": 249,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/frontend/hugo/SKILL.md",
+      "name": "hugo",
+      "category": "frontend",
+      "lines": 286,
+      "bodyLines": 270,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/frontend/javascript/SKILL.md",
+      "name": "javascript",
+      "category": "frontend",
+      "lines": 284,
+      "bodyLines": 268,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/frontend/modern-css/SKILL.md",
+      "name": "modern-css",
+      "category": "frontend",
+      "lines": 279,
+      "bodyLines": 263,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/frontend/nextjs/SKILL.md",
+      "name": "nextjs",
+      "category": "frontend",
+      "lines": 296,
+      "bodyLines": 279,
+      "folders": [
+        "examples"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/frontend/nuxt/SKILL.md",
+      "name": "nuxt",
+      "category": "frontend",
+      "lines": 300,
+      "bodyLines": 282,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/frontend/react-native/SKILL.md",
+      "name": "react-native",
+      "category": "frontend",
+      "lines": 297,
+      "bodyLines": 278,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/frontend/react/SKILL.md",
+      "name": "react",
+      "category": "frontend",
+      "lines": 249,
+      "bodyLines": 232,
+      "folders": [
+        "examples"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/frontend/responsive-design/SKILL.md",
+      "name": "responsive-design",
+      "category": "frontend",
+      "lines": 268,
+      "bodyLines": 252,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/frontend/semantic-html/SKILL.md",
+      "name": "semantic-html",
+      "category": "frontend",
+      "lines": 257,
+      "bodyLines": 241,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/frontend/shadcn-ui/SKILL.md",
+      "name": "shadcn-ui",
+      "category": "frontend",
+      "lines": 253,
+      "bodyLines": 236,
+      "folders": [
+        "scripts",
+        "examples"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/frontend/sveltekit/SKILL.md",
+      "name": "sveltekit",
+      "category": "frontend",
+      "lines": 325,
+      "bodyLines": 307,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/frontend/tailwind-css/SKILL.md",
+      "name": "tailwind-css",
+      "category": "frontend",
+      "lines": 270,
+      "bodyLines": 253,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/frontend/typescript/SKILL.md",
+      "name": "typescript",
+      "category": "frontend",
+      "lines": 299,
+      "bodyLines": 283,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/frontend/ui-design/SKILL.md",
+      "name": "ui-design",
+      "category": "frontend",
+      "lines": 271,
+      "bodyLines": 255,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/frontend/vue/SKILL.md",
+      "name": "vue",
+      "category": "frontend",
+      "lines": 300,
+      "bodyLines": 283,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/infrastructure/aws/SKILL.md",
+      "name": "aws",
+      "category": "infrastructure",
+      "lines": 286,
+      "bodyLines": 268,
+      "folders": [
+        "scripts"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/infrastructure/ci-cd/SKILL.md",
+      "name": "ci-cd",
+      "category": "infrastructure",
+      "lines": 202,
+      "bodyLines": 184,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/infrastructure/cloudflare-d1/SKILL.md",
+      "name": "cloudflare-d1",
+      "category": "infrastructure",
+      "lines": 233,
+      "bodyLines": 215,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/infrastructure/cloudflare-kv/SKILL.md",
+      "name": "cloudflare-kv",
+      "category": "infrastructure",
+      "lines": 216,
+      "bodyLines": 199,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/infrastructure/cloudflare-queues/SKILL.md",
+      "name": "cloudflare-queues",
+      "category": "infrastructure",
+      "lines": 235,
+      "bodyLines": 216,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/infrastructure/cloudflare-r2/SKILL.md",
+      "name": "cloudflare-r2",
+      "category": "infrastructure",
+      "lines": 225,
+      "bodyLines": 207,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/infrastructure/cloudflare-workers/SKILL.md",
+      "name": "cloudflare-workers",
+      "category": "infrastructure",
+      "lines": 233,
+      "bodyLines": 215,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/infrastructure/cloudflare/SKILL.md",
+      "name": "cloudflare",
+      "category": "infrastructure",
+      "lines": 203,
+      "bodyLines": 184,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/infrastructure/deployment/SKILL.md",
+      "name": "deployment",
+      "category": "infrastructure",
+      "lines": 217,
+      "bodyLines": 200,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/infrastructure/docker/SKILL.md",
+      "name": "docker",
+      "category": "infrastructure",
+      "lines": 242,
+      "bodyLines": 224,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/infrastructure/durable-objects/SKILL.md",
+      "name": "durable-objects",
+      "category": "infrastructure",
+      "lines": 242,
+      "bodyLines": 223,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/infrastructure/fly-io/SKILL.md",
+      "name": "fly-io",
+      "category": "infrastructure",
+      "lines": 311,
+      "bodyLines": 291,
+      "folders": [
+        "references",
+        "scripts",
+        "assets"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/infrastructure/gcp/SKILL.md",
+      "name": "gcp",
+      "category": "infrastructure",
+      "lines": 306,
+      "bodyLines": 288,
+      "folders": [
+        "references",
+        "scripts"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/infrastructure/github-actions/SKILL.md",
+      "name": "github-actions",
+      "category": "infrastructure",
+      "lines": 237,
+      "bodyLines": 219,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/infrastructure/kubernetes/SKILL.md",
+      "name": "kubernetes",
+      "category": "infrastructure",
+      "lines": 289,
+      "bodyLines": 271,
+      "folders": [
+        "scripts",
+        "examples"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/infrastructure/observability/SKILL.md",
+      "name": "observability",
+      "category": "infrastructure",
+      "lines": 224,
+      "bodyLines": 206,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/infrastructure/pulumi/SKILL.md",
+      "name": "pulumi",
+      "category": "infrastructure",
+      "lines": 313,
+      "bodyLines": 295,
+      "folders": [
+        "references",
+        "scripts",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/infrastructure/railway/SKILL.md",
+      "name": "railway",
+      "category": "infrastructure",
+      "lines": 291,
+      "bodyLines": 271,
+      "folders": [
+        "scripts",
+        "examples"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/infrastructure/render/SKILL.md",
+      "name": "render",
+      "category": "infrastructure",
+      "lines": 314,
+      "bodyLines": 291,
+      "folders": [
+        "references",
+        "scripts",
+        "assets"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/infrastructure/self-hosted-vps/SKILL.md",
+      "name": "self-hosted-vps",
+      "category": "infrastructure",
+      "lines": 359,
+      "bodyLines": 338,
+      "folders": [
+        "scripts",
+        "assets",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/infrastructure/terraform/SKILL.md",
+      "name": "terraform",
+      "category": "infrastructure",
+      "lines": 293,
+      "bodyLines": 275,
+      "folders": [
+        "scripts",
+        "examples"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/infrastructure/vercel/SKILL.md",
+      "name": "vercel",
+      "category": "infrastructure",
+      "lines": 215,
+      "bodyLines": 197,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/media/ai-image-generation/SKILL.md",
+      "name": "ai-image-generation",
+      "category": "media",
+      "lines": 242,
+      "bodyLines": 227,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/media/blog-featured-images/SKILL.md",
+      "name": "blog-featured-images",
+      "category": "media",
+      "lines": 252,
+      "bodyLines": 237,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/media/brand-visual-consistency/SKILL.md",
+      "name": "brand-visual-consistency",
+      "category": "media",
+      "lines": 263,
+      "bodyLines": 248,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/media/image-accessibility/SKILL.md",
+      "name": "image-accessibility",
+      "category": "media",
+      "lines": 256,
+      "bodyLines": 241,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/media/image-compression/SKILL.md",
+      "name": "image-compression",
+      "category": "media",
+      "lines": 238,
+      "bodyLines": 223,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/media/image-format-conversion/SKILL.md",
+      "name": "image-format-conversion",
+      "category": "media",
+      "lines": 243,
+      "bodyLines": 228,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/media/image-prompt-engineering/SKILL.md",
+      "name": "image-prompt-engineering",
+      "category": "media",
+      "lines": 253,
+      "bodyLines": 238,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/media/infographic-generation/SKILL.md",
+      "name": "infographic-generation",
+      "category": "media",
+      "lines": 247,
+      "bodyLines": 232,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/media/og-image-generation/SKILL.md",
+      "name": "og-image-generation",
+      "category": "media",
+      "lines": 266,
+      "bodyLines": 251,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/media/platform-social-images/SKILL.md",
+      "name": "platform-social-images",
+      "category": "media",
+      "lines": 298,
+      "bodyLines": 278,
+      "folders": [
+        "examples"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/media/resvg/SKILL.md",
+      "name": "resvg",
+      "category": "media",
+      "lines": 299,
+      "bodyLines": 281,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/media/satori/SKILL.md",
+      "name": "satori",
+      "category": "media",
+      "lines": 270,
+      "bodyLines": 251,
+      "folders": [
+        "examples"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/media/sharp/SKILL.md",
+      "name": "sharp",
+      "category": "media",
+      "lines": 298,
+      "bodyLines": 279,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/media/social-preview/SKILL.md",
+      "name": "social-preview",
+      "category": "media",
+      "lines": 254,
+      "bodyLines": 239,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/media/twitter-card-images/SKILL.md",
+      "name": "twitter-card-images",
+      "category": "media",
+      "lines": 282,
+      "bodyLines": 267,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/media/youtube-thumbnails/SKILL.md",
+      "name": "youtube-thumbnails",
+      "category": "media",
+      "lines": 266,
+      "bodyLines": 251,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/metadata/dynamic-metadata/SKILL.md",
+      "name": "dynamic-metadata",
+      "category": "metadata",
+      "lines": 265,
+      "bodyLines": 247,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/metadata/metadata-validation/SKILL.md",
+      "name": "metadata-validation",
+      "category": "metadata",
+      "lines": 257,
+      "bodyLines": 240,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/metadata/open-graph/SKILL.md",
+      "name": "open-graph",
+      "category": "metadata",
+      "lines": 251,
+      "bodyLines": 234,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/metadata/seo-metadata/SKILL.md",
+      "name": "seo-metadata",
+      "category": "metadata",
+      "lines": 250,
+      "bodyLines": 233,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/metadata/social-sharing/SKILL.md",
+      "name": "social-sharing",
+      "category": "metadata",
+      "lines": 266,
+      "bodyLines": 249,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/metadata/twitter-cards/SKILL.md",
+      "name": "twitter-cards",
+      "category": "metadata",
+      "lines": 260,
+      "bodyLines": 243,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/performance/bundle-optimization/SKILL.md",
+      "name": "bundle-optimization",
+      "category": "performance",
+      "lines": 228,
+      "bodyLines": 211,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/performance/caching-strategy/SKILL.md",
+      "name": "caching-strategy",
+      "category": "performance",
+      "lines": 248,
+      "bodyLines": 231,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/performance/core-web-vitals/SKILL.md",
+      "name": "core-web-vitals",
+      "category": "performance",
+      "lines": 265,
+      "bodyLines": 247,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/performance/image-optimization/SKILL.md",
+      "name": "image-optimization",
+      "category": "performance",
+      "lines": 269,
+      "bodyLines": 252,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/performance/javascript-optimization/SKILL.md",
+      "name": "javascript-optimization",
+      "category": "performance",
+      "lines": 255,
+      "bodyLines": 238,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/performance/lighthouse/SKILL.md",
+      "name": "lighthouse",
+      "category": "performance",
+      "lines": 232,
+      "bodyLines": 215,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/performance/pagespeed-insights/SKILL.md",
+      "name": "pagespeed-insights",
+      "category": "performance",
+      "lines": 234,
+      "bodyLines": 217,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/performance/web-performance-audit/SKILL.md",
+      "name": "web-performance-audit",
+      "category": "performance",
+      "lines": 243,
+      "bodyLines": 227,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/security/csrf-protection/SKILL.md",
+      "name": "csrf-protection",
+      "category": "security",
+      "lines": 230,
+      "bodyLines": 215,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/security/dependency-security/SKILL.md",
+      "name": "dependency-security",
+      "category": "security",
+      "lines": 229,
+      "bodyLines": 214,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/security/owasp/SKILL.md",
+      "name": "owasp",
+      "category": "security",
+      "lines": 237,
+      "bodyLines": 222,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/security/secrets-management/SKILL.md",
+      "name": "secrets-management",
+      "category": "security",
+      "lines": 230,
+      "bodyLines": 214,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/security/secure-headers/SKILL.md",
+      "name": "secure-headers",
+      "category": "security",
+      "lines": 254,
+      "bodyLines": 237,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/security/security-auditing/SKILL.md",
+      "name": "security-auditing",
+      "category": "security",
+      "lines": 241,
+      "bodyLines": 225,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/security/sql-injection-prevention/SKILL.md",
+      "name": "sql-injection-prevention",
+      "category": "security",
+      "lines": 227,
+      "bodyLines": 212,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/security/xss-prevention/SKILL.md",
+      "name": "xss-prevention",
+      "category": "security",
+      "lines": 253,
+      "bodyLines": 238,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/aeo-optimization/SKILL.md",
+      "name": "aeo-optimization",
+      "category": "seo",
+      "lines": 267,
+      "bodyLines": 249,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/canonical-management/SKILL.md",
+      "name": "canonical-management",
+      "category": "seo",
+      "lines": 232,
+      "bodyLines": 214,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/competitor-analysis/SKILL.md",
+      "name": "competitor-analysis",
+      "category": "seo",
+      "lines": 209,
+      "bodyLines": 194,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/content-decay/SKILL.md",
+      "name": "content-decay",
+      "category": "seo",
+      "lines": 314,
+      "bodyLines": 293,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/seo/content-gap-analysis/SKILL.md",
+      "name": "content-gap-analysis",
+      "category": "seo",
+      "lines": 211,
+      "bodyLines": 196,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/eeat/SKILL.md",
+      "name": "eeat",
+      "category": "seo",
+      "lines": 261,
+      "bodyLines": 243,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/entity-seo/SKILL.md",
+      "name": "entity-seo",
+      "category": "seo",
+      "lines": 310,
+      "bodyLines": 290,
+      "folders": [
+        "references",
+        "scripts",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/seo/geo-optimization/SKILL.md",
+      "name": "geo-optimization",
+      "category": "seo",
+      "lines": 268,
+      "bodyLines": 253,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/hreflang/SKILL.md",
+      "name": "hreflang",
+      "category": "seo",
+      "lines": 256,
+      "bodyLines": 238,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/image-seo/SKILL.md",
+      "name": "image-seo",
+      "category": "seo",
+      "lines": 271,
+      "bodyLines": 253,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/internal-linking/SKILL.md",
+      "name": "internal-linking",
+      "category": "seo",
+      "lines": 233,
+      "bodyLines": 218,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/international-seo/SKILL.md",
+      "name": "international-seo",
+      "category": "seo",
+      "lines": 274,
+      "bodyLines": 255,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/keyword-clustering/SKILL.md",
+      "name": "keyword-clustering",
+      "category": "seo",
+      "lines": 210,
+      "bodyLines": 195,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/keyword-research/SKILL.md",
+      "name": "keyword-research",
+      "category": "seo",
+      "lines": 204,
+      "bodyLines": 189,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/llm-seo/SKILL.md",
+      "name": "llm-seo",
+      "category": "seo",
+      "lines": 272,
+      "bodyLines": 254,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/llms-txt/SKILL.md",
+      "name": "llms-txt",
+      "category": "seo",
+      "lines": 255,
+      "bodyLines": 238,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/local-seo/SKILL.md",
+      "name": "local-seo",
+      "category": "seo",
+      "lines": 262,
+      "bodyLines": 243,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/off-page-seo/SKILL.md",
+      "name": "off-page-seo",
+      "category": "seo",
+      "lines": 225,
+      "bodyLines": 210,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/on-page-seo/SKILL.md",
+      "name": "on-page-seo",
+      "category": "seo",
+      "lines": 236,
+      "bodyLines": 221,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/programmatic-seo/SKILL.md",
+      "name": "programmatic-seo",
+      "category": "seo",
+      "lines": 268,
+      "bodyLines": 250,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/schema-jsonld/SKILL.md",
+      "name": "schema-jsonld",
+      "category": "seo",
+      "lines": 296,
+      "bodyLines": 281,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/search-console/SKILL.md",
+      "name": "search-console",
+      "category": "seo",
+      "lines": 261,
+      "bodyLines": 242,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/search-intent/SKILL.md",
+      "name": "search-intent",
+      "category": "seo",
+      "lines": 208,
+      "bodyLines": 193,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/seo-audit/SKILL.md",
+      "name": "seo-audit",
+      "category": "seo",
+      "lines": 221,
+      "bodyLines": 206,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/seo-migration/SKILL.md",
+      "name": "seo-migration",
+      "category": "seo",
+      "lines": 241,
+      "bodyLines": 222,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/serp-analysis/SKILL.md",
+      "name": "serp-analysis",
+      "category": "seo",
+      "lines": 216,
+      "bodyLines": 201,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/serp-monitoring/SKILL.md",
+      "name": "serp-monitoring",
+      "category": "seo",
+      "lines": 355,
+      "bodyLines": 334,
+      "folders": [
+        "assets",
+        "examples"
+      ],
+      "status": "disclosed-over-budget"
+    },
+    {
+      "path": "skills/seo/sitemap-robots/SKILL.md",
+      "name": "sitemap-robots",
+      "category": "seo",
+      "lines": 258,
+      "bodyLines": 240,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/structured-data/SKILL.md",
+      "name": "structured-data",
+      "category": "seo",
+      "lines": 247,
+      "bodyLines": 232,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/technical-seo/SKILL.md",
+      "name": "technical-seo",
+      "category": "seo",
+      "lines": 256,
+      "bodyLines": 240,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/seo/topical-authority/SKILL.md",
+      "name": "topical-authority",
+      "category": "seo",
+      "lines": 296,
+      "bodyLines": 276,
+      "folders": [
+        "references",
+        "examples"
+      ],
+      "status": "disclosed"
+    },
+    {
+      "path": "skills/testing/accessibility-testing/SKILL.md",
+      "name": "accessibility-testing",
+      "category": "testing",
+      "lines": 231,
+      "bodyLines": 215,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/testing/e2e-testing/SKILL.md",
+      "name": "e2e-testing",
+      "category": "testing",
+      "lines": 228,
+      "bodyLines": 212,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/testing/integration-testing/SKILL.md",
+      "name": "integration-testing",
+      "category": "testing",
+      "lines": 241,
+      "bodyLines": 225,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/testing/performance-testing/SKILL.md",
+      "name": "performance-testing",
+      "category": "testing",
+      "lines": 234,
+      "bodyLines": 219,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/testing/playwright/SKILL.md",
+      "name": "playwright",
+      "category": "testing",
+      "lines": 254,
+      "bodyLines": 237,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/testing/regression-testing/SKILL.md",
+      "name": "regression-testing",
+      "category": "testing",
+      "lines": 211,
+      "bodyLines": 196,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/testing/unit-testing/SKILL.md",
+      "name": "unit-testing",
+      "category": "testing",
+      "lines": 247,
+      "bodyLines": 231,
+      "folders": [],
+      "status": "single-file"
+    },
+    {
+      "path": "skills/testing/vitest/SKILL.md",
+      "name": "vitest",
+      "category": "testing",
+      "lines": 262,
+      "bodyLines": 246,
+      "folders": [],
+      "status": "single-file"
+    }
+  ]
+}

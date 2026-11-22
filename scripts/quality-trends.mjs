@@ -107,8 +107,8 @@ export const METRIC_DEFS = {
   'a11y.applicableSkills': { label: 'Skills accessibility applies to', direction: 'neutral', unit: 'skills' },
   'a11y.withGuidance': { label: 'Applicable skills carrying guidance', direction: 'higher', unit: 'skills' },
   'disclosure.coveragePct': { label: 'Progressive-disclosure coverage (skills with subdirectories)', direction: 'higher', unit: '%' },
-  'disclosure.medianBodyLines': { label: 'Median SKILL.md body lines', direction: 'neutral', unit: 'lines' },
-  'disclosure.maxBodyLines': { label: 'Max SKILL.md body lines', direction: 'neutral', unit: 'lines' },
+  'disclosure.medianBodyLines': { label: 'Median SKILL.md lines (total, frontmatter included)', direction: 'neutral', unit: 'lines' },
+  'disclosure.maxBodyLines': { label: 'Max SKILL.md lines (total, frontmatter included)', direction: 'neutral', unit: 'lines' },
   'disclosure.skillsWithSubdirs': { label: 'Skills with references/scripts/assets/examples subdirectories', direction: 'higher', unit: 'skills' },
   'flags.totalFlagged': { label: 'Skills carrying scorer flags', direction: 'lower', unit: 'skills' },
   'flags.flaggedPct': { label: 'Scored skills carrying flags', direction: 'lower', unit: '%' },
@@ -275,16 +275,27 @@ export async function computeA11yDocCoverage(root, classification) {
  *   { totalSkills, skillsWithSubdirs, coveragePct?,
  *     medianBodyLines, maxBodyLines }
  * coveragePct is derived from the counts when the file omits it.
+ * Also accepts the keys scripts/disclosure-coverage.mjs actually
+ * emits (withFolders, medianLines, maxLines) — the first
+ * integration run found all four disclosure metrics unavailable
+ * because the producer and this normalizer disagreed on names.
+ * Note the semantics: the disclosure tool measures TOTAL SKILL.md
+ * lines (frontmatter included), so medianBodyLines/maxBodyLines
+ * carry total lines, not body-only lines; the metric labels say so.
  */
 export function normalizeDisclosure(data) {
   const s = (data && data.summary) || data || {};
   const total = typeof s.totalSkills === 'number' ? s.totalSkills : (typeof s.total === 'number' ? s.total : null);
-  const withSubdirs = typeof s.skillsWithSubdirs === 'number' ? s.skillsWithSubdirs : (typeof s.withSubdirs === 'number' ? s.withSubdirs : null);
+  const withSubdirs = typeof s.skillsWithSubdirs === 'number' ? s.skillsWithSubdirs
+    : (typeof s.withSubdirs === 'number' ? s.withSubdirs
+    : (typeof s.withFolders === 'number' ? s.withFolders : null));
   const coveragePct = typeof s.coveragePct === 'number'
     ? s.coveragePct
     : (total !== null && total > 0 && withSubdirs !== null ? round1((withSubdirs / total) * 100) : null);
-  const medianBodyLines = typeof s.medianBodyLines === 'number' ? s.medianBodyLines : null;
-  const maxBodyLines = typeof s.maxBodyLines === 'number' ? s.maxBodyLines : null;
+  const medianBodyLines = typeof s.medianBodyLines === 'number' ? s.medianBodyLines
+    : (typeof s.medianLines === 'number' ? s.medianLines : null);
+  const maxBodyLines = typeof s.maxBodyLines === 'number' ? s.maxBodyLines
+    : (typeof s.maxLines === 'number' ? s.maxLines : null);
   if (total === null && withSubdirs === null && medianBodyLines === null && maxBodyLines === null) return null;
   return { totalSkills: total, skillsWithSubdirs: withSubdirs, coveragePct, medianBodyLines, maxBodyLines };
 }

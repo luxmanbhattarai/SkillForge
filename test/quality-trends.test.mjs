@@ -144,6 +144,18 @@ test('normalizeDisclosure accepts summary or top-level fields', () => {
   assert.equal(normalizeDisclosure(null), null);
 });
 
+test('normalizeDisclosure accepts the keys disclosure-coverage.mjs actually emits', () => {
+  // Integration fix (2026-11-22): the first snapshot run found all
+  // four disclosure metrics unavailable because the producer emits
+  // withFolders/medianLines/maxLines, which the normalizer did not
+  // recognize. Shape below mirrors the real --out JSON (summary
+  // object, total-line semantics).
+  assert.deepEqual(
+    normalizeDisclosure({ summary: { total: 228, medianLines: 247, maxLines: 400, minLines: 142, withFolders: 44 } }),
+    { totalSkills: 228, skillsWithSubdirs: 44, coveragePct: 19.3, medianBodyLines: 247, maxBodyLines: 400 },
+  );
+});
+
 // ---------------------------------------------------------------------------
 // buildSnapshot: determinism + unavailable handling
 // ---------------------------------------------------------------------------
