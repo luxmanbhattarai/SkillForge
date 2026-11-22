@@ -86,7 +86,17 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Check out repository
+        # Full history (not the default shallow checkout): the
+        # freshness scorer reads each skill's last-change date
+        # from `git log`. In a shallow checkout HEAD is a root
+        # commit whose diff lists EVERY file, so all 277 skills
+        # look changed on the HEAD date and AGING inflates
+        # (run 44980101979 reported 47 AGING; full history says
+        # 5 — finding MW-05). Same precedent as the Gitleaks job
+        # in security-audit.yml.
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js 24
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
