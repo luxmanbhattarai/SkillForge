@@ -555,7 +555,13 @@ function usage() {
 }
 
 // Only run as a script: tests import the helpers above.
-if (import.meta.url === `file://${process.argv[1]}`) {
+// (path.resolve comparison, as in check-links.mjs — the
+// `file://${argv[1]}` form never matches on Windows, where argv[1]
+// has backslashes and the URL has forward slashes, so the CLI
+// silently did nothing there. Found by the Windows CI leg.)
+const invokedAsScript = process.argv[1]
+  && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (invokedAsScript) {
   const args = process.argv.slice(2);
   let jsonOut = false;
   let outFile = null;
