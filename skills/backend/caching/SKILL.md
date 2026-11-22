@@ -11,7 +11,7 @@ metadata:
   category: backend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires a cache store such as Redis or the HTTP cache layer being used.
 ---
 

@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert";
-import { build } from "./app.js";
+import { build } from "./fastify-app.js";
 
 test("POST /v1/orders validates the body", async () => {
   const app = build();

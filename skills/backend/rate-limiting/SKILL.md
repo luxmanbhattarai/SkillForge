@@ -11,7 +11,7 @@ metadata:
   category: backend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires a shared store such as Redis for limits that work across multiple server instances.
 ---
 
@@ -61,12 +61,14 @@ clients, and that tells legitimate clients exactly when they can retry.
 
 - [RFC 6585 — Additional HTTP Status Codes](https://www.rfc-editor.org/rfc/rfc6585.html)
   — defines status code 429.
-- [RateLimit header fields (IETF draft, rev. 11, May 2026)](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/)
+- [RateLimit header fields (IETF draft, rev. 12, November 2026)](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/)
   — the current draft defines two fields, `RateLimit-Policy` and
   `RateLimit`. It is still an Internet-Draft, not an RFC, and its
   syntax has changed before: the older `RateLimit-Limit`,
   `RateLimit-Remaining`, and `RateLimit-Reset` names were the draft's
-  syntax up to rev. 06 and were superseded in rev. 08. `Retry-After`
+  syntax up to rev. 06 and were superseded in rev. 08, and rev. 11's
+  `r` (remaining) and `t` (seconds) parameters were renamed to `a`
+  (available quota) and `w` (window) in rev. 12. `Retry-After`
   (RFC 9110) remains the stable, standardized mechanism for telling
   a client when to retry.
 - [Redis documentation](https://redis.io/docs/) — the reference for
@@ -109,7 +111,7 @@ clients, and that tells legitimate clients exactly when they can retry.
 - Return `429` with `Retry-After` (seconds until the client may retry)
   and the current draft headers: `RateLimit-Policy:
   "name";q=<quota>;w=<window-seconds>` for the policy and `RateLimit:
-  "name";r=<remaining>;t=<seconds>` for the current state. Do not use
+  "name";a=<available>;w=<window-seconds>` for the current state. Do not use
   the superseded `RateLimit-Limit` / `RateLimit-Remaining` /
   `RateLimit-Reset` names for new APIs — but note they are still
   common in the wild, so a client may need to accept both forms.
@@ -206,13 +208,13 @@ async function isAllowed(key: string, limit: number, windowSeconds: number) {
 }
 ```
 
-A `429` response with the current draft headers (rev. 11):
+A `429` response with the current draft headers (rev. 12):
 
 ```http
 HTTP/1.1 429 Too Many Requests
 Retry-After: 12
 RateLimit-Policy: "default";q=100;w=60
-RateLimit: "default";r=0;t=12
+RateLimit: "default";a=0;w=12
 Content-Type: application/problem+json
 
 {
@@ -256,7 +258,7 @@ acceptable if the API documents it.
 ## References
 
 - [RFC 6585 — Additional HTTP Status Codes](https://www.rfc-editor.org/rfc/rfc6585.html)
-- [RateLimit header fields (IETF draft, rev. 11)](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/)
+- [RateLimit header fields (IETF draft, rev. 12)](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/)
 - [Redis documentation](https://redis.io/docs/)
 - [Cloudflare Rate Limiting](https://developers.cloudflare.com/waf/rate-limiting-rules/)
 - Related skills in this repository: `rest-api`, `api-design`,

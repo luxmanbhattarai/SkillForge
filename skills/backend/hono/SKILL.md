@@ -12,7 +12,7 @@ metadata:
   category: backend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js 24 LTS or later or a supported edge runtime; TypeScript 7.x recommended.
 ---
 
@@ -52,7 +52,7 @@ reason about, easy to test, and portable across runtimes.
 - Familiarity with TypeScript 7.x and HTTP fundamentals.
 - A project scaffolded with Hono (for example via the Hono starter
   templates) or an existing Hono app.
-- Hono 4.13.x (4.13.19, November 2026). Validate with Zod 4.x via
+- Hono 4.13.x (4.13.20, November 2026). Validate with Zod 4.x via
   `@hono/zod-validator` 0.9.x, which supports Zod 4.
 
 ## Official Documentation

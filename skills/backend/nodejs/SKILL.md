@@ -12,7 +12,7 @@ metadata:
   category: backend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js 24 LTS or later and npm; network access for installing dependencies.
 ---
 
@@ -258,4 +258,4 @@ process.on("unhandledRejection", (err) => {
 - [TypeScript documentation](https://www.typescriptlang.org/docs/) —
   TypeScript 7.x reference.
 - Related skills in this repository: `rest-api`, `hono`, `api-design`,
-  `package-development`, `background-jobs`, `testing`.
+  `package-development`, `background-jobs`, `unit-testing`.

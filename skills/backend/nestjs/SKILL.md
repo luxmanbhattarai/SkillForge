@@ -13,7 +13,7 @@ metadata:
   category: backend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js v20.19+ or v22.12+ (NestJS 12; CLI generators need 22.22.3+/24.15+/26+); TypeScript 6.x (TypeScript 7 not yet supported by nest build).
 ---
 

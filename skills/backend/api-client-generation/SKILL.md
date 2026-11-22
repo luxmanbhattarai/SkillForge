@@ -14,7 +14,7 @@ metadata:
   category: backend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # API Client Generation
@@ -60,7 +60,7 @@ API by construction, regenerated on every contract change.
 - The generator's runtime: OpenAPI Generator needs Java 11 or newer
   (or the npm wrapper, which downloads the JAR); the TypeScript
   generators need a current Node.js LTS — orval needs 22.18 or
-  newer, hey-api needs 22.13 or newer, and openapi-typescript
+  newer, hey-api needs 22.18 or newer, and openapi-typescript
   declares no minimum.
 - A decision on where generated code lives and whether it is
   committed to the repository (recommended for libraries and
@@ -80,13 +80,13 @@ API by construction, regenerated on every contract change.
   generator list, configuration options, and release notes.
 - [Orval](https://orval.dev) — TypeScript generator with fetch,
   axios, React Query, SWR, Angular, Vue, Svelte, MSW, and Zod
-  outputs. Version 8.48.0 is current (14 November 2026). Use
-  8.30.0 or later: earlier versions are affected by the September
+  outputs. Version 8.49.0 is current (22 November 2026). Use
+  8.29.0 or later: earlier versions are affected by the September
   2026 code-injection CVEs (see Security Considerations).
 - [Hey API](https://heyapi.dev/docs/openapi/typescript/get-started) —
   `@hey-api/openapi-ts`, a plugin-based TypeScript generator.
   Version 0.99.x is current; it is ESM-only, requires Node.js
-  22.13 or newer, and is pre-1.0, so pin an exact version.
+  22.18 or newer, and is pre-1.0, so pin an exact version.
 - [openapi-typescript](https://openapi-ts.dev/) — generates
   TypeScript types only (no runtime client); pair it with the
   `openapi-fetch` runtime client. Version 7.13.x is current.
@@ -181,7 +181,7 @@ API by construction, regenerated on every contract change.
   In September 2026, orval disclosed code-injection CVEs
   (CVE-2026-96754, CVE-2026-96755, CVE-2026-96759, CVSS 9.8) in
   which attacker-controlled spec values were spliced into
-  generated TypeScript without escaping. Use orval 8.30.0 or
+  generated TypeScript without escaping. Use orval 8.29.0 or
   later, keep generators current, and never generate from a spec
   you have not reviewed if the generated code runs in production.
 - Never put secrets, credentials, or real tokens in the spec or in

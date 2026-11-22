@@ -1,16 +1,5 @@
 import Fastify from "fastify";
-
-const fastify = Fastify({ logger: true });
-
-fastify.setErrorHandler((error, request, reply) => {
-  request.log.error(error);
-  const status = error.statusCode ?? 500;
-  void reply.code(status).send({
-    type: "https://api.example.com/problems/internal-error",
-    title: status === 500 ? "Internal server error" : error.message,
-    status,
-  });
-});
+import { pathToFileURL } from "node:url";
 
 const orderBody = {
   type: "object",
@@ -32,7 +21,7 @@ const orderResponse = {
 } as const;
 
 async function ordersRoutes(fastify: Fastify.FastifyInstance) {
-  fastify.post(
+  fastify.post<{ Body: { totalMinor: number; currency: string } }>(
     "/",
     { schema: { body: orderBody, response: { 201: orderResponse } } },
     async (request, reply) => {
@@ -42,10 +31,29 @@ async function ordersRoutes(fastify: Fastify.FastifyInstance) {
   );
 }
 
-fastify.register(ordersRoutes, { prefix: "/v1/orders" });
-fastify.get("/health", async () => ({ status: "ok" }));
+// Build the app without binding a port, so tests can import this
+// module and drive the instance with app.inject().
+export function build() {
+  const fastify = Fastify({ logger: true });
+
+  fastify.setErrorHandler((error, request, reply) => {
+    request.log.error(error);
+    const status = error.statusCode ?? 500;
+    void reply.code(status).send({
+      type: "https://api.example.com/problems/internal-error",
+      title: status === 500 ? "Internal server error" : error.message,
+      status,
+    });
+  });
+
+  fastify.register(ordersRoutes, { prefix: "/v1/orders" });
+  fastify.get("/health", async () => ({ status: "ok" }));
+
+  return fastify;
+}
 
 const start = async () => {
+  const fastify = build();
   try {
     await fastify.listen({ port: 3000, host: "0.0.0.0" });
   } catch (err) {
@@ -54,4 +62,8 @@ const start = async () => {
   }
 };
 
-void start();
+// Listen only when this file is the entrypoint. Importing it from
+// a test must not start a server.
+if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
+  void start();
+}

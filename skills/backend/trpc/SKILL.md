@@ -11,7 +11,7 @@ metadata:
   category: backend
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js 24 LTS or later, TypeScript 7.x, and a TypeScript client; works best in a monorepo.
 ---
 

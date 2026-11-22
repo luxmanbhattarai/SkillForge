@@ -1,4 +1,4 @@
-import { app } from "./app.js";
+import { app } from "./express-app.js";
 
 const server = app.listen(process.env.PORT ?? 3000, () => {
   console.log(`listening on ${process.env.PORT ?? 3000}`);
