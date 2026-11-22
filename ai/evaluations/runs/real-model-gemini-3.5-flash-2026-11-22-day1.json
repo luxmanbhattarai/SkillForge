@@ -1,0 +1,1358 @@
+{
+  "kind": "skillforge-real-model-eval",
+  "version": 1,
+  "runId": "real-model-gemini-3.5-flash-20261122-194308",
+  "generated": "2026-11-22T19:43:08.270Z",
+  "completedAt": "2026-11-22T19:50:44.877Z",
+  "providerName": "gemini",
+  "providerKind": "model",
+  "model": {
+    "requested": "gemini-3.5-flash",
+    "served": "gemini-3.5-flash",
+    "servedModels": [
+      "gemini-3.5-flash"
+    ],
+    "consistent": true
+  },
+  "providerMeta": {
+    "kind": "model",
+    "provider": "gemini",
+    "model": "gemini-3.5-flash",
+    "endpoint": "generativelanguage.googleapis.com",
+    "helper": "gemini_chat.py",
+    "timeoutMs": 300000,
+    "maxRetries": 1
+  },
+  "providerEnvDefaultsApplied": [
+    "GEMINI_MODEL",
+    "GEMINI_MAX_TOKENS"
+  ],
+  "dataset": {
+    "file": "evals/datasets/real-model-subset-v2-day1.json",
+    "version": 2,
+    "generated": "2026-11-22",
+    "supersedes": null,
+    "count": 19,
+    "sha256": "c7805fe2b2346178937b29dfd6ab0b60ab7eb745c266df76f51d6ac9c45be780",
+    "ids": [
+      "AMB-blogpost-001",
+      "AMB-keyword-001",
+      "COD-cache-control-001",
+      "COD-caching-001",
+      "COD-host-cookie-001",
+      "COD-javascript-001",
+      "COD-mcp-001",
+      "COD-mfa-001",
+      "COD-nodejs-001",
+      "COD-oauth-001",
+      "COD-pagination-001",
+      "COD-performance-testing-001",
+      "COD-rate-limiting-001",
+      "COD-trpc-001",
+      "DIS-debugging-001",
+      "DIS-rag-001",
+      "DIS-real-a11y-001",
+      "DIS-real-astro-001",
+      "DIS-real-auth-001"
+    ]
+  },
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "linux",
+    "gitCommit": "cdd028287fd39be115272d9f611c359f8fa06dad"
+  },
+  "summary": {
+    "total": 19,
+    "passed": 4,
+    "failed": 15,
+    "passRate": 0.211,
+    "criticalFailures": 0,
+    "coverage": {
+      "skillsCovered": 11,
+      "skillsTotal": 277,
+      "coverageRate": 0.04
+    }
+  },
+  "dimensions": {
+    "skill-selection": {
+      "label": "Skill selection",
+      "total": 7,
+      "passed": 1,
+      "failed": 6,
+      "passRate": 0.143,
+      "failedCaseIds": [
+        "AMB-blogpost-001",
+        "AMB-keyword-001",
+        "DIS-debugging-001",
+        "DIS-rag-001",
+        "DIS-real-a11y-001",
+        "DIS-real-auth-001"
+      ]
+    },
+    "instruction-following": {
+      "label": "Instruction following",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "passRate": null,
+      "failedCaseIds": []
+    },
+    "refusal": {
+      "label": "Refusal",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "passRate": null,
+      "failedCaseIds": []
+    },
+    "code-quality": {
+      "label": "Code quality",
+      "total": 12,
+      "passed": 3,
+      "failed": 9,
+      "passRate": 0.25,
+      "failedCaseIds": [
+        "COD-caching-001",
+        "COD-host-cookie-001",
+        "COD-mcp-001",
+        "COD-mfa-001",
+        "COD-nodejs-001",
+        "COD-oauth-001",
+        "COD-pagination-001",
+        "COD-performance-testing-001",
+        "COD-rate-limiting-001"
+      ]
+    },
+    "grounding": {
+      "label": "Grounding",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "passRate": null,
+      "failedCaseIds": []
+    },
+    "tool-use": {
+      "label": "Tool use",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "passRate": null,
+      "failedCaseIds": []
+    },
+    "unsafe-instruction-handling": {
+      "label": "Unsafe-instruction handling",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "passRate": null,
+      "failedCaseIds": []
+    },
+    "context-preservation": {
+      "label": "Context preservation",
+      "proxy": true,
+      "proxyNote": "Proxy dimension: no dedicated context-preservation cases exist in the subset; measured over error-handling, negative-case-handling, and output-quality cases.",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "passRate": null,
+      "failedCaseIds": []
+    }
+  },
+  "byCategory": {
+    "skill-selection": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "critical": 0
+    },
+    "code-generation": {
+      "total": 12,
+      "passed": 3,
+      "failed": 9,
+      "critical": 0
+    },
+    "skill-discovery": {
+      "total": 5,
+      "passed": 1,
+      "failed": 4,
+      "critical": 0
+    }
+  },
+  "failures": [
+    {
+      "id": "AMB-blogpost-001",
+      "category": "skill-selection",
+      "type": "ambiguous",
+      "skill": "blog-writing",
+      "critical": false,
+      "failureCategory": "selection-gap",
+      "failedChecks": [
+        "recall",
+        "precision"
+      ],
+      "needsHumanReview": true,
+      "failureReason": "recall: missing expected skill(s): blog-writing (selected: none) | precision: precision 0/0 = 0.00 (need >= 0.50)"
+    },
+    {
+      "id": "AMB-keyword-001",
+      "category": "skill-selection",
+      "type": "ambiguous",
+      "skill": "keyword-to-content",
+      "critical": false,
+      "failureCategory": "selection-gap",
+      "failedChecks": [
+        "recall",
+        "precision",
+        "grounded-in: keyword-to-content",
+        "must-include: Classify the intent"
+      ],
+      "needsHumanReview": true,
+      "failureReason": "recall: missing expected skill(s): keyword-to-content (selected: seo-content-strategy, seo-keyword-research) | precision: precision 0/2 = 0.00 (need >= 0.50) | grounded-in: keyword-to-content: evaluated skill \"keyword-to-content\" was not selected (selected: seo-content-strategy, seo-keyword-research) | must-include: Classify the intent: answer does not contain \"Classify the intent\""
+    },
+    {
+      "id": "COD-caching-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "caching",
+      "critical": false,
+      "failureCategory": "code-gap",
+      "failedChecks": [
+        "recall",
+        "precision",
+        "code-must-include: v1:product",
+        "code-must-include: ttlSeconds: 300"
+      ],
+      "needsHumanReview": true,
+      "failureReason": "recall: missing expected skill(s): caching (selected: none) | precision: precision 0/0 = 0.00 (need >= 0.50) | code-must-include: v1:product: code does not contain \"v1:product\" | code-must-include: ttlSeconds: 300: code does not contain \"ttlSeconds: 300\""
+    },
+    {
+      "id": "COD-host-cookie-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "session-management",
+      "critical": false,
+      "failureCategory": "code-gap",
+      "failedChecks": [
+        "code-block-1-compiles",
+        "code-block-3-compiles"
+      ],
+      "needsHumanReview": true,
+      "failureReason": "code-block-1-compiles: JavaScript block does not compile: SyntaxError: Unexpected token ':' | code-block-3-compiles: JavaScript block does not compile: SyntaxError: Invalid or unexpected token"
+    },
+    {
+      "id": "COD-mcp-001",
+      "category": "code-generation",
+      "type": "regression",
+      "skill": "mcp-development",
+      "critical": false,
+      "failureCategory": "code-gap",
+      "failedChecks": [
+        "code-must-include: @modelcontextprotocol/server",
+        "code-must-include: registerTool",
+        "code-must-exclude: @modelcontextprotocol/sdk/"
+      ],
+      "needsHumanReview": true,
+      "failureReason": "code-must-include: @modelcontextprotocol/server: code does not contain \"@modelcontextprotocol/server\" | code-must-include: registerTool: code does not contain \"registerTool\" | code-must-exclude: @modelcontextprotocol/sdk/: code contains forbidden \"@modelcontextprotocol/sdk/\""
+    },
+    {
+      "id": "COD-mfa-001",
+      "category": "code-generation",
+      "type": "regression",
+      "skill": "mfa",
+      "critical": false,
+      "failureCategory": "code-gap",
+      "failedChecks": [
+        "recall",
+        "precision",
+        "code-must-exclude: authenticator.generateSecret"
+      ],
+      "needsHumanReview": true,
+      "failureReason": "recall: missing expected skill(s): mfa (selected: none) | precision: precision 0/0 = 0.00 (need >= 0.50) | code-must-exclude: authenticator.generateSecret: code contains forbidden \"authenticator.generateSecret\""
+    },
+    {
+      "id": "COD-nodejs-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "nodejs",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini helper failed (exit 1): Gemini API error: HTTP 503: [{\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n]"
+    },
+    {
+      "id": "COD-oauth-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "oauth",
+      "critical": false,
+      "failureCategory": "code-gap",
+      "failedChecks": [
+        "recall",
+        "precision",
+        "code-block-1-structure",
+        "code-must-include: S256",
+        "code-must-include: codeVerifier",
+        "code-must-include: codeChallenge",
+        "code-must-include: S256"
+      ],
+      "needsHumanReview": true,
+      "failureReason": "recall: missing expected skill(s): oauth (selected: none) | precision: precision 0/0 = 0.00 (need >= 0.50) | code-block-1-structure: TypeScript block is malformed: unbalanced delimiter: unexpected \"}\" | code-must-include: S256: code does not contain \"S256\" | code-must-include: codeVerifier: code does not contain \"codeVerifier\" | code-must-include: codeChallenge: code does not contain \"codeChallenge\" | code-must-include: S256: code does not contain \"S256\""
+    },
+    {
+      "id": "COD-pagination-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "rest-api",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini provider returned non-JSON output"
+    },
+    {
+      "id": "COD-performance-testing-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "performance-testing",
+      "critical": false,
+      "failureCategory": "selection-gap",
+      "failedChecks": [
+        "recall",
+        "precision"
+      ],
+      "needsHumanReview": true,
+      "failureReason": "recall: missing expected skill(s): performance-testing (selected: k6) | precision: precision 0/1 = 0.00 (need >= 0.50)"
+    },
+    {
+      "id": "COD-rate-limiting-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "rate-limiting",
+      "critical": false,
+      "failureCategory": "code-gap",
+      "failedChecks": [
+        "recall",
+        "precision",
+        "code-must-include: slidingWindowCount",
+        "code-must-include: windowSeconds"
+      ],
+      "needsHumanReview": true,
+      "failureReason": "recall: missing expected skill(s): rate-limiting (selected: none) | precision: precision 0/0 = 0.00 (need >= 0.50) | code-must-include: slidingWindowCount: code does not contain \"slidingWindowCount\" | code-must-include: windowSeconds: code does not contain \"windowSeconds\""
+    },
+    {
+      "id": "DIS-debugging-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "debugging",
+      "critical": false,
+      "failureCategory": "selection-gap",
+      "failedChecks": [
+        "recall",
+        "top-3"
+      ],
+      "needsHumanReview": true,
+      "failureReason": "recall: missing expected skill(s): debugging (selected: node-js) | top-3: expected skill(s) outside top 3: debugging (top 3: node-js)"
+    },
+    {
+      "id": "DIS-rag-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "rag",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini provider returned non-JSON output"
+    },
+    {
+      "id": "DIS-real-a11y-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "accessibility",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini provider returned non-JSON output"
+    },
+    {
+      "id": "DIS-real-auth-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "authentication",
+      "critical": false,
+      "failureCategory": "selection-gap",
+      "failedChecks": [
+        "recall",
+        "top-3"
+      ],
+      "needsHumanReview": true,
+      "failureReason": "recall: missing expected skill(s): authentication (selected: authentication-best-practices, web-security) | top-3: expected skill(s) outside top 3: authentication (top 3: authentication-best-practices, web-security)"
+    }
+  ],
+  "usage": {
+    "requests": 19,
+    "attempts": 19,
+    "retries": 0,
+    "errors": 1,
+    "promptTokens": 3624,
+    "completionTokens": 13269,
+    "totalTokens": 30294,
+    "estimatedCostUsd": null,
+    "servedModels": {
+      "gemini-3.5-flash": 18
+    },
+    "emptyResponses": 0
+  },
+  "runnerRetries": 0,
+  "results": [
+    {
+      "id": "AMB-blogpost-001",
+      "category": "skill-selection",
+      "type": "ambiguous",
+      "skill": "blog-writing",
+      "source": "hand-written",
+      "pass": false,
+      "score": 33,
+      "failureReason": "recall: missing expected skill(s): blog-writing (selected: none) | precision: precision 0/0 = 0.00 (need >= 0.50)",
+      "selectedSkills": [],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": false,
+          "detail": "missing expected skill(s): blog-writing (selected: none)"
+        },
+        {
+          "name": "precision",
+          "pass": false,
+          "detail": "precision 0/0 = 0.00 (need >= 0.50)"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "usage": {
+        "promptTokens": 189,
+        "completionTokens": 385,
+        "totalTokens": 918
+      },
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false,
+      "failureCategory": "selection-gap",
+      "failedChecks": [
+        "recall",
+        "precision"
+      ],
+      "needsHumanReview": true
+    },
+    {
+      "id": "AMB-keyword-001",
+      "category": "skill-selection",
+      "type": "ambiguous",
+      "skill": "keyword-to-content",
+      "source": "hand-written",
+      "pass": false,
+      "score": 20,
+      "failureReason": "recall: missing expected skill(s): keyword-to-content (selected: seo-content-strategy, seo-keyword-research) | precision: precision 0/2 = 0.00 (need >= 0.50) | grounded-in: keyword-to-content: evaluated skill \"keyword-to-content\" was not selected (selected: seo-content-strategy, seo-keyword-research) | must-include: Classify the intent: answer does not contain \"Classify the intent\"",
+      "selectedSkills": [
+        "seo-content-strategy",
+        "seo-keyword-research"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": false,
+          "detail": "missing expected skill(s): keyword-to-content (selected: seo-content-strategy, seo-keyword-research)"
+        },
+        {
+          "name": "precision",
+          "pass": false,
+          "detail": "precision 0/2 = 0.00 (need >= 0.50)"
+        },
+        {
+          "name": "grounded-in: keyword-to-content",
+          "pass": false,
+          "detail": "evaluated skill \"keyword-to-content\" was not selected (selected: seo-content-strategy, seo-keyword-research)"
+        },
+        {
+          "name": "must-include: Classify the intent",
+          "pass": false,
+          "detail": "answer does not contain \"Classify the intent\""
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "usage": {
+        "promptTokens": 206,
+        "completionTokens": 755,
+        "totalTokens": 2007
+      },
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false,
+      "failureCategory": "selection-gap",
+      "failedChecks": [
+        "recall",
+        "precision",
+        "grounded-in: keyword-to-content",
+        "must-include: Classify the intent"
+      ],
+      "needsHumanReview": true
+    },
+    {
+      "id": "COD-cache-control-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "caching",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [],
+      "checks": [
+        {
+          "name": "fixture: cache-control-parse#1",
+          "pass": true,
+          "detail": "run({\"header\":\"public, max-age=60, stale-while-revalidate=30\"}) === {\"public\":true,\"maxAge\":60,\"staleWhileRevalidate\":30}"
+        },
+        {
+          "name": "fixture: cache-control-parse#2",
+          "pass": true,
+          "detail": "run({\"header\":\"private\"}) === {\"private\":true}"
+        },
+        {
+          "name": "fixture: cache-control-parse#3",
+          "pass": true,
+          "detail": "run({\"header\":\"no-store\"}) === {\"noStore\":true}"
+        },
+        {
+          "name": "fixture: cache-control-parse#4",
+          "pass": true,
+          "detail": "run({\"header\":\"public, max-age=3600\"}) === {\"public\":true,\"maxAge\":3600}"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "usage": {
+        "promptTokens": 199,
+        "completionTokens": 272,
+        "totalTokens": 1114
+      },
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "COD-caching-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "caching",
+      "source": "hand-written",
+      "pass": false,
+      "score": 33,
+      "failureReason": "recall: missing expected skill(s): caching (selected: none) | precision: precision 0/0 = 0.00 (need >= 0.50) | code-must-include: v1:product: code does not contain \"v1:product\" | code-must-include: ttlSeconds: 300: code does not contain \"ttlSeconds: 300\"",
+      "selectedSkills": [],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": false,
+          "detail": "missing expected skill(s): caching (selected: none)"
+        },
+        {
+          "name": "precision",
+          "pass": false,
+          "detail": "precision 0/0 = 0.00 (need >= 0.50)"
+        },
+        {
+          "name": "code-block-1-structure",
+          "pass": true,
+          "detail": "TypeScript block is structurally balanced (compile check unavailable: node --check does not type-strip)"
+        },
+        {
+          "name": "code-must-include: v1:product",
+          "pass": false,
+          "detail": "code does not contain \"v1:product\""
+        },
+        {
+          "name": "code-must-include: ttlSeconds: 300",
+          "pass": false,
+          "detail": "code does not contain \"ttlSeconds: 300\""
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "usage": {
+        "promptTokens": 206,
+        "completionTokens": 703,
+        "totalTokens": 1891
+      },
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false,
+      "failureCategory": "code-gap",
+      "failedChecks": [
+        "recall",
+        "precision",
+        "code-must-include: v1:product",
+        "code-must-include: ttlSeconds: 300"
+      ],
+      "needsHumanReview": true
+    },
+    {
+      "id": "COD-host-cookie-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "session-management",
+      "source": "hand-written",
+      "pass": false,
+      "score": 78,
+      "failureReason": "code-block-1-compiles: JavaScript block does not compile: SyntaxError: Unexpected token ':' | code-block-3-compiles: JavaScript block does not compile: SyntaxError: Invalid or unexpected token",
+      "selectedSkills": [],
+      "checks": [
+        {
+          "name": "code-block-1-compiles",
+          "pass": false,
+          "detail": "JavaScript block does not compile: SyntaxError: Unexpected token ':'"
+        },
+        {
+          "name": "code-block-2-compiles",
+          "pass": true,
+          "detail": "JavaScript block compiles (node --check)"
+        },
+        {
+          "name": "code-block-3-compiles",
+          "pass": false,
+          "detail": "JavaScript block does not compile: SyntaxError: Invalid or unexpected token"
+        },
+        {
+          "name": "fixture: host-cookie-prefix#1",
+          "pass": true,
+          "detail": "run({\"cookie\":\"__Host-session=abc123; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400\"}) === {\"valid\":true,\"violations\":[]}"
+        },
+        {
+          "name": "fixture: host-cookie-prefix#2",
+          "pass": true,
+          "detail": "run({\"cookie\":\"__Host-session=abc123; Path=/; HttpOnly; SameSite=Lax\"}) === {\"valid\":false,\"violations\":[\"missing Secure\"]}"
+        },
+        {
+          "name": "fixture: host-cookie-prefix#3",
+          "pass": true,
+          "detail": "run({\"cookie\":\"__Host-session=abc123; Path=/; HttpOnly; Secure; Domain=example.com\"}) === {\"valid\":false,\"violations\":[\"Domain attribute present\"]}"
+        },
+        {
+          "name": "fixture: host-cookie-prefix#4",
+          "pass": true,
+          "detail": "run({\"cookie\":\"__Host-session=abc123; Path=/app; HttpOnly; Secure\"}) === {\"valid\":false,\"violations\":[\"Path is not /\"]}"
+        },
+        {
+          "name": "fixture: host-cookie-prefix#5",
+          "pass": true,
+          "detail": "run({\"cookie\":\"session=abc123; Path=/; HttpOnly; Secure\"}) === {\"valid\":false,\"violations\":[\"name lacks __Host- prefix\"]}"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "usage": {
+        "promptTokens": 198,
+        "completionTokens": 641,
+        "totalTokens": 1462
+      },
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false,
+      "failureCategory": "code-gap",
+      "failedChecks": [
+        "code-block-1-compiles",
+        "code-block-3-compiles"
+      ],
+      "needsHumanReview": true
+    },
+    {
+      "id": "COD-javascript-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "javascript",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "javascript"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "precision",
+          "pass": true,
+          "detail": "precision 1/1 = 1.00 (need >= 0.50)"
+        },
+        {
+          "name": "code-block-1-compiles",
+          "pass": true,
+          "detail": "JavaScript block compiles (node --check)"
+        },
+        {
+          "name": "code-must-exclude: var ",
+          "pass": true,
+          "detail": "code avoids \"var \""
+        },
+        {
+          "name": "code-must-exclude: XMLHttpRequest",
+          "pass": true,
+          "detail": "code avoids \"XMLHttpRequest\""
+        },
+        {
+          "name": "code-block-2-compiles",
+          "pass": true,
+          "detail": "JavaScript block compiles (node --check)"
+        },
+        {
+          "name": "code-must-exclude: var ",
+          "pass": true,
+          "detail": "code avoids \"var \""
+        },
+        {
+          "name": "code-must-exclude: XMLHttpRequest",
+          "pass": true,
+          "detail": "code avoids \"XMLHttpRequest\""
+        },
+        {
+          "name": "code-block-3-compiles",
+          "pass": true,
+          "detail": "JavaScript block compiles (node --check)"
+        },
+        {
+          "name": "code-must-exclude: var ",
+          "pass": true,
+          "detail": "code avoids \"var \""
+        },
+        {
+          "name": "code-must-exclude: XMLHttpRequest",
+          "pass": true,
+          "detail": "code avoids \"XMLHttpRequest\""
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "usage": {
+        "promptTokens": 201,
+        "completionTokens": 890,
+        "totalTokens": 1660
+      },
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "COD-mcp-001",
+      "category": "code-generation",
+      "type": "regression",
+      "skill": "mcp-development",
+      "source": "hand-written",
+      "pass": false,
+      "score": 50,
+      "failureReason": "code-must-include: @modelcontextprotocol/server: code does not contain \"@modelcontextprotocol/server\" | code-must-include: registerTool: code does not contain \"registerTool\" | code-must-exclude: @modelcontextprotocol/sdk/: code contains forbidden \"@modelcontextprotocol/sdk/\"",
+      "selectedSkills": [
+        "mcp-typescript-sdk"
+      ],
+      "checks": [
+        {
+          "name": "code-block-1-structure",
+          "pass": true,
+          "detail": "TypeScript block is structurally balanced (compile check unavailable: node --check does not type-strip)"
+        },
+        {
+          "name": "code-must-include: McpServer",
+          "pass": true,
+          "detail": "code contains \"McpServer\""
+        },
+        {
+          "name": "code-must-include: @modelcontextprotocol/server",
+          "pass": false,
+          "detail": "code does not contain \"@modelcontextprotocol/server\""
+        },
+        {
+          "name": "code-must-include: registerTool",
+          "pass": false,
+          "detail": "code does not contain \"registerTool\""
+        },
+        {
+          "name": "code-must-exclude: @modelcontextprotocol/sdk/",
+          "pass": false,
+          "detail": "code contains forbidden \"@modelcontextprotocol/sdk/\""
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "usage": {
+        "promptTokens": 198,
+        "completionTokens": 474,
+        "totalTokens": 1644
+      },
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false,
+      "failureCategory": "code-gap",
+      "failedChecks": [
+        "code-must-include: @modelcontextprotocol/server",
+        "code-must-include: registerTool",
+        "code-must-exclude: @modelcontextprotocol/sdk/"
+      ],
+      "needsHumanReview": true
+    },
+    {
+      "id": "COD-mfa-001",
+      "category": "code-generation",
+      "type": "regression",
+      "skill": "mfa",
+      "source": "hand-written",
+      "pass": false,
+      "score": 50,
+      "failureReason": "recall: missing expected skill(s): mfa (selected: none) | precision: precision 0/0 = 0.00 (need >= 0.50) | code-must-exclude: authenticator.generateSecret: code contains forbidden \"authenticator.generateSecret\"",
+      "selectedSkills": [],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": false,
+          "detail": "missing expected skill(s): mfa (selected: none)"
+        },
+        {
+          "name": "precision",
+          "pass": false,
+          "detail": "precision 0/0 = 0.00 (need >= 0.50)"
+        },
+        {
+          "name": "code-block-1-structure",
+          "pass": true,
+          "detail": "TypeScript block is structurally balanced (compile check unavailable: node --check does not type-strip)"
+        },
+        {
+          "name": "code-must-exclude: authenticator.generateSecret",
+          "pass": false,
+          "detail": "code contains forbidden \"authenticator.generateSecret\""
+        },
+        {
+          "name": "code-must-exclude: authenticator.verify",
+          "pass": true,
+          "detail": "code avoids \"authenticator.verify\""
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "usage": {
+        "promptTokens": 207,
+        "completionTokens": 496,
+        "totalTokens": 1313
+      },
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false,
+      "failureCategory": "code-gap",
+      "failedChecks": [
+        "recall",
+        "precision",
+        "code-must-exclude: authenticator.generateSecret"
+      ],
+      "needsHumanReview": true
+    },
+    {
+      "id": "COD-nodejs-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "nodejs",
+      "source": "hand-written",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini helper failed (exit 1): Gemini API error: HTTP 503: [{\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n]",
+      "selectedSkills": [],
+      "checks": [],
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    },
+    {
+      "id": "COD-oauth-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "oauth",
+      "source": "hand-written",
+      "pass": false,
+      "score": 36,
+      "failureReason": "recall: missing expected skill(s): oauth (selected: none) | precision: precision 0/0 = 0.00 (need >= 0.50) | code-block-1-structure: TypeScript block is malformed: unbalanced delimiter: unexpected \"}\" | code-must-include: S256: code does not contain \"S256\" | code-must-include: codeVerifier: code does not contain \"codeVerifier\" | code-must-include: codeChallenge: code does not contain \"codeChallenge\" | code-must-include: S256: code does not contain \"S256\"",
+      "selectedSkills": [],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": false,
+          "detail": "missing expected skill(s): oauth (selected: none)"
+        },
+        {
+          "name": "precision",
+          "pass": false,
+          "detail": "precision 0/0 = 0.00 (need >= 0.50)"
+        },
+        {
+          "name": "code-block-1-structure",
+          "pass": false,
+          "detail": "TypeScript block is malformed: unbalanced delimiter: unexpected \"}\""
+        },
+        {
+          "name": "code-must-include: codeVerifier",
+          "pass": true,
+          "detail": "code contains \"codeVerifier\""
+        },
+        {
+          "name": "code-must-include: codeChallenge",
+          "pass": true,
+          "detail": "code contains \"codeChallenge\""
+        },
+        {
+          "name": "code-must-include: S256",
+          "pass": false,
+          "detail": "code does not contain \"S256\""
+        },
+        {
+          "name": "code-block-2-structure",
+          "pass": true,
+          "detail": "TypeScript block is structurally balanced (compile check unavailable: node --check does not type-strip)"
+        },
+        {
+          "name": "code-must-include: codeVerifier",
+          "pass": false,
+          "detail": "code does not contain \"codeVerifier\""
+        },
+        {
+          "name": "code-must-include: codeChallenge",
+          "pass": false,
+          "detail": "code does not contain \"codeChallenge\""
+        },
+        {
+          "name": "code-must-include: S256",
+          "pass": false,
+          "detail": "code does not contain \"S256\""
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "usage": {
+        "promptTokens": 201,
+        "completionTokens": 665,
+        "totalTokens": 1594
+      },
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false,
+      "failureCategory": "code-gap",
+      "failedChecks": [
+        "recall",
+        "precision",
+        "code-block-1-structure",
+        "code-must-include: S256",
+        "code-must-include: codeVerifier",
+        "code-must-include: codeChallenge",
+        "code-must-include: S256"
+      ],
+      "needsHumanReview": true
+    },
+    {
+      "id": "COD-pagination-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "rest-api",
+      "source": "hand-written",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini provider returned non-JSON output",
+      "selectedSkills": [],
+      "checks": [],
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    },
+    {
+      "id": "COD-performance-testing-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "performance-testing",
+      "source": "hand-written",
+      "pass": false,
+      "score": 71,
+      "failureReason": "recall: missing expected skill(s): performance-testing (selected: k6) | precision: precision 0/1 = 0.00 (need >= 0.50)",
+      "selectedSkills": [
+        "k6"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": false,
+          "detail": "missing expected skill(s): performance-testing (selected: k6)"
+        },
+        {
+          "name": "precision",
+          "pass": false,
+          "detail": "precision 0/1 = 0.00 (need >= 0.50)"
+        },
+        {
+          "name": "code-block-1-compiles",
+          "pass": true,
+          "detail": "JavaScript block compiles (node --check)"
+        },
+        {
+          "name": "code-must-include: thresholds",
+          "pass": true,
+          "detail": "code contains \"thresholds\""
+        },
+        {
+          "name": "code-must-include: http_req_duration",
+          "pass": true,
+          "detail": "code contains \"http_req_duration\""
+        },
+        {
+          "name": "code-must-include: p(95)<500",
+          "pass": true,
+          "detail": "code contains \"p(95)<500\""
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "usage": {
+        "promptTokens": 202,
+        "completionTokens": 574,
+        "totalTokens": 1445
+      },
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false,
+      "failureCategory": "selection-gap",
+      "failedChecks": [
+        "recall",
+        "precision"
+      ],
+      "needsHumanReview": true
+    },
+    {
+      "id": "COD-rate-limiting-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "rate-limiting",
+      "source": "hand-written",
+      "pass": false,
+      "score": 33,
+      "failureReason": "recall: missing expected skill(s): rate-limiting (selected: none) | precision: precision 0/0 = 0.00 (need >= 0.50) | code-must-include: slidingWindowCount: code does not contain \"slidingWindowCount\" | code-must-include: windowSeconds: code does not contain \"windowSeconds\"",
+      "selectedSkills": [],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": false,
+          "detail": "missing expected skill(s): rate-limiting (selected: none)"
+        },
+        {
+          "name": "precision",
+          "pass": false,
+          "detail": "precision 0/0 = 0.00 (need >= 0.50)"
+        },
+        {
+          "name": "code-block-1-structure",
+          "pass": true,
+          "detail": "TypeScript block is structurally balanced (compile check unavailable: node --check does not type-strip)"
+        },
+        {
+          "name": "code-must-include: slidingWindowCount",
+          "pass": false,
+          "detail": "code does not contain \"slidingWindowCount\""
+        },
+        {
+          "name": "code-must-include: windowSeconds",
+          "pass": false,
+          "detail": "code does not contain \"windowSeconds\""
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "usage": {
+        "promptTokens": 194,
+        "completionTokens": 680,
+        "totalTokens": 1665
+      },
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false,
+      "failureCategory": "code-gap",
+      "failedChecks": [
+        "recall",
+        "precision",
+        "code-must-include: slidingWindowCount",
+        "code-must-include: windowSeconds"
+      ],
+      "needsHumanReview": true
+    },
+    {
+      "id": "COD-trpc-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "trpc",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "trpc",
+        "zod"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "precision",
+          "pass": true,
+          "detail": "precision 1/2 = 0.50 (need >= 0.50)"
+        },
+        {
+          "name": "code-block-1-structure",
+          "pass": true,
+          "detail": "TypeScript block is structurally balanced (compile check unavailable: node --check does not type-strip)"
+        },
+        {
+          "name": "code-must-include: initTRPC",
+          "pass": true,
+          "detail": "code contains \"initTRPC\""
+        },
+        {
+          "name": "code-must-include: TRPCError",
+          "pass": true,
+          "detail": "code contains \"TRPCError\""
+        },
+        {
+          "name": "code-must-include: AppRouter",
+          "pass": true,
+          "detail": "code contains \"AppRouter\""
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "usage": {
+        "promptTokens": 199,
+        "completionTokens": 828,
+        "totalTokens": 1910
+      },
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "DIS-debugging-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "debugging",
+      "source": "hand-written",
+      "pass": false,
+      "score": 33,
+      "failureReason": "recall: missing expected skill(s): debugging (selected: node-js) | top-3: expected skill(s) outside top 3: debugging (top 3: node-js)",
+      "selectedSkills": [
+        "node-js"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": false,
+          "detail": "missing expected skill(s): debugging (selected: node-js)"
+        },
+        {
+          "name": "top-3",
+          "pass": false,
+          "detail": "expected skill(s) outside top 3: debugging (top 3: node-js)"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "usage": {
+        "promptTokens": 199,
+        "completionTokens": 812,
+        "totalTokens": 1480
+      },
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false,
+      "failureCategory": "selection-gap",
+      "failedChecks": [
+        "recall",
+        "top-3"
+      ],
+      "needsHumanReview": true
+    },
+    {
+      "id": "DIS-rag-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "rag",
+      "source": "hand-written",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini provider returned non-JSON output",
+      "selectedSkills": [],
+      "checks": [],
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    },
+    {
+      "id": "DIS-real-a11y-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "accessibility",
+      "source": "hand-written",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini provider returned non-JSON output",
+      "selectedSkills": [],
+      "checks": [],
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    },
+    {
+      "id": "DIS-real-astro-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "astro",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "astro"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "usage": {
+        "promptTokens": 210,
+        "completionTokens": 895,
+        "totalTokens": 1396
+      },
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "DIS-real-auth-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "authentication",
+      "source": "hand-written",
+      "pass": false,
+      "score": 33,
+      "failureReason": "recall: missing expected skill(s): authentication (selected: authentication-best-practices, web-security) | top-3: expected skill(s) outside top 3: authentication (top 3: authentication-best-practices, web-security)",
+      "selectedSkills": [
+        "authentication-best-practices",
+        "web-security"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": false,
+          "detail": "missing expected skill(s): authentication (selected: authentication-best-practices, web-security)"
+        },
+        {
+          "name": "top-3",
+          "pass": false,
+          "detail": "expected skill(s) outside top 3: authentication (top 3: authentication-best-practices, web-security)"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "usage": {
+        "promptTokens": 212,
+        "completionTokens": 1464,
+        "totalTokens": 2127
+      },
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false,
+      "failureCategory": "selection-gap",
+      "failedChecks": [
+        "recall",
+        "top-3"
+      ],
+      "needsHumanReview": true
+    }
+  ],
+  "archivePath": "ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-22-day1.json",
+  "limitations": [
+    "This run measures one model at one point in time (temperature 0, but providers are not perfectly deterministic). Re-running may give different results.",
+    "The model was asked to self-report its skill selection as JSON; a model can select a skill and fail to report it, or report one it would not actually load.",
+    "The model never sees the skill files — it answers from its own knowledge plus the task prompt. A \"grounded\" answer may come from its weights, not the library; the grounded-in check only verifies the skill was named.",
+    "Content checks are substring matches on the model's answer; they prove the guidance is present in the answer, not that it is complete or correctly applied.",
+    "Code checks prove compilation of the model's code blocks (and fixture behavior where fixtures exist), not general correctness. TypeScript blocks get a structural check only.",
+    "Context preservation is a proxy dimension (no dedicated cases exist in the subset); see the dimension note above.",
+    "Failure categories are a machine first pass. Every failure needs a human read before it is counted as a model gap, a case-design issue, or a library gap."
+  ]
+}

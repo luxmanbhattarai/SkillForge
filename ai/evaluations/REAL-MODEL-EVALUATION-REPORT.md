@@ -537,23 +537,68 @@ plus the 2–3 case smoke test — no other paid calls.
    prompt); structured-output enforcement (`response_format`); a
    spend cap; per-model result history.
 
-## 9. Run results (BLOCKED — free-tier daily quota exhausted; smoke test recorded below)
+## 9. Run results (IN PROGRESS — multi-day run on `gemini-3.5-flash`; Day 1 of 5 complete)
 
-> The 89-case run has **not** executed: the smoke test proved
-> the free-tier daily quota (20 requests/day for
-> `gemini-3.8-flash`) was already exhausted, and the full run was
-> deliberately not launched (§7). There are no real-model
-> results yet. When the run completes (after one of the §7 paths
-> unblocks it), record here: model/provider info, methodology
+> The 89-case run is executing as a multi-day run (free tier,
+> 20 requests/day, checkpointed day slices) on
+> `gemini-3.5-flash`, after the model switch noted at the top
+> of this report. Day 1 (19 cases) completed 2026-11-22; the
+> remaining 70 cases plus 1 retry run on Days 2–5. When the run
+> completes, record here: model/provider info, methodology
 > (as run, including any deviations), dataset details, individual
 > results summary, aggregate metrics (the eight dimensions),
 > failure analysis (every failure classified per §5.4),
 > comparison against the mock evaluation (463/463), token usage
-> and cost, and known limitations. The machine-readable record
-> will live at
-> `ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-22.json`.
+> and cost, and known limitations. The machine-readable records
+> live at
+> `ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-22-day<N>.json`.
 
-### Smoke test (2026-11-22 ~01:58 UTC) — the only live evidence so far
+### Day 1 (2026-11-22) — 19 cases, `gemini-3.5-flash`
+
+- **Result: 4/19 passed (21.1%), 15 failed, 0 critical.**
+  Run id `real-model-gemini-3.5-flash-20261122-194308`, ~7.6
+  min. Model served: `gemini-3.5-flash` (consistent across all
+  18 answered calls). Coverage: 11/277 skills selected.
+- **Dimensions (this slice only):** skill selection 1/7
+  (14.3%), code quality 3/12 (25.0%). The other six dimensions
+  had 0 cases in this slice.
+- **Passes (4):** `COD-cache-control-001`, `COD-javascript-001`,
+  `COD-trpc-001`, `DIS-real-astro-001` — all 100.
+- **Failures (15):** 5 selection-gap, 6 code-gap, 3 model
+  format failures, 1 true provider error.
+  - *Selection-gap (5):* the model guessed plausible skill
+    names instead of selecting from the library — e.g.
+    `seo-content-strategy`/`seo-keyword-research` for
+    `keyword-to-content`, `node-js` for `debugging`, `k6` for
+    `performance-testing`, `authentication-best-practices` for
+    `authentication`. No retrieval is in the prompt, so this is
+    the no-RAG baseline behaving as designed; retrieval-augmented
+    eval remains future work (§8.3).
+  - *Code-gap (6):* missing required code elements, two
+    non-compiling JS blocks (`COD-host-cookie-001`), a
+    malformed TS block (`COD-oauth-001`), one forbidden-API use
+    (`@modelcontextprotocol/sdk/` in `COD-mcp-001`,
+    `authenticator.generateSecret` in `COD-mfa-001`).
+  - *Model format failures (3, runner label: provider-error):*
+    `COD-pagination-001`, `DIS-rag-001`, `DIS-real-a11y-001` —
+    the model answered but not as JSON, so `extractJsonObject`
+    threw. These are model instruction-following failures, not
+    API failures; the runner's `provider-error` label covers
+    both and the distinction is recorded here. The model's reply
+    text was not preserved (harness gap — fixed the same day:
+    `extractJsonObject` now keeps a 200-char excerpt).
+  - *True provider error (1):* `COD-nodejs-001` — HTTP 503,
+    model under high demand (transient). Retried on Day 2; the
+    3 format failures are legitimate model failures and are NOT
+    retried (temperature 0 would repeat them).
+- **Usage:** 19 requests, 0 retries, 30,294 tokens (3,624
+  prompt + 13,269 completion + ~13,401 reasoning). Cost: $0
+  (free tier). Day-1 quota use: 19 cases + 1 probe = 20/20.
+- **Archive:** `ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-22-day1.json`
+  (dataset: `evals/datasets/real-model-subset-v2-day1.json`,
+  first 19 ids of subset v2).
+
+### Smoke test (2026-11-22 ~01:58 UTC) — the pre-run quota evidence
 
 | Case | Result | Failure |
 | ---- | ------ | ------- |
