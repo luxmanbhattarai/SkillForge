@@ -47,11 +47,46 @@ const AUDIT_STATUS_MAP = {
 // longer matches verification-status.json is itself an error (a
 // stale override must not linger unnoticed).
 const AUDIT_OVERRIDES = {
-  'link-building': {
-    status: 'verified',
-    date: '2026-11-21',
-    reason: 'A3-01: the 6 broken tools/ links were the only limitation; they were resolved by the Phase 4 tools/ import (all 6 targets verified on disk), so the skill is verified.',
+  // Full-skills re-test, 2026-11-22: these five skills were
+  // 'Verified' in the Phase 3 audit but the re-test found real
+  // limitations, so they were re-labeled
+  // 'verified-with-limitations' in
+  // sources/verification-status.json. Each entry records the
+  // re-audit date and the evidence; see the sidecar notes for the
+  // full detail.
+  'analytics': {
+    status: 'verified-with-limitations',
+    date: '2026-11-22',
+    reason: 'Full-skills re-test: real regex bug in references/gtm-implementation.md:390 (\\\\. instead of \\. — returns null for the skill\'s own example "1234.56") plus 5 unimported siblings referenced.',
   },
+  'copy-editing': {
+    status: 'verified-with-limitations',
+    date: '2026-11-22',
+    reason: 'Full-skills re-test: Related Skills reference 2 unimported siblings (marketing-psychology, ab-testing).',
+  },
+  'prisma-cli': {
+    status: 'verified-with-limitations',
+    date: '2026-11-22',
+    reason: 'Full-skills re-test: stale prisma.config.ts framing — Prisma 7.10+ creates prisma7.config.ts (10 reference files share it).',
+  },
+  'prisma-orm-setup': {
+    status: 'verified-with-limitations',
+    date: '2026-11-22',
+    reason: 'Full-skills re-test: 5 v7 provider refs use prisma.config.ts exclusively (7.10+ creates prisma7.config.ts); v6-mongodb ref lacks the end-of-support note (6.x support ended 2026-11-19).',
+  },
+  'skill-creator': {
+    status: 'verified-with-limitations',
+    date: '2026-11-22',
+    reason: 'Full-skills re-test: undocumented PyYAML dependency — scripts/quick_validate.py imports yaml with no requirements.txt or install step; the report path crashes with ImportError where PyYAML is absent.',
+  },
+  // NOTE (2026-11-22): the A3-01 override for 'link-building'
+  // (promoted to 'verified' 2026-11-21 when its 6 broken tools/
+  // links resolved) was REMOVED by the full-skills re-test: the
+  // re-test found a new limitation (7 unimported siblings
+  // referenced), so the skill is 'verified-with-limitations'
+  // again — which agrees with the Phase 3 audit table exactly,
+  // so no override is needed. Do not re-add it unless the
+  // sidecar and the audit table disagree again.
 };
 
 const errors = [];

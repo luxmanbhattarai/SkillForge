@@ -20,8 +20,8 @@ date; each names its evidence.
   (Latest; tag on `9216cbb`) and v1.0.0 (restored; tag on
   `bc304a2`).
 - **Library:** 277 skills (228 original + 49 upstream) in 18
-  categories, 24 agents, 16 workflows. Verification split: 255
-  verified / 16 with limitations / 6 needs-correction / 0
+  categories, 24 agents, 16 workflows. Verification split: 249
+  verified / 22 with limitations / 6 needs-correction / 0
   unverified.
 - **How `main` got here:** the production upgrade was merged via
   PR #5 (merge commit `7b4f6eb`, 2026-11-21T23:13:44Z). The

@@ -408,3 +408,101 @@ Run from the repo root after all audit fixes were committed:
 | `npm test` | 196/196 passed |
 
 Full battery results are recorded in `ai/remediation/STAGE-C-RESULTS.md`.
+
+---
+
+## Addendum — Full-skills test-and-fix re-verification (2026-11-22)
+
+The Stage C audit above is a historical record and was not rewritten.
+On 2026-11-22 every skill in the library (277/277) was re-tested:
+code examples were syntax/structure-checked, version and API claims
+were re-verified against official docs, and links in touched skills
+were re-checked. Original skills with confirmed bugs were fixed in
+place (142 fixed, 105 pass, 0 still broken); upstream skills were
+tested but never edited, per repository rule. This addendum records
+the verification-status changes that re-test produced. All entries
+below are reflected in `sources/verification-status.json` (per-entry
+date 2026-11-22) and in `scripts/validate-registry.mjs`
+(`AUDIT_OVERRIDES`).
+
+### Re-labels (6): verified -> verified-with-limitations
+
+| Skill | Evidence |
+| --- | --- |
+| `analytics` (marketingskills) | Real code bug: `references/gtm-implementation.md:390` uses `\\.` (literal backslash + any char) instead of `\.` in a JS regex; executed from the file it returns false for the skill's own example value `"1234.56"`. Plus 5 unimported siblings referenced (ab-testing, conversion-tracking, attribution, revops, influencer-marketing). |
+| `copy-editing` (marketingskills) | Related Skills reference 2 unimported siblings (marketing-psychology, ab-testing). |
+| `link-building` (marketingskills) | Related Skills reference 7 unimported siblings (free-tools, public-relations, directory-submissions, referrals, community-marketing, cold-email, marketing-loops). Its earlier broken-links limitation stays resolved (2026-11-21). The A3-01 `AUDIT_OVERRIDES` entry was removed: the skill now agrees with the Phase 3 audit table exactly, so no override is needed. |
+| `prisma-cli` (prisma) | Stale config-file framing: SKILL.md says `prisma init` creates `prisma.config.ts`; Prisma 7.10+ creates `prisma7.config.ts` (confirmed in the published prisma@7.10.1 CLI binary and official docs). 10 reference files share it. Mitigating: the Prisma 7 CLI discovers either name. |
+| `prisma-orm-setup` (prisma) | 5 v7 provider refs use `prisma.config.ts` exclusively (7.10+ creates `prisma7.config.ts`); `references/v6-mongodb.md` advises the latest Prisma 6.x with no end-of-support note — Prisma ORM 6 support ended 2026-11-19. |
+| `skill-creator` (anthropic) | Undocumented PyYAML dependency: `scripts/quick_validate.py` imports yaml, but there is no requirements.txt and no documented install step; `generate_report.py` imports `quick_validate`, so the report path crashes with ImportError where PyYAML is absent. |
+
+New split: **249 verified / 22 verified-with-limitations /
+6 needs-correction / 0 unverified** (was 255/16/6/0).
+
+### Notes updated, status unchanged (17)
+
+- `seo` (needs-correction): K5 re-measured — 12 of 37 resource
+  `.md` files carry the freshness comment (was recorded 3/19), all
+  ~9 months old. New: "Python 3.8+" claim is wrong
+  (`hreflang_checker.py` uses PEP 585 annotations in 8 signatures
+  with no `from __future__` import; real minimum 3.9); literal
+  `https://...` placeholder URLs in `seo-hreflang.md:172-174`.
+- `competitor-profiling`: corrected — `content-strategy` is NOT
+  missing (it exists in the registry); the 8 actually missing
+  siblings are now listed by name.
+- `ai-seo`: UCP described as "forthcoming" but Google launched it
+  2026-01-11; 2 unimported siblings referenced (competitors,
+  lead-magnets). The Brave-subprocessor item could not be
+  re-verified (JS-gated page); the 2026-11-20 evidence stands.
+- `cro`: missing siblings now listed by name (signup, popups,
+  ab-testing; description also references onboarding).
+- `site-architecture`: 2 unimported siblings referenced
+  (competitors, launch).
+- `prisma-upgrade-v7` (needs-correction): Accelerate retirement
+  2026-12-01 unmentioned; SKILL.md:198 stay-on-6.x advice vs 6.x
+  support ended 2026-11-19.
+- `vercel-composition-patterns` (needs-correction): more undefined
+  `Composer.*` members in "Correct" examples (CancelEdit, SaveEdit,
+  Mentions; second `use(Composer.Context)` in
+  `rules/state-lift-state.md:114`).
+- `vercel-react-view-transitions` (needs-correction): broken links
+  re-measured at 25, not ~29 (the 2 `../SKILL.md` refs are
+  plain-text mentions, not links); "Firefox 144+" overstates
+  support for the type-keyed system (needs Firefox 147).
+- `vercel-react-best-practices` (needs-correction): AGENTS.md says
+  "40+ rules" vs 70 rule files counted; SKILL.md is right.
+- `prisma-compute`: SKILL.md:136-137 contradicts itself (says pin
+  with `--save-exact`, shows unpinned installs); Composer now
+  0.39.0.
+- `prisma-mongodb-upgrade`: stay-on-v6 advice ignores end of 6.x
+  support (2026-11-19).
+- `prisma-postgres-upgrade`: dangling pointer confirmed —
+  SKILL.md:86 references `references/deploy-existing-app.md`,
+  which does not exist in this skill.
+- `vercel-cli-with-tokens`: "10M Edge Requests" now matches no
+  current Vercel source (plan page says 1M); "Turbo by default"
+  is wrong (new Pro/Enterprise accounts use Elastic by default).
+- `vercel-optimize`: `vercel contract` no longer exists (CLI
+  66.6.0); `getContract()` always returns null (degrades silently
+  via REST fallback).
+- `executing-plans`: MAJOR — `task-start`/`task-done` fail with
+  Permission denied (exit 126): all 11 superpowers scripts are
+  mode 100644 in this repo vs 100755 upstream; the import
+  stripped the exec bits. Invoking via `bash` works. (Repo-side
+  import defect, not upstream content; the fix is a chmod, left
+  as an owner decision because it touches `skills/upstream/`.)
+- `using-superpowers`: `invoke_agent` claim unsupported by the
+  official Gemini CLI docs; Platform Adaptation list omits Gemini.
+- `writing-skills`: broken links re-measured at 15 (14 unique
+  targets), not 16.
+
+### Confirmed, no change
+
+All 6 `needs-correction` skills re-confirmed with their recorded
+issues still real. The 2 validator "placeholder text" warnings on
+`seo` and `doc-coauthoring` are false positives (both describe
+placeholders rather than containing them) — validator behavior,
+not skill errors. `mcp-builder` v1 `registerTool` usage is correct
+in late v1.x (verified against the published 1.32.2 tarball).
+`schema` (marketingskills) contradicts `seo` (agentic-seo) on FAQ
+rich results; `schema` is correct.

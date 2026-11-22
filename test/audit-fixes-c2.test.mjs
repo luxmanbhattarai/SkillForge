@@ -167,14 +167,19 @@ test('E-01: validate-registry FAIL summary survives a slow-draining pipe', async
 
 // --- A3-01: post-audit override mechanism ---
 
-test('A3-01: overridden link-building passes the audit cross-check', async () => {
+test('A3-01: an overridden skill passes the audit cross-check', async () => {
   const root = await copyRepo();
   try {
     const r = await runNode(VALIDATE_REGISTRY, ['--root', root]);
     assert.equal(r.code, 0, r.stdout + r.stderr);
-    assert.doesNotMatch(r.stdout, /link-building' status is 'verified' but the Phase 3 audit/);
+    assert.doesNotMatch(r.stdout, /analytics' status is 'verified-with-limitations' but the Phase 3 audit/);
     // The override stays visible: it is reported, never silent.
-    assert.match(r.stdout, /post-audit override \(2026-11-21: A3-01/);
+    // (Retargeted 2026-11-22: the A3-01 link-building override was
+    // removed when the full-skills re-test re-labeled that skill
+    // back to 'verified-with-limitations' — which agrees with the
+    // audit table, so no override is needed. 'analytics' carries
+    // a live 2026-11-22 override instead.)
+    assert.match(r.stdout, /post-audit override \(2026-11-22/);
   } finally {
     await rm(root, { recursive: true, force: true });
   }
@@ -200,11 +205,11 @@ test('A3-01: a stale override (sidecar no longer matches it) errors', async () =
   const root = await copyRepo();
   try {
     await mutateJson(path.join(root, 'sources', 'verification-status.json'), (doc) => {
-      doc.statuses['link-building'].status = 'needs-correction';
+      doc.statuses.analytics.status = 'needs-correction';
     });
     const r = await runNode(VALIDATE_REGISTRY, ['--root', root]);
     assert.equal(r.code, 1, r.stdout);
-    assert.match(r.stdout, /post-audit override \(2026-11-21\) says 'verified'/);
+    assert.match(r.stdout, /post-audit override \(2026-11-22\) says 'verified-with-limitations'/);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

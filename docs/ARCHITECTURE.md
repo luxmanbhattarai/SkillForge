@@ -113,7 +113,7 @@ accuracy audit (`ai/audits/TECHNICAL-ACCURACY-AUDIT.md`) and the
 Stage C audit of the 51 Phase 4 skills
 (`ai/audits/SKILL-AUDIT-MATRIX.md`). A skill with no entry defaults to
 `unverified` with a warning — never to `verified`. Current split:
-255 verified, 16 verified-with-limitations, 6 needs-correction (all
+249 verified, 22 verified-with-limitations, 6 needs-correction (all
 upstream), 0 unverified. See
 `ai/decisions/2026-11-20-verification-status-sidecar.md`.
 

@@ -33,12 +33,13 @@
     },
     "ai-seo": {
       "status": "verified-with-limitations",
-      "date": "2026-11-20",
-      "note": "No flat errors. Limitations: (1) Brave Search is on Anthropic's subprocessor list as \"Web Search\" since 2025-03-19 (confirmed), but the pipeline is composite (Parallel Web Systems and turbopuffer also listed for web search as of 2026-10-24; image results from Bing). (2) GPT-5.6 framing roughly right (GA 2026-07-09)."
+      "date": "2026-11-22",
+      "note": "No flat errors. Limitations: (1) Brave Search is on Anthropic's subprocessor list as \"Web Search\" since 2025-03-19 (confirmed), but the pipeline is composite (Parallel Web Systems and turbopuffer also listed for web search as of 2026-10-24; image results from Bing). (2) GPT-5.6 framing roughly right (GA 2026-07-09). (3) UCP described as a \"forthcoming protocol\" but Google launched the Universal Commerce Protocol on 2026-01-11 (found 2026-11-22). (4) Import-scope gap: Related Skills reference 2 unimported siblings (competitors, lead-magnets). Item (1) could not be re-verified 2026-11-22 (Anthropic's subprocessor page is JS-gated); the 2026-11-20 verification stands."
     },
     "analytics": {
-      "status": "verified",
-      "date": "2026-11-20"
+      "status": "verified-with-limitations",
+      "date": "2026-11-22",
+      "note": "Limitations found 2026-11-22 (full-skills test): (1) Real code bug in references/gtm-implementation.md:390 \u2014 the Custom JavaScript Variable regex uses \\\\. (literal backslash + any char) instead of \\. (decimal point); executed from the file, it returns false for the skill\u2019s own example value \"1234.56\", so the snippet returns null for exactly the input it claims to handle. (2) Import-scope gap: Related Skills reference 5 unimported siblings (ab-testing, conversion-tracking, attribution, revops, influencer-marketing)."
     },
     "api-client-generation": {
       "status": "verified",
@@ -186,8 +187,8 @@
     },
     "competitor-profiling": {
       "status": "verified-with-limitations",
-      "date": "2026-11-20",
-      "note": "No content errors. Limitation (import-scope gap): Related Skills sections reference unimported marketingskills siblings (e.g. competitors, content-strategy)."
+      "date": "2026-11-22",
+      "note": "No content errors. Limitation (import-scope gap): Related Skills reference 8 unimported marketingskills siblings (competitors, reverse-engineer-marketing, prospecting, customer-research, sales-enablement, ads, pricing, marketing-plan). Corrected 2026-11-22: content-strategy is NOT missing \u2014 it exists in the registry (the earlier note wrongly named it as an example)."
     },
     "connection-pooling": {
       "status": "verified",
@@ -226,8 +227,9 @@
       "date": "2026-11-20"
     },
     "copy-editing": {
-      "status": "verified",
-      "date": "2026-11-20"
+      "status": "verified-with-limitations",
+      "date": "2026-11-22",
+      "note": "Limitation (import-scope gap, found 2026-11-22): Related Skills reference 2 unimported siblings (marketing-psychology, ab-testing)."
     },
     "copywriting": {
       "status": "verified",
@@ -239,8 +241,8 @@
     },
     "cro": {
       "status": "verified-with-limitations",
-      "date": "2026-11-20",
-      "note": "No content errors. Limitation (import-scope gap): Related Skills reference unimported siblings (ab-testing, conversion-tracking, attribution, etc.)."
+      "date": "2026-11-22",
+      "note": "No content errors. Limitation (import-scope gap): Related Skills reference unimported siblings (signup, popups, ab-testing); the description also references onboarding (missing). Re-confirmed 2026-11-22."
     },
     "csrf-protection": {
       "status": "verified",
@@ -356,8 +358,8 @@
     },
     "executing-plans": {
       "status": "verified-with-limitations",
-      "date": "2026-11-20",
-      "note": "No content errors. Limitation (import-scope gap): names `superpowers:test-driven-development` as a REQUIRED sub-skill and references `superpowers:systematic-debugging`; neither was imported."
+      "date": "2026-11-22",
+      "note": "No content errors. Limitations: (1) import-scope gap: names `superpowers:test-driven-development` as a REQUIRED sub-skill and references `superpowers:systematic-debugging`; neither was imported. (2) Found 2026-11-22 (MAJOR): scripts/task-start and scripts/task-done fail with Permission denied (exit 126) in this repo \u2014 all 11 superpowers script files are mode 100644 here vs 100755 upstream at obra/superpowers 22f0b463 (verified via GitHub API); the import stripped the exec bits. The two scripts call sibling scripts by direct exec (task-start:26, task-done:28) without the \"${BASH:-bash}\" workaround their SDD siblings use, and SKILL.md instructs bare-path invocation, which fails the same way. Invoking via `bash` works."
     },
     "expo": {
       "status": "verified",
@@ -508,9 +510,9 @@
       "date": "2026-11-20"
     },
     "link-building": {
-      "status": "verified",
-      "date": "2026-11-21",
-      "note": "Limitation resolved 2026-11-21 (Phase C, A3-01): the 6 broken relative links to `../../tools/integrations/{ahrefs,semrush,dataforseo,exa,firecrawl,hunter}.md` now resolve \u2014 the `tools/` directory was imported in Phase 4 (commit caf1f32) after the Phase 3 audit; `npm run validate` emits no warning for this skill. No content errors. Promoted to `verified`."
+      "status": "verified-with-limitations",
+      "date": "2026-11-22",
+      "note": "Limitation (import-scope gap, found 2026-11-22): Related Skills reference 7 unimported siblings (free-tools, public-relations, directory-submissions, referrals, community-marketing, cold-email, marketing-loops). The earlier broken-links limitation stays resolved (2026-11-21, Phase C A3-01): the 6 relative links to ../../tools/integrations/{ahrefs,semrush,dataforseo,exa,firecrawl,hunter}.md resolve."
     },
     "llm-integration": {
       "status": "verified",
@@ -682,8 +684,9 @@
       "date": "2026-11-20"
     },
     "prisma-cli": {
-      "status": "verified",
-      "date": "2026-11-20"
+      "status": "verified-with-limitations",
+      "date": "2026-11-22",
+      "note": "Limitation found 2026-11-22 (full-skills test): stale config-file framing \u2014 SKILL.md says `prisma init` creates `prisma.config.ts` and to use it for CLI configuration, but Prisma 7.10+ creates `prisma7.config.ts` (confirmed in the published prisma@7.10.1 CLI binary and official docs); 10 reference files share the exclusive `prisma.config.ts` framing. Mitigating: the Prisma 7 CLI discovers either name, so existing files keep working; the gap bites new 7.10+ projects and mixed v7/v8 projects (v8 only accepts `prisma.config.ts`)."
     },
     "prisma-client-api": {
       "status": "verified",
@@ -691,8 +694,8 @@
     },
     "prisma-compute": {
       "status": "verified-with-limitations",
-      "date": "2026-11-20",
-      "note": "No errors. Limitation: verified against Prisma 8 RC pins (prisma 8.0.0-rc.21 / @prisma/orm-postgres 8.0.0-rc.23, Composer 0.30.0); current RCs are prisma 8.0.0-rc.34 / @prisma/orm-postgres 8.0.0-rc.24. Prisma 8 is still a release candidate with no GA date announced (the October GA date was removed from the release-status page on 13 November 2026). Prisma Compute runs only Prisma 8. Re-verify pins at Prisma 8 GA."
+      "date": "2026-11-22",
+      "note": "No errors. Limitation: verified against Prisma 8 RC pins (prisma 8.0.0-rc.21 / @prisma/orm-postgres 8.0.0-rc.23, Composer 0.30.0); current RCs are prisma 8.0.0-rc.34 / @prisma/orm-postgres 8.0.0-rc.24. Prisma 8 is still a release candidate with no GA date announced (the October GA date was removed from the release-status page on 13 November 2026). Prisma Compute runs only Prisma 8. Re-verify pins at Prisma 8 GA. Also found 2026-11-22: SKILL.md:136-137 contradicts itself \u2014 it says to pin the Composer packages with --save-exact to the version matching the installed prisma, then shows unpinned installs (same unpinned pair in references/app-composer-setup.md:20-21). Current pins have drifted further: Composer 0.39.0, create-prisma 0.14.8."
     },
     "prisma-database-setup": {
       "status": "verified",
@@ -704,12 +707,13 @@
     },
     "prisma-mongodb-upgrade": {
       "status": "verified-with-limitations",
-      "date": "2026-11-20",
-      "note": "No errors. Limitation: verified against `@prisma/orm-mongo` 8.0.0-rc.13; current RC is 8.0.0-rc.24. Prisma 8 is still a release candidate with no GA date announced (the October GA date was removed from the release-status page on 13 November 2026). Re-verify pins at Prisma 8 GA."
+      "date": "2026-11-22",
+      "note": "No errors. Limitation: verified against `@prisma/orm-mongo` 8.0.0-rc.13; current RC is 8.0.0-rc.24. Prisma 8 is still a release candidate with no GA date announced (the October GA date was removed from the release-status page on 13 November 2026). Re-verify pins at Prisma 8 GA. Also found 2026-11-22: the stay-on-v6 hygiene advice (\"keep taking 6.x patch releases\") ignores the end of Prisma 6 support on 2026-11-19 \u2014 there will be no further 6.x releases."
     },
     "prisma-orm-setup": {
-      "status": "verified",
-      "date": "2026-11-20"
+      "status": "verified-with-limitations",
+      "date": "2026-11-22",
+      "note": "Limitations found 2026-11-22 (full-skills test): (1) 5 v7 provider reference files use `prisma.config.ts` exclusively; Prisma 7.10+ creates `prisma7.config.ts` (the 7 CLI discovers either name, so existing files keep working). (2) references/v6-mongodb.md advises the latest Prisma 6.x release with no end-of-support note \u2014 Prisma ORM 6 support ended 2026-11-19 (official release-status page, updated 2026-11-20); there will be no further 6.x releases."
     },
     "prisma-postgres": {
       "status": "verified",
@@ -721,13 +725,13 @@
     },
     "prisma-postgres-upgrade": {
       "status": "verified-with-limitations",
-      "date": "2026-11-20",
-      "note": "No errors. Limitations: pins `prisma 8.0.0-rc.27` / `@prisma/orm-postgres 8.0.0-rc.20` as current; current RCs are 8.0.0-rc.34 / 8.0.0-rc.24. Prisma 8 is still a release candidate with no GA date announced (the October GA date was removed from the release-status page on 13 November 2026). Re-verify pins at Prisma 8 GA."
+      "date": "2026-11-22",
+      "note": "No errors. Limitations: pins `prisma 8.0.0-rc.27` / `@prisma/orm-postgres 8.0.0-rc.20` as current; current RCs are 8.0.0-rc.34 / 8.0.0-rc.24. Prisma 8 is still a release candidate with no GA date announced (the October GA date was removed from the release-status page on 13 November 2026). Re-verify pins at Prisma 8 GA. Also confirmed 2026-11-22: dangling disclosure pointer \u2014 SKILL.md:86 references references/deploy-existing-app.md, which does not exist in this skill (it exists only under prisma-compute/references/); validate-skills.mjs flags it."
     },
     "prisma-upgrade-v7": {
       "status": "needs-correction",
-      "date": "2026-11-20",
-      "note": "Stale version claim: \"Latest stable Prisma ORM version: 7.6.0\" is wrong \u2014 the official release-status page lists 7.10.1; frontmatter metadata version also stale. Neon docs flag: Prisma 7.10+ creates `prisma7.config.ts` instead of `prisma.config.ts`."
+      "date": "2026-11-22",
+      "note": "Stale version claim: \"Latest stable Prisma ORM version: 7.6.0\" is wrong \u2014 the official release-status page lists 7.10.1; frontmatter metadata version also stale. Neon docs flag: Prisma 7.10+ creates `prisma7.config.ts` instead of `prisma.config.ts`. Also found 2026-11-22: (1) references/accelerate-users.md presents Accelerate setup as a live path with no warning \u2014 standalone Accelerate and hosted Prisma Postgres accelerate.prisma-data.net connections retire 2026-12-01 (official upgrade guide). (2) SKILL.md:198 advises keeping MongoDB projects on the latest Prisma 6.x release \u2014 Prisma ORM 6 support ended 2026-11-19; there will be no further 6.x releases."
     },
     "programmatic-seo": {
       "status": "verified",
@@ -867,8 +871,8 @@
     },
     "seo": {
       "status": "needs-correction",
-      "date": "2026-11-20",
-      "note": "Multiple errors: (1) Outdated FAQ rule (Critical Rule 2 + `resources/references/schema-types.md`) contradicting marketingskills/schema \u2014 FAQ rich results retired for ALL sites 2026-05-07. (2) \"12 sub-skills\" vs 15 present. (3) Literal placeholder links in `resources/skills/seo-geo.md`. (4) Retired sitelinks-search-box template in `resources/schema/templates.json`. (5) Only 3 of 19 files carry the required freshness comment (all 2026-02-07, >90 days old per the skill's own rule). (6) E-E-A-T overstatement presented as a Google fact."
+      "date": "2026-11-22",
+      "note": "Multiple errors (all 6 re-confirmed 2026-11-22, plus 2 new): (1) Outdated FAQ rule (Critical Rule 2 + resources/references/schema-types.md) contradicting marketingskills/schema \u2014 FAQ rich results retired for ALL sites 2026-05-07. (2) \"12 sub-skills\" vs 15 present. (3) Literal placeholder links in resources/skills/seo-geo.md. (4) Retired sitelinks-search-box template in resources/schema/templates.json. (5) Freshness rule (Rule 13) unmet: measured 2026-11-22, only 12 of 37 resource .md files carry the required freshness comment (references/ 3/7, templates/ 9/9, skills/ 0/15, agents/ 0/6), all dated 2026-02-07 or 2026-03-02 \u2014 ~9 months old, past the skill\u2019s own 90-day rule. (6) E-E-A-T overstatement presented as a Google fact. (7) NEW: \"Python 3.8+\" claim is wrong \u2014 scripts/hreflang_checker.py uses PEP 585 builtin-generic annotations in 8 signatures with no `from __future__ import annotations`, so it cannot even be imported on Python 3.8 (real minimum 3.9). (8) NEW: literal placeholder URLs (https://...) in resources/skills/seo-hreflang.md:172-174."
     },
     "seo-audit": {
       "status": "verified",
@@ -908,16 +912,17 @@
     },
     "site-architecture": {
       "status": "verified-with-limitations",
-      "date": "2026-11-20",
-      "note": "No content errors. Limitation: broken link `/features/analytics` (validator warning 10) \u2014 an illustrative example anchor, not a repo file. Low severity."
+      "date": "2026-11-22",
+      "note": "No content errors. Limitations: (1) broken link `/features/analytics` (validator warning 10) \u2014 an illustrative example anchor, not a repo file. Low severity. (2) Import-scope gap (found 2026-11-22): Related Skills reference 2 unimported siblings (competitors, launch)."
     },
     "sitemap-robots": {
       "status": "verified",
       "date": "2026-11-20"
     },
     "skill-creator": {
-      "status": "verified",
-      "date": "2026-11-20"
+      "status": "verified-with-limitations",
+      "date": "2026-11-22",
+      "note": "Limitation found 2026-11-22 (full-skills test): undocumented PyYAML dependency \u2014 scripts/quick_validate.py imports yaml, but the skill has no requirements.txt and SKILL.md documents no install step; generate_report.py imports quick_validate, so the report path crashes with ImportError where PyYAML is absent."
     },
     "social-preview": {
       "status": "verified-with-limitations",
@@ -1052,8 +1057,8 @@
     },
     "using-superpowers": {
       "status": "verified-with-limitations",
-      "date": "2026-11-20",
-      "note": "No content errors. Limitation (import-scope gap): references `superpowers:systematic-debugging`, which was not imported."
+      "date": "2026-11-22",
+      "note": "No content errors. Limitations: (1) import-scope gap: references `superpowers:systematic-debugging`, which was not imported. (2) Found 2026-11-22: references/gemini-tools.md claims Gemini CLI dispatches subagents through an `invoke_agent` tool \u2014 the official Gemini CLI subagents doc never mentions `invoke_agent` (subagents are exposed as tools named after the agent, plus @agent-name chat syntax); only superpowers mirrors/forks use the name. (3) The SKILL.md Platform Adaptation list omits Gemini although references/gemini-tools.md exists."
     },
     "vercel": {
       "status": "verified",
@@ -1061,28 +1066,28 @@
     },
     "vercel-cli-with-tokens": {
       "status": "verified-with-limitations",
-      "date": "2026-11-20",
-      "note": "No errors. Limitation / documented discrepancy: the skill's Pro-plan 10M CDN/Edge-requests figure matches Vercel's pricing page, but Vercel's Flat Rate CDN docs describe the included tier as 1M requests (reported Nov 2026) \u2014 docs discrepancy noted."
+      "date": "2026-11-22",
+      "note": "Limitations (re-checked 2026-11-22): (1) The skill\u2019s Pro-plan \"10M Edge Requests\" figure now matches no current Vercel source \u2014 the Pro plan page (updated 2026-09-15) says the Flat Rate CDN Pro tier includes 1M CDN requests/month, and the pricing page contains no \"10M\" or \"Edge Requests\" text as fetched 2026-11-22 (caveat: the pricing-page fetch may collapse per-plan columns). The earlier note that 10M matched the pricing page could not be reproduced. (2) \"Turbo build machines by default for new projects\" is wrong \u2014 Vercel docs (builds/managing-builds, updated 2026-09-17): new Pro and Enterprise accounts use Elastic machines by default (Turbo specs themselves are correct: 30 vCPUs / 60 GB)."
     },
     "vercel-composition-patterns": {
       "status": "needs-correction",
-      "date": "2026-11-20",
-      "note": "Bad code example in AGENTS.md \u00a72.3: the \"Correct\" example calls `use(Composer.Context)` but the `Composer` object exports no `Context` member \u2014 the example does not run as written."
+      "date": "2026-11-22",
+      "note": "Bad code example in AGENTS.md \u00a72.3: the \"Correct\" example calls `use(Composer.Context)` but the `Composer` object exports no `Context` member \u2014 the example does not run as written. Also found 2026-11-22: more undefined Composer members used in \"Correct\" examples that do not run as written \u2014 Composer.CancelEdit, Composer.SaveEdit, Composer.Mentions (8 usages), plus a second use(Composer.Context) in rules/state-lift-state.md:114. The defined Composer object has 9 members (Provider, Frame, Input, Submit, Header, Footer, Attachments, Formatting, Emojis); none of Context/CancelEdit/SaveEdit/Mentions is among them."
     },
     "vercel-optimize": {
       "status": "verified-with-limitations",
-      "date": "2026-11-20",
-      "note": "No errors. Limitations: (1) `vercel usage` is now grouped under `vercel billing usage` (Vercel changelog, ~2026-11-19); the old name still works as an alias. (2) `docs-library.json` `lastVerified` is 2026-05-26 (~6 months old)."
+      "date": "2026-11-22",
+      "note": "No errors. Limitations: (1) `vercel usage` is now grouped under `vercel billing usage` (Vercel changelog, ~2026-11-19); the old name still works as an alias. (2) `docs-library.json` `lastVerified` is 2026-05-26 (~6 months old). (3) Found 2026-11-22: `vercel contract` no longer exists (tested on CLI 66.6.0: Unknown command \"contract\") \u2014 lib/vercel.mjs getContract() shells out to it, so the contract signal is always null on current CLI; the code degrades silently (inferPlan falls back, getAccountPlan uses the REST API). The skill still lists it as a prerequisite."
     },
     "vercel-react-best-practices": {
       "status": "needs-correction",
-      "date": "2026-11-20",
-      "note": "3 broken links in AGENTS.md: `./async-defer-await.md`, `./async-cheap-condition-before-await.md`, `./server-hoist-static-io.md` \u2014 the files live in `rules/`."
+      "date": "2026-11-22",
+      "note": "3 broken links in AGENTS.md: `./async-defer-await.md`, `./async-cheap-condition-before-await.md`, `./server-hoist-static-io.md` \u2014 the files live in `rules/`. Also found 2026-11-22: AGENTS.md says \"40+ rules\" but SKILL.md says 70 \u2014 counted 70 rule files, so SKILL.md is right and AGENTS.md is stale."
     },
     "vercel-react-view-transitions": {
       "status": "needs-correction",
-      "date": "2026-11-20",
-      "note": "~29 broken links in AGENTS.md to bare `css-recipes.md`, `patterns.md`, `troubleshooting.md`, `nextjs.md`, `implementation.md`, `../SKILL.md` \u2014 the files live in `references/`; stale \"React canary\" framing (Next.js 16.4 ships stable React 19.3)."
+      "date": "2026-11-22",
+      "note": "25 broken links in AGENTS.md to bare css-recipes.md (x9), patterns.md (x9), nextjs.md (x4), troubleshooting.md (x2), implementation.md (x1) \u2014 the files live in references/ (measured 2026-11-22; the earlier \"~29\" count included 2 plain-text mentions of ../SKILL.md, which is also a wrong path since SKILL.md is in the skill root); stale \"React canary\" framing (Next.js 16.4 ships stable React 19.3). Also found 2026-11-22: \"Firefox 144+\" overstates support for the skill\u2019s type-keyed system \u2014 the options-object `types` form and :active-view-transition-type() need Firefox 147 (Jan 2026); basic startViewTransition is Firefox 144."
     },
     "verification-before-completion": {
       "status": "verified",
@@ -1123,8 +1128,8 @@
     },
     "writing-skills": {
       "status": "verified-with-limitations",
-      "date": "2026-11-20",
-      "note": "No errors in SKILL.md. Limitations: (1) names `superpowers:test-driven-development` as REQUIRED background; not imported. (2) `references/anthropic-best-practices.md` has 16 broken relative links."
+      "date": "2026-11-22",
+      "note": "No errors in SKILL.md. Limitations: (1) names `superpowers:test-driven-development` as REQUIRED background; not imported. (2) `references/anthropic-best-practices.md` has 15 broken relative links (14 unique targets; measured 2026-11-22 \u2014 the earlier count of 16 was wrong)."
     },
     "xss-prevention": {
       "status": "verified",

@@ -305,9 +305,16 @@ test('query CLI: search, show, status, categories, stale', async () => {
   // (6 broken tools/ links) was resolved by the Phase 4 tools/
   // import — so the split is now 255 verified / 16 with
   // limitations. See AUDIT_OVERRIDES in scripts/validate-registry.mjs.
-  assert.equal(status.counts.verified, 255);
+  // Full-skills re-test (2026-11-22): six skills were re-labeled
+  // verified -> verified-with-limitations on new evidence
+  // (analytics, copy-editing, link-building, prisma-cli,
+  // prisma-orm-setup, skill-creator) — the split is now 249
+  // verified / 22 with limitations. See AUDIT_OVERRIDES in
+  // scripts/validate-registry.mjs and the notes in
+  // sources/verification-status.json.
+  assert.equal(status.counts.verified, 249);
   assert.equal(status.counts.unverified, 0);
-  assert.equal(status.counts['verified-with-limitations'], 16);
+  assert.equal(status.counts['verified-with-limitations'], 22);
   assert.equal(status.counts['needs-correction'], 6);
 
   r = await runNode(QUERY, ['categories']);

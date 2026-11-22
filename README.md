@@ -60,8 +60,8 @@ registry — a skill with no audit entry is `unverified`, never silently
 
 | Status | Skills | Meaning |
 | --- | --- | --- |
-| `verified` | 255 | Audited against official docs; guidance confirmed. |
-| `verified-with-limitations` | 16 | Audited; known limits recorded (e.g. docs unavailable, RC software). |
+| `verified` | 249 | Audited against official docs; guidance confirmed. |
+| `verified-with-limitations` | 22 | Audited; known limits recorded (e.g. docs unavailable, RC software). |
 | `needs-correction` | 6 | Known errors — all upstream; fixes belong upstream, never edited here. |
 | `unverified` | 0 | No unaudited skills remain; the 51 Phase 4 skills were audited in Stage C (2026-11-20). |
 
