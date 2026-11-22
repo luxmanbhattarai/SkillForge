@@ -1,0 +1,1157 @@
+{
+  "$schema": "accessibility-classification v1",
+  "generated": "2026-11-21",
+  "method": "Each original skill was classified by whether its deliverable or workflow produces or shapes something a person perceives or interacts with (UI, web page, app, published content, media, user-facing flow). Purely machine-facing skills (APIs, database schemas, infrastructure, CLI tooling, internal process) are not-applicable and carry a recorded reason. A skill is applicable only when accessibility guidance specific to its subject exists; see ai/quality/ACCESSIBILITY-COVERAGE.md for the full method.",
+  "counts": {
+    "total_original_skills": 228,
+    "applicable": 95,
+    "not_applicable": 133
+  },
+  "guidance_values": {
+    "subsection": "Skill must carry a ### Accessibility subsection in Implementation Standards.",
+    "whole-skill": "The skill itself is accessibility guidance; no subsection required.",
+    "none": "No accessibility guidance required; a recorded reason justifies the classification."
+  },
+  "skills": {
+    "ai-engineering/agent-evaluation": {
+      "applicability": "not-applicable",
+      "reason": "Evaluation harness for LLM and agent outputs; no UI in its deliverable.",
+      "guidance": "none"
+    },
+    "ai-engineering/ai-agents": {
+      "applicability": "not-applicable",
+      "reason": "Agent architectures, tool design, and memory; any UI the agent drives is covered by the frontend skills.",
+      "guidance": "none"
+    },
+    "ai-engineering/llm-integration": {
+      "applicability": "not-applicable",
+      "reason": "Multi-provider LLM client integration; server-side, no UI.",
+      "guidance": "none"
+    },
+    "ai-engineering/mcp-security": {
+      "applicability": "not-applicable",
+      "reason": "Protocol-level MCP security; no user-facing surface.",
+      "guidance": "none"
+    },
+    "ai-engineering/rag": {
+      "applicability": "not-applicable",
+      "reason": "Ingestion, chunking, embedding, and retrieval pipeline; backend only.",
+      "guidance": "none"
+    },
+    "architecture/changesets": {
+      "applicability": "not-applicable",
+      "reason": "Architecture and tooling skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "architecture/dependency-management": {
+      "applicability": "not-applicable",
+      "reason": "Architecture and tooling skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "architecture/domain-driven-design": {
+      "applicability": "not-applicable",
+      "reason": "Architecture and tooling skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "architecture/microservices": {
+      "applicability": "not-applicable",
+      "reason": "Architecture and tooling skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "architecture/modular-monolith": {
+      "applicability": "not-applicable",
+      "reason": "Architecture and tooling skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "architecture/monorepo": {
+      "applicability": "not-applicable",
+      "reason": "Architecture and tooling skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "architecture/nx": {
+      "applicability": "not-applicable",
+      "reason": "Architecture and tooling skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "architecture/package-boundaries": {
+      "applicability": "not-applicable",
+      "reason": "Architecture and tooling skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "architecture/pnpm-workspaces": {
+      "applicability": "not-applicable",
+      "reason": "Architecture and tooling skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "architecture/release-management": {
+      "applicability": "not-applicable",
+      "reason": "Architecture and tooling skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "architecture/system-design": {
+      "applicability": "not-applicable",
+      "reason": "Architecture and tooling skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "architecture/turborepo": {
+      "applicability": "not-applicable",
+      "reason": "Architecture and tooling skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "auth/auth-security": {
+      "applicability": "applicable",
+      "reason": "Covers CAPTCHAs and challenge flows, which must have accessible alternatives (WCAG 3.3.8).",
+      "guidance": "subsection"
+    },
+    "auth/authentication": {
+      "applicability": "applicable",
+      "reason": "Sign-up and sign-in flows are user-facing forms.",
+      "guidance": "subsection"
+    },
+    "auth/authjs": {
+      "applicability": "applicable",
+      "reason": "Sign-in and sign-up UI flows are user-facing forms.",
+      "guidance": "subsection"
+    },
+    "auth/authorization": {
+      "applicability": "not-applicable",
+      "reason": "Permission model and enforcement; policy logic, no UI.",
+      "guidance": "none"
+    },
+    "auth/better-auth": {
+      "applicability": "applicable",
+      "reason": "Email/password and social sign-in UI flows are user-facing forms.",
+      "guidance": "subsection"
+    },
+    "auth/clerk": {
+      "applicability": "applicable",
+      "reason": "Hosted sign-in and sign-up UI is user-facing.",
+      "guidance": "subsection"
+    },
+    "auth/jwt": {
+      "applicability": "not-applicable",
+      "reason": "Token issuance and verification; protocol-level, no UI.",
+      "guidance": "none"
+    },
+    "auth/mfa": {
+      "applicability": "applicable",
+      "reason": "MFA enrollment and code entry are user-facing flows with timing and input constraints.",
+      "guidance": "subsection"
+    },
+    "auth/multi-tenancy": {
+      "applicability": "not-applicable",
+      "reason": "Tenant isolation architecture; backend, no UI.",
+      "guidance": "none"
+    },
+    "auth/oauth": {
+      "applicability": "applicable",
+      "reason": "Consent screens and redirect flows are user-facing.",
+      "guidance": "subsection"
+    },
+    "auth/passkeys": {
+      "applicability": "applicable",
+      "reason": "Registration and authentication ceremonies include user-facing prompts and fallbacks.",
+      "guidance": "subsection"
+    },
+    "auth/rbac": {
+      "applicability": "not-applicable",
+      "reason": "Role and permission model; policy logic, no UI.",
+      "guidance": "none"
+    },
+    "auth/session-management": {
+      "applicability": "applicable",
+      "reason": "Session expiry and re-authentication interrupt the user; timeout warnings are a WCAG concern (2.2.1).",
+      "guidance": "subsection"
+    },
+    "auth/supabase-auth": {
+      "applicability": "applicable",
+      "reason": "Email, magic-link, OTP, and OAuth sign-in UI flows are user-facing forms.",
+      "guidance": "subsection"
+    },
+    "backend/advanced-api-architecture": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/api-client-generation": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/api-design": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/background-jobs": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/caching": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/express": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/fastify": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/graphql": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/hono": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/mcp-development": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/nestjs": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/nodejs": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/openapi": {
+      "applicability": "not-applicable",
+      "reason": "API contract documents; machine-facing, and the rendered docs UI is covered by api-documentation.",
+      "guidance": "none"
+    },
+    "backend/package-development": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/python-sdk": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/queues": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/rate-limiting": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/rest-api": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/sdk-development": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/trpc": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "backend/typescript-sdk": {
+      "applicability": "not-applicable",
+      "reason": "Server-side API/service skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "content/article-writing": {
+      "applicability": "applicable",
+      "reason": "Published articles are consumed by readers, including screen-reader and keyboard users.",
+      "guidance": "subsection"
+    },
+    "content/blog-writing": {
+      "applicability": "applicable",
+      "reason": "Published blog posts are consumed by readers, including screen-reader and keyboard users.",
+      "guidance": "subsection"
+    },
+    "content/content-brief": {
+      "applicability": "applicable",
+      "reason": "The brief specifies the deliverable structure; accessibility requirements belong in it.",
+      "guidance": "subsection"
+    },
+    "content/content-localization": {
+      "applicability": "applicable",
+      "reason": "Localized content is consumed by readers; lang attributes and translated alt text affect assistive technology.",
+      "guidance": "subsection"
+    },
+    "content/content-refresh": {
+      "applicability": "applicable",
+      "reason": "Refreshed content is published and consumed by readers.",
+      "guidance": "subsection"
+    },
+    "content/content-repurposing": {
+      "applicability": "applicable",
+      "reason": "Each repurposed format is consumed by people and needs its own text alternative.",
+      "guidance": "subsection"
+    },
+    "content/content-research": {
+      "applicability": "not-applicable",
+      "reason": "Research process; notes are an internal working artifact, not published content.",
+      "guidance": "none"
+    },
+    "content/content-strategy": {
+      "applicability": "applicable",
+      "reason": "Governs the content program, including the accessibility standards published content must meet.",
+      "guidance": "subsection"
+    },
+    "content/copywriting": {
+      "applicability": "applicable",
+      "reason": "Landing pages, emails, and ads are user-facing copy.",
+      "guidance": "subsection"
+    },
+    "content/editorial-review": {
+      "applicability": "applicable",
+      "reason": "The review checklist gates published content; accessibility checks belong in it.",
+      "guidance": "subsection"
+    },
+    "content/editorial-workflow": {
+      "applicability": "applicable",
+      "reason": "Runs published content end to end; already carries an Accessibility subsection.",
+      "guidance": "subsection"
+    },
+    "content/eeat-writing": {
+      "applicability": "applicable",
+      "reason": "Published content is consumed by readers, including screen-reader and keyboard users.",
+      "guidance": "subsection"
+    },
+    "content/fact-checking": {
+      "applicability": "not-applicable",
+      "reason": "Verification process; findings are internal until the writing skills publish them.",
+      "guidance": "none"
+    },
+    "content/faq-generation": {
+      "applicability": "applicable",
+      "reason": "FAQ pages and accordions are user-facing UI.",
+      "guidance": "subsection"
+    },
+    "content/human-editing": {
+      "applicability": "applicable",
+      "reason": "Editing shapes published prose; plain language is cognitive accessibility.",
+      "guidance": "subsection"
+    },
+    "content/keyword-to-content": {
+      "applicability": "not-applicable",
+      "reason": "Keyword-to-plan mapping; the plan is internal, and accessibility requirements for the resulting pages live in content-brief and the writing skills.",
+      "guidance": "none"
+    },
+    "content/seo-content-writing": {
+      "applicability": "applicable",
+      "reason": "Published content is consumed by readers, including screen-reader and keyboard users.",
+      "guidance": "subsection"
+    },
+    "content/source-verification": {
+      "applicability": "applicable",
+      "reason": "Selects the sources readers consume; already carries an Accessibility subsection (prefer accessible formats).",
+      "guidance": "subsection"
+    },
+    "content/technical-writing": {
+      "applicability": "applicable",
+      "reason": "Technical documentation is consumed by readers.",
+      "guidance": "subsection"
+    },
+    "core/clean-code": {
+      "applicability": "not-applicable",
+      "reason": "Code readability; no user-facing surface.",
+      "guidance": "none"
+    },
+    "core/code-review": {
+      "applicability": "applicable",
+      "reason": "Reviews include UI changes; accessibility is a review dimension for them.",
+      "guidance": "subsection"
+    },
+    "core/debugging": {
+      "applicability": "not-applicable",
+      "reason": "Bug-finding process; applies to any layer, no UI of its own.",
+      "guidance": "none"
+    },
+    "core/design-patterns": {
+      "applicability": "not-applicable",
+      "reason": "Code patterns; no user-facing surface.",
+      "guidance": "none"
+    },
+    "core/engineering-standards": {
+      "applicability": "not-applicable",
+      "reason": "Team process and code-style standards; product accessibility requirements live in the frontend skills and docs/ACCESSIBILITY-STANDARDS.md.",
+      "guidance": "none"
+    },
+    "core/performance": {
+      "applicability": "not-applicable",
+      "reason": "General software performance (profiling, bottlenecks); the web-facing overlap lives in frontend-performance.",
+      "guidance": "none"
+    },
+    "core/refactoring": {
+      "applicability": "not-applicable",
+      "reason": "Code restructuring without behavior change; no user-facing surface.",
+      "guidance": "none"
+    },
+    "core/security": {
+      "applicability": "not-applicable",
+      "reason": "Secure coding practices; no user-facing surface.",
+      "guidance": "none"
+    },
+    "core/software-architecture": {
+      "applicability": "not-applicable",
+      "reason": "Architecture evaluation; no user-facing surface.",
+      "guidance": "none"
+    },
+    "core/tdd": {
+      "applicability": "not-applicable",
+      "reason": "Test-first development process; no UI of its own.",
+      "guidance": "none"
+    },
+    "core/technical-decision-records": {
+      "applicability": "not-applicable",
+      "reason": "Decision records are internal engineering docs.",
+      "guidance": "none"
+    },
+    "database/backup-recovery": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/clickhouse": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/connection-pooling": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/database-design": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/database-security": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/drizzle": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/elasticsearch": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/indexing": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/migrations": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/mongodb": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/mysql": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/opensearch": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/postgresql": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/prisma": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/redis": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/sql-optimization": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/sqlite": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "database/transactions": {
+      "applicability": "not-applicable",
+      "reason": "Database skill; schemas, queries, and operations are machine-facing.",
+      "guidance": "none"
+    },
+    "desktop/electron": {
+      "applicability": "applicable",
+      "reason": "Desktop apps are user-facing UI; already carries an Accessibility subsection.",
+      "guidance": "subsection"
+    },
+    "desktop/rust": {
+      "applicability": "not-applicable",
+      "reason": "Rust is a systems language with no UI of its own; accessibility is a property of the application built with it (the skill already records this in its Accessibility note).",
+      "guidance": "none"
+    },
+    "desktop/tauri": {
+      "applicability": "applicable",
+      "reason": "Desktop apps with a webview frontend are user-facing UI; already carries an Accessibility subsection.",
+      "guidance": "subsection"
+    },
+    "documentation/api-documentation": {
+      "applicability": "applicable",
+      "reason": "Published API docs are consumed by readers.",
+      "guidance": "subsection"
+    },
+    "documentation/changelog-management": {
+      "applicability": "applicable",
+      "reason": "Changelogs are published documents consumed by users.",
+      "guidance": "subsection"
+    },
+    "documentation/developer-experience": {
+      "applicability": "applicable",
+      "reason": "Error messages, docs, and CLI output are consumed by developers, including developers using assistive technology.",
+      "guidance": "subsection"
+    },
+    "documentation/readme-engineering": {
+      "applicability": "applicable",
+      "reason": "READMEs are user-facing documents consumed by readers.",
+      "guidance": "subsection"
+    },
+    "documentation/technical-documentation": {
+      "applicability": "applicable",
+      "reason": "Published documentation is consumed by readers.",
+      "guidance": "subsection"
+    },
+    "frontend/accessibility": {
+      "applicability": "applicable",
+      "reason": "The skill itself is accessibility guidance.",
+      "guidance": "whole-skill"
+    },
+    "frontend/astro": {
+      "applicability": "applicable",
+      "reason": "Builds content websites; the shipped HTML is user-facing UI.",
+      "guidance": "subsection"
+    },
+    "frontend/css": {
+      "applicability": "applicable",
+      "reason": "Stylesheets determine contrast, focus visibility, motion, and reflow.",
+      "guidance": "subsection"
+    },
+    "frontend/expo": {
+      "applicability": "applicable",
+      "reason": "Universal iOS, Android, and web apps are user-facing UI; already carries an Accessibility subsection.",
+      "guidance": "subsection"
+    },
+    "frontend/frontend-performance": {
+      "applicability": "applicable",
+      "reason": "Performance choices (lazy loading, layout shift, deferred scripts) change what assistive technology encounters.",
+      "guidance": "subsection"
+    },
+    "frontend/html": {
+      "applicability": "applicable",
+      "reason": "Markup is the accessibility layer: semantics, labels, tables, and alt text.",
+      "guidance": "subsection"
+    },
+    "frontend/hugo": {
+      "applicability": "applicable",
+      "reason": "Builds static websites; the shipped HTML is user-facing UI.",
+      "guidance": "subsection"
+    },
+    "frontend/javascript": {
+      "applicability": "applicable",
+      "reason": "DOM scripting drives interactivity: keyboard handling, focus management, and live regions.",
+      "guidance": "subsection"
+    },
+    "frontend/modern-css": {
+      "applicability": "applicable",
+      "reason": "CSS features determine contrast, focus visibility, motion, and reflow.",
+      "guidance": "subsection"
+    },
+    "frontend/nextjs": {
+      "applicability": "applicable",
+      "reason": "Full-stack React apps; the shipped UI is user-facing.",
+      "guidance": "subsection"
+    },
+    "frontend/nuxt": {
+      "applicability": "applicable",
+      "reason": "Full-stack Vue apps; the shipped UI is user-facing; already carries an Accessibility subsection.",
+      "guidance": "subsection"
+    },
+    "frontend/react": {
+      "applicability": "applicable",
+      "reason": "Builds user interfaces; components must expose name, role, and state.",
+      "guidance": "subsection"
+    },
+    "frontend/react-native": {
+      "applicability": "applicable",
+      "reason": "Native iOS and Android apps are user-facing UI; already carries an Accessibility subsection.",
+      "guidance": "subsection"
+    },
+    "frontend/responsive-design": {
+      "applicability": "applicable",
+      "reason": "Layouts determine reflow, zoom behavior, and touch targets.",
+      "guidance": "subsection"
+    },
+    "frontend/semantic-html": {
+      "applicability": "applicable",
+      "reason": "Semantic elements and landmarks are the accessibility structure of a page.",
+      "guidance": "subsection"
+    },
+    "frontend/shadcn-ui": {
+      "applicability": "applicable",
+      "reason": "Component library built on Radix primitives; composition must preserve their accessible behavior.",
+      "guidance": "subsection"
+    },
+    "frontend/sveltekit": {
+      "applicability": "applicable",
+      "reason": "Full-stack web apps; the shipped UI is user-facing; already carries an Accessibility subsection.",
+      "guidance": "subsection"
+    },
+    "frontend/tailwind-css": {
+      "applicability": "applicable",
+      "reason": "Utility styling determines contrast, focus visibility, motion, and reflow.",
+      "guidance": "subsection"
+    },
+    "frontend/typescript": {
+      "applicability": "not-applicable",
+      "reason": "Language skill (types, strict mode); accessibility lives in the UI skills that use TypeScript.",
+      "guidance": "none"
+    },
+    "frontend/ui-design": {
+      "applicability": "applicable",
+      "reason": "Interface design determines contrast, target size, focus states, and color-only meaning.",
+      "guidance": "subsection"
+    },
+    "frontend/vue": {
+      "applicability": "applicable",
+      "reason": "Builds user interfaces; already carries an Accessibility subsection.",
+      "guidance": "subsection"
+    },
+    "infrastructure/aws": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/ci-cd": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/cloudflare": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/cloudflare-d1": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/cloudflare-kv": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/cloudflare-queues": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/cloudflare-r2": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/cloudflare-workers": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/deployment": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/docker": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/durable-objects": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/fly-io": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/gcp": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/github-actions": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/kubernetes": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/observability": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/pulumi": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/railway": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/render": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/self-hosted-vps": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/terraform": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "infrastructure/vercel": {
+      "applicability": "not-applicable",
+      "reason": "Infrastructure/deployment skill; no user-facing UI in its deliverable.",
+      "guidance": "none"
+    },
+    "media/ai-image-generation": {
+      "applicability": "applicable",
+      "reason": "Generated images are published visuals; they need alt text and legible text.",
+      "guidance": "subsection"
+    },
+    "media/blog-featured-images": {
+      "applicability": "applicable",
+      "reason": "Featured images are published visuals; they need alt text and legible text.",
+      "guidance": "subsection"
+    },
+    "media/brand-visual-consistency": {
+      "applicability": "applicable",
+      "reason": "Palette, typography, and imagery choices determine contrast and legibility.",
+      "guidance": "subsection"
+    },
+    "media/image-accessibility": {
+      "applicability": "applicable",
+      "reason": "The skill itself is image-accessibility guidance.",
+      "guidance": "whole-skill"
+    },
+    "media/image-compression": {
+      "applicability": "not-applicable",
+      "reason": "File-size optimization only; it does not change what the image communicates or its text alternative.",
+      "guidance": "none"
+    },
+    "media/image-format-conversion": {
+      "applicability": "not-applicable",
+      "reason": "Format conversion only; the visual content and its text alternative are unchanged.",
+      "guidance": "none"
+    },
+    "media/image-prompt-engineering": {
+      "applicability": "applicable",
+      "reason": "Prompts determine the generated image, including text legibility and contrast.",
+      "guidance": "subsection"
+    },
+    "media/infographic-generation": {
+      "applicability": "applicable",
+      "reason": "Infographics present data visually; the data needs a non-visual alternative.",
+      "guidance": "subsection"
+    },
+    "media/og-image-generation": {
+      "applicability": "applicable",
+      "reason": "Open Graph preview images are seen by users and need og:image:alt.",
+      "guidance": "subsection"
+    },
+    "media/platform-social-images": {
+      "applicability": "applicable",
+      "reason": "Social preview images are seen by users; already carries an Accessibility subsection.",
+      "guidance": "subsection"
+    },
+    "media/resvg": {
+      "applicability": "applicable",
+      "reason": "Renders SVG, which carries title/desc accessibility semantics; already carries an Accessibility subsection.",
+      "guidance": "subsection"
+    },
+    "media/satori": {
+      "applicability": "applicable",
+      "reason": "Renders HTML/CSS to SVG for preview images; already carries an Accessibility subsection.",
+      "guidance": "subsection"
+    },
+    "media/sharp": {
+      "applicability": "applicable",
+      "reason": "Processes published images; already carries an Accessibility subsection.",
+      "guidance": "subsection"
+    },
+    "media/social-preview": {
+      "applicability": "applicable",
+      "reason": "Verifies shared-link previews, including their image alt text.",
+      "guidance": "subsection"
+    },
+    "media/twitter-card-images": {
+      "applicability": "applicable",
+      "reason": "X card preview images are seen by users and need twitter:image:alt.",
+      "guidance": "subsection"
+    },
+    "media/youtube-thumbnails": {
+      "applicability": "applicable",
+      "reason": "Thumbnails are seen by users and must stay readable at small sizes.",
+      "guidance": "subsection"
+    },
+    "metadata/dynamic-metadata": {
+      "applicability": "applicable",
+      "reason": "Generated titles are announced by screen readers; preview images need alt text.",
+      "guidance": "subsection"
+    },
+    "metadata/metadata-validation": {
+      "applicability": "applicable",
+      "reason": "Validates titles and preview metadata, which are announced to assistive technology.",
+      "guidance": "subsection"
+    },
+    "metadata/open-graph": {
+      "applicability": "applicable",
+      "reason": "Open Graph tags render link previews seen by users; images need og:image:alt.",
+      "guidance": "subsection"
+    },
+    "metadata/seo-metadata": {
+      "applicability": "applicable",
+      "reason": "Page titles are announced by screen readers (WCAG 2.4.2).",
+      "guidance": "subsection"
+    },
+    "metadata/social-sharing": {
+      "applicability": "applicable",
+      "reason": "Share buttons are interactive UI; preview metadata needs alt text.",
+      "guidance": "subsection"
+    },
+    "metadata/twitter-cards": {
+      "applicability": "applicable",
+      "reason": "X Card tags render link previews seen by users; images need twitter:image:alt.",
+      "guidance": "subsection"
+    },
+    "performance/bundle-optimization": {
+      "applicability": "not-applicable",
+      "reason": "Bundle size and loading mechanics; no user-facing surface.",
+      "guidance": "none"
+    },
+    "performance/caching-strategy": {
+      "applicability": "not-applicable",
+      "reason": "HTTP caching policy; no user-facing surface.",
+      "guidance": "none"
+    },
+    "performance/core-web-vitals": {
+      "applicability": "applicable",
+      "reason": "Layout stability and responsiveness affect users with motor and cognitive impairments.",
+      "guidance": "subsection"
+    },
+    "performance/image-optimization": {
+      "applicability": "applicable",
+      "reason": "Lazy loading and responsive images change what assistive technology encounters.",
+      "guidance": "subsection"
+    },
+    "performance/javascript-optimization": {
+      "applicability": "not-applicable",
+      "reason": "Main-thread cost reduction; no user-facing surface.",
+      "guidance": "none"
+    },
+    "performance/lighthouse": {
+      "applicability": "applicable",
+      "reason": "Lighthouse reports an accessibility category; the skill interprets audit output.",
+      "guidance": "subsection"
+    },
+    "performance/pagespeed-insights": {
+      "applicability": "applicable",
+      "reason": "PageSpeed Insights reports include Lighthouse accessibility audits alongside performance.",
+      "guidance": "subsection"
+    },
+    "performance/web-performance-audit": {
+      "applicability": "applicable",
+      "reason": "A full-site audit scopes which quality checks run, including accessibility.",
+      "guidance": "subsection"
+    },
+    "security/csrf-protection": {
+      "applicability": "not-applicable",
+      "reason": "Token-based request-forgery defense; protocol-level, no UI.",
+      "guidance": "none"
+    },
+    "security/dependency-security": {
+      "applicability": "not-applicable",
+      "reason": "Vulnerability auditing of dependencies; developer tooling.",
+      "guidance": "none"
+    },
+    "security/owasp": {
+      "applicability": "not-applicable",
+      "reason": "Security guidance for web applications; no UI surface of its own.",
+      "guidance": "none"
+    },
+    "security/secrets-management": {
+      "applicability": "not-applicable",
+      "reason": "Secret storage and rotation; operational, no UI.",
+      "guidance": "none"
+    },
+    "security/secure-headers": {
+      "applicability": "not-applicable",
+      "reason": "HTTP response headers; no user-facing surface.",
+      "guidance": "none"
+    },
+    "security/security-auditing": {
+      "applicability": "not-applicable",
+      "reason": "Security audit process; accessibility auditing lives in accessibility-testing.",
+      "guidance": "none"
+    },
+    "security/sql-injection-prevention": {
+      "applicability": "not-applicable",
+      "reason": "Query parameterization; backend, no UI.",
+      "guidance": "none"
+    },
+    "security/xss-prevention": {
+      "applicability": "applicable",
+      "reason": "HTML sanitization can strip alt and ARIA attributes; the sanitizer configuration affects accessibility.",
+      "guidance": "subsection"
+    },
+    "seo/aeo-optimization": {
+      "applicability": "applicable",
+      "reason": "Restructures published content (headings, direct answers) that readers consume.",
+      "guidance": "subsection"
+    },
+    "seo/canonical-management": {
+      "applicability": "not-applicable",
+      "reason": "Canonical URL management; search-facing metadata, not rendered to users.",
+      "guidance": "none"
+    },
+    "seo/competitor-analysis": {
+      "applicability": "not-applicable",
+      "reason": "Competitive analysis; internal research artifact.",
+      "guidance": "none"
+    },
+    "seo/content-decay": {
+      "applicability": "not-applicable",
+      "reason": "Traffic diagnosis; analysis, not published content.",
+      "guidance": "none"
+    },
+    "seo/content-gap-analysis": {
+      "applicability": "not-applicable",
+      "reason": "Topic planning; internal analysis.",
+      "guidance": "none"
+    },
+    "seo/eeat": {
+      "applicability": "applicable",
+      "reason": "Shapes author bios, trust pages, and review displays that users read.",
+      "guidance": "subsection"
+    },
+    "seo/entity-seo": {
+      "applicability": "not-applicable",
+      "reason": "Entity disambiguation via structured data; machine-facing.",
+      "guidance": "none"
+    },
+    "seo/geo-optimization": {
+      "applicability": "applicable",
+      "reason": "Restructures published content for answer engines that readers consume.",
+      "guidance": "subsection"
+    },
+    "seo/hreflang": {
+      "applicability": "not-applicable",
+      "reason": "Search annotations for language versions; the lang attribute for assistive technology lives in content-localization.",
+      "guidance": "none"
+    },
+    "seo/image-seo": {
+      "applicability": "applicable",
+      "reason": "Alt text is core to both image SEO and accessibility.",
+      "guidance": "subsection"
+    },
+    "seo/internal-linking": {
+      "applicability": "applicable",
+      "reason": "Link text and structure determine navigability for screen-reader users (WCAG 2.4.4).",
+      "guidance": "subsection"
+    },
+    "seo/international-seo": {
+      "applicability": "applicable",
+      "reason": "Multilingual sites need lang attributes and translated alt text for assistive technology.",
+      "guidance": "subsection"
+    },
+    "seo/keyword-clustering": {
+      "applicability": "not-applicable",
+      "reason": "Keyword grouping; internal planning.",
+      "guidance": "none"
+    },
+    "seo/keyword-research": {
+      "applicability": "not-applicable",
+      "reason": "Query research; internal planning.",
+      "guidance": "none"
+    },
+    "seo/llm-seo": {
+      "applicability": "applicable",
+      "reason": "Restructures published content (headings, clear structure) that readers consume.",
+      "guidance": "subsection"
+    },
+    "seo/llms-txt": {
+      "applicability": "not-applicable",
+      "reason": "Machine-facing llms.txt file for LLM crawlers.",
+      "guidance": "none"
+    },
+    "seo/local-seo": {
+      "applicability": "not-applicable",
+      "reason": "Listings, citations, and LocalBusiness data; the landing pages it touches get accessibility guidance from the content and on-page skills.",
+      "guidance": "none"
+    },
+    "seo/off-page-seo": {
+      "applicability": "not-applicable",
+      "reason": "Backlinks and brand mentions; off-site, no UI shaped by the skill.",
+      "guidance": "none"
+    },
+    "seo/on-page-seo": {
+      "applicability": "applicable",
+      "reason": "Optimizes titles, headings, alt text, and link text — all accessibility-relevant.",
+      "guidance": "subsection"
+    },
+    "seo/programmatic-seo": {
+      "applicability": "applicable",
+      "reason": "Generates pages from templates; template accessibility multiplies across every generated page.",
+      "guidance": "subsection"
+    },
+    "seo/schema-jsonld": {
+      "applicability": "not-applicable",
+      "reason": "JSON-LD structured data; machine-facing, not rendered to users.",
+      "guidance": "none"
+    },
+    "seo/search-console": {
+      "applicability": "not-applicable",
+      "reason": "Search Console monitoring; a third-party tool UI the skill does not shape.",
+      "guidance": "none"
+    },
+    "seo/search-intent": {
+      "applicability": "not-applicable",
+      "reason": "Query classification; analysis, no user-facing surface.",
+      "guidance": "none"
+    },
+    "seo/seo-audit": {
+      "applicability": "applicable",
+      "reason": "A full-site audit scopes which quality checks run, including accessibility checks.",
+      "guidance": "subsection"
+    },
+    "seo/seo-migration": {
+      "applicability": "not-applicable",
+      "reason": "Migration planning (URLs, redirects); no content shaping.",
+      "guidance": "none"
+    },
+    "seo/serp-analysis": {
+      "applicability": "not-applicable",
+      "reason": "SERP analysis; internal research artifact.",
+      "guidance": "none"
+    },
+    "seo/serp-monitoring": {
+      "applicability": "not-applicable",
+      "reason": "Rank tracking; monitoring, no user-facing surface.",
+      "guidance": "none"
+    },
+    "seo/sitemap-robots": {
+      "applicability": "not-applicable",
+      "reason": "Sitemap and robots.txt files; machine-facing.",
+      "guidance": "none"
+    },
+    "seo/structured-data": {
+      "applicability": "not-applicable",
+      "reason": "Structured-data governance; machine-facing.",
+      "guidance": "none"
+    },
+    "seo/technical-seo": {
+      "applicability": "applicable",
+      "reason": "Covers viewport/zoom behavior and mobile usability, which are accessibility criteria.",
+      "guidance": "subsection"
+    },
+    "seo/topical-authority": {
+      "applicability": "not-applicable",
+      "reason": "Topic-coverage strategy; planning, no user-facing surface.",
+      "guidance": "none"
+    },
+    "testing/accessibility-testing": {
+      "applicability": "applicable",
+      "reason": "The skill itself is accessibility-testing guidance.",
+      "guidance": "whole-skill"
+    },
+    "testing/e2e-testing": {
+      "applicability": "applicable",
+      "reason": "User journeys run in a real browser; keyboard-only journeys are accessibility tests.",
+      "guidance": "subsection"
+    },
+    "testing/integration-testing": {
+      "applicability": "not-applicable",
+      "reason": "Module, service, and API integration; no UI.",
+      "guidance": "none"
+    },
+    "testing/performance-testing": {
+      "applicability": "not-applicable",
+      "reason": "Load and response-time testing; no UI.",
+      "guidance": "none"
+    },
+    "testing/playwright": {
+      "applicability": "applicable",
+      "reason": "Browser automation can run axe and keyboard tests.",
+      "guidance": "subsection"
+    },
+    "testing/regression-testing": {
+      "applicability": "not-applicable",
+      "reason": "Regression process; accessibility regression checks live in accessibility-testing and e2e-testing.",
+      "guidance": "none"
+    },
+    "testing/unit-testing": {
+      "applicability": "applicable",
+      "reason": "Component tests can assert accessible roles, names, and keyboard interaction.",
+      "guidance": "subsection"
+    },
+    "testing/vitest": {
+      "applicability": "not-applicable",
+      "reason": "Test runner configuration; developer tooling.",
+      "guidance": "none"
+    }
+  }
+}
