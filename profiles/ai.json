@@ -1,0 +1,17 @@
+{
+  "name": "ai",
+  "description": "AI engineering: agents, LLM integration, RAG, and agent evaluation.",
+  "skills": [
+    "agent-evaluation",
+    "ai-agents",
+    "llm-integration",
+    "mcp-security",
+    "rag"
+  ],
+  "agents": [
+    "ai-engineer"
+  ],
+  "workflows": [
+    "ai-rag-implementation"
+  ]
+}

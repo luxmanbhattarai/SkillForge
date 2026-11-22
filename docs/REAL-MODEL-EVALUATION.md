@@ -1,11 +1,24 @@
 # Real-Model Evaluation Plan
 
-> **Status: NOT EXECUTED.** No real-model evaluation has been run for
-> SkillForge. There are no API credentials in this environment, and no
-> real-model run has ever been performed. Nothing in this document is
-> a result — it is a plan for running one. **Do not claim any
-> real-model validation until a run has actually happened and its
-> report is on file.**
+> **Status: NOT EXECUTED — BLOCKED ON QUOTA.** No real-model
+> evaluation has completed for SkillForge. The credential blocker
+> is lifted — the owner connected a Gemini API key (custom.gemini
+> connector, Secure Vault) and approved it for this evaluation —
+> and the runner (`evals/run-real-model.mjs`) plus the Gemini
+> adapter (`evals/providers/gemini.mjs`) are built and tested.
+> The run itself is blocked: the key is on the **free tier (20
+> requests/day)**, the quota was already exhausted when the smoke
+> test ran (2026-11-22 ~01:58 UTC, 0/3 cases, all HTTP 429), and
+> it resets at midnight Pacific Time (~08:00 UTC). The run may
+> proceed as a multi-day run (20/day, resuming from the
+> checkpoint each day) or on a paid tier — an owner/coordinator
+> decision. Nothing in this document is a result — it is a plan
+> for running one. **Do not claim any real-model validation until
+> a run has actually happened and its report is on file.** The
+> run record lives in
+> `ai/evaluations/REAL-MODEL-EVALUATION-REPORT.md` (Group B,
+> Phase 4) — that report is the source of truth for run state;
+> this document is the plan.
 
 ## Why this exists
 
@@ -33,6 +46,29 @@ No credentials are hardcoded. The key comes from the environment only,
 is sent as a Bearer token, and is never logged or written into any
 report. Provider metadata in reports carries the endpoint host (not
 the full URL) and the model name.
+
+### The Gemini adapter (current run path)
+
+`evals/providers/gemini.mjs` is the adapter for the approved
+evaluation. It shells out per completion to the
+`custom.gemini` connector helper
+(`~/workspace/custom-connectors/custom.gemini/bin/gemini_chat.py`),
+which authenticates via the Secure Vault surrogate — the adapter
+takes no API key and nothing in the run path touches a raw key.
+Model `gemini-3.8-flash`, max tokens `2048` by default (the
+minimum that avoids empty content from this thinking model).
+The adapter was verified live (2026-11-22): a completion
+returned model `gemini-3.8-flash` with finish `stop`. It
+retries a 429 exactly once internally, reports auth failures as
+"credential rejected (HTTP 401/403)" and a missing model as
+"model unavailable (HTTP 404)". The dedicated runner is
+`evals/run-real-model.mjs` (see [How to run it](#how-to-run-it)):
+it resolves providers through
+`evals/lib/provider-registry.mjs` (`--provider gemini` is the
+default), checkpoints after every case, and resumes with
+`--resume`. Provider resolution, checkpointing, the eight
+aggregate dimensions, and failure classification are documented
+in `ai/evaluations/REAL-MODEL-EVALUATION-REPORT.md` §4.1.
 
 ### Configuration
 
@@ -63,8 +99,10 @@ failure reason, not silently skipped.
 
 ### The representative subset (recommended first run)
 
-`evals/datasets/real-model-subset.json` — **75 cases**, selected by a
-fixed rule so the subset is reproducible and reviewable:
+`evals/datasets/real-model-subset-v2.json` — **89 cases**, selected by a
+fixed rule so the subset is reproducible and reviewable. It supersedes
+the v1 subset (`evals/datasets/real-model-subset.json`, 75 cases,
+2026-11-20), which predates the `DIS-real-*` cases:
 
 | Slice | Cases | Rationale |
 | --- | --- | --- |
@@ -72,13 +110,28 @@ fixed rule so the subset is reproducible and reviewable:
 | All hand-written `code-generation` | 12 | Tests whether the model writes compilable code when asked, rather than the mock's extraction of the skill's own examples. |
 | First 2 hand-written cases (sorted by id) from each of the other 10 categories | 20 | Stratified coverage of selection, discovery, trigger accuracy, instruction following, technical correctness, error handling, negative cases, hallucination resistance, tool use, and output quality. |
 | One generated discovery case per registry category (alphabetically-first skill) | 18 | Checks real-model discoverability across all 18 skill categories without running all 277 generated cases. |
+| All 14 non-circular discovery cases (`DIS-real-*`) from `evals/cases/discovery-realistic.json` | 14 | Added in Stage C after v1 was frozen; realistic prompts that do not quote registry text, so they are the strongest discovery signal for a real model. |
 
-The subset passes 75/75 on the mock provider (verified 2026-11-20),
+Category breakdown (verified against the case files): skill-discovery
+34 (16 hand-written + 18 generated), security-compliance 25,
+code-generation 12, and 2 each from skill-selection,
+trigger-accuracy, instruction-following, technical-correctness,
+error-handling, negative-case-handling, hallucination-resistance,
+tool-use-correctness, and output-quality. All 89 ids resolve to
+real cases (71 hand-written in `evals/cases/*.json`, 18 generated
+in `evals/datasets/discovery-generated.json`); 0 malformed.
+
+The subset passes 89/89 on the mock provider (verified 2026-11-22),
 so it is a valid reference point: any real-model failure on it is a
 model-behavior signal, not a broken case.
 
 ```bash
-npm run evals -- --provider model --cases-file evals/datasets/real-model-subset.json
+# Sanity check on the mock (no credentials needed)
+npm run evals -- --cases-file evals/datasets/real-model-subset-v2.json --out /tmp/rme-mock-check
+
+# The real-model run (Gemini; background process, ~4-5 hours)
+node evals/run-real-model.mjs \
+  --archive ai/evaluations/runs/real-model-gemini-3.8-flash-2026-11-22.json
 ```
 
 ### The full suite (optional, after the subset looks sane)
@@ -92,6 +145,78 @@ provider integration works and the failure modes are understood.
 
 ## How to run it
 
+### Gemini (current run path)
+
+No environment variables are needed — the helper authenticates
+via the Secure Vault surrogate. Model and max tokens default to
+`gemini-3.8-flash` / `2048`. **Never paste the raw key into the
+environment** — the approved credential lives in the Secure Vault
+and is used only through the helper-based adapter.
+
+```bash
+# 1. Sanity check (no credentials needed): the subset is valid on the mock.
+npm run evals -- --cases-file evals/datasets/real-model-subset-v2.json --out /tmp/rme-mock-check
+#    Expected: "Evals (mock): 89/89 passed (100.0%), 0 failed, 0 critical."
+
+# 2. Smoke test (2-3 real Gemini calls — counts as verification, not eval).
+#    Build a small dataset file with 2-3 case ids, then:
+node evals/run-real-model.mjs --dataset /tmp/rme-smoke.json --out /tmp/rme-smoke-out
+#    Expect: exit 0 or 1 with per-case results and a usage block. Any
+#    401/403 aborts the run immediately — STOP and report it; do not retry.
+
+# 3. The real-model run (89 cases), as a background process.
+node evals/run-real-model.mjs \
+  --archive ai/evaluations/runs/real-model-gemini-3.8-flash-2026-11-22.json
+#    Writes evals/reports/model/<run-id>/latest.json + latest.md, plus the
+#    archive copy the dashboard worker consumes. Expected duration: ~4-5
+#    hours at ~3 min/call. Progress on stderr ([N/89] ...); checkpoint at
+#    <out>/checkpoint.json after each case. Do not parallelize.
+
+# 4. If the run is interrupted, resume it (do not restart from scratch):
+node evals/run-real-model.mjs --resume evals/reports/model/<run-id>/checkpoint.json \
+  --archive ai/evaluations/runs/real-model-gemini-3.8-flash-2026-11-22.json
+#    Validates the checkpoint against the dataset/provider/model, skips
+#    completed cases, keeps the run id, merges checkpointed token totals.
+```
+
+**Quota discipline (free tier, 20 requests/day, reset at midnight
+Pacific Time / ~08:00 UTC):** every live call counts against the
+same daily budget — verification calls, smoke tests, and stray
+test runs all eat into it. On the free tier the 89-case run is a
+multi-day run: 20 calls/day × 5 days, resuming from the
+checkpoint each day after the reset. Do not launch the full run
+while the quota is exhausted — it would only produce a
+misleading 0/89 "result" from 178 pointless attempts (each case
+retries a 429 once). A paid tier (owner decision) removes the
+daily cap and the run proceeds in one ~4–5 h session. Limits
+apply per Google Cloud project, not per API key — a second key
+in the same project shares the same 20/day.
+
+Notes:
+
+- The runner is deliberately sequential (one request at a time) to
+  stay inside provider rate limits. Do not parallelize it without a
+  rate-limit strategy.
+- A fresh 429 retries the case once after a 10 s backoff (the
+  adapter also retries a 429 once internally; the runner does not
+  retry an already-exhausted 429). A 401/403 or a model 404 aborts
+  the run with no report — the checkpoint survives for resume after
+  the cause is fixed.
+- `--report-only` makes the run exit 0 even with failures (reporting
+  mode). The default exit code is 1 when any case fails; 2 means a
+  configuration/dataset/validation error or an aborted run.
+- `--save-baseline` is **refused** for model runs: baselines are
+  mock-only. A model run measures a model, not the library's
+  regression state.
+- There is no spend cap: the approved scope is the 89 eval calls
+  plus the 2–3 case smoke test — no other paid calls.
+
+### Other providers (generic OpenAI-compatible endpoint)
+
+The legacy path uses `EVAL_PROVIDER_*` environment variables with
+the generic `model` provider (`npm run evals -- --provider model`
+or `node evals/run-real-model.mjs --provider model`):
+
 ```bash
 export EVAL_PROVIDER_URL="https://api.openai.com/v1/chat/completions"
 export EVAL_PROVIDER_KEY="<key>"              # never commit this; never paste it into a report
@@ -99,32 +224,29 @@ export EVAL_PROVIDER_MODEL="gpt-5-mini"
 export EVAL_PROVIDER_PRICE_INPUT_PER_1K="0.003"   # optional; enables cost estimates
 export EVAL_PROVIDER_PRICE_OUTPUT_PER_1K="0.015" # optional; use the provider's actual prices
 
-npm run evals -- --provider model --cases-file evals/datasets/real-model-subset.json
+npm run evals -- --provider model --cases-file evals/datasets/real-model-subset-v2.json
 ```
 
-Notes:
-
-- The runner is deliberately sequential (one request at a time) to
-  stay inside provider rate limits. Do not parallelize it without a
-  rate-limit strategy.
-- Use `--out <dir>` to put a run's reports somewhere other than the
-  default location, e.g. for per-model archives:
-  `--out evals/reports/model-gpt-5-mini-2026-11-20` (note:
-  `evals/reports/` is gitignored; copy a report you want to keep into
-  `ai/test-results/` with a dated name).
-- `--report-only` makes the run exit 0 even with failures (reporting
-  mode). The default exit code is 1 when any case fails.
-- `--save-baseline` is **refused** for model runs: baselines are
-  mock-only. A model run measures a model, not the library's
-  regression state.
+Use `--out <dir>` to put a run's reports somewhere other than the
+default location, e.g. for per-model archives:
+`--out evals/reports/model-gpt-5-mini-2026-11-20` (note:
+`evals/reports/` is gitignored; copy a report you want to keep into
+`ai/test-results/` with a dated name).
 
 ## Where results go, and how they stay separate
 
 | Run | Report location | Baseline comparison |
 | --- | --- | --- |
 | Mock (default) | `evals/reports/latest.json` + `latest.md` | Yes, vs `evals/baselines/current.json` |
-| Model | `evals/reports/model/latest.json` + `latest.md` | **No** — model runs are never compared to the mock baseline |
+| Model (`run-real-model.mjs`) | `evals/reports/model/<run-id>/latest.json` + `latest.md`, plus `--archive` copy | **No** — model runs are never compared to the mock baseline |
+| Model (`npm run evals -- --provider model`) | `evals/reports/model/latest.json` + `latest.md` | **No** — model runs are never compared to the mock baseline |
 | Either, with `--out <dir>` | `<dir>/latest.json` + `latest.md` | Mock only; the comparison file lands in `<dir>/regression.json` |
+
+The Gemini run's durable record is the `--archive` copy:
+`ai/evaluations/runs/real-model-gemini-3.8-flash-<YYYY-MM-DD>.json`
+(the file the benchmark-dashboard worker consumes). The run's
+human-readable record is
+`ai/evaluations/REAL-MODEL-EVALUATION-REPORT.md` §9.
 
 Model reports carry `providerKind: "model"`, `providerMeta`
 (kind, model, endpoint host, timeout, retries), and a `usage` block
@@ -178,13 +300,20 @@ truth for a completed run; these numbers are for planning.
 
 - **Per case:** roughly 700–1,500 tokens total (system prompt
   ~200 tokens, short user input, a few hundred tokens of JSON output).
-- **Subset (75 cases):** roughly 50k–110k tokens. At example prices
-  of $3/1M input + $15/1M output, roughly **$0.50–$1.50**.
+- **Subset (89 cases):** roughly 60k–130k tokens. At example prices
+  of $3/1M input + $15/1M output, roughly **$0.60–$1.80**.
 - **Full suite (463 cases):** roughly 300k–700k tokens, roughly
   **$3–$9** at the same example prices.
-- **Time:** the runner is sequential at ~2–6 seconds per case
-  (provider latency dominates). Subset: **~3–8 minutes**. Full suite:
-  **~20–45 minutes**, plus retry delays if the provider throttles.
+- **Time (generic provider):** the runner is sequential at ~2–6
+  seconds per case (provider latency dominates). Subset: **~3–9
+  minutes**. Full suite: **~20–45 minutes**, plus retry delays if
+  the provider throttles.
+- **Time (Gemini, measured):** the verified live call took ~164
+  seconds for a tiny prompt — roughly **3 minutes per case**, so
+  the 89-case run takes **~4–5 hours**. That is why the runner
+  checkpoints after every case: an interruption loses at most the
+  case in flight. On the free tier (20 requests/day) the run
+  spans 5 days via checkpoint resume.
 - **Budget guard:** there is no built-in spend cap. Start with the
   subset, check the `usage` block, and scale to the full suite only
   with the cost-per-case in hand. Set `EVAL_PROVIDER_MAX_TOKENS` to

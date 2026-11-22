@@ -30,7 +30,7 @@ import {
   InvalidBackupError,
 } from './backups.mjs';
 import { withLock, LOCK_NAME } from './lock.mjs';
-import { resolveSelection, splitList } from './library.mjs';
+import { expandProfiles, loadProfiles, resolveSelection, splitList } from './library.mjs';
 import { splitFrontmatter, parseFrontmatter } from '../lib/frontmatter.mjs';
 import {
   InstallerError,
@@ -66,6 +66,89 @@ function label(kind, name) {
 
 function hasSelectors(ctx) {
   return [ctx.skills, ctx.categories, ctx.agents, ctx.workflows].some((v) => v && v.length);
+}
+
+// --profile/--bundle (Finding 2): expand the named profiles into
+// the selection's skill/agent/workflow arrays (union with any
+// other selectors — resolveSelection deduplicates). Unknown
+// profiles are a usage error naming the known profiles. Returns
+// a new selection object; the caller's ctx is not mutated.
+// Profiles are NOT part of hasSelectors: restore ignores them,
+// and adding them there would make `restore --profile x` filter
+// to an empty selection instead of ignoring the flag.
+async function expandProfileSelectors(ctx, selection) {
+  const names = splitList(ctx.profiles);
+  if (!names.length) return selection;
+  const profiles = await loadProfiles(ctx.library);
+  const { expanded, errors } = expandProfiles(profiles, names);
+  if (errors.length) throw new UsageError(errors.join('; '));
+  return {
+    ...selection,
+    skills: [...(selection.skills || []), ...expanded.skills],
+    agents: [...(selection.agents || []), ...expanded.agents],
+    workflows: [...(selection.workflows || []), ...expanded.workflows],
+  };
+}
+
+// Needs-correction status filter (Finding 3). The library record
+// carries `status` (from registry/skills.json, which derives it
+// from sources/verification-status.json) and `statusNote` (the
+// audit note, from verification-status.json directly).
+//
+// Semantics, by default (no --allow-needs-correction):
+//   * a skill named EXPLICITLY via --skill/--skills is REFUSED
+//     per item: the refusal is recorded in results.refused with a
+//     clear stderr error naming the skill, its status, and the
+//     opt-in flag; the rest of the run installs normally, and the
+//     run exits 1 at the end. A refusal never aborts the run —
+//     the engine's rule is "one bad item never aborts the run"
+//     (A2-03), and a policy refusal is still one bad item. (An
+//     earlier version threw here and aborted the whole run; it
+//     was changed to per-item refusal for exactly this reason.)
+//   * a needs-correction skill reached only through a BULK
+//     selector (--skills all, --category, --profile) is warned
+//     about on stderr and skipped; the rest of the run proceeds
+//     (exit 0 — a bulk skip is a warning, not a failure).
+// With --allow-needs-correction, all of them install, with a
+// one-line stderr note naming them (the flag is the explicit
+// acknowledgment; the note keeps the run auditable).
+// Fixture libraries (SKILLFORGE_ROOT) carry no status unless
+// their registry says so; skills without a status are unaffected
+// (status null is not needs-correction).
+// Returns { items, refused }: items is the installable subset,
+// refused is [{ label, error }] in the results.refused shape,
+// already reported to stderr in the `refused: <label> — <error>`
+// format the engine uses for conflict refusals.
+function applyStatusFilter(ctx, items, explicitSkillNames) {
+  const bad = items.filter((i) => i.kind === 'skill' && i.status === 'needs-correction');
+  if (!bad.length) return { items, refused: [] };
+  if (ctx.allowNeedsCorrection) {
+    ctx.err(
+      `note: installing ${bad.length} needs-correction skill${bad.length === 1 ? '' : 's'} (--allow-needs-correction): ` +
+        bad.map((i) => i.name).join(', '),
+    );
+    return { items, refused: [] };
+  }
+  const refused = [];
+  const kept = [];
+  for (const i of items) {
+    if (i.kind !== 'skill' || i.status !== 'needs-correction') {
+      kept.push(i);
+      continue;
+    }
+    if (explicitSkillNames.has(i.name)) {
+      const note = i.statusNote ? `: ${i.statusNote.slice(0, 200)}${i.statusNote.length > 200 ? '…' : ''}` : '';
+      const error =
+        `needs-correction${note}. These skills have known errors (see sources/verification-status.json). ` +
+        'Re-run with --allow-needs-correction to install it anyway.';
+      refused.push({ label: i.name, error });
+      ctx.err(`refused: ${i.name} — ${error}`);
+    } else {
+      const note = i.statusNote ? ` — ${i.statusNote.slice(0, 160)}${i.statusNote.length > 160 ? '…' : ''}` : '';
+      ctx.err(`warning: skipping skill '${i.name}' (needs-correction${note}); re-run with --allow-needs-correction to install it anyway.`);
+    }
+  }
+  return { items: kept, refused };
 }
 
 // Agentic-SEO warnings (findings S-08/S-09, specified by the Stage
@@ -516,15 +599,29 @@ export async function cmdInstall(ctx) {
 }
 
 async function runInstall(ctx, locations) {
-  const selection = hasSelectors(ctx) ? ctx : { ...ctx, skills: ['all'] };
+  const baseSelection =
+    hasSelectors(ctx) || (ctx.profiles && ctx.profiles.length) ? ctx : { ...ctx, skills: ['all'] };
+  const selection = await expandProfileSelectors(ctx, baseSelection);
   const { items, errors } = resolveSelection(ctx.library, selection);
   if (errors.length) throw new UsageError(errors.join('; '));
-  if (!items.length) {
+  // Needs-correction filter (Finding 3): explicit --skill names
+  // are refused per item (A2-03 — the rest still install, and the
+  // run exits 1 at the end); bulk selections warn and skip.
+  // 'all' is bulk, never explicit.
+  const explicitSkillNames = new Set(splitList(ctx.skills).filter((n) => n !== 'all'));
+  const { items: itemsToInstall, refused } = applyStatusFilter(ctx, items, explicitSkillNames);
+  if (!itemsToInstall.length) {
+    if (refused.length) {
+      // Everything requested was refused: nothing to install, and
+      // the refusal (already on stderr) makes the run fail.
+      printSummary(ctx, { installed: [], updated: [], already: [], skipped: [], refused, failed: [] });
+      return 1;
+    }
     ctx.out('Nothing to install.');
     return 0;
   }
-  warnDeprecatedWorkflows(ctx, items, locations);
-  noteLinkScope(ctx, items);
+  warnDeprecatedWorkflows(ctx, itemsToInstall, locations);
+  noteLinkScope(ctx, itemsToInstall);
 
   // A2-03: planning is per-item fault-isolated. computePlanned
   // throws on a missing skill source dir, an unreadable agent
@@ -536,7 +633,7 @@ async function runInstall(ctx, locations) {
   // summary with a non-zero exit code.
   const plannedItems = [];
   const planningFailures = [];
-  for (const item of items) {
+  for (const item of itemsToInstall) {
     try {
       plannedItems.push(await computePlanned(ctx.library, item, locations, ctx));
     } catch (err) {
@@ -578,14 +675,15 @@ async function runInstall(ctx, locations) {
   if (!ctx.dryRun) await resolveConflicts(ctx, plannedItems);
   if (ctx.dryRun) {
     printPlan(ctx, plannedItems, locations);
-    if (planningFailures.length) {
-      printSummary(ctx, { installed: [], updated: [], already: [], skipped: [], refused: [], failed: planningFailures });
+    if (planningFailures.length || refused.length) {
+      printSummary(ctx, { installed: [], updated: [], already: [], skipped: [], refused, failed: planningFailures });
       return 1;
     }
     return 0;
   }
   const results = await executeInstallRun(ctx, locations, plannedItems, manifest, { command: 'install', manifestDirty: wasCorrupt });
   results.failed.push(...planningFailures);
+  results.refused.push(...refused);
   printSummary(ctx, results);
   if (results.installed.length || results.updated.length) {
     ctx.out('Restart the agent (or reload the project) so it picks up the new skills.');
@@ -624,11 +722,27 @@ async function runUpdate(ctx, locations) {
   // directly (an entry may outlive its library item); categories
   // resolve through the library.
   let entries = sortedEntries(manifest);
-  if (hasSelectors(ctx)) {
+  if (hasSelectors(ctx) || (ctx.profiles && ctx.profiles.length)) {
     const skillNames = new Set(splitList(ctx.skills));
     const agentNames = new Set(splitList(ctx.agents));
     const workflowNames = new Set(splitList(ctx.workflows));
     const categories = splitList(ctx.categories);
+    // --profile/--bundle (Finding 2): profile members join the
+    // wanted set (union with the other selectors). Kept separate
+    // from the typed name sets so the unknown-name check below
+    // never complains about a profile member that simply is not
+    // installed here.
+    let profileSkills = new Set();
+    let profileAgents = new Set();
+    let profileWorkflows = new Set();
+    if (ctx.profiles && ctx.profiles.length) {
+      const profiles = await loadProfiles(ctx.library);
+      const { expanded, errors } = expandProfiles(profiles, splitList(ctx.profiles));
+      if (errors.length) throw new UsageError(errors.join('; '));
+      profileSkills = new Set(expanded.skills);
+      profileAgents = new Set(expanded.agents);
+      profileWorkflows = new Set(expanded.workflows);
+    }
     for (const cat of categories) {
       if (cat !== 'all' && !ctx.library.categories.has(cat)) {
         throw new UsageError(`unknown category '${cat}' (known: ${[...ctx.library.categories].sort().join(', ')})`);
@@ -640,12 +754,12 @@ async function runUpdate(ctx, locations) {
     entries = entries.filter((e) => {
       if (e.kind === 'skill') {
         if (wantAllSkills || wantAllCategories) return true;
-        if (skillNames.has(e.name)) return true;
+        if (skillNames.has(e.name) || profileSkills.has(e.name)) return true;
         const rec = ctx.library.skills.get(e.name);
         return rec && categorySet.has(rec.category);
       }
-      if (e.kind === 'agent') return agentNames.has('all') || agentNames.has(e.name);
-      return workflowNames.has('all') || workflowNames.has(e.name);
+      if (e.kind === 'agent') return agentNames.has('all') || agentNames.has(e.name) || profileAgents.has(e.name);
+      return workflowNames.has('all') || workflowNames.has(e.name) || profileWorkflows.has(e.name);
     });
     // Unknown names are an error, not a silent no-op.
     const manifestNames = new Set(entries.map((e) => `${e.kind}:${e.name}`));
@@ -670,9 +784,42 @@ async function runUpdate(ctx, locations) {
   }
   warnDeprecatedWorkflows(ctx, entries, locations);
 
+  // Needs-correction filter (Finding 3): update never re-installs
+  // a known-bad skill by default — it warns and skips it. (No
+  // refusal here, unlike install: the content is already
+  // installed, so refusing would protect nothing.)
+  // --allow-needs-correction updates them, with a one-line note.
+  const statusSkipped = [];
+  const needsCorrectionEntries = entries.filter(
+    (e) => e.kind === 'skill' && ctx.library.skills.get(e.name)?.status === 'needs-correction',
+  );
+  if (needsCorrectionEntries.length) {
+    if (ctx.allowNeedsCorrection) {
+      ctx.err(
+        `note: updating ${needsCorrectionEntries.length} needs-correction skill${needsCorrectionEntries.length === 1 ? '' : 's'} (--allow-needs-correction): ` +
+          needsCorrectionEntries.map((e) => e.name).join(', '),
+      );
+    } else {
+      for (const e of needsCorrectionEntries) {
+        const rec = ctx.library.skills.get(e.name);
+        const note = rec?.statusNote ? ` — ${rec.statusNote.slice(0, 160)}${rec.statusNote.length > 160 ? '…' : ''}` : '';
+        statusSkipped.push(
+          `${label(e.kind, e.name)} (needs-correction${note}; re-run with --allow-needs-correction to update it anyway)`,
+        );
+        ctx.err(
+          `warning: skipping update of skill '${e.name}' (needs-correction${note}); re-run with --allow-needs-correction to update it anyway.`,
+        );
+      }
+      entries = entries.filter(
+        (e) => !(e.kind === 'skill' && ctx.library.skills.get(e.name)?.status === 'needs-correction'),
+      );
+    }
+  }
+
   const plannedItems = [];
   const planningFailures = [];
   const skipped = [];
+  skipped.push(...statusSkipped);
   for (const entry of entries) {
     const byKind =
       entry.kind === 'skill' ? ctx.library.skills : entry.kind === 'agent' ? ctx.library.agents : ctx.library.workflows;
@@ -1149,8 +1296,8 @@ async function runUninstall(ctx, locations) {
     });
   }
 
-  if (!ctx.all && !hasSelectors(ctx)) {
-    throw new UsageError('Nothing selected: pass --skill <name>, --agent <name>, --workflow <name>, --category <name>, or --all.');
+  if (!ctx.all && !hasSelectors(ctx) && !(ctx.profiles && ctx.profiles.length)) {
+    throw new UsageError('Nothing selected: pass --skill <name>, --agent <name>, --workflow <name>, --category <name>, --profile <name>, or --all.');
   }
 
   // Resolve the selection against the union of manifest + library,
@@ -1170,6 +1317,16 @@ async function runUninstall(ctx, locations) {
       for (const s of ctx.library.skills.values()) {
         if (cat === 'all' || s.category === cat) wanted.push({ kind: 'skill', name: s.name });
       }
+    }
+    // --profile/--bundle (Finding 2): uninstall the profile's
+    // members (union with the other selectors).
+    if (ctx.profiles && ctx.profiles.length) {
+      const profiles = await loadProfiles(ctx.library);
+      const { expanded, errors } = expandProfiles(profiles, splitList(ctx.profiles));
+      if (errors.length) throw new UsageError(errors.join('; '));
+      for (const n of expanded.skills) wanted.push({ kind: 'skill', name: n });
+      for (const n of expanded.agents) wanted.push({ kind: 'agent', name: n });
+      for (const n of expanded.workflows) wanted.push({ kind: 'workflow', name: n });
     }
     const unknown = [];
     for (const w of wanted) {
@@ -1574,6 +1731,19 @@ async function runRestore(ctx, locations) {
     else planned.push({ item, entry, destAbs, paths, storedHash, action: 'replace', reason: 'current content differs from the backup' });
   }
 
+  // Agentic-SEO detection for a planned restore item (S-08/S-09):
+  // the backup entry carries the library `source` when the backup
+  // was taken from a manifest; recovered backups carry no entry,
+  // so fall back to the library record by name (the same lookup
+  // the manifest repair below uses).
+  const isAgenticSeoRestore = (p) => {
+    if (isAgenticSeoSource(p.entry?.source)) return true;
+    const byKind =
+      p.item.kind === 'skill' ? ctx.library.skills : p.item.kind === 'agent' ? ctx.library.agents : ctx.library.workflows;
+    const libItem = byKind.get(p.item.name);
+    return !!libItem && isAgenticSeoSource(libItem.source);
+  };
+
   if (ctx.dryRun) {
     ctx.out(`Dry run — nothing will change. Backup: ${record.id} (${record.created || 'date unknown'})`);
     for (const p of planned) {
@@ -1581,12 +1751,26 @@ async function runRestore(ctx, locations) {
       else if (p.action === 'replace') ctx.out(`would restore ${label(p.item.kind, p.item.name)} → ${p.destAbs} (current content is backed up first)`);
       else ctx.out(`already matches the backup: ${label(p.item.kind, p.item.name)}`);
     }
+    // Agentic-SEO warnings (S-08/S-09): a restore re-installs the
+    // seo skill's unsafe upstream docs and TLS-blind link checker,
+    // so restore warns like install/update do — on dry-run and on
+    // the real run, once per run. Before this fix, restore warned
+    // about nothing on either path.
+    if (planned.some((p) => ['restore', 'replace', 'already'].includes(p.action) && isAgenticSeoRestore(p))) {
+      for (const w of AGENTIC_SEO_WARNINGS) ctx.err(w);
+    }
     return 0;
   }
 
   await cleanAllStaleStaging(ctx, locations);
 
   const results = { restored: [], already: [], skipped: [], refused: [], failed: [], installed: [], updated: [], removed: [] };
+  // Agentic-SEO warnings (S-08/S-09): emitted once per run, when
+  // the first agentic-seo item is restored — or found already
+  // matching the backup (below). Same once-per-run flag as the
+  // install/update warning; a failed restore warns about nothing
+  // (nothing was (re)installed by this run).
+  let warnedAgenticSeo = false;
   const toReplace = planned.filter((p) => p.action === 'replace');
   let preBackup = null;
   if (toReplace.length) {
@@ -1628,6 +1812,10 @@ async function runRestore(ctx, locations) {
   }
   for (const p of planned) {
     if (p.action === 'already') {
+      if (!warnedAgenticSeo && isAgenticSeoRestore(p)) {
+        warnedAgenticSeo = true;
+        for (const w of AGENTIC_SEO_WARNINGS) ctx.err(w);
+      }
       results.already.push(label(p.item.kind, p.item.name));
       ctx.out(`already matches the backup: ${label(p.item.kind, p.item.name)}`);
       continue;
@@ -1706,6 +1894,10 @@ async function runRestore(ctx, locations) {
         }
       }
       results.restored.push(label(p.item.kind, p.item.name));
+      if (!warnedAgenticSeo && isAgenticSeoRestore(p)) {
+        warnedAgenticSeo = true;
+        for (const w of AGENTIC_SEO_WARNINGS) ctx.err(w);
+      }
       ctx.out(`restored ${label(p.item.kind, p.item.name)} → ${p.destAbs}`);
     } catch (err) {
       results.failed.push({ label: label(p.item.kind, p.item.name), error: err.message });

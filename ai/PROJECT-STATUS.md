@@ -1,4 +1,131 @@
-# SkillForge — Production Upgrade: Project Status
+# SkillForge — Project Status (canonical)
+
+**Canonical status document.** This file states the actual project
+state without ambiguity. The machine-readable canonical source is
+`ai/PROJECT-STATUS.json` (guarded by `scripts/check-status.mjs` in
+CI); this document is its human-readable companion. If the two ever
+disagree, the JSON governs and this file must be fixed.
+
+Last reconciled: **2026-11-22** (production-hardening mission,
+Group A). All facts below were verified against git history
+(`git log`) and the GitHub API (`gh api`, `gh run list`) on that
+date; each names its evidence.
+
+## Current canonical state
+
+- **Branch:** `main`. **HEAD:** `b86b469`
+  (`b86b4696e518a87edded3f0f55ef0643fd08c3cd`, "CI: add Gitleaks
+  secret scanning; branch protection enabled").
+- **Version:** 1.1.0 (`package.json`). **Releases:** v1.1.0
+  (Latest; tag on `9216cbb`) and v1.0.0 (restored; tag on
+  `bc304a2`).
+- **Library:** 277 skills (228 original + 49 upstream) in 18
+  categories, 24 agents, 16 workflows. Verification split: 255
+  verified / 16 with limitations / 6 needs-correction / 0
+  unverified.
+- **How `main` got here:** the production upgrade was merged via
+  PR #5 (merge commit `7b4f6eb`, 2026-11-21T23:13:44Z). The
+  feature branch was deleted after the merge; the remote now has
+  only `main`.
+- **CI on `main`:** green at `b86b469` (Validate skills, Lint,
+  Security audit, CodeQL runs all `success`). All 6 workflows
+  have now run on GitHub: `release.yml` ran green on the v1.1.0
+  tag (run 44967209791); `scheduled-maintenance.yml` had its
+  first run on 2026-11-22 (run 44970737145, `workflow_dispatch`)
+  with conclusion `failure` — "Monitor upstream sources" and
+  "Detect stale skill verification" passed, but "Verify links
+  online" failed on 3 external links returning HTTP 403
+  (bot-blocked hosts, not dead links; needs documented
+  exceptions or link fixes, then a re-run).
+- **Branch protection: ON** for `main` (10 required status
+  checks, strict; force pushes and deletions blocked;
+  `enforce_admins=false`, so the owner's direct pushes still
+  work). Pull requests before merging and conversation
+  resolution are **not** required — owner decisions. Full live
+  config: `ai/audits/BRANCH-PROTECTION-VERIFICATION.md`.
+- **Tests:** `npm test` 326 tests, 325 pass, 0 fail, 1 skipped
+  (Linux; the skip is the Windows-only junction test) at the
+  last clean committed battery (`9fdc0d0`). The hardening
+  mission has since added test files on the shared
+  `feat/production-hardening` tree (Group A: 31 tests — 9
+  docs-consistency + 5 installer-warnings + 9
+  installer-profiles + 8 installer-status-filter — all
+  passing; the latest shared-tree full run, 2026-11-22, was
+  646 total with 628 pass, 4 fail, 14 skipped — the 4 failures
+  were all in `test/installer.test.mjs`, all caused by the
+  Finding 3 status filter, and all fixed after the run); the
+  runner numbers move when the coordinator re-runs the full
+  battery at the merge commit. **Behavioral evals:** 463/463 pass, 0 failed, 0
+  critical, 277/277 skills covered (mock provider, at
+  `9fdc0d0`). **Security scan:** `npm run check:security` PASS,
+  0 findings; Semgrep 0 findings (68 rules); CodeQL 0 open
+  alerts; Gitleaks full-history scan 0 real secrets.
+
+## What has NOT happened (stated plainly)
+
+- **No real-model evaluation has ever run.** There are no
+  results and no run has been performed. The credential
+  blocker is lifted — the owner connected a Gemini API key
+  (custom.gemini connector, Secure Vault) and approved it for
+  the real-model evaluation (2026-11-21) — and the Phase 4 framework
+  is complete (`evals/run-real-model.mjs` +
+  `evals/providers/gemini.mjs`); the run itself is now blocked
+  on the free-tier quota (20 requests/day, exhausted; reset
+  ~08:00 UTC) after a 2026-11-22 smoke test went 0/3 on HTTP
+  429s — it may proceed as a multi-day run (20/day, checkpoint
+  resume) or on a paid tier (owner decision). An 89-case subset
+  is ready (`evals/datasets/real-model-subset-v2.json`, 89/89
+  on mock). See `ai/audits/REAL-MODEL-EVALUATION.md`,
+  `ai/evaluations/REAL-MODEL-EVALUATION-REPORT.md` (Group B,
+  BLOCKED — free-tier quota exhausted), and
+  `ai/PROJECT-STATUS.json` (`evidence.realModelEval`: `hasRun:
+  false`, no commit — none is invented).
+- **S-08 has no owner disposition.** The unsafe
+  curl-pipe install text still ships verbatim in the
+  upstream `seo` skill; the local mitigation (mandatory
+  installer warnings on install, update, dry-run,
+  already-installed, restore, and doctor paths + the
+  safe-install guide) is verified working, but accepting the
+  residual risk — or dropping the skill — is the owner's call
+  and has not been recorded. See
+  `ai/security/SECURITY-RISK-ACCEPTANCE.md` and
+  `docs/AGENTIC-SEO-SAFE-INSTALL.md`.
+- **No real-machine Windows staging.** All Windows evidence is
+  GitHub CI (`windows-latest`); junction-creation fallback,
+  NTFS ACL, and AV scenarios are unproven on a real machine.
+
+## Pending validations
+
+See `ai/PROJECT-STATUS.json` (`pendingValidations`): fix the
+scheduled-maintenance first-run links failure (3× HTTP 403) and
+re-run; S-08 owner disposition; real-model eval execution
+(credentials available, framework complete, run pending);
+branch-protection residuals; disabled code-security items
+(validity checks, non-provider patterns); real-machine Windows
+staging; full-battery re-run at the hardening-mission merge
+commit; the S-14 re-point decision.
+
+## Historical reports
+
+The audit reports under `ai/audits/` are preserved as history.
+The four reconciled reports (`RELEASE-ACCEPTANCE.md`,
+`GITHUB-SECURITY-RECOMMENDATIONS.md`,
+`REAL-MODEL-EVALUATION.md`, `CI-VALIDATION-REPORT.md`) each
+carry a dated "Addendum — canonical main reconciliation
+(2026-11-22)" section recording what has changed since they
+were written. The mission log below is the 12-phase upgrade
+log, preserved verbatim.
+
+## Historical mission log (2026-11-20 – 2026-11-21, preserved as history)
+
+The log below records the 12-phase production-upgrade mission
+on its feature branch. It is history: the branch is merged and
+deleted, the "local only / do not push" rule is superseded, and
+the phase statuses describe that mission, not current `main`.
+Do not edit it to match the present; append dated corrections
+instead (as was done throughout).
+
+### Production Upgrade: Project Status (original header, preserved)
 
 Branch: `feat/skillforge-production-upgrade` (from `main` @ bc304a2, v1.0.0)
 Started: 2026-11-20
@@ -8,12 +135,12 @@ and reverted at the owner's request. The rule no longer applies; push /
 merge / PR decisions are the owner's, per the production-readiness
 audit A1-10.)
 
-## Baseline (v1.0.0, main @ bc304a2)
+### Baseline (v1.0.0, main @ bc304a2)
 - 226 skills (177 original + 49 upstream), 20 agents, 9 workflows, 844 files.
 - All validations pass; online link check clean (311 URLs verified, 47 documented exceptions).
 - Known: 11 upstream-only warnings; upstream files verbatim/unedited.
 
-## Phase status
+### Phase status
 | Phase | Status | Notes |
 | --- | --- | --- |
 | 1. Full repository audit | Verified | 27 findings (0 Critical, 5 High, 10 Medium, 12 Low). All baseline checks re-run and passing; online link check clean. -> ai/audits/INITIAL-AUDIT.md |
@@ -33,7 +160,7 @@ Statuses: Not Started / In Progress / Implemented / Tested / Verified / Blocked.
 A phase is Verified only when its implementation exists, its tests ran and passed,
 results are recorded, and limitations are documented.
 
-## Execution log
+### Execution log
 - 2026-11-20: Branch created from main @ bc304a2; ai/ workspace scaffolded.
 - 2026-11-20: Phase 1 complete — full audit written (27 findings), all baseline validations re-run and passing, online link check clean (311 URLs, 0 errors).
 - 2026-11-20: H-02 fixed in Wave 1 — registry/report generation is now deterministic (`generated` derives from newest `last_verified`); see ai/decisions/2026-11-20-registry-determinism.md.

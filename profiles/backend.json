@@ -1,0 +1,53 @@
+{
+  "name": "backend",
+  "description": "Backend development: APIs, services, and databases.",
+  "skills": [
+    "advanced-api-architecture",
+    "api-client-generation",
+    "api-design",
+    "background-jobs",
+    "backup-recovery",
+    "caching",
+    "clickhouse",
+    "connection-pooling",
+    "database-design",
+    "database-security",
+    "drizzle",
+    "elasticsearch",
+    "express",
+    "fastify",
+    "graphql",
+    "hono",
+    "indexing",
+    "mcp-development",
+    "migrations",
+    "mongodb",
+    "mysql",
+    "nestjs",
+    "nodejs",
+    "openapi",
+    "opensearch",
+    "package-development",
+    "postgresql",
+    "prisma",
+    "python-sdk",
+    "queues",
+    "rate-limiting",
+    "redis",
+    "rest-api",
+    "sdk-development",
+    "sql-optimization",
+    "sqlite",
+    "transactions",
+    "trpc",
+    "typescript-sdk"
+  ],
+  "agents": [
+    "backend-specialist",
+    "database-specialist"
+  ],
+  "workflows": [
+    "database-migration",
+    "secure-api-development"
+  ]
+}

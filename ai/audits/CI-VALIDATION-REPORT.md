@@ -257,3 +257,97 @@ the prompt paths are covered on Windows by in-process mirrors.
   failure looked like a green weekly run. It now exits non-zero
   on any UNKNOWN vendor; drift (BEHIND/AHEAD/DIVERGED) stays
   informational.
+
+---
+
+## Addendum — canonical main reconciliation (2026-11-22)
+
+This report is a **historical record** of CI validation on branch
+`feat/skillforge-production-upgrade` (draft PR #4). Nothing above
+this addendum has been rewritten: the rounds, the E-01/E-02
+defects, and the Windows staging evidence describe the branch
+at the heads recorded, and they were correct for that evidence.
+What follows records what has changed since, so the report is
+not mistaken for a statement about current `main`.
+
+### Canonical state (verified 2026-11-22)
+
+- **The upgrade reached `main`.** PR #5 was merged
+  2026-11-21T23:13:44Z with merge commit `7b4f6eb`
+  (`7b4f6eb7c109867cf9026ff835c9301e6fb3f71d`). The branch was
+  deleted after the merge; the remote now has only `main`.
+- **Current `main` HEAD is `b86b469`**
+  (`b86b4696e518a87edded3f0f55ef0643fd08c3cd`, verified via
+  `git log`).
+- **Draft PR #4 is closed, never merged** (`state: closed`,
+  `merged: false`). Its rounds remain the validation evidence
+  for the branch heads they ran on — they are not evidence
+  about `main`.
+
+### CI since the merge (verified via `gh` API, 2026-11-22)
+
+- **PR #5 head `b3dbfb6`: 9/9 checks green.** Check-runs on
+  that commit (`GET .../commits/b3dbfb6.../check-runs`) all
+  report `success`: Validate (Node 24), Registry, Behavioral
+  evals, Windows (Node 24), lint, security-audit, Semgrep
+  (SAST), CodeQL, Analyze (javascript-typescript). (No
+  Gitleaks check existed yet — the job was added in `b86b469`.)
+- **`main` @ `b86b469`: all reporting required checks green.**
+  Check-runs on the commit report `success` for Validate
+  (Node 24), Registry, Behavioral evals, Windows (Node 24),
+  lint, security-audit, Semgrep (SAST), Gitleaks, and Analyze
+  (javascript-typescript). One required context, the
+  workflow-level `CodeQL` check, did **not** report on this
+  push-to-`main` commit (it reports on PR commits, e.g.
+  `b3dbfb6` above); see
+  `ai/audits/BRANCH-PROTECTION-VERIFICATION.md` for the
+  implication. Main CI runs at `b86b469`: Validate skills
+  44969762985, Lint 44969763106, Security audit 44969763003,
+  CodeQL 44969762981 — all `success`.
+- **Branch protection is now ON** for `main` (10 required
+  status checks, strict) — the "Branch protection is not
+  enabled, so all CI is advisory" statement in "What CI does
+  not prove" is superseded. See the verification report for
+  the exact config and the residual gaps (no PR requirement,
+  no conversation resolution, `enforce_admins=false`).
+
+### Workflows that have still never run — updated
+
+- **`release.yml`: HAS NOW RUN.** The v1.1.0 tag triggered run
+  44967209791 (head `9216cbb`, conclusion `success`) — the
+  first real execution, all 14 steps incl. the tag↔version
+  and CHANGELOG gates. The "never executed on GitHub" statement
+  above is now historical.
+- **`scheduled-maintenance.yml`: FIRST RUN RAN — AND
+  FAILED (links job).** Run 44970737145 (`workflow_dispatch`,
+  head `b86b469`, 2026-11-22T01:17:15Z) is the first run ever;
+  it completed with conclusion `failure` at 01:21:24Z.
+  "Monitor upstream sources" and "Detect stale skill
+  verification" passed; "Verify links online" failed on 3
+  external links returning HTTP 403
+  (`www.domainlanguage.com/ddd/` from
+  `skills/architecture/domain-driven-design/SKILL.md`,
+  `orval.dev` from `skills/backend/api-client-generation/SKILL.md`,
+  `scholar.google.com` from `skills/content/content-research/SKILL.md`
+  — hosts blocking automated checks, not dead links; 560
+  checked live, 45 skipped, 3 errors). The workflow itself
+  has no defect; the fix is documented link exceptions (same
+  treatment as the 45 existing skips) or link fixes, then a
+  re-run. The HTTP-404 dispatch block described above ended
+  when the file reached `main`.
+- **No real-model eval run has ever executed.** Unchanged;
+  the credential blocker has since been lifted (owner-connected
+  Gemini key, approved for the eval) and the Phase 4 framework
+  is complete — the run is pending execution. See the update
+  to `ai/audits/REAL-MODEL-EVALUATION.md`.
+
+### What is historical vs current evidence
+
+- **Historical (preserved as written):** the PR #4 rounds
+  (1–5), the merge-ref problem and `-s ours` account, the
+  E-01/E-02 defect write-ups, the Windows staging evidence
+  (CI-log based, branch heads), and every "has still never
+  run" statement.
+- **Current (supersedes this report):** `ai/PROJECT-STATUS.json`
+  (canonical status, restructured 2026-11-22) and
+  `ai/PROJECT-STATUS.md`.

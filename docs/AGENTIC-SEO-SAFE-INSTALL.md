@@ -186,3 +186,29 @@ not a code fix:
   imported code) and threat 5 (supply-chain compromise)
 - `sources/imported-skills.md` — the pinned commit for every
   upstream import
+
+---
+
+## Verification note (2026-11-22, production-hardening mission, Group A)
+
+Re-verified against `main` @ `b86b469`:
+
+- The S-08 occurrences are unchanged: `seo/README.md:109-110`
+  and `seo/install.sh:57-58` still document the curl-pipe
+  install, and `install.sh:221` still clones unpinned
+  (`git clone --depth 1`). The pinned import is still commit
+  `67775741ce88e0a474513ac53d6f6e4558ff1a3b`
+  (`sources/imported-skills.md`).
+- The installer warnings now cover the **restore** path too:
+  restoring a backup containing the `seo` skill warns (dry-run
+  and real run, including already-matching and recovered
+  corrupt backups). Before this fix, restore was the only
+  command that could (re-)install the skill without warning.
+  See `scripts/install/commands.mjs` (`runRestore`) and the
+  regression tests in `test/installer-warnings.test.mjs`.
+  Install, update, dry-run, already-installed, and doctor
+  coverage is unchanged from `9fdc0d0`.
+- The full risk record — attack scenario, mitigations,
+  residual risk, severity, and the recommended owner decision
+  (still awaiting the owner's word) — is now
+  `ai/security/SECURITY-RISK-ACCEPTANCE.md`.

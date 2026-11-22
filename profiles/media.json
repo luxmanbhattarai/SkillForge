@@ -1,0 +1,28 @@
+{
+  "name": "media",
+  "description": "Media production: images, social visuals, and video thumbnails.",
+  "skills": [
+    "ai-image-generation",
+    "blog-featured-images",
+    "brand-visual-consistency",
+    "image-accessibility",
+    "image-compression",
+    "image-format-conversion",
+    "image-prompt-engineering",
+    "infographic-generation",
+    "og-image-generation",
+    "platform-social-images",
+    "resvg",
+    "satori",
+    "sharp",
+    "social-preview",
+    "twitter-card-images",
+    "youtube-thumbnails"
+  ],
+  "agents": [
+    "media-specialist"
+  ],
+  "workflows": [
+    "image-generation"
+  ]
+}

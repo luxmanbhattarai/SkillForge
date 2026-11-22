@@ -1,0 +1,31 @@
+{
+  "name": "frontend",
+  "description": "Frontend development: frameworks, styling, and browser skills for building web interfaces.",
+  "skills": [
+    "accessibility",
+    "astro",
+    "css",
+    "expo",
+    "frontend-performance",
+    "html",
+    "hugo",
+    "javascript",
+    "modern-css",
+    "nextjs",
+    "nuxt",
+    "react",
+    "react-native",
+    "responsive-design",
+    "semantic-html",
+    "shadcn-ui",
+    "sveltekit",
+    "tailwind-css",
+    "typescript",
+    "ui-design",
+    "vue"
+  ],
+  "agents": [
+    "frontend-specialist"
+  ],
+  "workflows": []
+}

@@ -450,3 +450,99 @@ regression net for the **library**:
    evaluation (skill text in the prompt), structured-output
    enforcement (`response_format`), a spend cap, and per-model
    result history.
+
+---
+
+## Addendum — canonical main reconciliation (2026-11-22)
+
+This document is a **historical record** of the Phase 7 audit on
+branch `feat/skillforge-production-upgrade` (@ `be03f2c`).
+Nothing above this addendum has been rewritten. Its headline
+remains true and is re-affirmed here: **no real-model evaluation
+has ever been run for SkillForge.** No `EVAL_PROVIDER_*`
+credentials exist in this environment, no real-model run has
+been performed, and no results exist — as of 2026-11-22.
+
+### Canonical state (verified 2026-11-22)
+
+- **The upgrade reached `main`.** PR #5 was merged
+  2026-11-21T23:13:44Z with merge commit `7b4f6eb`
+  (`7b4f6eb7c109867cf9026ff835c9301e6fb3f71d`). The branch was
+  deleted after the merge; the remote now has only `main`.
+- **Current `main` HEAD is `b86b469`**
+  (`b86b4696e518a87edded3f0f55ef0643fd08c3cd`, verified via
+  `git log`).
+- The branch references above ("Branch:
+  `feat/skillforge-production-upgrade` @ `be03f2c`") are
+  historical: they record where the provider layer was
+  verified, not where the code lives now. The provider layer
+  (`evals/runners/providers.mjs`, `evals/runners/run-evals.mjs`)
+  and the v2 subset (`evals/datasets/real-model-subset-v2.json`,
+  89 cases) reached `main` with the merge, unchanged in
+  substance since this audit.
+
+### Updates since the audit
+
+- **RME-01 (pricing-unit doc bug) is FIXED.** The plan doc's
+  per-1k example values were corrected in `d010069` (Phase 11),
+  so the "Not fixed in this phase" note in §3 is now
+  historical. The corrected values (`0.003` / `0.015` for the
+  $3/$15-per-1M example) are the ones §5.2 of this document
+  already used.
+- **RME-02 stays fixed by v2.** No change.
+- **The §5 run instructions are still the current procedure.**
+  No code changes are needed to start a run the moment
+  credentials arrive; the only open item is the credentials
+  themselves (§8 item 1), which remain owner-supplied.
+- **The 89/89 mock verification of subset v2** (§4) is
+  historical evidence from 2026-11-21 on the branch; it is not
+  re-run here (mock evals are owned by another worker in the
+  hardening mission — do not re-cite the number without a fresh
+  run at the new head).
+
+### What is historical vs current evidence
+
+- **Historical (preserved as written):** the provider-layer
+  verification (§2), the v2 subset definition and its 89/89
+  mock verification (§4), the cost/time estimates (§6, still
+  estimates — no run has happened), and the open-items list
+  (§8) except as updated above.
+- **Current (supersedes this document for status):**
+  `ai/PROJECT-STATUS.json` (`evidence.realModelEval`: `hasRun:
+  false`, no commit — no real-model evaluation commit exists
+  and none is invented) and `ai/PROJECT-STATUS.md`.
+
+### Update — later 2026-11-22: the credential blocker is lifted, still no run
+
+After this addendum was written, the owner connected a Gemini
+API key (custom.gemini connector, Secure Vault) and approved it
+for the real-model evaluation (2026-11-21). The credential blocker in
+§8 item 1 is therefore **lifted** — but no run has executed:
+Group B's Phase 4 report
+(`ai/evaluations/REAL-MODEL-EVALUATION-REPORT.md`, 2026-11-22)
+records the framework as complete (new runner
+`evals/run-real-model.mjs`, provider adapters including
+`evals/providers/gemini.mjs`) with status BLOCKED — NOT
+EXECUTED at time of writing. The run is pending execution by
+Phase 4. The headline of this document stands: no real-model
+evaluation has ever run for SkillForge, and `hasRun` stays
+`false` in `ai/PROJECT-STATUS.json` until a run executes.
+
+### Update — still later 2026-11-22: the run is blocked on the free-tier quota
+
+The credential blocker is lifted, but a new blocker replaced
+it: the connected Gemini key is on the **free tier (20
+requests/day for `gemini-3.8-flash`)**, and the quota was
+already exhausted when Group B's smoke test ran (2026-11-22
+~01:58 UTC: 3 cases, 0 passed, all HTTP 429, 0 tokens used).
+The full 89-case run was deliberately not launched. It may
+proceed as a multi-day run (20/day, resuming from the
+checkpoint after each midnight-PT reset, ~08:00 UTC) or on a
+paid tier — an owner/coordinator decision. Verified live call
+latency is ~3 minutes per case, so the run takes ~4–5 hours.
+Details and the smoke-test record:
+`ai/evaluations/REAL-MODEL-EVALUATION-REPORT.md` §7/§9. The
+plan document `docs/REAL-MODEL-EVALUATION.md` now describes
+the v2 89-case subset and this quota-blocked state. Nothing
+here changes the headline: no real-model evaluation has run,
+and no result exists.

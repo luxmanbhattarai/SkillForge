@@ -1,0 +1,13 @@
+{
+  "name": "desktop",
+  "description": "Desktop applications: Electron, Tauri, and Rust.",
+  "skills": [
+    "electron",
+    "rust",
+    "tauri"
+  ],
+  "agents": [
+    "desktop-engineer"
+  ],
+  "workflows": []
+}

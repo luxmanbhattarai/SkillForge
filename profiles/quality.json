@@ -1,0 +1,43 @@
+{
+  "name": "quality",
+  "description": "Quality engineering: testing, performance, code review, and engineering standards.",
+  "skills": [
+    "accessibility-testing",
+    "bundle-optimization",
+    "caching-strategy",
+    "clean-code",
+    "code-review",
+    "core-web-vitals",
+    "debugging",
+    "design-patterns",
+    "e2e-testing",
+    "engineering-standards",
+    "image-optimization",
+    "integration-testing",
+    "javascript-optimization",
+    "lighthouse",
+    "pagespeed-insights",
+    "performance",
+    "performance-testing",
+    "playwright",
+    "refactoring",
+    "regression-testing",
+    "security",
+    "software-architecture",
+    "tdd",
+    "technical-decision-records",
+    "unit-testing",
+    "vitest",
+    "web-performance-audit"
+  ],
+  "agents": [
+    "qa-testing-specialist",
+    "performance-specialist",
+    "code-review-specialist",
+    "quality-auditor"
+  ],
+  "workflows": [
+    "code-audit",
+    "performance-audit"
+  ]
+}

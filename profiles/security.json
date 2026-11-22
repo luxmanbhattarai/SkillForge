@@ -1,0 +1,36 @@
+{
+  "name": "security",
+  "description": "Application security: auth, hardening, and security review.",
+  "skills": [
+    "auth-security",
+    "authentication",
+    "authjs",
+    "authorization",
+    "better-auth",
+    "clerk",
+    "csrf-protection",
+    "dependency-security",
+    "jwt",
+    "mfa",
+    "multi-tenancy",
+    "oauth",
+    "owasp",
+    "passkeys",
+    "rbac",
+    "secrets-management",
+    "secure-headers",
+    "security-auditing",
+    "session-management",
+    "sql-injection-prevention",
+    "supabase-auth",
+    "xss-prevention"
+  ],
+  "agents": [
+    "security-specialist"
+  ],
+  "workflows": [
+    "security-review",
+    "secure-api-development",
+    "authentication-implementation"
+  ]
+}

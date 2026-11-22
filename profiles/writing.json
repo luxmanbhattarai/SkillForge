@@ -1,0 +1,38 @@
+{
+  "name": "writing",
+  "description": "Writing and documentation: articles, docs, and editorial workflow.",
+  "skills": [
+    "api-documentation",
+    "article-writing",
+    "blog-writing",
+    "changelog-management",
+    "content-brief",
+    "content-localization",
+    "content-refresh",
+    "content-repurposing",
+    "content-research",
+    "content-strategy",
+    "copywriting",
+    "developer-experience",
+    "editorial-review",
+    "editorial-workflow",
+    "eeat-writing",
+    "fact-checking",
+    "faq-generation",
+    "human-editing",
+    "keyword-to-content",
+    "readme-engineering",
+    "seo-content-writing",
+    "source-verification",
+    "technical-documentation",
+    "technical-writing"
+  ],
+  "agents": [
+    "article-writer",
+    "content-strategist",
+    "technical-writer"
+  ],
+  "workflows": [
+    "article-publishing"
+  ]
+}

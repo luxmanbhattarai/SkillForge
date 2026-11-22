@@ -73,6 +73,26 @@ export async function loadLibrary(root) {
     );
   }
   const skills = new Map();
+  // Verification status (Finding 3): the registry carries each
+  // skill's `status` (derived from sources/verification-status.json
+  // by the registry generator, Phase 9 M-01), so the status is read
+  // from the registry — the same source the installer already
+  // trusts for names, paths, and categories. The human-readable
+  // note behind a status lives only in verification-status.json
+  // (the registry carries no note field), so it is read from there
+  // directly, best-effort: a fixture library without the file
+  // simply has no notes, and its skills carry no status.
+  let statusNotes = new Map();
+  try {
+    const vs = JSON.parse(await readFile(path.join(root, 'sources', 'verification-status.json'), 'utf8'));
+    if (vs && typeof vs === 'object' && vs.statuses && typeof vs.statuses === 'object') {
+      for (const [name, entry] of Object.entries(vs.statuses)) {
+        if (entry && typeof entry.note === 'string' && entry.note) statusNotes.set(name, entry.note);
+      }
+    }
+  } catch (err) {
+    if (err.code !== 'ENOENT') throw err;
+  }
   for (const s of reg.skills) {
     validateRegistryEntry(s, 'skill', root, 'registry/skills.json');
     skills.set(s.name, {
@@ -82,6 +102,8 @@ export async function loadLibrary(root) {
       version: s.version || pkg.version || '0.0.0',
       source: s.path, // repo-relative, e.g. skills/frontend/nextjs
       description: s.description || '',
+      status: typeof s.status === 'string' ? s.status : null,
+      statusNote: statusNotes.get(s.name) || null,
     });
   }
   const categories = new Set([...skills.values()].map((s) => s.category).filter(Boolean));
@@ -170,6 +192,97 @@ export function splitList(values) {
     }
   }
   return out;
+}
+
+/**
+ * Load install profiles (Finding 2): `profiles/*.json`, each
+ * `{ name, description, skills[], agents[], workflows[] }` — a
+ * named bundle of skills (plus agents/workflows) that installs
+ * as one unit, so a user installs the 21 frontend skills instead
+ * of all 277 descriptions (~25k tokens) at once. See
+ * docs/PROFILES.md for the catalog and the file format.
+ *
+ * Validates shape and that every named item exists in the
+ * library; a bad profile is a LibraryError naming the file (a
+ * repo problem, like a malformed registry). A missing
+ * profiles/ directory means no profiles (fixture libraries).
+ * Loaded lazily — only when --profile/--bundle is given — so a
+ * malformed profile cannot break unrelated commands.
+ * Returns a Map of profile name → definition.
+ */
+export async function loadProfiles(library) {
+  const dir = path.join(library.root, 'profiles');
+  let files;
+  try {
+    files = (await readdir(dir)).filter((f) => f.endsWith('.json')).sort();
+  } catch (err) {
+    if (err.code === 'ENOENT') return new Map();
+    throw err;
+  }
+  const out = new Map();
+  for (const file of files) {
+    const where = `profiles/${file}`;
+    let doc;
+    try {
+      doc = JSON.parse(await readFile(path.join(dir, file), 'utf8'));
+    } catch (err) {
+      throw new LibraryError(`${where}: invalid JSON (${err.message})`);
+    }
+    if (!doc || typeof doc !== 'object' || Array.isArray(doc)) {
+      throw new LibraryError(`${where}: expected an object with "name", "description", "skills", "agents", "workflows"`);
+    }
+    const expectedName = file.slice(0, -'.json'.length);
+    if (doc.name !== expectedName) {
+      throw new LibraryError(`${where}: "name" must be ${JSON.stringify(expectedName)} (the file name)`);
+    }
+    if (typeof doc.description !== 'string' || !doc.description.trim()) {
+      throw new LibraryError(`${where}: "description" must be a non-empty string`);
+    }
+    const members = {};
+    for (const kind of ['skills', 'agents', 'workflows']) {
+      const list = doc[kind] === undefined ? [] : doc[kind];
+      if (!Array.isArray(list) || list.some((n) => typeof n !== 'string' || !n.trim())) {
+        throw new LibraryError(`${where}: "${kind}" must be an array of names`);
+      }
+      members[kind] = [...new Set(list.map((n) => n.trim()))];
+    }
+    const byKind = { skills: library.skills, agents: library.agents, workflows: library.workflows };
+    for (const kind of ['skills', 'agents', 'workflows']) {
+      for (const name of members[kind]) {
+        const singular = kind.slice(0, -1);
+        if (!byKind[kind].has(name)) {
+          throw new LibraryError(`${where}: unknown ${singular} '${name}'`);
+        }
+      }
+    }
+    out.set(doc.name, { name: doc.name, description: doc.description, ...members });
+  }
+  return out;
+}
+
+/**
+ * Expand profile names into selection arrays, to be merged with
+ * the caller's --skill/--agent/--workflow selectors (union —
+ * resolveSelection deduplicates). Returns { expanded, errors }:
+ * errors lists unknown profiles (with the known names), in the
+ * same shape as resolveSelection's errors, so callers report
+ * them as usage errors.
+ */
+export function expandProfiles(profiles, names) {
+  const expanded = { skills: [], agents: [], workflows: [] };
+  const errors = [];
+  const known = [...profiles.keys()].sort().join(', ') || 'none';
+  for (const name of names) {
+    const p = profiles.get(name);
+    if (!p) {
+      errors.push(`unknown profile '${name}' (known profiles: ${known})`);
+      continue;
+    }
+    expanded.skills.push(...p.skills);
+    expanded.agents.push(...p.agents);
+    expanded.workflows.push(...p.workflows);
+  }
+  return { expanded, errors };
 }
 
 /**

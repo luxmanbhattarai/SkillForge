@@ -1,0 +1,51 @@
+{
+  "name": "seo",
+  "description": "Search optimization: technical SEO, content SEO signals, and social metadata.",
+  "skills": [
+    "aeo-optimization",
+    "canonical-management",
+    "competitor-analysis",
+    "content-decay",
+    "content-gap-analysis",
+    "dynamic-metadata",
+    "eeat",
+    "entity-seo",
+    "geo-optimization",
+    "hreflang",
+    "image-seo",
+    "internal-linking",
+    "international-seo",
+    "keyword-clustering",
+    "keyword-research",
+    "llm-seo",
+    "llms-txt",
+    "local-seo",
+    "metadata-validation",
+    "off-page-seo",
+    "on-page-seo",
+    "open-graph",
+    "programmatic-seo",
+    "schema-jsonld",
+    "search-console",
+    "search-intent",
+    "seo-audit",
+    "seo-metadata",
+    "seo-migration",
+    "serp-analysis",
+    "serp-monitoring",
+    "sitemap-robots",
+    "social-sharing",
+    "structured-data",
+    "technical-seo",
+    "topical-authority",
+    "twitter-cards"
+  ],
+  "agents": [
+    "seo-specialist",
+    "keyword-research-specialist",
+    "geo-aeo-specialist"
+  ],
+  "workflows": [
+    "seo-audit"
+  ]
+}

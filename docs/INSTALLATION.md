@@ -87,6 +87,13 @@ bad skills), `2` usage error (unknown skill, target, or flag).
   `install` installs all skills.
 - `--category <name>` — a whole category (repeatable); categories
   are listed in `registry/skills.json`.
+- `--profile <name>` — a profile bundle of skills, agents, and
+  workflows (repeatable); `--bundle` is an alias. Profiles are
+  defined in `profiles/*.json` — see [PROFILES.md](PROFILES.md)
+  for the catalog. A profile combines with other selectors as a
+  union (deduped). Profiles need `--target`: every shipped profile
+  bundles at least one agent, and agents cannot install to a bare
+  `--dest`.
 - `--agent <name>` — one agent definition; repeatable, or `all`.
   Needs `--target` (see [Agents and workflows](#agents-and-workflows)).
 - `--workflow <name>` — one workflow; repeatable, or `all`.
@@ -123,6 +130,11 @@ manifest, and `uninstall` needs `--all` (or a selector) to act.
 - `--dry-run` — print exactly what would happen; change nothing.
 - `--force` — overwrite conflicts without prompting. A backup is
   still made first. Never the default.
+- `--allow-needs-correction` — install skills whose verification
+  status is `needs-correction` (see
+  [Needs-correction skills](#needs-correction-skills) below).
+  Without it, explicitly naming such a skill refuses the run, and
+  bulk installs skip them with a warning.
 - `--backup` — back up and overwrite conflicts without prompting
   (same effect as `--force` for conflicts).
 - `--json` — machine-readable output (`list`, `doctor`, `validate`,
@@ -216,6 +228,50 @@ What the installer does to the files:
   target is a clear error, not a silent fallback.
 
 ## Safety
+
+### Needs-correction skills
+
+Six skills carry verification status `needs-correction` — they
+have known errors documented in `sources/verification-status.json`
+(all six are upstream imports; the fixes belong upstream):
+
+| Skill | Known issue |
+| --- | --- |
+| `prisma-upgrade-v7` | Stale version claim (7.6.0 vs actual 7.10.1) |
+| `seo` | Outdated FAQ rich-results rule, among other errors |
+| `vercel-composition-patterns` | Bad code example (`use(Composer.Context)`) |
+| `vercel-react-best-practices` | 3 broken links |
+| `vercel-react-view-transitions` | ~29 broken links |
+| `web-artifacts-builder` | Stale React version |
+
+The installer enforces the status by default, reading it from
+`registry/skills.json` (which derives it from
+`sources/verification-status.json`) and the audit note from
+`verification-status.json` directly:
+
+- **Explicit install refuses, per item.** Naming a needs-correction
+  skill with `--skill`/`--skills` refuses that skill with a clear
+  error naming the skill, its status, and the issue — but the
+  refusal is per item, not per run: the other requested skills
+  still install (the engine's rule is "one bad item never aborts
+  the run"), and the run exits 1 at the end with the summary
+  reporting `refused N`. The refusal happens at selection time,
+  so it fires on `--dry-run` too.
+- **Bulk install warns and skips.** `--skills all`,
+  `--category`, and `--profile` warn on stderr about each
+  needs-correction skill and skip it; the rest install (exit 0).
+- **Update warns and skips.** There is no refusal on update —
+  the content is already installed, so refusing would protect
+  nothing. The skill is skipped with a warning.
+- **Opt-in: `--allow-needs-correction`.** Installs or updates
+  the skills, with a one-line stderr note naming them. The flag
+  is the explicit acknowledgment; the note keeps the run
+  auditable. It does not silence other warnings: installing `seo`
+  with the flag still prints the S-08/S-09 agentic-seo warnings.
+
+`uninstall`, `list`, `doctor`, `validate`, and `restore` are
+unaffected by the filter. Verified and
+verified-with-limitations skills install exactly as before.
 
 The v1.0.0 installer deleted an existing skill directory before
 installing, with no backup and no warning. That behavior is gone.

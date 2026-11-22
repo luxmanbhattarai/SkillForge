@@ -221,3 +221,97 @@ installer end-to-end (including `--link` on Windows), tag a release
 candidate to exercise `release.yml`, and run the real-model eval subset
 once credentials exist. Nothing in this verdict blocks that work — it
 blocks only the claim that the work is already production-proven.
+
+---
+
+## Addendum — canonical main reconciliation (2026-11-22)
+
+This report is a **historical record** of the Final Staging
+Validation mission on branch `feat/skillforge-production-upgrade`.
+Nothing above this addendum has been rewritten: the verdict, the
+§15 table, and the findings tally describe the branch at evidence
+heads `9fdc0d0` / `d010069`, and they were correct for that
+evidence. What follows records what has changed since, so the
+report is not mistaken for a statement about current `main`.
+
+### Canonical state (verified 2026-11-22)
+
+- **The upgrade reached `main`.** PR #5
+  (`feat/skillforge-production-upgrade` → `main`) was merged
+  2026-11-21T23:13:44Z with merge commit
+  `7b4f6eb` (`7b4f6eb7c109867cf9026ff835c9301e6fb3f71d`,
+  verified via `gh api .../pulls/5` and `git log`). The branch
+  was deleted after the merge; the remote now has only `main`
+  (`git ls-remote --heads origin`, 2026-11-22).
+- **Current `main` HEAD is `b86b469`**
+  (`b86b4696e518a87edded3f0f55ef0643fd08c3cd`, "CI: add Gitleaks
+  secret scanning; branch protection enabled", verified via
+  `git log`). The reconciliation plan's §"Main-branch
+  reconciliation recommendation" is therefore executed history,
+  not a pending plan — with one correction to the plan's
+  expectation: the fresh PR was **conflicting (51 conflicts)**,
+  not clean as predicted; it was resolved by merging `main`
+  into the branch (`b3dbfb6`, all conflicts taking the branch
+  version) before the merge.
+- **Releases:** v1.1.0 (tag on `9216cbb`, GitHub Release
+  "SkillForge v1.1.0", Latest) and v1.0.0 (tag restored on
+  `bc304a2`). See `CHANGELOG.md`.
+
+### The five "Why not PRODUCTION READY" reasons, revisited
+
+1. **S-08 disposition — STILL OPEN.** No owner acceptance has
+   been recorded. The Phase 3 recommendation (keep + mandatory
+   warnings + safe-install guidance) stands; the risk record is
+   now `ai/security/SECURITY-RISK-ACCEPTANCE.md`. The restore
+   warning gap found by the hardening mission (Group A) is
+   fixed on `feat/production-hardening`, unmerged.
+2. **Branch protection — ENABLED.** The owner reversed the
+   earlier decision: protection is on for `main` (10 required
+   status checks, strict; force pushes and deletions blocked;
+   `enforce_admins=false`). Verified live 2026-11-22; see
+   `ai/audits/BRANCH-PROTECTION-VERIFICATION.md`. Note the
+   residual: pull requests are still **not** required before
+   merging, and conversation resolution is **not** required —
+   both are owner decisions, documented in that report.
+3. **First real `release.yml` execution — DONE.** The workflow
+   ran green on the v1.1.0 tag (run 44967209791, head
+   `9216cbb`, conclusion `success`, verified via `gh run view`).
+4. **First real `scheduled-maintenance.yml` execution — RAN,
+   FAILED (links job).** The first run ever (run 44970737145,
+   `workflow_dispatch`, head `b86b469`, 2026-11-22T01:17:15Z)
+   completed with conclusion `failure`: "Monitor upstream
+   sources" and "Detect stale skill verification" passed, but
+   "Verify links online" failed on 3 external links returning
+   HTTP 403 (`www.domainlanguage.com/ddd/`, `orval.dev`,
+   `scholar.google.com` — hosts blocking automated checks, not
+   dead links; 560 checked live, 45 skipped). The workflow
+   itself has no defect; the fix is documented link exceptions
+   (same treatment as the 45 existing skips) or link fixes,
+   then a re-run. Recorded in `ai/PROJECT-STATUS.json`
+   (`pendingValidations`).
+5. **Real-model eval run — STILL NOT EXECUTED, but the
+   credential blocker is lifted.** No `EVAL_PROVIDER_*`
+   credentials existed at the time of the original report; the
+   owner has since connected a Gemini API key (custom.gemini
+   connector, Secure Vault) and approved it for the real-model
+   evaluation (2026-11-21), and Group B's Phase 4 framework is
+   complete (`evals/run-real-model.mjs` +
+   `evals/providers/gemini.mjs`). No run has executed yet —
+   the run is pending execution by Phase 4. See the update to
+   `ai/audits/REAL-MODEL-EVALUATION.md` and
+   `ai/evaluations/REAL-MODEL-EVALUATION-REPORT.md`.
+
+### What is historical vs current evidence
+
+- **Historical (branch-era, preserved as written):** the READY
+  FOR STAGING verdict, the §15 table, the findings tally, the
+  PR #4 CI rounds, the re-merge plan, and every statement of
+  the form "branch protection is off" / "release.yml has never
+  run" / "scheduled-maintenance cannot run before re-merge".
+  Those were true at the evidence heads and are false now;
+  they are history, not errors.
+- **Current (supersedes this report):** `ai/PROJECT-STATUS.json`
+  (canonical status, restructured 2026-11-22) and
+  `ai/PROJECT-STATUS.md` (canonical status document). The
+  hardening mission owns any re-verdict on `main`; this
+  addendum does not re-grade the verdict.

@@ -1,0 +1,39 @@
+{
+  "name": "architecture",
+  "description": "Software architecture: system design, monorepos, packages, and SDKs.",
+  "skills": [
+    "changesets",
+    "clean-code",
+    "code-review",
+    "debugging",
+    "dependency-management",
+    "design-patterns",
+    "domain-driven-design",
+    "engineering-standards",
+    "microservices",
+    "modular-monolith",
+    "monorepo",
+    "nx",
+    "package-boundaries",
+    "performance",
+    "pnpm-workspaces",
+    "refactoring",
+    "release-management",
+    "security",
+    "software-architecture",
+    "system-design",
+    "tdd",
+    "technical-decision-records",
+    "turborepo"
+  ],
+  "agents": [
+    "engineering-architect",
+    "monorepo-specialist",
+    "sdk-api-specialist"
+  ],
+  "workflows": [
+    "architecture-review",
+    "new-project",
+    "sdk-development"
+  ]
+}

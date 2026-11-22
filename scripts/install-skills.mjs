@@ -76,8 +76,8 @@ const ROOT = process.env.SKILLFORGE_ROOT
   : path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 const COMMANDS = ['install', 'update', 'list', 'doctor', 'validate', 'uninstall', 'restore', 'help'];
-const VALUE_FLAGS = new Set(['--target', '--scope', '--dest', '--skill', '--skills', '--category', '--agent', '--workflow']);
-const BOOL_FLAGS = new Set(['--link', '--dry-run', '--force', '--backup', '--all', '--json', '--list', '--help', '-h', '--version']);
+const VALUE_FLAGS = new Set(['--target', '--scope', '--dest', '--skill', '--skills', '--category', '--agent', '--workflow', '--profile', '--bundle']);
+const BOOL_FLAGS = new Set(['--link', '--dry-run', '--force', '--backup', '--all', '--json', '--list', '--help', '-h', '--version', '--allow-needs-correction']);
 
 const HELP = `SkillForge installer — install skills, agents, and workflows into an AI agent's directories.
 
@@ -103,8 +103,14 @@ Options:
   --skill <name>      Skill to install (repeatable, comma-separated, or 'all')
   --skills <list>     Legacy alias for --skill
   --category <name>   Install a whole category (repeatable; see registry/skills.json)
+  --profile <name>    Install a profile bundle (repeatable; see profiles/ and docs/PROFILES.md)
+  --bundle <name>     Alias for --profile
   --agent <name>      Agent to install (repeatable, or 'all'); needs --target
   --workflow <name>   Workflow to install (repeatable, or 'all'); Antigravity only
+  --allow-needs-correction
+                      Install skills whose verification status is needs-correction
+                      (refused by default when named explicitly, skipped with a
+                      warning in bulk installs; see docs/INSTALLATION.md)
   --link              Symlink skills instead of copying (agents/workflows are always copied)
   --dry-run           Print exactly what would happen; change nothing
   --force             Overwrite conflicts without prompting (a backup is still made first)
@@ -127,6 +133,7 @@ Safety:
 Examples:
   node scripts/install-skills.mjs --target claude-code --scope project --skills nextjs,astro
   node scripts/install-skills.mjs install --target codex --scope user --category seo
+  node scripts/install-skills.mjs install --target claude-code --scope project --profile frontend
   node scripts/install-skills.mjs install --target cursor --scope project --agent frontend-specialist
   node scripts/install-skills.mjs install --target claude-code --scope user --skills all --link
   node scripts/install-skills.mjs update --target claude-code --scope project --dry-run
@@ -149,6 +156,8 @@ function parseArgs(argv) {
     categories: [],
     agents: [],
     workflows: [],
+    profiles: [],
+    allowNeedsCorrection: false,
     link: false,
     dryRun: false,
     force: false,
@@ -193,6 +202,7 @@ function parseArgs(argv) {
       else if (name === '--dest') ctx.dest = value;
       else if (name === '--skill' || name === '--skills') ctx.skills.push(value);
       else if (name === '--category') ctx.categories.push(value);
+      else if (name === '--profile' || name === '--bundle') ctx.profiles.push(value);
       else if (name === '--agent') ctx.agents.push(value);
       else if (name === '--workflow') ctx.workflows.push(value);
       i++;
@@ -204,6 +214,7 @@ function parseArgs(argv) {
       else if (name === '--dry-run') ctx.dryRun = true;
       else if (name === '--force') ctx.force = true;
       else if (name === '--backup') ctx.backup = true;
+      else if (name === '--allow-needs-correction') ctx.allowNeedsCorrection = true;
       else if (name === '--all') ctx.all = true;
       else if (name === '--json') ctx.json = true;
       else if (name === '--list') ctx.listBackups = true;
@@ -233,7 +244,7 @@ async function main() {
   // Legacy invocation: no command word. --skills (or any selector)
   // means install; with no selectors at all, show usage.
   if (!ctx.command) {
-    const hasSelector = ctx.skills.length || ctx.categories.length || ctx.agents.length || ctx.workflows.length;
+    const hasSelector = ctx.skills.length || ctx.categories.length || ctx.agents.length || ctx.workflows.length || ctx.profiles.length;
     if (!hasSelector) {
       process.stderr.write(HELP);
       process.stderr.write('\nError: no command given. Run with --help for usage.\n');

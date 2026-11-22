@@ -602,3 +602,89 @@ git diff --shortstat 06100e3 be03f2c                    # 496 files, +96782/−1
 git diff --shortstat de6023d be03f2c                    # 69 files, +6724/−500
 git show --shortstat 06100e3                            # 479 files, +1236/−90456
 ```
+
+---
+
+## Addendum — canonical main reconciliation (2026-11-22)
+
+This document is a **historical record** of the Phase 4 / Phase 10
+inspection on branch `feat/skillforge-production-upgrade`
+(@ `be03f2c`). Nothing above this addendum has been rewritten:
+§1 describes the repo settings as verified on 2026-11-21, §5 is
+the re-merge plan as written before execution. What follows
+records what has changed since, so the document is not mistaken
+for a statement about current `main`.
+
+### Canonical state (verified 2026-11-22)
+
+- **The upgrade reached `main`.** PR #5 was merged
+  2026-11-21T23:13:44Z with merge commit `7b4f6eb`
+  (`7b4f6eb7c109867cf9026ff835c9301e6fb3f71d`). The branch was
+  deleted after the merge; the remote now has only `main`.
+- **Current `main` HEAD is `b86b469`**
+  (`b86b4696e518a87edded3f0f55ef0643fd08c3cd`, verified via
+  `git log`).
+
+### §1.2 — branch protection: was NOT enabled, NOW ENABLED
+
+The 2026-11-21 finding ("`GET .../branches/main/protection`
+returns HTTP 404") is superseded. Protection is on for `main`,
+verified live 2026-11-22 via the same endpoint; full current
+config, the job-name cross-check, and the remaining gaps are in
+`ai/audits/BRANCH-PROTECTION-VERIFICATION.md`. Two points of
+note against the §2.2 recommendation: the owner enabled the
+**legacy branch-protection API** (not the recommended ruleset —
+no rulesets exist, `GET .../rulesets` returns `[]`), and the
+required-checks list is the recommended 8 **plus** `Gitleaks`
+(new job, first run on `b86b469`) **plus** the workflow-level
+`CodeQL` check, for 10 total. Pull requests before merging and
+conversation resolution were **not** enabled — confirm and
+document as owner decisions in the verification report.
+
+### §2.1 — code-security items: STILL PENDING
+
+Re-verified 2026-11-22 (`GET /repos/luxmanbhattarai/SkillForge`
+→ `security_and_analysis`): secret scanning validity checks
+still **disabled**, non-provider patterns still **disabled**,
+and no `secret_scanning_generic_secrets` /
+`private_vulnerability_reporting` field is reported. Secret
+scanning, push protection, and Dependabot security updates
+remain enabled. The §2.1 recommendations are unchanged and
+still await owner action.
+
+### §3 — Dependabot PRs #2/#3: MERGED
+
+Both PRs were recreated after the re-merge and merged: #2
+(setup-node 7.1.0) merged 2026-11-21T23:53:44Z (`97c7371`), #3
+(checkout 7.0.1) merged 2026-11-22T00:07:35Z (`fd3fb82`).
+`main` now pins checkout v7.0.1 + setup-node v7.1.0. The §3.4
+"leave open; recreate after the re-merge" disposition was
+followed exactly.
+
+### §4 — draft PR #4: CLOSED, never merged
+
+PR #4 is `state: closed`, `merged: false` (verified via API
+2026-11-22), closed as superseded by PR #5.
+
+### §5 — reconciliation plan: EXECUTED, with one wrong prediction
+
+The plan was executed as written (revert-of-revert `c0f4717`,
+fresh PR #5, merge `7b4f6eb`) except for Step 5's expectation:
+the fresh PR was **conflicting (51 conflicts)**, not clean as
+the plan predicted ("no conflicts expected"). The conflicts
+were resolved by merging `main` into the branch (`b3dbfb6`,
+all conflicts taking the branch version; merged tree verified
+byte-identical to the branch head `5bbe682`). The plan's
+diff-size numbers (§5.3, computed at `be03f2c`) are historical
+estimates; the executed PR diff is recorded in the PR itself.
+§5 is now executed history, not a pending plan.
+
+### What is historical vs current evidence
+
+- **Historical (preserved as written):** the §1 settings table
+  (2026-11-21 values), the §2 recommended configuration, the
+  §3 PR #2/#3 analysis, the §5 plan and its §5.3 numbers.
+- **Current (supersedes this document):** the live protection
+  config in `ai/audits/BRANCH-PROTECTION-VERIFICATION.md` and
+  the canonical status in `ai/PROJECT-STATUS.json` /
+  `ai/PROJECT-STATUS.md`.

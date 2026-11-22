@@ -24,6 +24,12 @@ import {
 } from '../test-support/helpers.mjs';
 
 const CLAUDE = ['--target', 'claude-code', '--scope', 'project'];
+// The Finding 3 status filter refuses explicit installs of
+// needs-correction skills by default. Tests whose purpose is the
+// install mechanics (not the filter) pass this opt-in flag when
+// they need the `seo` skill installed; the refusal itself is
+// covered by test/installer-status-filter.test.mjs.
+const ALLOW_NEEDS_CORRECTION = '--allow-needs-correction';
 
 test('fresh install: skill dir, SKILL.md, and manifest', async () => {
   const { home, proj } = await makeSandbox();
@@ -867,7 +873,13 @@ test('A-04: two concurrent installs — one fails cleanly on the lock, manifest 
   const loser = a.code === 1 ? a : b;
   assert.match(loser.stderr, /Another SkillForge installer run is already using/);
   const manifest = await readJson(path.join(proj, 'out', '.skillforge-manifest.json'));
-  assert.equal(Object.keys(manifest.items).length, registry.total_skills);
+  // A no-selector install is a bulk install, so the Finding 3
+  // status filter warns and skips the 6 needs-correction skills:
+  // the manifest holds 271 of the 277 skills, not all of them.
+  // (Derived from the registry so the count stays right if the
+  // needs-correction set changes.)
+  const expectedInstalled = registry.skills.filter((s) => s.status !== 'needs-correction').length;
+  assert.equal(Object.keys(manifest.items).length, expectedInstalled);
   // The lock is released when the winner exits.
   assert.equal(await exists(path.join(proj, 'out', '.skillforge-lock')), false);
 });
@@ -1532,7 +1544,7 @@ test('S-08/S-09: installing, re-running, and dry-running the seo skill warn abou
   // Dry-run install of seo warns (stderr), while the plan itself
   // (stdout) is unchanged: before the fix, the careful path —
   // preview first — warned about nothing.
-  const dry = await runCli(['install', ...CLAUDE, '--skill', 'seo', '--dry-run'], { home, proj });
+  const dry = await runCli(['install', ...CLAUDE, '--skill', 'seo', '--dry-run', ALLOW_NEEDS_CORRECTION], { home, proj });
   assert.equal(dry.code, 0, dry.stderr);
   assert.match(dry.stdout, /would install seo/);
   assert.match(dry.stderr, /documents an unsafe install method/);
@@ -1542,7 +1554,7 @@ test('S-08/S-09: installing, re-running, and dry-running the seo skill warn abou
   assert.equal((dry.stderr.match(/finding S-08/g) || []).length, 1);
   assert.equal((dry.stderr.match(/finding S-09/g) || []).length, 1);
 
-  const r = await runCli(['install', ...CLAUDE, '--skill', 'seo'], { home, proj });
+  const r = await runCli(['install', ...CLAUDE, '--skill', 'seo', ALLOW_NEEDS_CORRECTION], { home, proj });
   assert.equal(r.code, 0, r.stderr);
   assert.match(r.stderr, /documents an unsafe install method/);
   assert.match(r.stderr, /disables TLS certificate verification/);
@@ -1555,7 +1567,7 @@ test('S-08/S-09: installing, re-running, and dry-running the seo skill warn abou
   // A re-run that finds the seo skill already installed warns too:
   // before the fix, only a fresh install/update warned, so users
   // who installed before the warnings existed never saw them.
-  const again = await runCli(['install', ...CLAUDE, '--skill', 'seo'], { home, proj });
+  const again = await runCli(['install', ...CLAUDE, '--skill', 'seo', ALLOW_NEEDS_CORRECTION], { home, proj });
   assert.equal(again.code, 0, again.stderr);
   assert.match(again.stdout, /already installed: seo/);
   assert.match(again.stderr, /finding S-08/);
@@ -1564,8 +1576,11 @@ test('S-08/S-09: installing, re-running, and dry-running the seo skill warn abou
   assert.equal((again.stderr.match(/finding S-09/g) || []).length, 1);
 
   // Update dry-run with seo already installed warns too (the
-  // 'already' action in the shared plan printer).
-  const updateDry = await runCli(['update', ...CLAUDE, '--dry-run'], { home, proj });
+  // 'already' action in the shared plan printer). The flag is
+  // needed here as well: without it the status filter skips seo
+  // from the update plan entirely, so there is no 'already'
+  // action to warn about.
+  const updateDry = await runCli(['update', ...CLAUDE, '--dry-run', ALLOW_NEEDS_CORRECTION], { home, proj });
   assert.equal(updateDry.code, 0, updateDry.stderr);
   assert.match(updateDry.stdout, /already installed: seo/);
   assert.match(updateDry.stderr, /finding S-08/);
@@ -1576,7 +1591,7 @@ test('S-08/S-09: installing, re-running, and dry-running the seo skill warn abou
 
 test('S-08/S-09: doctor warns about an installed seo skill', async () => {
   const { home, proj } = await makeSandbox();
-  const r = await runCli(['install', ...CLAUDE, '--skill', 'seo'], { home, proj });
+  const r = await runCli(['install', ...CLAUDE, '--skill', 'seo', ALLOW_NEEDS_CORRECTION], { home, proj });
   assert.equal(r.code, 0, r.stderr);
   const doctor = await runCli(['doctor', ...CLAUDE], { home, proj });
   assert.equal(doctor.code, 0, doctor.stdout); // warnings, not failures
@@ -1867,7 +1882,9 @@ test('A-15: uninstall backs up modified and foreign content, but not unmodified 
   // — is covered by the A-14 test.)
   const { home, proj } = await makeSandbox();
   const dest = ['--dest', 'out'];
-  await runCli(['install', ...dest, '--skill', 'nextjs,astro,seo'], { home, proj });
+  // The seo install needs the opt-in flag: it is needs-correction,
+  // and this test needs it installed (as the "foreign" case).
+  await runCli(['install', ...dest, '--skill', 'nextjs,astro,seo', ALLOW_NEEDS_CORRECTION], { home, proj });
   const skillsDir = path.join(proj, 'out');
   const backupsBase = path.join(proj, '.skillforge-backups');
   // astro: modified (differs from the manifest).

@@ -1,0 +1,38 @@
+{
+  "name": "devops",
+  "description": "Infrastructure and delivery: cloud, CI/CD, deployment, and release management.",
+  "skills": [
+    "aws",
+    "ci-cd",
+    "cloudflare",
+    "cloudflare-d1",
+    "cloudflare-kv",
+    "cloudflare-queues",
+    "cloudflare-r2",
+    "cloudflare-workers",
+    "deployment",
+    "docker",
+    "durable-objects",
+    "fly-io",
+    "gcp",
+    "github-actions",
+    "kubernetes",
+    "observability",
+    "pulumi",
+    "railway",
+    "render",
+    "self-hosted-vps",
+    "terraform",
+    "vercel"
+  ],
+  "agents": [
+    "devops-engineer",
+    "cloudflare-specialist",
+    "release-manager",
+    "vercel-specialist"
+  ],
+  "workflows": [
+    "production-deployment",
+    "production-release"
+  ]
+}
