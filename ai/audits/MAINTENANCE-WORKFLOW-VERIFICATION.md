@@ -175,7 +175,7 @@ existing exceptions). **Verified fixed** by run 44980101979 (§8):
 the link job passed with 0 errors (609 URLs, 560 checked live,
 49 skipped).
 
-### MW-05 — Freshness job's shallow checkout inflates AGING (Medium) — FIXED, re-verification pending
+### MW-05 — Freshness job's shallow checkout inflates AGING (Medium) — CLOSED
 
 Run 44980101979's freshness job reported **224 FRESH / 47 AGING /
 6 STALE** with "277 skill(s) changed after their last
@@ -192,9 +192,9 @@ every skill to the HEAD date (2026-11-22), after every
 there are 0), but its headline numbers were wrong.
 **Fix** (`f40efb5`): `fetch-depth: 0` on the freshness job's
 checkout, with a comment recording the mechanism (same precedent
-as the Gitleaks job in security-audit.yml). **Re-verification:**
-run 3 (dispatched after the fix lands) must report the
-full-history numbers (266/5/6 at the `278343c` tree). Follow-up
+as the Gitleaks job in security-audit.yml). **Verified fixed**
+by run 44980945385 (§9): the freshness job reported 266 FRESH /
+5 AGING / 6 STALE — exactly the full-history numbers. Follow-up
 idea (not implemented): a script-level guard — treat a shallow
 repo (`.git/shallow` present) as unknown history and exclude the
 stability signal, instead of trusting wrong dates.
@@ -246,12 +246,11 @@ and error reporting all verify as designed, and the failure was
 surfaced loudly rather than swallowed), but the run as a whole
 failed on MW-01. Run 2 (§8) went green end to end — all 4 jobs,
 including the first-ever freshness job and the Phase 15
-upstream-report steps — after the MW-01 fix. One defect found in
-run 2 (MW-05, freshness shallow checkout) is fixed in `f40efb5`
-and awaits re-verification in run 3; it did not fail run 2 (the
-job fails only on CRITICAL). The weekly schedule (Mondays 07:00
-UTC) can now run unattended; the first scheduled run is still the
-real proof of the unattended loop.
+upstream-report steps — after the MW-01 fix. Run 2 exposed MW-05
+(freshness shallow checkout), fixed in `f40efb5` and verified
+fixed by run 3 (§9). The weekly schedule (Mondays 07:00 UTC) can
+now run unattended; the first scheduled run is still the real
+proof of the unattended loop.
 
 ## 8. Second run — 44980101979 (SUCCESS, 4/4 jobs)
 
@@ -319,3 +318,36 @@ the main head". The Phase 15 report step also ran and uploaded
 the `upstream-change-report` artifact (30-day retention).
 S-14 drift (agentic-seo 50 commits behind live upstream) is
 still reported, unchanged from run 1.
+
+## 9. Third run — 44980945385 (SUCCESS, 4/4 jobs; MW-05 verified fixed)
+
+| Field | Value |
+| --- | --- |
+| Run ID | `44980945385` |
+| Workflow | Scheduled maintenance |
+| Event | `workflow_dispatch` (manual dispatch by the coordinator) |
+| Branch | `main` |
+| Commit SHA | `4ea561c` (head at dispatch; includes the MW-05 `fetch-depth: 0` fix from `f40efb5`) |
+| Created | 2026-11-22T03:30:28Z |
+| Completed | 2026-11-22T03:34:51Z (~4m 23s wall clock) |
+| Conclusion | **success** |
+| URL | https://github.com/luxmanbhattarai/SkillForge/actions/runs/44980945385 |
+
+| Job | Job ID | Result |
+| --- | --- | --- |
+| Verify links online (`online-links`) | `137081089569` | passed (609 URLs, 560 checked live, 49 skipped, 0 errors) |
+| Detect stale skill verification (`stale-verification`) | `137081089633` | passed (none stale) |
+| Monitor upstream sources (`upstream`) | `137081089397` | passed (all 6 UP-TO-DATE) |
+| Score skill freshness (`freshness`) | `137081089662` | passed |
+
+Freshness job output (verbatim):
+
+```text
+Freshness report — reference 2026-11-22, commit 4ea561c (warn 180d / critical 365d)
+Scored 277 skills: 266 FRESH, 5 AGING, 6 STALE, 0 CRITICAL, 0 UNVERIFIED.
+Note: 175 skill(s) changed after their last verification date.
+```
+
+Exactly the full-history numbers — MW-05 is CLOSED. The
+maintenance loop is now verified green twice in a row (runs 2
+and 3) with all 4 jobs.

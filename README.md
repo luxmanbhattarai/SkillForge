@@ -117,6 +117,20 @@ installs are atomic with rollback, and every install is tracked in a
 manifest. Commands: `install`, `update`, `list`, `doctor`, `validate`,
 `uninstall`, `restore`.
 
+**Install profiles** — named bundles for one kind of project, so you
+don't preload all 277 skill descriptions into agent context:
+
+```bash
+# Frontend bundle (21 skills, ~1,761 description tokens vs ~25,066 for all)
+node scripts/install-skills.mjs install --target claude-code --scope project --profile frontend
+```
+
+12 profiles: ai, architecture, backend, desktop, devops, frontend,
+fullstack, media, quality, security, seo, writing (see
+[`docs/PROFILES.md`](docs/PROFILES.md)). Skills recorded as
+`needs-correction` (6, all upstream) are refused by default — pass
+`--allow-needs-correction` to install them anyway.
+
 **Option 2 — Skills CLI**
 
 ```bash
@@ -188,6 +202,9 @@ npm run check:registry      # registry schemas + semantic + verification coverag
 npm run check:links         # internal link check (add --online for external URLs)
 npm run check:security      # credential / prompt-injection scan
 npm run check:upstream      # upstream drift vs pinned commits
+npm run freshness           # freshness score + band for every skill
+npm run history -- <skill>  # per-skill changelog from git history
+npm run trends -- snapshot  # versioned quality snapshot (compare with trends:compare)
 npm run score               # quality score for every original skill (0–100)
 npm run test                # unit tests (663 tests, node:test, zero dependencies)
 npm run evals               # behavioral evals: 463 cases, deterministic mock agent
@@ -198,7 +215,7 @@ npm run report              # coverage + audit report
 CI runs the same checks on every pull request (`.github/workflows/`):
 validation on Node 24, registry regeneration diff, evals, lint,
 security audit, CodeQL, and weekly scheduled maintenance (online links,
-stale verification, upstream monitoring). See
+stale verification, upstream monitoring, freshness scoring). See
 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md#validation-and-ci) for the
 full pipeline.
 

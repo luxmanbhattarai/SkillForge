@@ -7,6 +7,112 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Production hardening (18 phases, Groups A–F, 2026-11-21/22),
+merged directly to `main` per the owner's explicit override
+(no feature branch, no PR). No new skills; the library stays at
+277 skills (228 original + 49 upstream), 24 agents, 16 workflows.
+Full record: `ai/audits/PRODUCTION-HARDENING-FINAL-REPORT.md`.
+
+### Added
+
+- Install profiles (`docs/PROFILES.md`): 12 named bundles (ai,
+  architecture, backend, desktop, devops, frontend, fullstack,
+  media, quality, security, seo, writing) installable with
+  `--profile` / `--bundle` on install, update, and uninstall.
+  The frontend profile loads ~1,761 description tokens instead
+  of ~25,066 for `--skills all`; `--skills all` still works
+  unchanged.
+- Progressive disclosure (`docs/PROGRESSIVE-DISCLOSURE.md`):
+  a standard (short SKILL.md body + `references/` + `scripts/` +
+  `assets/` + `examples/`) with coverage tooling
+  (`npm run disclosure`). 44 skills migrated, 182 disclosure
+  files; longest SKILL.md body 489 → 400 lines.
+- Freshness scoring (`npm run freshness`,
+  `ai/quality/SKILL-FRESHNESS.md`): every skill scored and banded
+  FRESH / AGING / STALE / CRITICAL / UNVERIFIED (266 / 5 / 6 /
+  0 / 0, mean 88.3), with a weekly job in scheduled maintenance.
+- Skill history (`npm run history`, `npm run history:all`):
+  per-skill changelog derived from git history — 277/277 skills,
+  927 entries.
+- Quality trends (`npm run trends`, `npm run trends:compare`,
+  `npm run trends:snapshot`): versioned quality snapshots with
+  regression comparison (exits 1 on regression).
+- Reference-integrity checker (`npm run check:references`):
+  validates skill/agent/workflow cross-references (0 errors).
+- Multi-model evaluation infrastructure
+  (`ai/evaluations/MULTI-MODEL-EVALUATION.md`): provider adapters
+  for OpenAI, Anthropic, Gemini (connector helper, no raw key),
+  and local OpenAI-compatible endpoints, behind one interface.
+  Real-model runner (`npm run evals:real`) with per-case
+  checkpointing and resume; the 89-case run is blocked on the
+  Gemini free-tier quota (see "Known limitations" in the final
+  report).
+- Benchmark dashboard generator (`npm run benchmark`,
+  `ai/evaluations/BENCHMARK-DASHBOARD.md`): first report from
+  mock data (463/463); real-model metrics shown as unavailable.
+- Upstream change monitoring (Phase 15): JSON change reports
+  with a security heuristic, uploaded as a 30-day artifact by the
+  weekly maintenance run.
+- Distribution architecture
+  (`ai/architecture/DISTRIBUTION-ARCHITECTURE.md`): GitHub
+  Releases primary, npm opt-in only, with a dispatch-only
+  dry-run-default `publish-npm.yml` and an SBOM generator
+  (`npm run sbom`). Note: the npm name `skillforge` is taken.
+- Accessibility standards (`docs/ACCESSIBILITY-STANDARDS.md`,
+  WCAG 2.2 AA) and a per-skill classification
+  (`sources/accessibility-classification.json`, 228 entries):
+  all 95 applicable skills now carry accessibility content
+  (documentation coverage 100%).
+- Installer integration tests (24, real CLI in temp sandboxes)
+  and real Windows junction tests (12, on the gating Windows CI
+  leg: 9 pass, 3 skip with environment reasons). Test suite grew
+  326 → 663 (Linux CI: 650 pass, 0 fail, 13 skipped; Windows CI:
+  658 pass, 0 fail, 9 skipped).
+
+### Changed
+
+- **Behavior change: the installer now refuses
+  needs-correction skills by default.** A single
+  needs-correction skill requested explicitly is refused with an
+  error naming the skill and its known issue; a bulk install
+  warns and skips the 6, installing the other 271. To install
+  them anyway, pass `--allow-needs-correction`. The six skills
+  (all upstream, files untouched): prisma-upgrade-v7, seo,
+  vercel-composition-patterns, vercel-react-best-practices,
+  vercel-react-view-transitions, web-artifacts-builder.
+- Quality scores improved: flagged skills 115 → 82, mean overall
+  87 → 88, content mean 76.7 → 77.7; accessibility flags 24 → 0.
+  The scorer now counts an explicit "version range: none" as a
+  version statement and reads accessibility applicability from
+  the per-skill classification.
+- `ai/PROJECT-STATUS.json` restructured (canonical / evidence /
+  pending) and kept as the canonical status source, guarded by
+  `check:status` in CI.
+- Scheduled maintenance now has 4 jobs (freshness scoring added)
+  and uploads an upstream change report artifact.
+
+### Fixed
+
+- Astro skill: corrected "no router component" (`<ClientRouter />`
+  exists since `astro@5.0.0`) and the confusing
+  `getStaticPaths()`/`prerender` guidance, verified against the
+  official Astro 7 docs.
+- Removed 116 hardcoded "as of 2026-11-20" dates from skill
+  bodies (36 genuinely historical occurrences kept); version
+  facts now live in frontmatter `last_verified` / the registry,
+  enforced by a validator rule.
+- S-08: installer warnings for the agentic-seo skill now fire on
+  restore paths too (dry-run and real restore), completing
+  warning coverage on every install path.
+- Windows: fixed two CLI main-module guards that could never
+  match on Windows (`quality-trends`, `skill-history`), and
+  corrected the wrong "a junction's target must exist" assumption
+  — junctions dangle like symlinks; the installer now checks
+  targets explicitly (`requireTarget`) on the install path.
+- Scheduled maintenance: the 3 bot-blocked link-check 403s
+  (MW-01) are documented exceptions, and the freshness job now
+  checks out full history so its change dates are real (MW-05).
+
 ## [1.1.0] - 2026-11-21
 
 Production upgrade of the v1.0.0 library, merged to `main` via PR #5
