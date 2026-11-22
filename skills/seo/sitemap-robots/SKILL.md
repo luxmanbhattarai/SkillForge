@@ -63,6 +63,8 @@ responsibilities separate.
   checkout, internal search results, staging paths, API endpoints).
 - Access to Google Search Console (or Bing Webmaster Tools) to submit
   the sitemap and check coverage.
+- Knowledge of the ISO 8601 date format for sitemap `<lastmod>`
+  values.
 
 ## Official Documentation
 

@@ -59,6 +59,8 @@ it makes pages eligible for them and keeps the markup trustworthy.
   listing features were removed in September 2025. A schema.org type
   staying valid does not mean Google still shows the feature — check
   the current search gallery before planning around any type.
+- Knowledge of ISO 8601 date and time formats (dates in markup use
+  ISO 8601).
 
 ## Official Documentation
 

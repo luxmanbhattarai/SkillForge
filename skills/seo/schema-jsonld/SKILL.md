@@ -67,6 +67,8 @@ a page eligible for rich results; it never guarantees them.
   check the current search gallery before adding a type; the
   schema.org type staying valid does not mean Google still shows the
   feature.
+- Knowledge of ISO 8601 date and time formats (dates in markup use
+  ISO 8601).
 
 ## Official Documentation
 

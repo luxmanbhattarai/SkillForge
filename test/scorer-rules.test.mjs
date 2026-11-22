@@ -15,7 +15,7 @@ import { cp, mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { disclosureBonus, hasVersionInfo } from '../scripts/score-skills.mjs';
+import { disclosureBonus, hasVersionInfo, isA11yApplicable } from '../scripts/score-skills.mjs';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -58,7 +58,7 @@ const SECTIONS = [
   'Expected Deliverables', 'References',
 ];
 
-function skillMd({ name = 'fixture-skill', prereq = '', extra = '', padLines = 0 } = {}) {
+function skillMd({ name = 'fixture-skill', category = 'backend', prereq = '', extra = '', padLines = 0 } = {}) {
   const filler = 'Guidance text that makes the body long enough to clear the '
     + 'suspiciously-short check. '.repeat(4);
   let body = '';
@@ -68,11 +68,12 @@ function skillMd({ name = 'fixture-skill', prereq = '', extra = '', padLines = 0
   }
   if (extra) body += `${extra}\n`;
   if (padLines > 0) body += '\n'.repeat(padLines);
-  return `---\nname: ${name}\ndescription: A fixture skill for scorer-rule tests with a description long enough to be valid.\nlicense: MIT\nmetadata:\n  version: "1.0.0"\n  category: backend\n  maintainer: skills-library\n  source: original\n  last_verified: "2026-11-20"\n---\n\n# Fixture Skill\n\n${body}`;
+  return `---\nname: ${name}\ndescription: A fixture skill for scorer-rule tests with a description long enough to be valid.\nlicense: MIT\nmetadata:\n  version: "1.0.0"\n  category: ${category}\n  maintainer: skills-library\n  source: original\n  last_verified: "2026-11-20"\n---\n\n# Fixture Skill\n\n${body}`;
 }
 
 const byPath = (out, name) =>
   out.results.find((r) => r.path === `skills/backend/${name}/SKILL.md`);
+const byRelPath = (out, rel) => out.results.find((r) => r.path === rel);
 
 // --- hasVersionInfo: forms the old rule missed ---------------------
 
@@ -104,6 +105,13 @@ test('hasVersionInfo accepts standards IDs', () => {
   assert.equal(hasVersionInfo('Language tags follow BCP 47.'), true);
   assert.equal(hasVersionInfo('Codes per ISO 639-1.'), true);
   assert.equal(hasVersionInfo('Guidance from NIST SP 800-63.'), true);
+  // 4-digit standards IDs: RFC numbers (caching, rate-limiting,
+  // caching-strategy, technical-seo) and ISO 8601 (schema-jsonld,
+  // sitemap-robots, structured-data). The old \d{1,3} pattern could
+  // not match any of these.
+  assert.equal(hasVersionInfo('Cache-Control per RFC 9111.'), true);
+  assert.equal(hasVersionInfo('Dates use ISO 8601 format.'), true);
+  assert.equal(hasVersionInfo('Robots rules per RFC 9309.'), true);
 });
 
 test('hasVersionInfo keeps the version-range and requires forms', () => {
@@ -111,12 +119,18 @@ test('hasVersionInfo keeps the version-range and requires forms', () => {
   assert.equal(hasVersionInfo('Requires Wrangler 4.'), true);
 });
 
-test('hasVersionInfo rejects "version range: none"', () => {
-  // The Finding 4 cleanup writes "version range: none" into
-  // conceptual skills; the old rule matched the bare words and
-  // cleared the flag. A statement that there is no version range
-  // is not version information.
-  assert.equal(hasVersionInfo('Conceptual skill; version range: none — applies to the latest release.'), false);
+test('hasVersionInfo accepts an explicit "version range: none" declaration', () => {
+  // Finding 6 integration (2026-11-22), reversing the earlier
+  // deliberate choice: the flag surfaces skills that have NOT
+  // addressed versioning, and a skill that honestly declares it
+  // has no versionable dependency (a conceptual skill, or a
+  // managed platform with no pinned version) has addressed it.
+  // Flagging it forever is noise that hides the real gaps. The
+  // bare words "version range" alone still do not count.
+  assert.equal(hasVersionInfo('Conceptual skill; version range: none — applies to the latest release.'), true);
+  assert.equal(hasVersionInfo('Version range: none — Fly.io is a managed platform with no pinned version.'), true);
+  assert.equal(hasVersionInfo('Version range: not applicable to this skill.'), true);
+  assert.equal(hasVersionInfo('See the version range in the release notes.'), false);
 });
 
 test('hasVersionInfo rejects the bare "current stable as of" phrase', () => {
@@ -132,6 +146,30 @@ test('hasVersionInfo rejects dates and ranked lists', () => {
   assert.equal(hasVersionInfo('See the OWASP Top 10 list.'), false);
   assert.equal(hasVersionInfo('No version information here.'), false);
   assert.equal(hasVersionInfo(''), false);
+});
+
+// --- isA11yApplicable: per-skill classification + category fallback --
+
+test('isA11yApplicable follows the per-skill classification where it covers a skill', () => {
+  // Real classification entries (sources/accessibility-classification.json):
+  // fact-checking and image-compression are not-applicable even though
+  // their categories are in the Phase 5 rule; react is applicable.
+  assert.equal(isA11yApplicable('content', 'fact-checking'), false);
+  assert.equal(isA11yApplicable('media', 'image-compression'), false);
+  assert.equal(isA11yApplicable('frontend', 'react'), true);
+  // Desktop is not in the category rule at all, but electron is
+  // applicable per the classification — the file extends coverage.
+  assert.equal(isA11yApplicable('desktop', 'electron'), true);
+  assert.equal(isA11yApplicable('desktop', 'rust'), false);
+});
+
+test('isA11yApplicable falls back to the category rule for unlisted skills', () => {
+  // Historical worktrees predate the classification file; unknown
+  // skills must still get the Phase 5 category answer.
+  assert.equal(isA11yApplicable('frontend', 'no-such-skill'), true);
+  assert.equal(isA11yApplicable('content', 'no-such-skill'), true);
+  assert.equal(isA11yApplicable('backend', 'no-such-skill'), false);
+  assert.equal(isA11yApplicable('database', 'no-such-skill'), false);
 });
 
 // --- disclosureBonus -------------------------------------------------
@@ -219,4 +257,38 @@ test('scorer rewards a long disclosed skill and not a long undisclosed one', asy
   assert.ok(plain < 100, `long undisclosed skill should lose points, got ${plain}`);
   assert.equal(disclosed - plain, 10, 'references/ is worth +10');
   assert.equal(full - plain, 20, 'all folders cap at +20');
+});
+
+// --- End-to-end: accessibility flag follows the classification ------
+
+test('scorer honors a not-applicable classification over the category rule', async (t) => {
+  // A content-category fixture with no accessibility content would be
+  // flagged by the category rule alone; the classification file in the
+  // fixture tree marks it not-applicable, so no flag and no -10.
+  const classification = JSON.stringify({
+    skills: {
+      'content/fixture-na': { applicability: 'not-applicable', reason: 'Fixture.', guidance: 'none' },
+      'content/fixture-yes': { applicability: 'applicable', reason: 'Fixture.', guidance: 'basic' },
+    },
+  });
+  const out = await scoreTree(t, {
+    'sources/accessibility-classification.json': classification,
+    'skills/content/fixture-na/SKILL.md': skillMd({ name: 'fixture-na', category: 'content' }),
+    'skills/content/fixture-yes/SKILL.md': skillMd({ name: 'fixture-yes', category: 'content' }),
+  });
+  const na = byRelPath(out, 'skills/content/fixture-na/SKILL.md');
+  const yes = byRelPath(out, 'skills/content/fixture-yes/SKILL.md');
+  assert.ok(!na.flags.some((f) => f.startsWith('accessibility:')), `N/A skill must not be flagged: ${na.flags}`);
+  assert.ok(yes.flags.includes('accessibility: no accessibility content (applicable category)'));
+  assert.ok(na.dimensions.completeness > yes.dimensions.completeness, 'N/A skill keeps its completeness points');
+});
+
+test('scorer falls back to the category rule without a classification file', async (t) => {
+  // No sources/ file in the fixture tree (as on historical worktrees):
+  // a content skill with no accessibility content is flagged.
+  const out = await scoreTree(t, {
+    'skills/content/fixture-old/SKILL.md': skillMd({ name: 'fixture-old', category: 'content' }),
+  });
+  const r = byRelPath(out, 'skills/content/fixture-old/SKILL.md');
+  assert.ok(r.flags.includes('accessibility: no accessibility content (applicable category)'));
 });

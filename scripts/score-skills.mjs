@@ -47,9 +47,21 @@
 //     350 lines. Small single-file skills still score 100 without
 //     any folder — disclosure is a reward for long skills, never a
 //     tax on short ones.
+//   - Finding 6 integration (2026-11-22): (a) the standards-ID
+//     pattern now accepts 4-digit numbers (RFC 9111, ISO 8601 —
+//     the old \d{1,3} could not match any RFC number); (b) an
+//     explicit "version range: none" declaration now counts as a
+//     version statement — the flag surfaces skills that have not
+//     addressed versioning, and a skill that honestly declares it
+//     has no versionable dependency has addressed it (this
+//     reverses the earlier deliberate choice; see hasVersionInfo);
+//     (c) the accessibility flag now reads the per-skill
+//     classification in sources/accessibility-classification.json
+//     (Phase 8), falling back to the category rule when the file
+//     is absent — e.g. on historical worktrees.
 
 import { readFile } from 'node:fs/promises';
-import { existsSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { splitFrontmatter, parseFrontmatter } from './lib/frontmatter.mjs';
@@ -67,7 +79,36 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SKILLS_DIR = path.join(ROOT, 'skills');
 
 // Categories where accessibility content is applicable (Phase 5 standard).
+// Fallback only: the per-skill classification in
+// sources/accessibility-classification.json (Phase 8, 228 entries) is
+// authoritative where it covers a skill — it is finer-grained than the
+// category rule in both directions (applicable skills exist in auth,
+// seo, testing and other categories the rule never covered; and a few
+// skills in the four categories below are genuinely not applicable,
+// e.g. content/fact-checking). The fallback matters for historical
+// worktrees (quality-trends snapshots) that predate the file.
 const A11Y_CATEGORIES = new Set(['frontend', 'media', 'content', 'metadata']);
+const A11Y_CLASSIFICATION_PATH = path.join(ROOT, 'sources', 'accessibility-classification.json');
+let a11yClassification = null; // null = not loaded yet; {} = unavailable
+function loadA11yClassification() {
+  if (a11yClassification !== null) return a11yClassification;
+  try {
+    a11yClassification = JSON.parse(readFileSync(A11Y_CLASSIFICATION_PATH, 'utf8')).skills || {};
+  } catch {
+    a11yClassification = {};
+  }
+  return a11yClassification;
+}
+// Is accessibility content applicable to this skill? Exported for
+// testing. Classification entry wins when present; otherwise the
+// Phase 5 category rule applies.
+export function isA11yApplicable(category, name) {
+  const entry = loadA11yClassification()[`${category}/${name}`];
+  if (entry && typeof entry.applicability === 'string') {
+    return entry.applicability === 'applicable';
+  }
+  return A11Y_CATEGORIES.has(category);
+}
 
 // (Security patterns live in scripts/lib/security-patterns.mjs;
 // the security dimension uses its 'score' scope via scanLine.)
@@ -103,29 +144,36 @@ const nonEmptyLines = (text) => text.split('\n').filter((l) => l.trim() !== '').
 //   - major-line ranges: 10.x, 6.x (ESLint 10.x, jose 6.x)
 //   - v-prefixed bare majors: v4, v2 (Tailwind v4, Compose v2)
 //   - bare majors on dotted products: Node.js 24, Node.js 26
-//   - standards IDs: BCP 47, ISO 639, SP 800 (all-caps acronym + number)
+//   - standards IDs: BCP 47, ISO 639, SP 800, RFC 9111, ISO 8601
+//     (all-caps acronym + number, up to 4 digits — RFC numbers are
+//     4 digits, and the old \d{1,3} could not match any of them)
 //   - "version range" phrasing and "requires <tool> <n>" forms
+//   - an explicit "version range: none" (or "not applicable")
+//     declaration: the flag surfaces skills that have NOT addressed
+//     versioning, and a skill that honestly declares it has no
+//     versionable dependency — a conceptual skill, or a managed
+//     platform with no pinned version — has addressed it. This
+//     reverses the earlier deliberate choice (which held that
+//     counting "none" would hide the skills the flag is meant to
+//     surface): flagging a skill forever for a version it cannot
+//     have is noise that hides the real gaps. The bare words
+//     "version range" alone still do not count — only the explicit
+//     none / not-applicable declaration, or a digit after the phrase.
 // Deliberately NOT recognised: the bare phrase "current stable as
 // of" (Finding 4 bans it with a date from skill bodies, and without
 // a date it states no version), bare "<Word> <n>" forms such as
 // "May 7" (a calendar date) or "Top 10" (OWASP Top 10) — a generic
 // bare-major pattern cannot tell those from versions, so bare
-// majors only count in the dotted-product and v-prefixed forms —
-// and "version range: none", the honest statement that a conceptual
-// skill has no version range. The old rule matched the bare words
-// "version range", so the phrase alone cleared the flag; the new
-// rule requires a digit after the phrase, so "none" does not.
-// (The Finding 4 cleanup writes "version range: none" into
-// conceptual skills; counting it would hide exactly the skills the
-// flag is meant to surface.)
+// majors only count in the dotted-product and v-prefixed forms.
 export function hasVersionInfo(text) {
   return (
     /\bv?\d+\.\d+(\.\d+)?\b/.test(text) ||
     /\bv?\d+\.x\b/i.test(text) ||
     /\bv\d{1,2}\b/.test(text) ||
     /\b[A-Z][A-Za-z]*\.[a-z]+\s+\d{1,2}\b/.test(text) ||
-    /\b[A-Z]{2,}\s+\d{1,3}\b/.test(text) ||
+    /\b[A-Z]{2,}\s+\d{1,4}\b/.test(text) ||
     /version range[^.\n]*\d/i.test(text) ||
+    /version range\s*:\s*(none|n\/a|not applicable)\b/i.test(text) ||
     /requires?\s+\S+\s+\d/i.test(text)
   );
 }
@@ -183,8 +231,10 @@ function scoreSkill(relPath, text) {
   const desc = (data.description || '').trim();
   if (desc.length >= 50 && desc.length <= 1024) completeness += 10;
   else if (desc.length > 0) completeness += 5;
-  // Accessibility element: applicable categories must mention it.
-  if (A11Y_CATEGORIES.has(category) && !/accessib|wcag|aria|screen reader|keyboard navigat/i.test(body)) {
+  // Accessibility element: applicable skills must mention it.
+  // Applicability is per-skill (Phase 8 classification) with a
+  // category-rule fallback — see isA11yApplicable.
+  if (isA11yApplicable(category, name) && !/accessib|wcag|aria|screen reader|keyboard navigat/i.test(body)) {
     completeness = Math.max(0, completeness - 10);
     flags.push('accessibility: no accessibility content (applicable category)');
   }
