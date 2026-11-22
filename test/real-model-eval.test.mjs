@@ -654,6 +654,54 @@ test('end-to-end: provider errors fail the case as provider-error, not silently'
   }
 });
 
+test('results preserve the model observation (answer, code, tools) for diagnosis', async () => {
+  const dir = tmpdir();
+  try {
+    const dataset = writeDataset(dir, ['SEL-nextjs-001']);
+    const observation = {
+      selectedSkills: ['nextjs'], answer: 'The nextjs skill covers this.',
+      refused: false, refusalReason: null,
+      tools: ['Load nextjs', 'Follow its routing guide'],
+      code: ['export default function Page() { return null; }'],
+      usage: { promptTokens: 100, completionTokens: 50, totalTokens: 150 },
+    };
+    const provider = makeFakeProvider(() => observation);
+    const { report } = await runRealModelEval({
+      providerName: 'gemini', provider, datasetPath: dataset,
+      outDir: path.join(dir, 'out'), delayMs: 0, retryBackoffMs: 1,
+    });
+    assert.equal(report.results.length, 1);
+    // Day 1's compile failures had no record of the code: the
+    // model's own output must survive into the result record.
+    assert.equal(report.results[0].answer, observation.answer);
+    assert.deepEqual(report.results[0].code, observation.code);
+    assert.deepEqual(report.results[0].tools, observation.tools);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('provider-error results keep the call context the error carries (usage, finish reason)', async () => {
+  const dir = tmpdir();
+  try {
+    const dataset = writeDataset(dir, ['SEL-nextjs-001']);
+    const err = new Error('Gemini provider returned non-JSON output: not json');
+    err.usage = { promptTokens: 100, completionTokens: 50, totalTokens: 150 };
+    err.finishReason = 'stop';
+    const provider = makeFakeProvider(() => err);
+    const { report, exitCode } = await runRealModelEval({
+      providerName: 'gemini', provider, datasetPath: dataset,
+      outDir: path.join(dir, 'out'), delayMs: 0, retryBackoffMs: 1,
+    });
+    assert.equal(exitCode, 1);
+    assert.equal(report.results[0].failureCategory, 'provider-error');
+    assert.deepEqual(report.results[0].usage, err.usage);
+    assert.equal(report.results[0].finishReason, 'stop');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('rate-limit: the runner retries a fresh 429 once, then the case passes', async () => {
   const dir = tmpdir();
   const byInput = loadCasesByInput();

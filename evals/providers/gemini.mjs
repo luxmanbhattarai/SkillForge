@@ -339,7 +339,21 @@ export function createGeminiProvider(env = process.env, spawnImpl = spawnHelper)
             ...(finishReason ? { finishReason } : {}),
           };
         }
-        const parsed = extractJsonObject(text, 'Gemini provider');
+        let parsed;
+        try {
+          parsed = extractJsonObject(text, 'Gemini provider');
+        } catch (e) {
+          // The call succeeded but the reply was not JSON: keep the
+          // call context on the error so the runner can record it —
+          // without it, a format failure shows no usage and no finish
+          // reason, and truncation (finish_reason "length") is
+          // indistinguishable from the model choosing prose. Day 1
+          // had 3 such cases with no context at all.
+          if (caseUsage) e.usage = caseUsage;
+          if (finishReason) e.finishReason = finishReason;
+          if (servedModel) e.model = servedModel;
+          throw e;
+        }
         const observation = normalizeObservation(parsed);
         if (caseUsage) observation.usage = caseUsage;
         if (servedModel) observation.model = servedModel;

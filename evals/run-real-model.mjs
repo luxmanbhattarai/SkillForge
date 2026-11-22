@@ -763,6 +763,12 @@ export async function runRealModelEval(options = {}) {
         failureReason: `provider error: ${e.message}`,
         selectedSkills: [], checks: [],
       };
+      // A provider error may still carry call context (usage, finish
+      // reason) — e.g. the Gemini adapter attaches it when the call
+      // succeeded but the reply was not JSON. Record it: it
+      // distinguishes truncation from a format choice.
+      if (e.usage) failed.usage = e.usage;
+      if (typeof e.finishReason === 'string' && e.finishReason) failed.finishReason = e.finishReason;
       failed.critical = isCritical(c, failed);
       const classified = classifyFailure(failed);
       failed.failureCategory = classified.failureCategory;
@@ -790,6 +796,15 @@ export async function runRealModelEval(options = {}) {
       checks: scored.checks,
     };
     if (observation.usage) result.usage = observation.usage;
+    // Preserve what the model actually said and wrote: without it,
+    // a failed check (non-compiling code, a missing must-include
+    // string) cannot be diagnosed retroactively — Day 1's compile
+    // failures had no record of the code. Only the model's own
+    // output is kept (answer, code, tools); the prompt is the case
+    // input, already recorded by id.
+    if (typeof observation.answer === 'string' && observation.answer) result.answer = observation.answer;
+    if (Array.isArray(observation.code) && observation.code.length > 0) result.code = observation.code;
+    if (Array.isArray(observation.tools) && observation.tools.length > 0) result.tools = observation.tools;
     // finish_reason, when the adapter surfaces it (empty-content
     // responses on thinking models end with finish_reason "length").
     if (typeof observation.finishReason === 'string' && observation.finishReason) {

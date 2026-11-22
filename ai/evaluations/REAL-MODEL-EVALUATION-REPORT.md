@@ -598,6 +598,53 @@ plus the 2–3 case smoke test — no other paid calls.
   (dataset: `evals/datasets/real-model-subset-v2-day1.json`,
   first 19 ids of subset v2).
 
+### Day 1 triage (2026-11-22) — what was fixed, what was verified, what is the model
+
+All 15 failures were triaged case by case. The cases are correct;
+the failures are genuine model behavior, except for two harness
+observability gaps (fixed below).
+
+- **Regression cases verified correct against official docs.**
+  `COD-mcp-001`: the official MCP TypeScript SDK docs confirm v2
+  is `@modelcontextprotocol/server` with `registerTool`
+  (`@modelcontextprotocol/sdk` is the v1 package) — the model
+  used the v1 API. `COD-mfa-001`: otplib v13 is a rewrite with
+  no `authenticator` object; the v12 `authenticator.*` calls
+  were removed in favor of the functional API
+  (`generateSecret`, `generate`, `verify`, `generateURI`) — the
+  model used the removed v12 API. Both cases stand unchanged.
+- **Exact-string code checks measure retrieval, not code ability.**
+  `COD-caching-001` (`v1:product`, `ttlSeconds: 300`) and
+  `COD-rate-limiting-001` (`slidingWindowCount`,
+  `windowSeconds`) demand the skill examples' exact identifiers,
+  which a model without the skill text cannot know. Left
+  unchanged: relaxing them mid-run would break Day 1 vs Day 2–5
+  comparability and would look like tuning the eval to the
+  model. They document the retrieval gap.
+- **Selection gaps are the no-retrieval baseline.** The model
+  cannot know 277 skill names it has never seen. The fix is
+  retrieval (skill names/descriptions in the prompt) — a
+  methodology decision for the owner, not a bug fix; it would
+  change what Days 2–5 measure, so it was not applied mid-run.
+- **System prompt left unchanged.** It already says "respond
+  with a single JSON object and nothing else"; there is no
+  evidence a wording tweak fixes the 3 format failures (their
+  reply text was not preserved). Revisit after Days 2–5, when
+  the excerpt fix below shows the actual failure mode.
+- **Harness fixes (committed the same day):**
+  1. `extractJsonObject` keeps a 200-char excerpt of non-JSON
+     replies (Day 1's 3 format failures had no record of what
+     the model said).
+  2. Results now preserve the model's own output (`answer`,
+     `code`, `tools`) — Day 1's compile failures had no record
+     of the code.
+  3. The Gemini adapter attaches usage, finish reason, and the
+     served model to non-JSON parse errors, and the runner
+     records usage + finish reason on provider-error results —
+     so truncation (`length`) is distinguishable from the model
+     choosing prose. Day 1's format failures recorded neither.
+  All three are covered by tests (99 targeted tests pass).
+
 ### Smoke test (2026-11-22 ~01:58 UTC) — the pre-run quota evidence
 
 | Case | Result | Failure |

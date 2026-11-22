@@ -512,6 +512,25 @@ test('gemini: non-JSON model content fails the case like the other adapters', as
   await assert.rejects(() => provider.run(CASE), /non-JSON output/);
 });
 
+test('gemini: non-JSON model content error carries usage, finish reason, and served model', async () => {
+  const { impl } = fakeSpawn([okResult('I refuse to answer in JSON.')]);
+  const provider = createGeminiProvider(GEMINI_ENV(), impl);
+  let caught;
+  try {
+    await provider.run(CASE);
+  } catch (e) {
+    caught = e;
+  }
+  assert.ok(caught, 'the case must fail');
+  assert.match(caught.message, /non-JSON output/);
+  // Day 1's 3 format failures recorded no usage and no finish
+  // reason, so truncation was indistinguishable from the model
+  // choosing prose. The call context must survive the throw.
+  assert.deepEqual(caught.usage, { promptTokens: 11, completionTokens: 7, totalTokens: 18 });
+  assert.equal(caught.finishReason, 'stop');
+  assert.equal(caught.model, 'gemini-3.5-flash');
+});
+
 test('gemini: real spawn path against a fake helper script (no paid call)', async () => {
   const dir = mkdtempSync(path.join(os.tmpdir(), 'skillforge-gemini-spawn-test-'));
   try {
