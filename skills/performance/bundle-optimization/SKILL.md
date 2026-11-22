@@ -13,7 +13,7 @@ metadata:
   category: performance
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Bundle Optimization
@@ -59,7 +59,7 @@ replaced.
 
 ## Official Documentation
 
-- [web.dev — Reduce JavaScript payloads](https://web.dev/) — Google's
+- [web.dev — Reduce JavaScript payloads](https://web.dev/articles/reduce-javascript-payloads-with-code-splitting) — Google's
   guides on code splitting and bundle reduction.
 - [MDN — Web performance](https://developer.mozilla.org/en-US/docs/Web/Performance)
   — browser-neutral reference for loading and parsing costs.
@@ -221,7 +221,7 @@ npx esbuild --analyze=verbose < meta.json
 
 ## References
 
-- [web.dev](https://web.dev/) — reducing JavaScript payloads.
+- [web.dev](https://web.dev/articles/reduce-javascript-payloads-with-code-splitting) — reducing JavaScript payloads.
 - [Rollup](https://rollupjs.org/) — tree-shaking and bundling.
 - [esbuild](https://esbuild.github.io/) — fast bundling and analysis.
 - Related skills in this repository: `javascript-optimization`,

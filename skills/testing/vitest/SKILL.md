@@ -11,7 +11,7 @@ metadata:
   category: testing
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js and a Vite-based or ESM TypeScript project.
 ---
 
@@ -47,8 +47,8 @@ reliable.
 
 ## Prerequisites
 
-- Node.js installed. Node.js 22, 24, and 26 are the active LTS lines
- ; Node.js 20 reached end-of-life on 30 April 2026.
+- Node.js installed. Node.js 22, 24, and 26 are the active LTS lines;
+  Node.js 20 reached end-of-life on 30 April 2026.
   Vitest 5.x is the current major (5.0 released 2026-09-03) and
   requires Node.js >= 22.12 and Vite >= 6.4; Vite is a peer
   dependency in v5, so Yarn users must install `vite` explicitly.
@@ -221,7 +221,7 @@ describe("getDisplayName", () => {
 });
 ```
 
-```json
+```jsonc
 // package.json scripts
 {
   "scripts": {

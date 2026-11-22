@@ -13,7 +13,7 @@ metadata:
   category: performance
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Caching Strategy
@@ -60,7 +60,7 @@ aggressively and safely, and HTML is fresh when it needs to be.
 
 ## Official Documentation
 
-- [web.dev — HTTP caching](https://web.dev/) — Google's guide to
+- [web.dev — HTTP caching](https://web.dev/articles/http-cache) — Google's guide to
   Cache-Control and caching strategies.
 - [MDN — HTTP caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching)
   — the full reference for cache headers and validation.
@@ -188,8 +188,10 @@ aggressively and safely, and HTML is fresh when it needs to be.
 Cache headers for a content-hashed static asset (Node.js/Express).
 The `express.static` options shown work in Express 4 and in
 Express 5 (the current major, which requires Node.js 18+). In
-Express, the `immutable` option only takes effect when `maxAge`
-is greater than zero.
+Express, the `immutable` directive is only meaningful when
+`maxAge` is greater than zero: with `maxAge: 0` the response is
+immediately stale, so there is no fresh lifetime for `immutable`
+to protect.
 
 ```js
 // Hashed filenames are immutable: a changed file gets a new URL.
@@ -243,6 +245,6 @@ curl -I https://example.com/assets/app-9f3c2a1b.js
   — cache headers and validation reference.
 - [MDN — Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)
   — every Cache-Control directive.
-- [web.dev](https://web.dev/) — HTTP caching guides.
+- [web.dev](https://web.dev/articles/http-cache) — HTTP caching guides.
 - Related skills in this repository: `core-web-vitals`,
   `web-performance-audit`, `image-optimization`, `bundle-optimization`.

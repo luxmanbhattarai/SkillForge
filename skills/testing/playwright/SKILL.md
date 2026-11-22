@@ -12,7 +12,7 @@ metadata:
   category: testing
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 compatibility: Requires Node.js and downloads browser binaries on install.
 ---
 

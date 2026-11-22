@@ -12,7 +12,7 @@ metadata:
   category: performance
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Web Performance Audit
@@ -60,7 +60,7 @@ but a plan — what to fix first, why, and how to prove it worked.
 
 ## Official Documentation
 
-- [web.dev — Performance audits](https://web.dev/) — Google's
+- [web.dev — Performance audits](https://web.dev/learn/performance) — Google's
   guidance on measuring and improving web performance.
 - [PageSpeed Insights](https://pagespeed.web.dev/) — field and lab
   data for public URLs.

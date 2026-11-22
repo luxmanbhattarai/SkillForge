@@ -13,7 +13,7 @@ metadata:
   category: security
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Secure Headers
@@ -67,8 +67,9 @@ starting values, and how to verify them.
 - [Helmet](https://helmet.js.org/) — header middleware for
   Express and Node.js. Helmet 8.x is the current line (8.3.0 as of
   November 2026, Node.js 18+). The HSTS option is
-  `strictTransportSecurity` — the old `hsts` option name was
-  removed in Helmet 8 and is silently ignored if used.
+  `strictTransportSecurity` — the old `hsts` name still works as
+  an alias in Helmet 8, but passing both options throws an error,
+  so use only the current name.
 
 ## Required Workflow
 

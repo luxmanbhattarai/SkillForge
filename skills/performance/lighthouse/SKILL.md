@@ -13,7 +13,7 @@ metadata:
   category: performance
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Lighthouse
@@ -64,14 +64,15 @@ ranked by estimated impact — not a single number treated as a verdict.
 
 - [Chrome DevTools — Lighthouse](https://developer.chrome.com/docs/lighthouse)
   — how to run Lighthouse in DevTools and from the command line.
-- [web.dev — Lighthouse](https://web.dev/) — guides on interpreting
+- [web.dev — Lighthouse](https://web.dev/learn/performance) — guides on interpreting
   scores and the audits behind them.
 - [Lighthouse on GitHub](https://github.com/GoogleChrome/lighthouse)
   — source, configuration options, and release notes. Current
-  versions run four categories (performance, accessibility,
-  best-practices, seo); the PWA category and the `--budget-path`
-  LightWallet workflow were removed in earlier majors, so do not
-  use them. Check `lighthouse --help` for the flags your installed
+  versions run five categories (performance, accessibility,
+  best-practices, seo, and agentic-browsing — the last added to
+  the default config in 13.3.0); the PWA category and the
+  `--budget-path` LightWallet workflow were removed in 12.0, so
+  do not use them. Check `lighthouse --help` for the flags your installed
   version accepts.
 
 ## Required Workflow
@@ -225,7 +226,7 @@ npx lighthouse https://example.com/ \
   — running Lighthouse in DevTools and from the CLI.
 - [Lighthouse on GitHub](https://github.com/GoogleChrome/lighthouse)
   — source, configuration, and release notes.
-- [web.dev](https://web.dev/) — guides on interpreting Lighthouse
+- [web.dev](https://web.dev/learn/performance) — guides on interpreting Lighthouse
   audits and scores.
 - Related skills in this repository: `core-web-vitals`,
   `pagespeed-insights`, `web-performance-audit`, `image-optimization`,

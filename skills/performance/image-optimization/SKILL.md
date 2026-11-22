@@ -13,7 +13,7 @@ metadata:
   category: performance
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Image Optimization
@@ -58,7 +58,7 @@ largest contentful paint, and where no image causes layout shift.
 
 ## Official Documentation
 
-- [web.dev — Image optimization](https://web.dev/) — Google's guides
+- [web.dev — Image optimization](https://web.dev/learn/performance/image-performance) — Google's guides
   on formats, responsive images, and lazy loading.
 - [MDN — Responsive images](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Performance/Multimedia)
   — `srcset`, `sizes`, and the `picture` element.
@@ -260,7 +260,7 @@ for (const width of [800, 1200, 1600]) {
 
 ## References
 
-- [web.dev](https://web.dev/) — image optimization guides.
+- [web.dev](https://web.dev/learn/performance/image-performance) — image optimization guides.
 - [MDN — Responsive images](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Performance/Multimedia)
   — `srcset`, `sizes`, and the `picture` element.
 - [Sharp](https://sharp.pixelplumbing.com/) — Node.js image

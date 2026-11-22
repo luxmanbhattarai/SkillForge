@@ -13,7 +13,7 @@ metadata:
   category: performance
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # JavaScript Optimization
@@ -57,7 +57,7 @@ user to notice.
 
 ## Official Documentation
 
-- [web.dev — JavaScript performance](https://web.dev/) — Google's
+- [web.dev — JavaScript performance](https://web.dev/learn/performance) — Google's
   guides on long tasks, code splitting, and third-party scripts.
 - [MDN — Web performance](https://developer.mozilla.org/en-US/docs/Web/Performance)
   — browser-neutral reference for scheduling and loading APIs.
@@ -245,7 +245,7 @@ async function processItems(items) {
 
 ## References
 
-- [web.dev](https://web.dev/) — JavaScript performance guides.
+- [web.dev](https://web.dev/learn/performance) — JavaScript performance guides.
 - [MDN — Web performance](https://developer.mozilla.org/en-US/docs/Web/Performance)
   — scheduling and loading APIs.
 - [MDN — Scheduler API](https://developer.mozilla.org/en-US/docs/Web/API/Scheduler)

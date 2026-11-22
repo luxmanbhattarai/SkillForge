@@ -12,7 +12,7 @@ metadata:
   category: security
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Secrets Management
@@ -165,13 +165,13 @@ rotating them, and responding when one leaks.
 
 ## Examples
 
-```bash
+```text
 # .env (local only, git-ignored) — real values live here, never in git.
 DATABASE_URL=postgres://app-user:<password>@localhost:5432/app
 API_KEY=your-development-key-here
 ```
 
-```bash
+```text
 # .env.example (committed) — names and formats only, no real values.
 DATABASE_URL=postgres://user:<password>@host:5432/database
 API_KEY=your-api-key-here
