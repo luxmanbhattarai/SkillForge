@@ -1,13 +1,14 @@
 # Scheduled-Maintenance Workflow Verification
 
-> **Run conclusion: FAILURE** (2 of 3 jobs passed). This document
-> records the actual outcome of the first-ever execution of
-> `.github/workflows/scheduled-maintenance.yml` on GitHub. The
-> failure is real — the online link job exited 1 — but the three
-> URLs behind it are live: they return HTTP 200 from outside the
-> GitHub runner network. The job failed on runner-IP bot-protection,
-> not on dead links. Nothing here is smoothed over; see §3 and
-> finding MW-01.
+> **Run 1 conclusion: FAILURE** (2 of 3 jobs passed).
+> **Run 2 conclusion: SUCCESS** (4 of 4 jobs passed — see §8).
+> This document records the actual outcomes of the first two
+> executions of `.github/workflows/scheduled-maintenance.yml` on
+> GitHub. Run 1 failed on runner-IP bot-protection, not on dead
+> links (see §3 and finding MW-01, now CLOSED). Run 2 went green
+> end to end after the MW-01 fix — and exposed one new defect in
+> the freshness job's checkout (MW-05, fixed; re-verification in
+> run 3). Nothing here is smoothed over.
 
 - **Phase:** 5 of the SkillForge production-hardening mission
   (Group B).
@@ -19,11 +20,11 @@
 
 > **Note on the working tree:** this verification covers the
 > workflow as committed at `b86b469` and as it ran in
-> 44970737145 (three jobs). Another worker has since added a fourth
-> job (`freshness` — skill freshness scoring, Phase 7) to the file
-> in the working tree. That job did not exist when run 44970737145
-> executed and is not covered by this verification; the next
-> maintenance run will exercise four jobs.
+> 44970737145 (three jobs). A fourth job (`freshness` — skill
+> freshness scoring, Phase 7) was added to the file during the
+> hardening mission and first executed in run 44980101979 (§8),
+> along with the Phase 15 upstream-report steps (JSON report
+> artifact, 30-day retention).
 
 ## 1. The run
 
@@ -162,18 +163,41 @@ invokes.
 
 ## 5. Findings
 
-### MW-01 — Online link job fails on three bot-blocked (403) URLs (Medium)
+### MW-01 — Online link job fails on three bot-blocked (403) URLs (Medium) — CLOSED
 
 `domainlanguage.com/ddd/`, `orval.dev`, `scholar.google.com`
 return 403 to the GitHub runner's requests (after retries and GET
-fallback) while returning 200 everywhere else. They need the same
-treatment as the 45 existing documented exceptions in
-`scripts/check-links.mjs`, or the weekly run will fail every
-Monday on the same three URLs. **Fix owner:** whoever owns
-`scripts/check-links.mjs` (outside Group B's scope — not edited
-here). The exception entries should record the verification
-evidence (200 via curl GET + HEAD, 2026-11-22) the way the
-existing entries do.
+fallback) while returning 200 everywhere else. **Fixed** in
+commit `48d677c`: the three URLs were added to EXCEPTIONS in
+`scripts/check-links.mjs` (all re-verified 200 via curl GET +
+HEAD, 2026-11-22, before excepting — the same treatment as the
+existing exceptions). **Verified fixed** by run 44980101979 (§8):
+the link job passed with 0 errors (609 URLs, 560 checked live,
+49 skipped).
+
+### MW-05 — Freshness job's shallow checkout inflates AGING (Medium) — FIXED, re-verification pending
+
+Run 44980101979's freshness job reported **224 FRESH / 47 AGING /
+6 STALE** with "277 skill(s) changed after their last
+verification date" — but a full-history run at the same tree
+reports **266 FRESH / 5 AGING / 6 STALE** ("175 changed after
+verification"). **Cause (verified by a local shallow-clone
+probe):** the job used the default checkout (`fetch-depth: 1`),
+so `git log` sees only HEAD — and HEAD as a root commit has no
+parent, so its diff lists EVERY file in the tree (1,011 skill
+files in the probe). The scorer's `collectLastChanges` then maps
+every skill to the HEAD date (2026-11-22), after every
+`last_verified`, zeroing the 15-point stability component for all
+277 skills. The job still PASSED (it fails only on CRITICAL, and
+there are 0), but its headline numbers were wrong.
+**Fix** (`f40efb5`): `fetch-depth: 0` on the freshness job's
+checkout, with a comment recording the mechanism (same precedent
+as the Gitleaks job in security-audit.yml). **Re-verification:**
+run 3 (dispatched after the fix lands) must report the
+full-history numbers (266/5/6 at the `278343c` tree). Follow-up
+idea (not implemented): a script-level guard — treat a shallow
+repo (`.git/shallow` present) as unknown history and exclude the
+stability signal, instead of trusting wrong dates.
 
 ### MW-02 — No artifacts: run results live only in logs (Low)
 
@@ -216,12 +240,82 @@ in this phase.
 
 ## 7. Verdict
 
-**PARTIAL.** The workflow itself is sound: permissions,
-triggers, concurrency, timeouts, retries, and error reporting all
-verify as designed, and the failure was surfaced loudly rather
-than swallowed — the run's `failure` conclusion is the system
-working, not the system broken. Two of three jobs passed on the
-first execution. But the run as a whole failed (MW-01), and until
-the three bot-blocked URLs are handled the weekly schedule will
-keep failing on the same false positives. The workflow cannot be
-called fully verified until a run goes green end to end.
+**PASS (after run 2).** Run 1 was PARTIAL: the workflow itself
+was sound (permissions, triggers, concurrency, timeouts, retries,
+and error reporting all verify as designed, and the failure was
+surfaced loudly rather than swallowed), but the run as a whole
+failed on MW-01. Run 2 (§8) went green end to end — all 4 jobs,
+including the first-ever freshness job and the Phase 15
+upstream-report steps — after the MW-01 fix. One defect found in
+run 2 (MW-05, freshness shallow checkout) is fixed in `f40efb5`
+and awaits re-verification in run 3; it did not fail run 2 (the
+job fails only on CRITICAL). The weekly schedule (Mondays 07:00
+UTC) can now run unattended; the first scheduled run is still the
+real proof of the unattended loop.
+
+## 8. Second run — 44980101979 (SUCCESS, 4/4 jobs)
+
+| Field | Value |
+| --- | --- |
+| Run ID | `44980101979` |
+| Workflow | Scheduled maintenance |
+| Event | `workflow_dispatch` (manual dispatch by the coordinator) |
+| Branch | `main` |
+| Commit SHA | `14ec4e7e03d4d711ef8814c61aebadc0aa48099f` (`14ec4e7`, "fix(tests): canonical-head assertion must not hardcode a hash") |
+| Created | 2026-11-22T03:19:33Z |
+| Completed | 2026-11-22T03:24:15Z (~4m 42s wall clock) |
+| Conclusion | **success** |
+| URL | https://github.com/luxmanbhattarai/SkillForge/actions/runs/44980101979 |
+
+### Job results
+
+| Job | Job ID | Result | Duration | Command |
+| --- | --- | --- | --- | --- |
+| Verify links online (`online-links`) | `137078531431` | **passed** | 4m 37s | `node scripts/check-links.mjs --online` |
+| Detect stale skill verification (`stale-verification`) | `137078531373` | passed | 6s | `npm run query -- stale --days 180` |
+| Monitor upstream sources (`upstream`) | `137078531329` | passed | 15s | `npm run check:upstream` (+ `--out` report step, artifact uploaded) |
+| Score skill freshness (`freshness`) | `137078531148` | passed | 7s | `npm run freshness -- --fail-on-critical` |
+
+### Link job — MW-01 verified fixed
+
+```text
+Checking 609 unique external URLs (HEAD requests)...
+Checked 262 internal links; 609 unique external URLs (560 checked live, 49 skipped: example domains / documented exceptions).
+PASS.
+```
+
+0 errors (run 1: 3 errors). The 3 MW-01 URLs are now among the
+documented exceptions (49 skipped vs 45 in run 1); 4 new URLs
+appeared since run 1 (609 vs 605 — new docs added links).
+
+### Freshness job — first execution, passed, numbers wrong (MW-05)
+
+```text
+Freshness report — reference 2026-11-22, commit 14ec4e7 (warn 180d / critical 365d)
+Scored 277 skills: 224 FRESH, 47 AGING, 6 STALE, 0 CRITICAL, 0 UNVERIFIED.
+Note: no --links-report supplied — the external-link signal was excluded for every skill.
+Note: 277 skill(s) changed after their last verification date.
+```
+
+Exit 0 (fails only on CRITICAL; 0 CRITICAL). But the 47 AGING
+is a shallow-checkout artifact — see MW-05. True numbers at the
+same tree (full history): 266 FRESH / 5 AGING / 6 STALE /
+0 CRITICAL, mean 88.3. The 5 true AGING skills:
+platform-social-images, social-preview, twitter-card-images,
+twitter-cards (all 73.5, verified-with-limitations + changed
+after verification) and web-design-guidelines (79.7). The mean
+fell from 95.9 (at `b86b469`) to 88.3 because the hardening
+mission itself edited 175 skills after their `last_verified`
+dates (disclosure migration, accessibility content, date
+cleanup) — the scorer correctly notes the verification no longer
+covers the current content. Those skills' scores recover when
+they are re-verified; bumping `last_verified` without
+re-verification would fabricate verification and was not done.
+
+### Upstream job — all 6 vendors UP-TO-DATE
+
+All 6 pinned vendor repos report "UP-TO-DATE: pinned commit is
+the main head". The Phase 15 report step also ran and uploaded
+the `upstream-change-report` artifact (30-day retention).
+S-14 drift (agentic-seo 50 commits behind live upstream) is
+still reported, unchanged from run 1.
