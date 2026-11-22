@@ -14,7 +14,8 @@
 // is prose or a command, not a reference; a token containing a dot is
 // a filename (e.g. `llms.txt`); a token containing a slash is a repo
 // path and must exist. Anything else must resolve. Skill names win
-// over agent/workflow names on collision (none exists today).
+// over agent/workflow names on collision (two exist: sdk-development
+// and seo-audit — see scripts/check-references.mjs warnings).
 
 export const AGENT_SECTIONS = [
   'Role',

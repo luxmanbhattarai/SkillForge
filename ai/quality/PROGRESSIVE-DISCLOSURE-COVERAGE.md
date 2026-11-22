@@ -74,11 +74,68 @@ Longest 10 at baseline:
 | 404 | `frontend/expo` | needs-disclosure |
 | 400 | `infrastructure/pulumi` | needs-disclosure |
 
+## Final — 2026-11-22 (migration complete)
+
+Measured 2026-11-22 at commit
+`3c5520742ce18a8bfc3c808cc2d30e55806bed6c` (branch
+`feat/production-hardening`), after the migration landed. All 44
+needs-disclosure skills were migrated — **no backlog remains**.
+
+| Metric | Baseline | Final |
+| --- | --- | --- |
+| Original skills measured | 228 | 228 |
+| Median SKILL.md lines (total) | 247 | 247 |
+| Longest SKILL.md | 489 (`desktop/electron`) | 400 (`desktop/electron`) |
+| Shortest SKILL.md | 142 | 142 |
+| Skills with any disclosure folder | **0** | **44** |
+| `references/` | 0 | 28 |
+| `scripts/` | 0 | 12 |
+| `assets/` | 0 | 9 |
+| `examples/` | 0 | 40 |
+| Disclosure files created | 0 | 182 |
+| Lines moved out of SKILL.md bodies | 0 | 2,878 |
+| Over the 300-line budget | 44 | 28 |
+| Over 350 lines | 32 | 8 |
+| Over 400 lines | 9 | 0 |
+| Over 450 lines | 4 | 0 |
+| Over 500 lines | 0 | 0 |
+
+| Status | Baseline | Final |
+| --- | --- | --- |
+| `single-file` | 184 | 184 |
+| `needs-disclosure` | 44 | **0** |
+| `disclosed` | 0 | 16 |
+| `disclosed-over-budget` | 0 | 28 |
+
+The 28 `disclosed-over-budget` skills are honest floors, not
+unfinished work: their remaining bulk is protected content the
+standard keeps in the body (Required Workflow steps, Testing
+Strategy, Security) — e.g. `seo/serp-monitoring`'s Workflow (67
+lines) + Docs (41), `seo/content-decay`'s 11-step diagnostic
+Workflow (65). The migration did not hollow out core guidance to
+chase the number, and did not move Workflow step detail (the
+standard's "stays whole as numbered steps" reading). The 184
+single-file skills were left whole, as the standard requires.
+
+Longest 10 at final:
+
+| Lines | Skill | Status |
+| --- | --- | --- |
+| 400 | `desktop/electron` | disclosed-over-budget |
+| 372 | `desktop/rust` | disclosed-over-budget |
+| 372 | `desktop/tauri` | disclosed-over-budget |
+| 362 | `backend/python-sdk` | disclosed-over-budget |
+| 359 | `infrastructure/self-hosted-vps` | disclosed-over-budget |
+| 358 | `backend/openapi` | disclosed-over-budget |
+| 356 | `backend/advanced-api-architecture` | disclosed-over-budget |
+| 355 | `seo/serp-monitoring` | disclosed-over-budget |
+| 349 | `ai-engineering/ai-agents` | disclosed-over-budget |
+| 345 | `frontend/expo` | disclosed-over-budget |
+
 ## Re-measuring after migration
 
-The migration is done by another worker; this document records the
-baseline the migration is measured against. Re-run after migration
-lands:
+The migration is complete (see Final above). Re-run any time the
+library changes:
 
 ```bash
 node scripts/disclosure-coverage.mjs            # human-readable summary

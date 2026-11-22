@@ -144,14 +144,14 @@ required sections were added).
 | 4 | When to use | `When to Use` |
 | 5 | When not to use | `When Not to Use` (name the alternative) |
 | 6 | Prerequisites | `Prerequisites` |
-| 7 | Supported versions | Required content in `Prerequisites`: version range, or "current stable as of DATE" + release-notes link |
+| 7 | Supported versions | Required content in `Prerequisites`: a version range (or a standards ID, e.g. RFC 9111 / ISO 8601), or an explicit `version range: none` statement for a conceptual skill or a managed platform with no pinned version. Never a hardcoded `as of DATE` in the body — version facts live in frontmatter `last_verified` and the registry (Finding 4) |
 | 8 | Official documentation | `Official Documentation` (real official URLs only) |
 | 9 | Required workflow | `Required Workflow` (numbered, in order) |
 | 10 | Architecture guidance | `Implementation Standards` (subsection where applicable) |
 | 11 | Implementation standards | `Implementation Standards` |
 | 12 | Security requirements | `Security Considerations` |
 | 13 | Performance requirements | `Performance Considerations` |
-| 14 | Accessibility requirements | Accessibility content where the skill's deliverable is user-facing: a `### Accessibility` subsection in `Implementation Standards`, or substantive prose guidance (WCAG / ARIA / screen-reader / keyboard). Required for frontend, media, content, metadata, and desktop skills; other skills include it only where their subject has a user-facing surface, and no N/A statement is required otherwise |
+| 14 | Accessibility requirements | Accessibility content where the skill's deliverable is user-facing: a `### Accessibility` subsection in `Implementation Standards`, or substantive prose guidance (WCAG / ARIA / screen-reader / keyboard). Required where `sources/accessibility-classification.json` marks the skill applicable (95 of 228 as of the Phase 8 pass); other skills include it only where their subject has a user-facing surface, and no N/A statement is required otherwise |
 | 15 | Testing strategy | `Implementation Standards` subsection (how the work is tested) |
 | 16 | Common mistakes | `Common Mistakes` (mistake → correction pairs) |
 | 17 | Correct examples | `Examples` |
@@ -179,15 +179,34 @@ Accessibility pass remains follow-up work, not a blocker; it is
 recorded in `ai/reports/FINAL-REMEDIATION-REPORT.md` §11
 (Element-14 row) and `ai/audits/SKILL-AUDIT-MATRIX.md`.
 
+Note on element 14 (per-skill classification, 2026-11-22, Phase 8):
+the library-wide Accessibility pass is now done — every original
+skill is classified per-skill in
+`sources/accessibility-classification.json` (95 applicable / 133
+not-applicable, each N/A entry reasoned), and all 95 applicable
+skills carry accessibility content (documentation coverage 100%;
+see `ai/quality/ACCESSIBILITY-COVERAGE.md`). The scorer
+(`scripts/score-skills.mjs`) now reads that classification as the
+authority, falling back to the category rule only when the file is
+absent (e.g. on historical worktrees). The category list in the
+row above is superseded by the classification: applicable skills
+exist in auth, seo, testing and other categories the list never
+covered, and a few skills inside the five categories are
+genuinely not applicable.
+
 ## Quality rules (all original skills)
 
 1. **Accurate.** Prioritize official current documentation, then official
    maintainer repositories and migration guides, then standards specs,
    then reputable community resources.
-2. **Current.** Record the verification date in metadata. Never hardcode an
-   old version as the permanent standard; prefer "current stable as of
-   DATE" with a link to official release notes when a version was not
-   verified in-session.
+2. **Current.** Record the verification date in metadata
+   (`last_verified`). Never hardcode an old version as the permanent
+   standard, and never write a hardcoded `as of DATE` into a skill
+   body (Finding 4 — validation fails on it); version facts live in
+   frontmatter and the registry. When a version was not verified
+   in-session, say so in `Prerequisites` ("not verified in-session;
+   check the official release notes") with a link to the official
+   release notes.
 3. **Practical.** Real, valid, minimal examples. No fake APIs, no invented
    package methods or CLI flags, no invented URLs.
 4. **Secure by default.** Examples use secret-manager placeholders, never
