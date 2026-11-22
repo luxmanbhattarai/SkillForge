@@ -206,7 +206,7 @@ npm run freshness           # freshness score + band for every skill
 npm run history -- <skill>  # per-skill changelog from git history
 npm run trends -- snapshot  # versioned quality snapshot (compare with trends:compare)
 npm run score               # quality score for every original skill (0–100)
-npm run test                # unit tests (666 tests, node:test, zero dependencies)
+npm run test                # unit tests (672 tests, node:test, zero dependencies)
 npm run evals               # behavioral evals: 463 cases, deterministic mock agent
 npm run registry            # regenerate registry/ from disk (never hand-edit it)
 npm run report              # coverage + audit report
