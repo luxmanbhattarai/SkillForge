@@ -980,7 +980,14 @@ Nothing was hidden, retried-away, or weakened to pass.
     check runs authenticated (5,000/hr). Both fixes are in the
     commit following `044114c`; verification is the Security
     audit run on the fixed head (run id in the coordinator's
-    final report).
+    final report). **Repeat (same hour):** the coordinator wrote
+    the same heading text into `ai/PROJECT-STATUS.json` in the
+    status sync that recorded this incident — and the piped
+    check (`npm run check:security | tail`) masked the scanner's
+    exit code, so the commit and push went ahead with the
+    finding present (`b7b79d2`). Fixed by rewording in the
+    following commit. The pre-push battery now runs the scanner
+    unpiped (or with `pipefail`): a piped gate is no gate.
 
 **Tests NOT weakened:** the unknown-profile test, the
 permission tests, and the junction tests assert the same
