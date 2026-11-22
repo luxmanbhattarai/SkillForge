@@ -7,7 +7,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { appendFile, cp, mkdtemp, rm } from 'node:fs/promises';
+import { appendFile, cp, mkdtemp, readFile, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { parseFrontmatter } from '../scripts/lib/frontmatter.mjs';
@@ -88,33 +88,42 @@ test('validate passes on the real repo; every warning is upstream-only', async (
 test('validate --strict passes when all warnings are upstream-only', async () => {
   const r = await runValidator(VALIDATOR, ['--strict']);
   assert.equal(r.code, 0, r.stdout + r.stderr);
-  // 4 upstream warnings remain (L-01 fixed the ai-seo off-by-one:
-  // it is exactly 500 lines, not 501).
-  assert.match(r.stdout, /PASS with 4 warning\(s\) \(4 upstream, informational\)\./);
+  // 5 upstream warnings remain (L-01 fixed the ai-seo off-by-one:
+  // it is exactly 500 lines, not 501; the fifth is the genuine
+  // dangling disclosure pointer in prisma-postgres-upgrade, which
+  // references a references/deploy-existing-app.md that was never
+  // imported — upstream files are never edited, so it warns).
+  assert.match(r.stdout, /PASS with 5 warning\(s\) \(5 upstream, informational\)\./);
 });
 
 test('validate --strict fails on a warning on an original skill', async () => {
   const root = await copyRepo();
   try {
-    // Pad an original SKILL.md past the 500-line recommended max
-    // (nextjs is 314 lines; 200 blank lines take it to ~514).
+    // Pad an original SKILL.md past the 500-line recommended max.
     // Blank lines change no other check: no headings, no
-    // placeholders, no links.
-    await appendFile(
-      path.join(root, 'skills', 'frontend', 'nextjs', 'SKILL.md'),
-      '\n'.repeat(200),
-    );
+    // placeholders, no links. The padding is computed from the
+    // file, not hardcoded: a hardcoded 200 broke when the
+    // progressive-disclosure migration shrank nextjs from 330 to
+    // 296 lines (the padded total became 496, under the threshold).
+    const skillPath = path.join(root, 'skills', 'frontend', 'nextjs', 'SKILL.md');
+    const before = await readFile(skillPath, 'utf8');
+    const baseLines = before.split('\n').length - (before.endsWith('\n') ? 1 : 0);
+    const pad = Math.max(10, 501 - baseLines + 10); // 10 lines past the threshold
+    await appendFile(skillPath, '\n'.repeat(pad));
     const copiedValidator = path.join(root, 'scripts', 'validate-skills.mjs');
     const strict = await runValidator(copiedValidator, ['--strict']);
     assert.equal(strict.code, 1, strict.stdout);
-    assert.match(strict.stdout, /FAIL: 0 error\(s\), 5 warning\(s\)\./);
+    assert.match(strict.stdout, /FAIL: 0 error\(s\), 6 warning\(s\)\./);
     // The validator prints platform-native paths (backslashes on
     // Windows); normalize before matching the POSIX form.
-    assert.match(strict.stdout.replace(/\\/g, '/'), /WARN  skills\/frontend\/nextjs\/SKILL\.md: SKILL\.md is 51\d lines/);
+    assert.match(
+      strict.stdout.replace(/\\/g, '/'),
+      new RegExp(`WARN  skills/frontend/nextjs/SKILL\\.md: SKILL\\.md is ${baseLines + pad} lines`),
+    );
     // Non-strict mode still passes: a warning is not an error.
     const plain = await runValidator(copiedValidator);
     assert.equal(plain.code, 0, plain.stdout);
-    assert.match(plain.stdout, /PASS with 5 warning\(s\) \(4 upstream, informational\)\./);
+    assert.match(plain.stdout, /PASS with 6 warning\(s\) \(5 upstream, informational\)\./);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

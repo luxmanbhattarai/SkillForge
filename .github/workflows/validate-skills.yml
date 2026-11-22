@@ -61,6 +61,9 @@ jobs:
       - name: Check agents and workflows
         run: npm run check:agents
 
+      - name: Check dependency and reference integrity
+        run: npm run check:references
+
       - name: Score skill quality
         run: npm run score
 

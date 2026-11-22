@@ -12,6 +12,16 @@ metadata:
   last_verified: "2026-11-20"
 ---
 
+<!-- Progressive disclosure (see docs/PROGRESSIVE-DISCLOSURE.md):
+keep this file short — core instructions + pointers only, budget
+300 lines total. When the body would exceed it, move detail out
+and link to it: references/ for detailed guides, scripts/ for
+reusable code, assets/ for templates and diagrams, examples/ for
+runnable examples. Small skills stay whole in one file; split
+only when the detail earns its place. Every disclosure file must
+be linked from this file (directly or through another linked
+file); unlinked files warn in validation. -->
+
 # Skill Name
 
 ## Purpose
@@ -30,9 +40,13 @@ What this skill is for and what outcome it produces. 2-4 sentences.
 
 - What must exist or be known before following this skill (tools, accounts, project state).
 - Supported versions (required): the version range this skill was
-  verified against, or "current stable as of YYYY-MM-DD" with a link
-  to the official release notes. Never state a version you did not
-  verify.
+  verified against (e.g. "Node.js 24 or 26", "ESLint 10.x"), with a
+  link to the official release notes. Never state a version you did
+  not verify. If the skill is genuinely version-agnostic, write
+  "version range: none" and say why in one sentence — do not date
+  the claim: version facts belong in frontmatter `last_verified`,
+  never as "as of YYYY-MM-DD" in the body (validation fails on
+  hardcoded version dates).
 
 ## Official Documentation
 
@@ -42,7 +56,9 @@ What this skill is for and what outcome it produces. 2-4 sentences.
 ## Required Workflow
 
 Numbered steps the agent must follow, in order. Be specific enough that a
-capable agent can execute without guessing.
+capable agent can execute without guessing. Keep the core workflow in
+the body; if a step needs a long procedure, link to it in
+`references/` instead of inlining it.
 
 1. Step one.
 2. Step two.
@@ -50,8 +66,11 @@ capable agent can execute without guessing.
 ## Implementation Standards
 
 Rules, conventions, and patterns the work must follow. Include version notes
-only for versions verified against official sources; otherwise write
-"current stable as of YYYY-MM-DD" and link to the official release notes.
+only for versions verified against official sources, stated as version
+ranges ("requires X 2.x") — never date a version claim in the body
+("as of YYYY-MM-DD" fails validation; the frontmatter
+`last_verified` date is the single source of truth for when the
+skill was verified).
 Use "must" only for checkable requirements; "should" for recommendations.
 
 ### Architecture

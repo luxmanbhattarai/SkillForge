@@ -69,6 +69,35 @@ jobs:
       - name: List skills not verified in the last 180 days
         run: npm run query -- stale --days 180
 
+  freshness:
+    # Automated skill freshness scoring (Phase 7): scores every
+    # skill on verification recency, status, post-verification
+    # edits, link health, and documentation completeness, and bands
+    # it FRESH / AGING / STALE / CRITICAL / UNVERIFIED (see
+    # ai/quality/SKILL-FRESHNESS.md). The job fails only on CRITICAL
+    # — a skill unverified for over 365 days, one full year. The
+    # threshold is a year rather than the 180-day stale line because
+    # STALE skills today are the known needs-correction upstream
+    # skills, whose fixes belong upstream: failing the weekly job on
+    # them would be noise the maintainers cannot act on. STALE
+    # skills are still listed in the job log for review.
+    name: Score skill freshness
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          # No cache: this repo has zero dependencies and no lockfile,
+          # so there is nothing to cache.
+
+      - name: Score freshness, failing on critical staleness
+        run: npm run freshness -- --fail-on-critical
+
   upstream:
     # Upstream source update monitoring: compares each upstream
     # vendor repo's latest default-branch commit against the pin in
@@ -95,3 +124,23 @@ jobs:
           # makes ~18). It is passed here for the higher rate limit.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run check:upstream
+
+      # Phase 15: the same check in report mode — a JSON change
+      # report (drift, new commits, flagged files) kept as a
+      # run artifact for 30 days so a maintainer can review it
+      # before deciding on a re-import. Report mode only: no
+      # --record-state (the checkout is fresh each run and this job
+      # is read-only; recording state is a maintainer step after
+      # review) and no auto-commit.
+      - name: Generate upstream change report (JSON)
+        env:
+          # The default token only; the script also works without it.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/check-upstream.mjs --out upstream-report.json
+
+      - name: Upload upstream change report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: upstream-change-report
+          path: upstream-report.json
+          retention-days: 30

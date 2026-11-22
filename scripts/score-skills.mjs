@@ -30,9 +30,26 @@
 //   node scripts/score-skills.mjs [--filter <path-prefix>] [--json]
 //   npm run score
 // Exit code 1 if any skill is CRITICAL (security pattern hit), else 0.
+//
+// Output format is stable (see the --json shape at the bottom):
+// rule changes move scores, never the shape, so before/after runs
+// stay comparable. Rule changes are recorded here:
+//   - Finding 6 (2026-11-22): the version-info rule used to miss
+//     "N.x" ranges (10.x, 6.x), v-prefixed majors (v4), bare majors
+//     on dotted products (Node.js 24), and standards IDs (BCP 47) —
+//     20 of the 110 flagged skills had version info the rule could
+//     not see. It also rewarded the bare phrase "current stable as
+//     of", which Finding 4 bans from bodies (with its date) and
+//     which says nothing without one; that reward is removed.
+//   - Finding 1 (2026-11-22): the disclosure bonus now covers all
+//     four disclosure folders (references 10, scripts 5, assets or
+//     examples 5; capped at 20), still only when the body is over
+//     350 lines. Small single-file skills still score 100 without
+//     any folder — disclosure is a reward for long skills, never a
+//     tax on short ones.
 
 import { readFile } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { splitFrontmatter, parseFrontmatter } from './lib/frontmatter.mjs';
@@ -78,6 +95,64 @@ function sections(body) {
 }
 
 const nonEmptyLines = (text) => text.split('\n').filter((l) => l.trim() !== '').length;
+
+// Does the Prerequisites / Official Documentation text state version
+// information? Exported for testing. Recognised forms (each verified
+// against real skills that were wrongly flagged):
+//   - dotted versions: 2.12.7, 1.37.2, v3.1
+//   - major-line ranges: 10.x, 6.x (ESLint 10.x, jose 6.x)
+//   - v-prefixed bare majors: v4, v2 (Tailwind v4, Compose v2)
+//   - bare majors on dotted products: Node.js 24, Node.js 26
+//   - standards IDs: BCP 47, ISO 639, SP 800 (all-caps acronym + number)
+//   - "version range" phrasing and "requires <tool> <n>" forms
+// Deliberately NOT recognised: the bare phrase "current stable as
+// of" (Finding 4 bans it with a date from skill bodies, and without
+// a date it states no version), bare "<Word> <n>" forms such as
+// "May 7" (a calendar date) or "Top 10" (OWASP Top 10) — a generic
+// bare-major pattern cannot tell those from versions, so bare
+// majors only count in the dotted-product and v-prefixed forms —
+// and "version range: none", the honest statement that a conceptual
+// skill has no version range. The old rule matched the bare words
+// "version range", so the phrase alone cleared the flag; the new
+// rule requires a digit after the phrase, so "none" does not.
+// (The Finding 4 cleanup writes "version range: none" into
+// conceptual skills; counting it would hide exactly the skills the
+// flag is meant to surface.)
+export function hasVersionInfo(text) {
+  return (
+    /\bv?\d+\.\d+(\.\d+)?\b/.test(text) ||
+    /\bv?\d+\.x\b/i.test(text) ||
+    /\bv\d{1,2}\b/.test(text) ||
+    /\b[A-Z][A-Za-z]*\.[a-z]+\s+\d{1,2}\b/.test(text) ||
+    /\b[A-Z]{2,}\s+\d{1,3}\b/.test(text) ||
+    /version range[^.\n]*\d/i.test(text) ||
+    /requires?\s+\S+\s+\d/i.test(text)
+  );
+}
+
+// Progressive-disclosure bonus for the maintainability dimension
+// (Finding 1). A folder counts only when it exists AND is non-empty:
+// an empty references/ dir discloses nothing. Exported for testing.
+// Returns { bonus, folders } with bonus capped at 20.
+export function disclosureBonus(skillDir) {
+  const nonEmpty = (dir) => {
+    try {
+      return readdirSync(path.join(skillDir, dir)).length > 0;
+    } catch {
+      return false;
+    }
+  };
+  const folders = [];
+  let bonus = 0;
+  if (nonEmpty('references')) { folders.push('references'); bonus += 10; }
+  if (nonEmpty('scripts')) { folders.push('scripts'); bonus += 5; }
+  if (nonEmpty('assets') || nonEmpty('examples')) {
+    if (nonEmpty('assets')) folders.push('assets');
+    if (nonEmpty('examples')) folders.push('examples');
+    bonus += 5;
+  }
+  return { bonus: Math.min(20, bonus), folders };
+}
 
 function scoreSkill(relPath, text) {
   // Line count that agrees with `wc -l`: split() counts a trailing
@@ -164,7 +239,10 @@ function scoreSkill(relPath, text) {
     freshness = ageDays <= 365 ? 100 : Math.max(0, 100 - Math.floor((ageDays - 365) / 3.65));
   }
   const prereq = (secs.get('Prerequisites') || '') + '\n' + (secs.get('Official Documentation') || '');
-  const versionInfo = /\bcurrent stable as of\b/i.test(prereq) || /\bv?\d+\.\d+(\.\d+)?\b/.test(prereq) || /version range|requires?\s+\S+\s+\d/i.test(prereq);
+  // The flag names Prerequisites because that is where the template
+  // requires supported versions; the check also accepts version info
+  // in Official Documentation (a leniency, not a second requirement).
+  const versionInfo = hasVersionInfo(prereq);
   dims.versioning = Math.round(freshness * 0.5 + (versionInfo ? 50 : 0));
   if (!versionInfo) flags.push('versioning: no version info in Prerequisites');
 
@@ -187,8 +265,15 @@ function scoreSkill(relPath, text) {
   // --- maintainability (length + progressive disclosure) ---
   // Curve aligned to the standard: <500 lines is acceptable, shorter is
   // better. Full marks at <=350 lines, 50 at the 500-line limit, 0 above.
+  // The disclosure bonus (references 10, scripts 5, assets/examples 5,
+  // capped at 20) applies only above 350 lines: a short skill is
+  // already at full marks with or without folders, so small
+  // single-file skills are never punished — and a long skill that
+  // factored its detail out earns some of the length penalty back.
+  // A body over 500 lines still scores low even fully disclosed:
+  // the split is supposed to shorten the body, not decorate it.
   let maintainability = lines <= 350 ? 100 : lines <= 500 ? Math.round(100 - (lines - 350) / 3) : 0;
-  if (lines > 350 && existsSync(path.join(skillDir, 'references'))) maintainability = Math.min(100, maintainability + 10);
+  if (lines > 350) maintainability = Math.min(100, maintainability + disclosureBonus(skillDir).bonus);
   dims.maintainability = maintainability;
 
   // --- overall + caps ---
@@ -201,51 +286,61 @@ function scoreSkill(relPath, text) {
   return { path: relPath, name, category, lines, overall, dimensions: dims, flags };
 }
 
-const files = (await findSkillFiles(SKILLS_DIR))
-  .filter((f) => !f.includes(`${path.sep}upstream${path.sep}`))
-  // Normalized to POSIX separators: the FILTER prefix match and
-  // scoreSkill's category fallback (split('/')[1]) both assume
-  // forward slashes, which a Windows backslash path would break
-  // (Stage D, same class as W-2). No-op on POSIX.
-  .map((f) => toPosixPath(path.relative(ROOT, f)))
-  .filter((rel) => !FILTER || rel.startsWith(FILTER))
-  .sort();
+async function main() {
+  const files = (await findSkillFiles(SKILLS_DIR))
+    .filter((f) => !f.includes(`${path.sep}upstream${path.sep}`))
+    // Normalized to POSIX separators: the FILTER prefix match and
+    // scoreSkill's category fallback (split('/')[1]) both assume
+    // forward slashes, which a Windows backslash path would break
+    // (Stage D, same class as W-2). No-op on POSIX.
+    .map((f) => toPosixPath(path.relative(ROOT, f)))
+    .filter((rel) => !FILTER || rel.startsWith(FILTER))
+    .sort();
 
-const results = [];
-for (const rel of files) {
-  const text = await readFile(path.join(ROOT, rel), 'utf8');
-  results.push(scoreSkill(rel, text));
-}
-
-const critical = results.filter((r) => r.flags.some((fl) => fl.startsWith('CRITICAL')));
-const mean = (arr) => arr.length ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length) : 0;
-const summary = {
-  scored: results.length,
-  meanOverall: mean(results.map((r) => r.overall)),
-  meanDimensions: Object.fromEntries(
-    ['accuracy', 'completeness', 'actionability', 'security', 'testing', 'documentation', 'versioning', 'maintainability']
-      .map((d) => [d, mean(results.map((r) => r.dimensions[d] ?? 0))])),
-  critical: critical.length,
-  lowest: [...results].sort((a, b) => a.overall - b.overall).slice(0, 10).map((r) => ({ path: r.path, overall: r.overall })),
-};
-
-if (JSON_OUT) {
-  console.log(JSON.stringify({ generated: new Date().toISOString().slice(0, 10), summary, results }, null, 2));
-} else {
-  console.log(`Scored ${results.length} original skills (upstream excluded). Mean overall: ${summary.meanOverall}/100.`);
-  console.log('Mean dimensions: ' + Object.entries(summary.meanDimensions).map(([k, v]) => `${k} ${v}`).join(', ') + '.');
-  console.log(`CRITICAL (security pattern hit): ${critical.length}.`);
-  if (critical.length > 0) for (const r of critical) console.log(`  CRITICAL ${r.path}: ${r.flags.filter((f) => f.startsWith('CRITICAL')).join('; ')}`);
-  console.log('\nLowest 10 by overall score:');
-  for (const r of summary.lowest) console.log(`  ${String(r.overall).padStart(3)}  ${r.path}`);
-  const flagged = results.filter((r) => r.flags.length > 0 && !r.flags.some((f) => f.startsWith('CRITICAL')));
-  if (flagged.length > 0) {
-    console.log(`\n${flagged.length} skills with non-critical flags (first 20):`);
-    for (const r of flagged.slice(0, 20)) console.log(`  ${r.path}: ${r.flags.join('; ')}`);
+  const results = [];
+  for (const rel of files) {
+    const text = await readFile(path.join(ROOT, rel), 'utf8');
+    results.push(scoreSkill(rel, text));
   }
-  console.log('\nNote: the accuracy dimension scores checkable proxies only (no placeholders, no broken relative links, https links). It does not verify technical accuracy.');
+
+  const critical = results.filter((r) => r.flags.some((fl) => fl.startsWith('CRITICAL')));
+  const mean = (arr) => arr.length ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length) : 0;
+  const summary = {
+    scored: results.length,
+    meanOverall: mean(results.map((r) => r.overall)),
+    meanDimensions: Object.fromEntries(
+      ['accuracy', 'completeness', 'actionability', 'security', 'testing', 'documentation', 'versioning', 'maintainability']
+        .map((d) => [d, mean(results.map((r) => r.dimensions[d] ?? 0))])),
+    critical: critical.length,
+    lowest: [...results].sort((a, b) => a.overall - b.overall).slice(0, 10).map((r) => ({ path: r.path, overall: r.overall })),
+  };
+
+  if (JSON_OUT) {
+    console.log(JSON.stringify({ generated: new Date().toISOString().slice(0, 10), summary, results }, null, 2));
+  } else {
+    console.log(`Scored ${results.length} original skills (upstream excluded). Mean overall: ${summary.meanOverall}/100.`);
+    console.log('Mean dimensions: ' + Object.entries(summary.meanDimensions).map(([k, v]) => `${k} ${v}`).join(', ') + '.');
+    console.log(`CRITICAL (security pattern hit): ${critical.length}.`);
+    if (critical.length > 0) for (const r of critical) console.log(`  CRITICAL ${r.path}: ${r.flags.filter((f) => f.startsWith('CRITICAL')).join('; ')}`);
+    console.log('\nLowest 10 by overall score:');
+    for (const r of summary.lowest) console.log(`  ${String(r.overall).padStart(3)}  ${r.path}`);
+    const flagged = results.filter((r) => r.flags.length > 0 && !r.flags.some((f) => f.startsWith('CRITICAL')));
+    if (flagged.length > 0) {
+      console.log(`\n${flagged.length} skills with non-critical flags (first 20):`);
+      for (const r of flagged.slice(0, 20)) console.log(`  ${r.path}: ${r.flags.join('; ')}`);
+    }
+    console.log('\nNote: the accuracy dimension scores checkable proxies only (no placeholders, no broken relative links, https links). It does not verify technical accuracy.');
+  }
+
+  // exitCode, not process.exit(): a hard exit discards pending piped
+  // stdout. Natural exit flushes it first (see validate-registry.mjs).
+  process.exitCode = critical.length > 0 ? 1 : 0;
 }
 
-// exitCode, not process.exit(): a hard exit discards pending piped
-// stdout. Natural exit flushes it first (see validate-registry.mjs).
-process.exitCode = critical.length > 0 ? 1 : 0;
+// Main guard: importing this module for hasVersionInfo /
+// disclosureBonus must not trigger a full scoring run.
+const invokedAsScript = process.argv[1]
+  && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (invokedAsScript) {
+  main();
+}
