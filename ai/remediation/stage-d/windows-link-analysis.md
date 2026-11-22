@@ -112,6 +112,19 @@ and what breaks if it is wrong.
    matters if the library disappears mid-run — in which case the junction
    attempt fails and the error is reported.
 
+   > **CORRECTION (2026-11-22, production-hardening mission, proven by
+   > the Windows CI leg on the merge commit): this assumption was
+   > WRONG. On Windows, neither `fs.symlink(..., 'junction')` nor a
+   > directory symlink validates the target at creation time — both
+   > succeed and the link dangles (as on POSIX). The first version
+   > of the `windows-junction` missing-target test asserted ENOENT
+   > and failed on real Windows. The fix: `createLink()` validates
+   > the target itself when the caller passes `requireTarget`
+   > (the install path does; the backup/restore paths deliberately
+   > do not, because they must recreate broken links). The
+   > "target must exist" quirk listed in §1.3 below is likewise
+   > wrong — junctions have no such requirement.
+
 ### 1.3 The symlink-first decision (A-11)
 
 The fallback tries a real directory symlink first and retries as a junction

@@ -603,6 +603,11 @@ export async function stageItem(planned, fsOps = {}) {
         kind: planned.kind,
         platform: fsOps.platform,
         symlinkFn: fsOps.symlink,
+        // A fresh install must never create a dangling link: on
+        // Windows neither a symlink nor a junction validates the
+        // target, so without this a missing source would install
+        // "successfully" and fail only at verification time.
+        requireTarget: true,
       });
     } else if (planned.kind === 'skill') {
       await cp(planned.sourceAbs, staged, { recursive: true });

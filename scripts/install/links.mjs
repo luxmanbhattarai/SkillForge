@@ -36,11 +36,18 @@
 //     (a `\??\` prefix); current libuv strips that prefix in
 //     readlink(), older versions did not — sameLinkTarget() strips
 //     it either way, so the comparison is stable across versions.
-//   * A junction's target must exist at creation time and must be
-//     absolute (Node normalizes a relative target to absolute, but
-//     against the process cwd — createLink resolves it against the
-//     link's parent instead, which is the correct base for a
-//     relative link target).
+//   * A junction's target must be absolute (Node normalizes a
+//     relative target to absolute, but against the process cwd —
+//     createLink resolves it against the link's parent instead,
+//     which is the correct base for a relative link target).
+//     CORRECTION (2026-11-22, proven by the Windows CI leg): the
+//     Stage D assumption that a junction's target must exist at
+//     creation time was WRONG — on Windows, neither a symlink nor
+//     a junction validates the target, so both can be created
+//     dangling (as on POSIX). createLink therefore validates the
+//     target itself when the caller asks (requireTarget); the
+//     backup/restore paths deliberately do NOT ask, because they
+//     must be able to recreate a broken (dangling) link.
 //   * Deleting or renaming a junction affects only the junction,
 //     never its target — the same as a symlink. This is the one
 //     assumption with a catastrophic failure mode if wrong (a
@@ -48,7 +55,7 @@
 //     it is the highest-priority item for the first real-Windows
 //     run; see the analysis fragment.
 
-import { symlink } from 'node:fs/promises';
+import { stat, symlink } from 'node:fs/promises';
 import path from 'node:path';
 
 /** A link could not be created (all attempts failed). */
@@ -81,19 +88,46 @@ export class LinkError extends Error {
  * otherwise get an error. File links cannot be junctions, so they
  * keep the clear privilege error.
  *
- * Only EPERM is retried: any other failure (missing target,
- * existing destination, bad path) would fail the same way as a
- * junction, and retrying would only hide the real error.
+ * Only EPERM is retried: any other failure (existing destination,
+ * bad path) would fail the same way as a junction, and retrying
+ * would only hide the real error. (A missing target is NOT in that
+ * list: on Windows, neither a symlink nor a junction validates the
+ * target at creation time, so a missing target silently produces a
+ * dangling link instead of an error — see requireTarget below.)
  *
  * `platform` and `symlinkFn` are injectable so tests can drive
  * the Windows fallback path on any platform (fault injection —
  * see test/installer.test.mjs). Production callers omit both.
+ * `requireTarget` asks createLink to fail cleanly (LinkError,
+ * no link attempt made) when the target does not exist; it
+ * defaults to false because the backup/restore paths must be
+ * able to recreate a broken (dangling) link. The install path
+ * (stageItem) passes true: a fresh install must never create a
+ * dangling link. `statFn` is the existence check, injectable
+ * alongside `symlinkFn` for tests that use fake paths.
  */
 export async function createLink(
   target,
   linkPath,
-  { kind = 'skill', platform = process.platform, symlinkFn = symlink } = {},
+  { kind = 'skill', platform = process.platform, symlinkFn = symlink, requireTarget = false, statFn = stat } = {},
 ) {
+  if (requireTarget) {
+    // Resolve relative targets against the link's parent — the
+    // same base the junction retry uses, and the base the OS
+    // resolves a relative link target against at use time.
+    const absoluteTarget = path.resolve(path.dirname(linkPath), target);
+    try {
+      await statFn(absoluteTarget);
+    } catch (err) {
+      if (err && err.code === 'ENOENT') {
+        throw new LinkError(`cannot create a link: target does not exist: ${target}`, {
+          cause: err,
+          attempts: [],
+        });
+      }
+      throw err;
+    }
+  }
   const type = kind === 'skill' ? 'dir' : 'file';
   try {
     await symlinkFn(target, linkPath, type);

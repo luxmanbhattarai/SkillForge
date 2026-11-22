@@ -297,35 +297,57 @@ test('junction: target resolution — readlink, readdir, and stat see through a 
   assert.equal((await lstat(linkPath)).isDirectory(), false);
 });
 
-test('junction: creation fails cleanly for a missing target', async (t) => {
+test('junction: a missing target dangles (raw) but createLink with requireTarget fails cleanly', async (t) => {
   if (skipUnlessWindows(t)) return;
   const { base } = await makeSandbox();
   const missing = path.join(base, 'does-not-exist');
 
-  // A junction's target must exist at creation time (unlike a
-  // symlink, which may dangle): the real call fails with ENOENT.
-  await assert.rejects(
-    () => symlink(missing, path.join(base, 'dangling-junction'), 'junction'),
-    (err) => err.code === 'ENOENT',
-  );
+  // CORRECTION (2026-11-22): the Stage D assumption that a
+  // junction's target must exist at creation time was WRONG — on
+  // Windows the real call succeeds and the junction dangles (the
+  // first version of this test asserted ENOENT and failed on the
+  // Windows CI leg). The junction is dangling: readlink returns
+  // the target, stat follows it and fails with ENOENT.
+  const dangling = path.join(base, 'dangling-junction');
+  await symlink(missing, dangling, 'junction');
+  assert.equal(await readlink(dangling), missing);
+  await assert.rejects(() => stat(dangling), (err) => err.code === 'ENOENT');
+  await rm(dangling, { force: true });
 
-  // The same failure through createLink's fallback path: the
-  // symlink attempt fails with EPERM, the real junction retry
-  // fails with ENOENT, and the error reports BOTH attempts.
+  // That is why createLink validates when asked: with
+  // requireTarget, a missing target fails cleanly with a LinkError
+  // before any link attempt is made (attempts []), naming the
+  // target. The install path (stageItem) passes requireTarget, so
+  // a fresh install can never silently create a dangling link.
   await assert.rejects(
     () =>
       createLink(missing, path.join(base, 'dangling-fallback'), {
         kind: 'skill',
         platform: 'win32',
         symlinkFn: epermSymlinkThenRealJunction(),
+        requireTarget: true,
       }),
     (err) => {
       assert.equal(err.name, 'LinkError');
-      assert.deepEqual(err.attempts, ['symlink', 'junction']);
-      assert.match(err.message, /junction fallback also failed/);
+      assert.deepEqual(err.attempts, []);
+      assert.match(err.message, /target does not exist/);
       return true;
     },
   );
+
+  // Without requireTarget the old behavior stands: the link is
+  // created dangling. The backup/restore paths rely on this —
+  // they must be able to recreate a broken link. (Which form is
+  // created depends on the runner's symlink privilege: symlink
+  // where allowed, junction fallback where denied.)
+  const allowed = path.join(base, 'dangling-allowed');
+  const form = await createLink(missing, allowed, {
+    kind: 'skill',
+    platform: 'win32',
+  });
+  assert.ok(form === 'symlink' || form === 'junction', `unexpected form: ${form}`);
+  await assert.rejects(() => stat(allowed), (err) => err.code === 'ENOENT');
+  await rm(allowed, { force: true });
 });
 
 // ---------------------------------------------------------------- destinations
