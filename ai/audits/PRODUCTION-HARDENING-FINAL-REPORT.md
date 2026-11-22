@@ -442,7 +442,7 @@ from the earlier mission stands.
   186 handwritten cases. Provider: deterministic mock agent (no
   LLM APIs).
 
-### Real-model eval (Phase 4) — BLOCKED on quota
+### Real-model evaluation (Phase 4) — BLOCKED on quota
 
 - **Framework complete.** `evals/run-real-model.mjs` (1,043
   lines): per-case checkpointing + resume (32/32 tests), dataset
@@ -951,6 +951,36 @@ Nothing was hidden, retried-away, or weakened to pass.
    (44980945385, main @ `4ea561c`) — the freshness job reported
    266 FRESH / 5 AGING / 6 STALE, exactly the full-history
    numbers. MW-05 CLOSED.
+
+10. **Security audit failure on the final commit (run
+    44981575650, main @ `044114c`) — two independent causes.**
+    (a) The repo's own scanner flagged the final report itself:
+    `HIGH .../PRODUCTION-HARDENING-FINAL-REPORT.md:445 [CODE-01]
+    dynamic code execution` — the old heading read "Real-model
+    eval" followed by " (Phase 4)", which matches the CODE-01
+    pattern (the word "eval" immediately followed by an opening
+    parenthesis, with optional whitespace between). False positive (prose about evaluations,
+    not code), but the rule is the rule: **fix** — reworded to
+    "Real-model evaluation (Phase 4)". (The scanner's own
+    finding line is not quoted verbatim here: it contains the
+    triggering token and would trip the scanner again.) Lesson
+    reinforced: the pre-push battery must include `npm run
+    check:security`, not just `npm test` — the scanner is a
+    separate CI job and the suite does not run it. (b) The Gitleaks job failed with "missing
+    gitleaks license" — NOT a real license requirement (this is
+    a personal-account repo; licenses are only required for
+    organizations). The action calls the GitHub API to check the
+    account type, and that call failed with "API rate limit
+    exceeded" because it ran UNAUTHENTICATED (no GITHUB_TOKEN
+    was passed to the action, so it shared the runner IP's 60/hr
+    budget); unable to determine the account type, the action
+    fail-closed to demanding a license. **Fix** — pass
+    `GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}` to the action
+    step (as the action's own README usage example does), so the
+    check runs authenticated (5,000/hr). Both fixes are in the
+    commit following `044114c`; verification is the Security
+    audit run on the fixed head (run id in the coordinator's
+    final report).
 
 **Tests NOT weakened:** the unknown-profile test, the
 permission tests, and the junction tests assert the same
