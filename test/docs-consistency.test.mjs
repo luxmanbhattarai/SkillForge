@@ -11,8 +11,8 @@
 // needles). These tests cover what check-status does not: version
 // agreement with package.json, stale-branch references in
 // canonical docs, the addendum presence, the real-model-eval
-// honesty guard (no run has ever happened; the status file must
-// never gain an invented evaluation commit), and the Finding 4
+// honesty guard (a claimed run must have a real run id and
+// archive on disk — Day 1 ran 2026-11-22), and the Finding 4
 // guard (no new hardcoded "as of YYYY-MM-DD" version-fact dates
 // in living docs).
 
@@ -117,13 +117,33 @@ test('each reconciled audit report carries the canonical-main addendum with the 
   }
 });
 
-test('PROJECT-STATUS.json records that no real-model evaluation has ever run (never invent one)', async () => {
+test('PROJECT-STATUS.json records the real-model evaluation run honestly (run id + archive must exist)', async () => {
   const status = await readJson('ai/PROJECT-STATUS.json');
   assert.ok(status.evidence, 'PROJECT-STATUS.json must have an evidence section');
-  assert.ok(status.evidence.realModelEval, 'PROJECT-STATUS.json evidence must record the real-model evaluation state');
-  assert.equal(status.evidence.realModelEval.hasRun, false, 'no real-model evaluation has ever run; hasRun must stay false until a real run happens');
-  assert.ok(!('commit' in status.evidence.realModelEval), 'a real-model evaluation commit must not exist until a real run happens');
-  assert.ok(!('runId' in status.evidence.realModelEval), 'a real-model evaluation run id must not exist until a real run happens');
+  const rme = status.evidence.realModelEval;
+  assert.ok(rme, 'PROJECT-STATUS.json evidence must record the real-model evaluation state');
+  // Day 1 ran 2026-11-22 (4/19, gemini-3.5-flash). The honesty guard
+  // now works the other way: a claimed run must have a real artifact.
+  // hasRun must be true, and the run id + archive it names must
+  // resolve to a real file whose own run id and model agree.
+  assert.equal(rme.hasRun, true, 'a real-model evaluation has run (Day 1, 2026-11-22); hasRun must be true');
+  assert.equal(rme.model, 'gemini-3.5-flash', 'the recorded model must be the model that ran');
+  assert.match(rme.runId, /^real-model-gemini-3\.5-flash-\d{8}-\d{6}$/, 'runId must be a real run id for the model that ran');
+  assert.ok(typeof rme.archive === 'string' && rme.archive.length > 0, 'the status must name the run archive file');
+  const archive = await readJson(rme.archive);
+  assert.equal(archive.runId, rme.runId, 'the archive run id must match the status run id');
+  assert.equal(archive.model.requested, 'gemini-3.5-flash', 'the archive must record the model that ran');
+  assert.equal(archive.model.served, 'gemini-3.5-flash', 'the archive must record the model that served');
+  // The archive's git commit is the code that ran: it must be a real
+  // commit on main's history (skipped on shallow CI checkouts).
+  const commit = archive.environment.gitCommit;
+  assert.match(commit, /^[0-9a-f]{40}$/, 'the archive must record the full git commit that ran');
+  try {
+    execFileSync('git', ['merge-base', '--is-ancestor', commit, 'HEAD'], { cwd: ROOT, stdio: 'ignore' });
+  } catch (e) {
+    if (e && e.status === 1) assert.fail(`archive git commit ${commit} is not an ancestor of HEAD`);
+    if (e && typeof e.status === 'number' && e.status !== 0 && e.status !== 128) throw e;
+  }
 });
 
 test('PROJECT-STATUS.json canonical section names main and its verified HEAD', async () => {
