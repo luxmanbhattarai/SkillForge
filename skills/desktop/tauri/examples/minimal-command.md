@@ -4,8 +4,6 @@ A minimal command, its registration, and a frontend call:
 
 ```rust
 // src-tauri/src/lib.rs
-use tauri::{AppHandle, Manager};
-
 #[tauri::command]
 fn greet(name: &str) -> Result<String, String> {
     let name = name.trim();

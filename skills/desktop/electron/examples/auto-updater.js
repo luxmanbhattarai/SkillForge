@@ -1,5 +1,5 @@
 // main.js
-const { autoUpdater } = require("electron");
+const { app, autoUpdater } = require("electron");
 
 autoUpdater.setFeedURL({
   url: "https://update.example.com/darwin/1.0.0",

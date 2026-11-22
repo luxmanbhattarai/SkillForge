@@ -55,6 +55,8 @@ fixes can be targeted instead of guessed.
   DevTools.
 - Knowledge of the expected metadata per page type (which tags each
   template should produce).
+- Version range: none — the skill is tooling-agnostic; use
+  whatever HTML fetcher and parser the project already has.
 
 ## Official Documentation
 

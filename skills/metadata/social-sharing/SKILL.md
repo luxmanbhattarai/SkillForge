@@ -13,7 +13,7 @@ metadata:
   category: metadata
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Social Sharing
@@ -52,6 +52,9 @@ that represents the page well wherever it lands.
   (or the plan to add them).
 - Knowledge of which platforms the audience actually uses.
 - For tracking: the site's analytics setup and UTM conventions.
+- Version range: none — sharing endpoints and tag formats are
+  platform-defined and unversioned; check the platform docs in
+  Official Documentation for current behaviour.
 
 ## Official Documentation
 

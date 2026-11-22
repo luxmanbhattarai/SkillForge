@@ -17,7 +17,7 @@ metadata:
   category: ai-engineering
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # MCP Security
@@ -69,7 +69,7 @@ this one before the server (or client) touches production.
 - A threat model for the deployment: who runs the servers, who
   connects to them, what the tools can reach, and what damage a
   malicious or misused tool could do.
-- The current MCP specification. the current
+- The current MCP specification. The current
   revision is dated 2026-07-28; the TypeScript SDK v2
   (`@modelcontextprotocol/server`) implements it. Check the
   official docs for the current revision before relying on

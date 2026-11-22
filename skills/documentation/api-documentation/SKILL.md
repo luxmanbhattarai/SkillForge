@@ -12,7 +12,7 @@ metadata:
   category: documentation
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # API Documentation
@@ -193,6 +193,7 @@ that actually run — so developers do not have to guess or ask.
 An endpoint reference entry (shown as the markdown source a writer
 would produce, with the code fences the entry itself contains):
 
+````markdown
 ## Get a post
 
 `GET /posts/{id}`
@@ -234,6 +235,7 @@ An error response example:
   }
 }
 ```
+````
 
 ## Validation Checklist
 

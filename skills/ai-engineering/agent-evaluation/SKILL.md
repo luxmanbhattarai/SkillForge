@@ -14,7 +14,7 @@ metadata:
   category: ai-engineering
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Agent Evaluation
@@ -233,7 +233,7 @@ before your users find out.
 
 An eval case file (JSONL, one case per line) for a RAG assistant:
 
-```json
+```jsonl
 {"id": "refunds-001", "category": "refunds", "input": "How long do refunds take?", "expected_contains": ["14 days"], "must_cite": true}
 {"id": "unknown-001", "category": "abstention", "input": "What is the refund policy for lunar hotels?", "expected_behavior": "abstain"}
 ```

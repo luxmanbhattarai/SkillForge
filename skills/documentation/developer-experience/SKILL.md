@@ -56,6 +56,8 @@ and fewer support questions along the way.
 - Knowledge of the current onboarding path (install, setup, first
   success).
 - Authority to change docs, error messages, tooling, or defaults.
+- Conceptual skill; version range: none — applies to any project
+  or API; no tool or version is pinned.
 
 ## Official Documentation
 

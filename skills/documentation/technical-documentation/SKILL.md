@@ -55,6 +55,8 @@ states the facts.
   trying to do.
 - A place for the docs to live (repository folder, docs site, or
   wiki) and a way to publish updates.
+- Conceptual skill; version range: none — applies to any system
+  being documented; no tool or version is pinned.
 
 ## Official Documentation
 
@@ -186,7 +188,7 @@ A how-to page structure:
 After reading this guide, you will have deployed the current
 branch to the staging environment.
 
-## Prerequisites
+## Before you begin
 
 - Access to the staging environment.
 - The project checked out locally.

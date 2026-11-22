@@ -14,7 +14,7 @@ metadata:
   category: metadata
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Dynamic Metadata
@@ -69,12 +69,13 @@ degrades gracefully when a field is empty.
 - [Next.js — Metadata](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)
   — the `generateMetadata` pattern for Next.js 16 App Router.
   App Router only (`generateMetadata`, Next.js 13.2+); the Pages
-  Router sets metadata with `next/head` instead. Next.js 16.4.x
-  is current as of November 2026.
+  Router sets metadata with `next/head` instead. Verified against
+  Next.js 16.4.x; check the Next.js release notes for the current
+  line.
 - [Astro — Docs](https://docs.astro.build/) — Astro 7 documentation,
-  including head and layout patterns. Astro 7.4.x is current as of
-  November 2026; metadata is set with plain tags in a layout's
-  `<head>`.
+  including head and layout patterns. Verified against Astro 7.4.x;
+  check the Astro release notes for the current line. Metadata is
+  set with plain tags in a layout's `<head>`.
 
 ## Required Workflow
 

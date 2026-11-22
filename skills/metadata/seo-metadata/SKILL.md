@@ -13,7 +13,7 @@ metadata:
   category: metadata
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # SEO Metadata
@@ -56,6 +56,9 @@ budget on the right URLs.
 - Knowledge of the site's canonical URL structure (www or not,
   trailing slash or not, http or https).
 - For audits: a list of the site's URLs (sitemap or crawl).
+- Version range: none — the skill follows the search engines'
+  published guidance, which is unversioned; see Official
+  Documentation for the current rules.
 
 ## Official Documentation
 

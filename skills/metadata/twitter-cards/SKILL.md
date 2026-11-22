@@ -13,7 +13,7 @@ metadata:
   category: metadata
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Twitter Cards
@@ -52,6 +52,10 @@ the content — instead of a bare link or a badly cropped image.
   card).
 - Knowledge of the page's canonical URL.
 - The site's X handle, if cards should attribute the site or creator.
+- Version range: none — X Cards has no versioned specification,
+  and X removed its Cards documentation from developer.x.com; the
+  tag limits in this skill are verified against the archived May
+  2025 reference (see Official Documentation).
 
 ## Official Documentation
 
@@ -105,7 +109,7 @@ the content — instead of a bare link or a badly cropped image.
   cause of missing card images.
 - The recommended large-card image size is 1200x600 pixels (2:1,
   per X's documented card specification). A 1200x628 (1.91:1) or
-  1200x630 image is also acceptable, losing only about 14 px top
+  1200x630 image is also acceptable, losing only about 14–15 px top
   and bottom to the 2:1 crop. A large-card image must be at least
   300x157, at most 4096x4096, and under 5 MB; smaller images fall
   back to a small card. A summary-card image must be at least

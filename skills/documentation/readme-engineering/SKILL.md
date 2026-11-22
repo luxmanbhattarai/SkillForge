@@ -13,7 +13,7 @@ metadata:
   category: documentation
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # README Engineering
@@ -52,6 +52,9 @@ understand what the project does — without asking anyone.
 - The project's license, repository URL, and support channels.
 - Knowledge of the project's requirements (runtime, version,
   dependencies).
+- Conceptual skill; version range: none — applies to any project;
+  the runtime and dependency versions belong to the project being
+  documented, not to this skill.
 
 ## Official Documentation
 
@@ -185,6 +188,7 @@ understand what the project does — without asking anyone.
 A minimal README structure (shown as the markdown a writer would
 produce, with the code blocks the README itself contains):
 
+````markdown
 # Project Name
 
 One sentence: what the project is and who it is for.
@@ -227,6 +231,7 @@ See CONTRIBUTING.md.
 ## License
 
 MIT. See LICENSE.
+````
 
 A good one-line description:
 

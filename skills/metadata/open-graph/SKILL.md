@@ -13,7 +13,7 @@ metadata:
   category: metadata
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Open Graph
@@ -55,6 +55,9 @@ a cropped title.
 - Knowledge of the page's canonical URL.
 - A way to test the preview: a sharing debugger or a test post on
   the target platform.
+- Version range: none — the Open Graph protocol is an unversioned
+  specification; see the protocol page in Official Documentation
+  for the current property list.
 
 ## Official Documentation
 
