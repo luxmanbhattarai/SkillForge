@@ -18,6 +18,7 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -129,7 +130,28 @@ test('PROJECT-STATUS.json canonical section names main and its verified HEAD', a
   const status = await readJson('ai/PROJECT-STATUS.json');
   assert.ok(status.canonical, 'PROJECT-STATUS.json must have a canonical section');
   assert.equal(status.canonical.branch, 'main');
-  assert.equal(status.canonical.head, 'b86b4696e518a87edded3f0f55ef0643fd08c3cd');
+  // canonical.head is a "last verified at" pointer: it moves forward
+  // when the battery re-runs at a newer commit, so it must NOT be a
+  // hardcoded hash (the old assertion pinned b86b469 and broke on
+  // the first main advance after the hardening merge). What is
+  // asserted instead: it is a well-formed commit hash, its short
+  // form agrees, and — where the commit resolves locally — it is
+  // an ancestor of HEAD, i.e. a real commit on main's history.
+  // The ancestry check is skipped when git cannot resolve the
+  // commit (shallow CI checkouts carry only the tip commit).
+  const head = status.canonical.head;
+  assert.match(head, /^[0-9a-f]{40}$/, 'canonical.head must be a full commit hash');
+  assert.equal(status.canonical.headShort, head.slice(0, 7), 'headShort must match head');
+  try {
+    execFileSync('git', ['merge-base', '--is-ancestor', head, 'HEAD'], { cwd: ROOT, stdio: 'ignore' });
+  } catch (e) {
+    // Exit 128 = unknown revision (shallow checkout): skip.
+    // Exit 1 = not an ancestor: fail — the pointer is wrong.
+    // Spawn failure (no git): skip.
+    if (e && e.status === 1) assert.fail(`canonical.head ${head} is not an ancestor of HEAD`);
+    if (e && typeof e.status === 'number' && e.status !== 0 && e.status !== 128) throw e;
+  }
+  // The merge commit is history (PR #5, 2026-11-21): immutable.
   assert.equal(status.canonical.mergeCommit, '7b4f6eb7c109867cf9026ff835c9301e6fb3f71d');
   assert.equal(status.branch, 'main');
 });
