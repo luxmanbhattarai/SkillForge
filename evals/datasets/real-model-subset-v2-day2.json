@@ -1,0 +1,30 @@
+{
+ "generated": "2026-11-22",
+ "version": 2,
+ "supersedes": null,
+ "description": "Day 2 slice of real-model-subset-v2: COD-nodejs-001 retry (Day 1 HTTP 503 provider error) + next 19 case ids. Free-tier day 2 (20 req/day on gemini-3.5-flash). Runs WITH retrieval (top-10 candidate skills in the prompt, owner decision 2026-11-22) — the Day 1 condition was no-retrieval, so Day 1 and Day 2+ results must be reported separately.",
+ "selectionRule": "COD-nodejs-001 (Day 1 retry) + ids 20-38 of evals/datasets/real-model-subset-v2.json, in order.",
+ "count": 20,
+ "ids": [
+  "COD-nodejs-001",
+  "DIS-real-debugging-001",
+  "DIS-real-docker-001",
+  "DIS-real-nextjs-001",
+  "DIS-real-playwright-001",
+  "DIS-real-prisma-001",
+  "DIS-real-ratelimit-001",
+  "DIS-real-seo-001",
+  "DIS-real-tailwind-001",
+  "DIS-real-typescript-001",
+  "DIS-real-unittest-001",
+  "DIS-real-workers-001",
+  "ERR-cloudflare-queues-001",
+  "ERR-debugging-001",
+  "GEN-disc-accessibility",
+  "GEN-disc-accessibility-testing",
+  "GEN-disc-advanced-api-architecture",
+  "GEN-disc-aeo-optimization",
+  "GEN-disc-agent-evaluation",
+  "GEN-disc-ai-image-generation"
+ ]
+}
