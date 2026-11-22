@@ -1,0 +1,36 @@
+# Gitleaks configuration for SkillForge.
+#
+# The repository contains deliberate fake secrets: the custom security
+# scanner's own test fixtures (test/*.test.mjs) and documented examples
+# in skill docs. Each allowlisted value below is a known fake, verified
+# by inspection on 2026-11-21 — no real credential is allowlisted.
+# A real secret with any other value still fails the scan.
+#
+# The private-key header string in test/security.test.mjs (SEC-01
+# fixture) is NOT allowlisted: the git-history scan does not flag it
+# (header only, no key body), so no exception is needed.
+
+title = "SkillForge Gitleaks config"
+
+# Extend the built-in rule set: without this, a custom config file
+# REPLACES the default rules entirely (verified 2026-11-21 — a probe
+# secret went undetected until this block was added).
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Known fake secrets: scanner-test fixtures and documented examples"
+regexes = [
+  # Fake API key used as a fixture in the security-scanner tests
+  # (test/security.test.mjs, test/scanner.test.mjs,
+  # test/audit-fixes-c3.test.mjs). Synthetic 16-char string.
+  '''k9f2m8x4q7w1z6p3''',
+  # Fake JWT built from "foo/bar/sig + 1234567890abcdefghijklmnop"
+  # (test/security.test.mjs, SEC-04 test).
+  '''eyJmb28xMjM0NTY3ODkwYWJjZGVmZ2hpamtsbW5vcA\.eyJiYXIxMjM0NTY3ODkwYWJjZGVmZ2hpamtsbW5vcA\.eyJzaWcxMjM0NTY3ODkwYWJjZGVmZ2hpamtsbW5vcA''',
+  # jwt.io public example token (John Doe, iat 1516239022), used in
+  # the SEC-04 test to prove the example is guarded out.
+  '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ\.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c''',
+  # Example Idempotency-Key UUID in skills/backend/api-design/SKILL.md.
+  '''7f3a9c2e-1b4d-4a8e-9c01-2d5f6a7b8c9d''',
+]

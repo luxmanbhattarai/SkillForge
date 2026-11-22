@@ -1,12 +1,13 @@
 name: Security audit
 
-# Local security scan (scripts/security-scan.mjs), Semgrep SAST, plus
-# a dependency audit. Runs on every push/PR and weekly, so newly
-# disclosed issues surface even without code changes. The custom
-# scanner is a pattern-based smoke screen, not SAST — the Semgrep
-# job is the real SAST. CodeQL runs in its own workflow
-# (codeql.yml); GitHub secret scanning and Dependabot alerts are
-# repo settings, not workflow steps — see ai/phase10/NOTES.md.
+# Local security scan (scripts/security-scan.mjs), Semgrep SAST, Gitleaks
+# secret scanning over the full git history, plus a dependency audit.
+# Runs on every push/PR and weekly, so newly disclosed issues surface
+# even without code changes. The custom scanner is a pattern-based
+# smoke screen, not SAST — the Semgrep job is the real SAST. CodeQL
+# runs in its own workflow (codeql.yml); GitHub secret scanning and
+# Dependabot alerts are repo settings, not workflow steps — see
+# ai/phase10/NOTES.md.
 
 on:
   push:
@@ -96,3 +97,27 @@ jobs:
 
       - name: Run Semgrep (p/javascript)
         run: semgrep --config p/javascript --error scripts/ test/ evals/
+
+  gitleaks:
+    # Secret scanning over the full git history: the custom scanner
+    # (security-audit job) scans the working tree only, so a secret
+    # committed and later removed would escape it. Gitleaks scans
+    # every commit (fetch-depth: 0). Known fake secrets (scanner-test
+    # fixtures, documented examples) are allowlisted by exact value
+    # in .gitleaks.toml — verified 2026-11-21, 13 findings triaged,
+    # 0 real secrets. The config extends the default rule set
+    # ([extend] useDefault = true); without it a custom config
+    # replaces the default rules entirely.
+    name: Gitleaks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository (full history)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@dcedce43c6f43de0b836d1fe38946645c9c638dc # v2
+        with:
+          args: detect --source . --redact --verbose

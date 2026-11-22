@@ -160,21 +160,27 @@ copy without checking.
 ## Tools not available locally
 
 The following were checked for on 2026-11-20 and are **not installed**
-in this environment: Semgrep, Gitleaks, TruffleHog, CodeQL. `npm audit`
-does not apply: the repository has zero dependencies and no lockfile,
-so there is nothing to audit. The scanner above plus manual review is
+in this environment: Semgrep, TruffleHog, CodeQL. (Gitleaks was
+downloaded to a scratch directory for a one-off triage on
+2026-11-21 and is not installed either.) `npm audit` does not
+apply: the repository has zero dependencies and no lockfile, so
+there is nothing to audit. The scanner above plus manual review is
 the local story.
 
 On the GitHub side, CodeQL runs via a workflow
 (`.github/workflows/codeql.yml`, advanced setup — do not also enable
-CodeQL default setup) and has run on PR #1 (2026-11-21). GitHub
-secret scanning (with push protection) and Dependabot security
-updates are enabled; branch protection is still not enabled (user
-decision — it would block direct pushes to `main`). 4 of 6
-workflows have run on GitHub (Validate, Lint, Security audit,
-CodeQL); `scheduled-maintenance` and `release` have never run, and
-the Semgrep job added in b619388 is still awaiting its first run —
-do not claim any of those have run until they have.
+CodeQL default setup) and has run green on PRs #1/#4/#5 and on main.
+GitHub secret scanning (with push protection) and Dependabot
+security updates are enabled; branch protection is enabled on
+`main` (2026-11-21): 10 required status checks (strict), force
+pushes and deletions blocked, admins bypass the checks so direct
+pushes still work. 5 of 6 workflows have run on GitHub (Validate,
+Lint, Security audit, CodeQL, Release validation on the v1.1.0
+tag); `scheduled-maintenance` has never run. The Semgrep job runs
+green in CI (0 findings, `p/javascript`), and the Gitleaks job
+scans the full git history on every push/PR (0 findings; 13
+triage findings were all fake test fixtures or documented
+examples, allowlisted by exact value in `.gitleaks.toml`).
 
 ## Files
 

@@ -238,12 +238,14 @@ screen, not SAST (see `docs/SECURITY-SCANNING.md`); real SAST runs
 in CI via the Semgrep job in the security-audit workflow
 (`p/javascript` over `scripts/`, `test/`, `evals/`), 0 findings on
 GitHub (draft PR #4, run 44946197886) and locally (68 rules), and
-Gitleaks/TruffleHog ran clean once in Stage D (2026-11-20) but are
-not in CI. GitHub secret scanning (with push protection) and
-Dependabot security updates are enabled; branch protection is not
-yet enabled (see `ai/phase10/NOTES.md` for the recommended checks).
-All 9 CI checks pass on draft PR #4 (2026-11-21), including the
-Windows leg (330 tests, 325 pass, 0 fail, 5 POSIX-only skipped)
+secret scanning over the full git history runs in CI via the
+Gitleaks job (0 findings; known fake test fixtures are allowlisted
+by exact value in `.gitleaks.toml`). GitHub secret scanning (with
+push protection) and Dependabot security updates are enabled, and
+branch protection is on for `main` (10 required status checks;
+admins bypass them, so direct pushes still work). All 10 CI
+checks pass on main, including the Windows leg (330 tests, 325
+pass, 0 fail, 5 POSIX-only skipped)
 and the first gating Windows runs.
 `scheduled-maintenance` and `release` have never run on GitHub.
 
