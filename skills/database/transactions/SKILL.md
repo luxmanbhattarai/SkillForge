@@ -13,7 +13,7 @@ metadata:
   category: database
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Transactions
@@ -42,6 +42,7 @@ This skill covers correct transaction use: keeping multi-statement writes atomic
 ## Prerequisites
 
 - Knowledge of the target engine's transaction syntax and default isolation level. The defaults differ by engine: PostgreSQL defaults to READ COMMITTED, MySQL/InnoDB defaults to REPEATABLE READ, and SQLite is effectively SERIALIZABLE (one writer at a time). Never assume the default is READ COMMITTED.
+- Supported versions: PostgreSQL 15–19, MySQL 8.4/9.7 LTS, SQLite 3.51 (see the engine skills for version detail).
 - The list of operations that must be atomic, and what "consistent" means for the domain (for example: an order is never created without its items).
 - Access to run the workload against a test database with concurrent clients, to observe locking behaviour.
 - Basic SQL knowledge: `BEGIN`, `COMMIT`, `ROLLBACK`, and `SELECT ... FOR UPDATE`.

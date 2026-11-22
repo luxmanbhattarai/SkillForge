@@ -13,7 +13,7 @@ metadata:
   category: database
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Database Design
@@ -136,6 +136,7 @@ CREATE TABLE books (
   title TEXT NOT NULL,
   price NUMERIC(10, 2) NOT NULL CHECK (price >= 0),
   published_at DATE,
+  review_count INT NOT NULL DEFAULT 0,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

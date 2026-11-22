@@ -14,7 +14,7 @@ metadata:
   category: database
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # OpenSearch
@@ -154,7 +154,7 @@ OpenSearch began in 2021 as a fork of Elasticsearch 7.10.2 and Kibana 7.10.2, af
 
 ## Examples
 
-```json
+```text
 // Example: index with an explicit mapping (text + keyword multi-field,
 // a date, and a keyword for filtering).
 PUT /products
@@ -174,7 +174,7 @@ PUT /products
 }
 ```
 
-```json
+```text
 // Example: bool query — scoring on title, filter (cacheable, unscored)
 // on category and price.
 GET /products/_search
@@ -194,7 +194,7 @@ GET /products/_search
 }
 ```
 
-```json
+```text
 // Example: ISM policy — roll over daily indices, delete after 30 days.
 PUT /_plugins/_ism/policies/logs-policy
 {
@@ -213,7 +213,7 @@ PUT /_plugins/_ism/policies/logs-policy
 }
 ```
 
-```json
+```text
 // Example: snapshot repository (shared filesystem) and a snapshot request.
 PUT /_snapshot/nightly_backups
 {
@@ -228,7 +228,7 @@ PUT /_snapshot/nightly_backups/snapshot-2026-11-20
 }
 ```
 
-```json
+```text
 // Example: PPL query — the same aggregation as the Query DSL example,
 // in Piped Processing Language.
 POST /_plugins/_ppl

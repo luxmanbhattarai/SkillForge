@@ -13,7 +13,7 @@ metadata:
   category: database
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # MongoDB
@@ -121,12 +121,12 @@ This skill covers practical MongoDB use for application developers: modeling dat
 ```js
 // Example: embed bounded data (address), reference unbounded data (orders).
 // A user document:
-{
-  _id: ObjectId("..."),
+const user = {
+  _id: ObjectId("507f1f77bcf86cd799439011"),
   email: "ada@example.com",
   address: { city: "Lisbon", country: "PT" },
   // Orders live in their own collection and reference the user.
-}
+};
 ```
 
 ```js

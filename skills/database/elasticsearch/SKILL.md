@@ -14,7 +14,7 @@ metadata:
   category: database
   maintainer: skills-library
   source: original
-  last_verified: "2026-11-20"
+  last_verified: "2026-11-22"
 ---
 
 # Elasticsearch
@@ -139,7 +139,7 @@ This skill guides the design, implementation, and operation of Elasticsearch for
 
 ## Examples
 
-```json
+```text
 // Example: index with an explicit mapping (text + keyword multi-field,
 // a date, and a keyword for filtering).
 PUT /products
@@ -159,7 +159,7 @@ PUT /products
 }
 ```
 
-```json
+```text
 // Example: bool query — scoring on title, filter (cacheable, unscored)
 // on category and price.
 GET /products/_search
@@ -179,7 +179,7 @@ GET /products/_search
 }
 ```
 
-```json
+```text
 // Example: snapshot repository and a daily snapshot lifecycle policy.
 PUT /_snapshot/nightly_backups
 {
@@ -196,7 +196,7 @@ PUT /_slm/policy/nightly-snapshots
 }
 ```
 
-```json
+```text
 // Example: index lifecycle policy for time-based log indices.
 PUT /_ilm/policy/logs-policy
 {
