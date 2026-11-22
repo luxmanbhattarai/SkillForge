@@ -66,7 +66,7 @@
 //                                 [--out <dir>] [--archive <file>]
 //                                 [--resume <checkpoint.json>]
 //                                 [--delay-ms N] [--retry-backoff-ms N]
-//                                 [--report-only] [--json]
+//                                 [--report-only] [--json] [--no-retrieval]
 //   --provider   registry provider name (default: gemini)
 //   --dataset    subset file (default: evals/datasets/real-model-subset-v2.json)
 //   --out        report directory (default: evals/reports/model/<run-id>/;
@@ -78,6 +78,8 @@
 //   --retry-backoff-ms  pause before a 429 retry (default: 10000)
 //   --report-only  always exit 0 (reporting mode)
 //   --json       print the run summary as JSON instead of text
+//   --no-retrieval  do NOT give the model a candidate skill list
+//                (the Day 1 condition; retrieval is on by default)
 // Exit code 0 = all cases passed (or --report-only); 1 = any case
 // failed; 2 = configuration error, dataset error, case-validation
 // failure, or aborted run (authentication failure — no report).
@@ -96,6 +98,7 @@ import { fileURLToPath } from 'node:url';
 import { atomicWriteFile } from '../scripts/lib/atomic-write.mjs';
 import { resolveProvider, KNOWN_PROVIDERS } from './lib/provider-registry.mjs';
 import { validateCases } from './runners/run-evals.mjs';
+import { MockAgent } from './runners/mock-agent.mjs';
 import { scoreSelection } from './scorers/selection.mjs';
 import { scoreContent } from './scorers/content.mjs';
 import { scoreRefusal } from './scorers/refusal.mjs';
@@ -115,6 +118,10 @@ export const CHECKPOINT_FILENAME = 'checkpoint.json';
 export const DEFAULT_PROVIDER = 'gemini';
 export const DEFAULT_DELAY_MS = 500;
 export const DEFAULT_RETRY_BACKOFF_MS = 10_000;
+// Retrieval candidates per case. 10 covers what the mock's select()
+// (max 5 within 60% of the top score) would pick, with room for the
+// model to discriminate; each candidate costs ~1 line in the prompt.
+export const DEFAULT_RETRIEVAL_TOP_K = 10;
 
 // Provider-specific env defaults, applied (to a copy of env, never
 // to process.env) when the operator has not set the variable. Only
@@ -626,6 +633,16 @@ export async function runRealModelEval(options = {}) {
   const delayMs = options.delayMs ?? DEFAULT_DELAY_MS;
   const retryBackoffMs = options.retryBackoffMs ?? DEFAULT_RETRY_BACKOFF_MS;
   const onProgress = typeof options.onProgress === 'function' ? options.onProgress : null;
+  // Retrieval (default ON since Day 2, 2026-11-22, owner decision):
+  // the runner ranks skills for each case with the same IDF-weighted
+  // keyword retriever the mock agent uses (MockAgent.rank) and gives
+  // the model the top-K candidates to select from. Day 1 ran WITHOUT
+  // retrieval and the model invented skill names (1/7 selection); the
+  // no-retrieval condition is still available via --no-retrieval for
+  // comparison runs. Retrieval uses ONLY the case input — never the
+  // case's expected skill, which would leak the answer.
+  const retrievalEnabled = options.retrieval !== false;
+  const retrievalTopK = options.retrievalTopK ?? DEFAULT_RETRIEVAL_TOP_K;
 
   const dataset = await loadDataset(datasetPath);
   if (dataset.declaredCount !== null && dataset.declaredCount !== dataset.count) {
@@ -643,6 +660,20 @@ export async function runRealModelEval(options = {}) {
   const errors = validateCases(cases, registry);
   if (errors.length > 0) {
     throw new Error(`case validation failed (${errors.length} error(s)): ${errors.join('; ')}`);
+  }
+  // The retriever ranks the registry for each case input. It is the
+  // mock agent's own ranker (IDF-weighted keyword overlap over skill
+  // name + description), so retrieval quality here is the same
+  // retrieval the mock evals measure — the real-model run adds the
+  // model's selection on top of it, it does not invent a second one.
+  const retriever = retrievalEnabled ? new MockAgent(registry) : null;
+  const byName = new Map(registry.skills.map((s) => [s.name, s]));
+  function retrieveCandidates(input) {
+    if (!retriever) return [];
+    return retriever.rank(input).slice(0, retrievalTopK).map((r) => ({
+      name: r.name,
+      description: byName.get(r.name)?.description || '',
+    }));
   }
 
   // Resolve the provider through the registry (or take the injected
@@ -747,6 +778,10 @@ export async function runRealModelEval(options = {}) {
   // skipped entirely — no re-billing, no re-scoring.
   for (const [index, c] of remaining.entries()) {
     if (index > 0 && delayMs > 0) await sleep(delayMs);
+    // Retrieve before the call so the provider-error path can record
+    // the candidates too (a failed call still shows whether retrieval
+    // had found the expected skill).
+    if (retriever) c.retrievedSkills = retrieveCandidates(c.input || '');
     let observation;
     try {
       observation = await runCase(c);
@@ -763,6 +798,7 @@ export async function runRealModelEval(options = {}) {
         failureReason: `provider error: ${e.message}`,
         selectedSkills: [], checks: [],
       };
+      if (c.retrievedSkills) failed.retrievedSkills = c.retrievedSkills.map((s) => s.name);
       // A provider error may still carry call context (usage, finish
       // reason) — e.g. the Gemini adapter attaches it when the call
       // succeeded but the reply was not JSON. Record it: it
@@ -795,6 +831,10 @@ export async function runRealModelEval(options = {}) {
       selectedSkills: observation.selectedSkills || [],
       checks: scored.checks,
     };
+    // The candidates the model chose from: without them, a selection
+    // failure cannot tell retrieval-miss (expected skill not in the
+    // list) from model-miss (it was listed and not picked).
+    if (c.retrievedSkills) result.retrievedSkills = c.retrievedSkills.map((s) => s.name);
     if (observation.usage) result.usage = observation.usage;
     // Preserve what the model actually said and wrote: without it,
     // a failed check (non-compiling code, a missing must-include
@@ -878,6 +918,11 @@ export async function runRealModelEval(options = {}) {
     model,
     providerMeta: provider.meta || null,
     providerEnvDefaultsApplied: envDefaultsApplied,
+    retrieval: {
+      enabled: retrievalEnabled,
+      topK: retrievalEnabled ? retrievalTopK : 0,
+      method: 'IDF-weighted keyword overlap over skill name + description (MockAgent.rank); candidates listed in the user message, model selects only from them',
+    },
     dataset: {
       file: dataset.file,
       version: dataset.version,
@@ -961,13 +1006,14 @@ function flagInt(name, fallback) {
 async function main() {
   if (args.includes('--help') || args.includes('-h')) {
     console.log([
-      'Usage: node evals/run-real-model.mjs [--provider <name>] [--dataset <path>] [--out <dir>] [--archive <file>] [--resume <checkpoint>] [--delay-ms N] [--retry-backoff-ms N] [--report-only] [--json]',
+      'Usage: node evals/run-real-model.mjs [--provider <name>] [--dataset <path>] [--out <dir>] [--archive <file>] [--resume <checkpoint>] [--delay-ms N] [--retry-backoff-ms N] [--report-only] [--json] [--no-retrieval]',
       '',
       'Runs the real-model evaluation subset against a live model provider.',
       `Providers (via evals/lib/provider-registry.mjs): ${KNOWN_PROVIDERS.join(', ')}. Default: ${DEFAULT_PROVIDER}.`,
       'Default dataset: evals/datasets/real-model-subset-v2.json (89 cases).',
       'Default output: evals/reports/model/<run-id>/ (latest.json + latest.md).',
       'After every case, <out>/checkpoint.json is updated; --resume <checkpoint> continues an interrupted run.',
+      'Retrieval is ON by default: each case gets the top-10 candidate skills (IDF-weighted keyword match) in its prompt. --no-retrieval runs the Day 1 condition instead.',
       'Exit code 0 = all cases passed (or --report-only); 1 = any case failed; 2 = configuration, dataset, or aborted-run error.',
     ].join('\n'));
     return;
@@ -984,6 +1030,7 @@ async function main() {
       delayMs: flagInt('--delay-ms', DEFAULT_DELAY_MS),
       retryBackoffMs: flagInt('--retry-backoff-ms', DEFAULT_RETRY_BACKOFF_MS),
       reportOnly: args.includes('--report-only'),
+      retrieval: !args.includes('--no-retrieval'),
       // Progress goes to stderr so --json stdout stays parseable.
       onProgress: ({ completed, total, id, pass, score, emptyResponse, failureCategory }) => {
         console.error(`[${completed}/${total}] ${id} ${pass ? `pass (${score})` : `FAIL (${score})${failureCategory ? ` ${failureCategory}` : ''}`}${emptyResponse ? ' [empty response]' : ''}`);

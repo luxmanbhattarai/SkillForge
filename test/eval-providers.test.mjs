@@ -14,7 +14,8 @@ import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'no
 import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
-import { parseRetryAfter, MODEL_SYSTEM_PROMPT } from '../evals/providers/shared.mjs';
+import { fileURLToPath } from 'node:url';
+import { parseRetryAfter, MODEL_SYSTEM_PROMPT, buildUserMessage } from '../evals/providers/shared.mjs';
 import { createOpenAIProvider, isOpenAIConfigured, parseOpenAIConfig } from '../evals/providers/openai.mjs';
 import { createAnthropicProvider, isAnthropicConfigured, parseAnthropicConfig } from '../evals/providers/anthropic.mjs';
 import { createGeminiProvider, isGeminiConfigured, parseGeminiConfig, GEMINI_MODEL } from '../evals/providers/gemini.mjs';
@@ -82,6 +83,8 @@ const anthropicMessage = (text, usage) => ({
 const GEMINI_TMP = mkdtempSync(path.join(os.tmpdir(), 'skillforge-gemini-test-'));
 const DUMMY_HELPER = path.join(GEMINI_TMP, 'gemini_chat.py');
 writeFileSync(DUMMY_HELPER, '# dummy helper for tests — never executed\n');
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 after(() => rmSync(GEMINI_TMP, { recursive: true, force: true }));
 
 const GEMINI_ENV = (extra = {}) => ({
@@ -136,6 +139,30 @@ test('parseRetryAfter: delay-seconds, HTTP-date, and unparseable values', () => 
 test('adapters share one system prompt (same instructions, every provider)', () => {
   assert.match(MODEL_SYSTEM_PROMPT, /respond with a single JSON object/);
   assert.match(MODEL_SYSTEM_PROMPT, /SkillForge skills library/);
+});
+
+test('the two MODEL_SYSTEM_PROMPT copies stay identical (shared + legacy provider)', () => {
+  const shared = readFileSync(path.join(ROOT, 'evals/providers/shared.mjs'), 'utf8');
+  const legacy = readFileSync(path.join(ROOT, 'evals/runners/providers.mjs'), 'utf8');
+  const extract = (text) => {
+    const m = text.match(/MODEL_SYSTEM_PROMPT = \[([\s\S]*?)\]\.join\('\\n'\);/);
+    assert.ok(m, 'MODEL_SYSTEM_PROMPT literal not found');
+    return m[1].trim();
+  };
+  assert.equal(extract(legacy), extract(shared), 'the legacy provider copy must match shared.mjs line for line');
+  assert.match(MODEL_SYSTEM_PROMPT, /candidate skill list/);
+});
+
+test('buildUserMessage: bare input without candidates, candidate list with them', () => {
+  assert.equal(buildUserMessage({ input: 'Do the thing.' }), 'Do the thing.');
+  assert.equal(buildUserMessage({ input: 'Do the thing.', retrievedSkills: [] }), 'Do the thing.');
+  const msg = buildUserMessage({ input: 'Do the thing.', retrievedSkills: [
+    { name: 'alpha-skill', description: 'Does alpha things.' },
+    { name: 'beta-skill', description: '' },
+  ]});
+  assert.ok(msg.startsWith('Do the thing.\n\nCandidate skills (select ONLY from this list; use the exact names):\n'));
+  assert.ok(msg.includes('- alpha-skill: Does alpha things.'));
+  assert.ok(msg.includes('- beta-skill:'));
 });
 
 // ---- OpenAI ---------------------------------------------------------
@@ -425,6 +452,20 @@ test('gemini: spawns the helper with the eval args, parses the response, records
   assert.equal(usage.totalTokens, 18);
   assert.deepEqual(usage.servedModels, { 'gemini-3.5-flash': 1 });
   assert.equal(usage.emptyResponses, 0);
+});
+
+test('gemini: retrieved candidates are listed in the user message', async () => {
+  const { impl, calls } = fakeSpawn([okResult(JSON.stringify(MODEL_REPLY))]);
+  const provider = createGeminiProvider(GEMINI_ENV(), impl);
+  await provider.run({ ...CASE, retrievedSkills: [
+    { name: 'alpha-skill', description: 'Does alpha things.' },
+    { name: 'beta-skill', description: 'Does beta things.' },
+  ]});
+  const messages = JSON.parse(calls[0].input);
+  assert.equal(messages[1].role, 'user');
+  assert.ok(messages[1].content.startsWith(CASE.input + '\n\nCandidate skills (select ONLY from this list; use the exact names):'));
+  assert.ok(messages[1].content.includes('- alpha-skill: Does alpha things.'));
+  assert.ok(messages[1].content.includes('- beta-skill: Does beta things.'));
 });
 
 test('gemini: empty content with finish_reason=length is an empty response, not a crash or a retry', async () => {

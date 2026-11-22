@@ -34,6 +34,7 @@
 import {
   DEFAULT_TIMEOUT_MS, DEFAULT_MAX_RETRIES, DEFAULT_RETRY_DELAY_MS,
   MODEL_SYSTEM_PROMPT,
+  buildUserMessage,
   parsePositiveInt, parseNonNegativeInt,
   missingEnvVars, warnPlaintextHttp,
   createUsageTracker, postJsonWithRetry,
@@ -113,7 +114,7 @@ export function createLocalProvider(env = process.env, fetchImpl = globalThis.fe
         temperature: 0,
         messages: [
           { role: 'system', content: MODEL_SYSTEM_PROMPT },
-          { role: 'user', content: evalCase.input },
+          { role: 'user', content: buildUserMessage(evalCase) },
         ],
       };
       if (config.maxTokens !== undefined) body.max_tokens = config.maxTokens;

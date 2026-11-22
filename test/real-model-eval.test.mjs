@@ -111,7 +111,11 @@ function makeFakeFetch(handler, servedModel = 'fake-model-2026-01-01') {
 // refusal flag) with compilable code where the case wants code.
 function goodModelHandler(byInput) {
   return (requestBody) => {
-    const input = requestBody.messages.find((m) => m.role === 'user').content;
+    const content = requestBody.messages.find((m) => m.role === 'user').content;
+    // The user message may carry the retrieved candidate list after
+    // the task input; the lookup key is the task input alone.
+    const marker = content.indexOf('\n\nCandidate skills (');
+    const input = marker >= 0 ? content.slice(0, marker) : content;
     return goodObservation(byInput, input);
   };
 }
@@ -174,6 +178,9 @@ function writeStubHelper(dir, responses, emptyInputs = []) {
     '        f.write(json.dumps(sys.argv) + "\\n")',
     '    msgs = json.load(sys.stdin)',
     '    user = next(m["content"] for m in msgs if m.get("role") == "user")',
+    '    # The user message may carry the retrieved candidate list',
+    '    # after the task input; the lookup key is the task input alone.',
+    '    user = user.split("\\n\\nCandidate skills (", 1)[0]',
     '    if user in EMPTY:',
     '        out = {"choices": [{"message": {"content": ""}, "finish_reason": "length"}], "model": "gemini-3.5-flash", "usage": {"prompt_tokens": 100, "completion_tokens": 0, "total_tokens": 100}}',
     '    else:',
@@ -697,6 +704,82 @@ test('provider-error results keep the call context the error carries (usage, fin
     assert.equal(report.results[0].failureCategory, 'provider-error');
     assert.deepEqual(report.results[0].usage, err.usage);
     assert.equal(report.results[0].finishReason, 'stop');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('retrieval is on by default: the provider gets candidates, results record them, the report names the method', async () => {
+  const dir = tmpdir();
+  try {
+    const dataset = writeDataset(dir, ['COD-nodejs-001']);
+    let seenCase;
+    const provider = makeFakeProvider((evalCase) => {
+      seenCase = evalCase;
+      return {
+        selectedSkills: ['nodejs'], answer: 'Use the nodejs skill.',
+        refused: false, refusalReason: null, tools: [], code: [],
+        usage: { promptTokens: 100, completionTokens: 50, totalTokens: 150 },
+      };
+    });
+    const { report } = await runRealModelEval({
+      providerName: 'gemini', provider, datasetPath: dataset,
+      outDir: path.join(dir, 'out'), delayMs: 0, retryBackoffMs: 1,
+    });
+    assert.equal(report.retrieval.enabled, true);
+    assert.equal(report.retrieval.topK, 10);
+    assert.match(report.retrieval.method, /MockAgent\.rank/);
+    // The provider received name+description candidates, built from
+    // the case input only — never from the expected skill.
+    assert.ok(Array.isArray(seenCase.retrievedSkills));
+    assert.ok(seenCase.retrievedSkills.some((s) => s.name === 'nodejs'), 'the expected skill must be among the retrieved candidates');
+    assert.equal(typeof seenCase.retrievedSkills[0].description, 'string');
+    const result = report.results[0];
+    assert.ok(result.retrievedSkills.includes('nodejs'));
+    assert.ok(result.retrievedSkills.length <= 10);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('retrieval: false runs the Day 1 condition (no candidates anywhere)', async () => {
+  const dir = tmpdir();
+  try {
+    const dataset = writeDataset(dir, ['COD-nodejs-001']);
+    let seenCase;
+    const provider = makeFakeProvider((evalCase) => {
+      seenCase = evalCase;
+      return {
+        selectedSkills: [], answer: 'No skill.', refused: false,
+        refusalReason: null, tools: [], code: [],
+        usage: { promptTokens: 100, completionTokens: 50, totalTokens: 150 },
+      };
+    });
+    const { report } = await runRealModelEval({
+      providerName: 'gemini', provider, datasetPath: dataset,
+      outDir: path.join(dir, 'out'), delayMs: 0, retryBackoffMs: 1,
+      retrieval: false,
+    });
+    assert.equal(report.retrieval.enabled, false);
+    assert.equal(report.retrieval.topK, 0);
+    assert.ok(!seenCase.retrievedSkills);
+    assert.ok(!('retrievedSkills' in report.results[0]));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('provider-error results still record the retrieved candidates', async () => {
+  const dir = tmpdir();
+  try {
+    const dataset = writeDataset(dir, ['COD-nodejs-001']);
+    const provider = makeFakeProvider(() => new Error('Gemini provider HTTP 503: model overloaded'));
+    const { report } = await runRealModelEval({
+      providerName: 'gemini', provider, datasetPath: dataset,
+      outDir: path.join(dir, 'out'), delayMs: 0, retryBackoffMs: 1,
+    });
+    assert.equal(report.results[0].failureCategory, 'provider-error');
+    assert.ok(report.results[0].retrievedSkills.includes('nodejs'));
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

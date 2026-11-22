@@ -27,6 +27,7 @@
 import {
   DEFAULT_TIMEOUT_MS, DEFAULT_MAX_RETRIES, DEFAULT_RETRY_DELAY_MS,
   MODEL_SYSTEM_PROMPT,
+  buildUserMessage,
   parsePositiveInt, parseNonNegativeInt, parseNonNegativeNumber,
   missingEnvVars, warnPlaintextHttp,
   createUsageTracker, postJsonWithRetry,
@@ -113,7 +114,7 @@ export function createAnthropicProvider(env = process.env, fetchImpl = globalThi
         temperature: 0,
         system: MODEL_SYSTEM_PROMPT,
         messages: [
-          { role: 'user', content: evalCase.input },
+          { role: 'user', content: buildUserMessage(evalCase) },
         ],
       };
 

@@ -75,6 +75,33 @@ default), checkpoints after every case, and resumes with
 aggregate dimensions, and failure classification are documented
 in `ai/evaluations/REAL-MODEL-EVALUATION-REPORT.md` §4.1.
 
+### Retrieval (candidate skills)
+
+Since Day 2 of the multi-day run (2026-11-22, owner decision), the
+runner gives the model a candidate skill list with each case. Day 1
+ran without one and the model invented plausible skill names
+(`seo-content-strategy`, `node-js`, `k6`) instead of selecting from
+the library — skill selection was 1/7 (14.3%). Retrieval is the
+fix: for each case, the runner ranks the registry with the mock
+agent's own IDF-weighted keyword retriever (`MockAgent.rank`, over
+skill name + description) and appends the top 10 candidates
+(name + description) to the user message; the system prompt tells
+the model to select ONLY from that list (or return an empty list
+if none apply). Retrieval uses ONLY the case input — never the
+case's expected skill, which would leak the answer.
+
+Measured baseline (2026-11-22, before Day 2): the expected skill is
+in the top 10 for 44/44 (100%) of the subset cases that have
+expected skills, and in the top 5 for 44/44 as well — so from Day 2
+on, a selection failure is a model failure (the right skill was
+listed and not picked), not a retrieval failure. Each result records
+its `retrievedSkills` (names only) for that diagnosis, and the
+report records the retrieval settings under `retrieval`
+(`enabled`, `topK`, `method`). `--no-retrieval` runs the Day 1
+condition for comparison. Day 1 and Days 2–5 are different
+conditions and must be reported separately — see the Phase 4
+report §9.
+
 ### Configuration
 
 | Variable | Required | Default | Meaning |

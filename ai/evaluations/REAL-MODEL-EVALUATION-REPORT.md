@@ -552,6 +552,20 @@ plus the 2–3 case smoke test — no other paid calls.
 > and cost, and known limitations. The machine-readable records
 > live at
 > `ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-22-day<N>.json`.
+>
+> **Methodology change from Day 2 (owner decision, 2026-11-22):**
+> Day 1 ran WITHOUT retrieval — the model saw only the task and
+> had to name skills from memory (it invented names; selection
+> 1/7). From Day 2, each case carries the top-10 candidate
+> skills (IDF-weighted keyword retrieval over skill name +
+> description, `MockAgent.rank`; candidates listed in the user
+> message, model selects only from them; `--no-retrieval`
+> reproduces the Day 1 condition). Measured baseline before
+> Day 2: the expected skill is in the top 10 for 44/44 (100%)
+> of the subset cases with expected skills. **Day 1 and
+> Days 2–5 are different conditions and must be reported
+> separately** — do not pool their pass rates into one number
+> without saying so.
 
 ### Day 1 (2026-11-22) — 19 cases, `gemini-3.5-flash`
 

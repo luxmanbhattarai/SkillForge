@@ -63,6 +63,7 @@ import { homedir } from 'node:os';
 import { basename, join } from 'node:path';
 import {
   MODEL_SYSTEM_PROMPT,
+  buildUserMessage,
   parsePositiveInt, parseNonNegativeInt,
   sleep,
   createUsageTracker,
@@ -234,7 +235,7 @@ export function createGeminiProvider(env = process.env, spawnImpl = spawnHelper)
       usage.recordRequest();
       const messages = [
         { role: 'system', content: MODEL_SYSTEM_PROMPT },
-        { role: 'user', content: evalCase.input },
+        { role: 'user', content: buildUserMessage(evalCase) },
       ];
       const args = [
         config.helperPath,
