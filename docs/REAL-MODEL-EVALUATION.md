@@ -55,10 +55,15 @@ evaluation. It shells out per completion to the
 (`~/workspace/custom-connectors/custom.gemini/bin/gemini_chat.py`),
 which authenticates via the Secure Vault surrogate — the adapter
 takes no API key and nothing in the run path touches a raw key.
-Model `gemini-3.8-flash`, max tokens `2048` by default (the
+Model `gemini-3.5-flash`, max tokens `2048` by default (the
 minimum that avoids empty content from this thinking model).
-The adapter was verified live (2026-11-22): a completion
-returned model `gemini-3.8-flash` with finish `stop`. It
+The model was verified live (2026-11-22 probe): a completion
+via the helper returned model `gemini-3.5-flash` with finish
+`stop`. (Switched from `gemini-3.8-flash` the same day per owner
+instruction — 3.5-flash has the higher per-minute limit on the
+same 20 req/day free-tier quota; the 3.8-flash verification and
+its quota exhaustion are recorded in
+`ai/evaluations/REAL-MODEL-EVALUATION-REPORT.md`.) It
 retries a 429 exactly once internally, reports auth failures as
 "credential rejected (HTTP 401/403)" and a missing model as
 "model unavailable (HTTP 404)". The dedicated runner is
@@ -131,7 +136,7 @@ npm run evals -- --cases-file evals/datasets/real-model-subset-v2.json --out /tm
 
 # The real-model run (Gemini; background process, ~4-5 hours)
 node evals/run-real-model.mjs \
-  --archive ai/evaluations/runs/real-model-gemini-3.8-flash-2026-11-22.json
+  --archive ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-22.json
 ```
 
 ### The full suite (optional, after the subset looks sane)
@@ -149,7 +154,7 @@ provider integration works and the failure modes are understood.
 
 No environment variables are needed — the helper authenticates
 via the Secure Vault surrogate. Model and max tokens default to
-`gemini-3.8-flash` / `2048`. **Never paste the raw key into the
+`gemini-3.5-flash` / `2048`. **Never paste the raw key into the
 environment** — the approved credential lives in the Secure Vault
 and is used only through the helper-based adapter.
 
@@ -166,7 +171,7 @@ node evals/run-real-model.mjs --dataset /tmp/rme-smoke.json --out /tmp/rme-smoke
 
 # 3. The real-model run (89 cases), as a background process.
 node evals/run-real-model.mjs \
-  --archive ai/evaluations/runs/real-model-gemini-3.8-flash-2026-11-22.json
+  --archive ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-22.json
 #    Writes evals/reports/model/<run-id>/latest.json + latest.md, plus the
 #    archive copy the dashboard worker consumes. Expected duration: ~4-5
 #    hours at ~3 min/call. Progress on stderr ([N/89] ...); checkpoint at
@@ -174,7 +179,7 @@ node evals/run-real-model.mjs \
 
 # 4. If the run is interrupted, resume it (do not restart from scratch):
 node evals/run-real-model.mjs --resume evals/reports/model/<run-id>/checkpoint.json \
-  --archive ai/evaluations/runs/real-model-gemini-3.8-flash-2026-11-22.json
+  --archive ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-22.json
 #    Validates the checkpoint against the dataset/provider/model, skips
 #    completed cases, keeps the run id, merges checkpointed token totals.
 ```
@@ -243,7 +248,7 @@ default location, e.g. for per-model archives:
 | Either, with `--out <dir>` | `<dir>/latest.json` + `latest.md` | Mock only; the comparison file lands in `<dir>/regression.json` |
 
 The Gemini run's durable record is the `--archive` copy:
-`ai/evaluations/runs/real-model-gemini-3.8-flash-<YYYY-MM-DD>.json`
+`ai/evaluations/runs/real-model-gemini-3.5-flash-<YYYY-MM-DD>.json`
 (the file the benchmark-dashboard worker consumes). The run's
 human-readable record is
 `ai/evaluations/REAL-MODEL-EVALUATION-REPORT.md` §9.

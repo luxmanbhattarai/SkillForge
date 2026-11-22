@@ -28,6 +28,14 @@
   (`gemini-2.5-flash` returns 404 for this key). The runner was
   refactored onto the provider registry (§4.1) and is ready; the
   helper-based adapter has landed and been verified live (§7).
+- **Update (2026-11-22, later):** model switched to
+  `gemini-3.5-flash` per owner instruction — 3.5-flash has the
+  higher per-minute limit (10–15 RPM vs 5 RPM) on the same
+  20 req/day free-tier quota. Probe verified the same day
+  (completion returned model `gemini-3.5-flash`, finish `stop`,
+  327 total tokens). The 3.8-flash references below that describe
+  the smoke test and its quota exhaustion are history and stay
+  as written; the run commands and defaults now name 3.5-flash.
 - **Supersedes for the runner:** the operator plan in
   `docs/REAL-MODEL-EVALUATION.md` and the audit in
   `ai/audits/REAL-MODEL-EVALUATION.md` (2026-11-21) remain the
@@ -168,7 +176,7 @@ run record needs:
   through the helper-based adapter.
 - **Gemini defaults** (applied to a copy of env, never to
   `process.env`, and recorded in the report): model
-  `gemini-3.8-flash` and max tokens `2048` (the minimum that
+  `gemini-3.5-flash` and max tokens `2048` (the minimum that
   avoids empty content from this thinking model). An
   operator-set value always wins over a default.
 - **Exact served model version** via `evals/lib/model-version.mjs`
@@ -218,7 +226,7 @@ run record needs:
   `evals/reports/model/<run-id>/` (or `--out <dir>`) with
   `latest.json` + `latest.md`; `--archive <file>` additionally
   writes the JSON report to a durable path (for the Gemini run:
-  `ai/evaluations/runs/real-model-gemini-3.8-flash-<YYYY-MM-DD>.json`,
+  `ai/evaluations/runs/real-model-gemini-3.5-flash-<YYYY-MM-DD>.json`,
   the file the dashboard worker consumes). The JSON carries run
   ID, timestamp, provider name, model, dataset fingerprint,
   environment (Node, platform, git commit), summary, dimensions,
@@ -278,9 +286,9 @@ call:
   JSON + Markdown written; no credential material in the report;
 - Gemini stub-helper run: 2 cases pass through the registry +
   real adapter; the stub's argv log proves `--model
-  gemini-3.8-flash`, `--max-tokens 2048`, `--temperature 0` were
+  gemini-3.5-flash`, `--max-tokens 2048`, `--temperature 0` were
   passed; served model + usage + `servedModels` recorded;
-  model defaults to `gemini-3.8-flash` when `GEMINI_MODEL` is
+  model defaults to `gemini-3.5-flash` when `GEMINI_MODEL` is
   unset; empty content (`finish_reason: length`) recorded with
   `finishReason`, never retried;
 - failure run: a bad model (selects nothing, refuses nothing,
@@ -476,10 +484,10 @@ node evals/run-real-model.mjs --dataset /tmp/rme-smoke.json --out /tmp/rme-smoke
 
 # 3. The real-model run (89 cases), as a background process.
 node evals/run-real-model.mjs \
-  --archive ai/evaluations/runs/real-model-gemini-3.8-flash-2026-11-22.json
+  --archive ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-22.json
 #    Writes evals/reports/model/<run-id>/latest.json + latest.md, plus the
 #    archive copy the dashboard worker consumes. Model and max tokens
-#    default to gemini-3.8-flash / 2048 (see §4.1); no env vars needed —
+#    default to gemini-3.5-flash / 2048 (see §4.1); no env vars needed —
 #    the helper authenticates via the Secure Vault surrogate.
 #    Expected duration: ~4-5 hours at ~3 min/call. Progress on stderr
 #    ([N/89] ...); checkpoint at <out>/checkpoint.json after each case.
@@ -487,7 +495,7 @@ node evals/run-real-model.mjs \
 
 # 4. If the run is interrupted, resume it (do not restart from scratch):
 node evals/run-real-model.mjs --resume evals/reports/model/<run-id>/checkpoint.json \
-  --archive ai/evaluations/runs/real-model-gemini-3.8-flash-2026-11-22.json
+  --archive ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-22.json
 #    Validates the checkpoint against the dataset/provider/model, skips
 #    completed cases, keeps the run id, merges checkpointed token totals.
 
@@ -516,7 +524,7 @@ plus the 2–3 case smoke test — no other paid calls.
    coordinator decision). Once unblocked: smoke test again
    (2–3 cases), then the 89-case subset via
    `node evals/run-real-model.mjs --archive
-   ai/evaluations/runs/real-model-gemini-3.8-flash-2026-11-22.json`,
+   ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-22.json`,
    then failure classification per §5.4 and this report updated
    with the real results (§9).
 2. **Plan doc staleness** — `docs/REAL-MODEL-EVALUATION.md` still
@@ -543,7 +551,7 @@ plus the 2–3 case smoke test — no other paid calls.
 > comparison against the mock evaluation (463/463), token usage
 > and cost, and known limitations. The machine-readable record
 > will live at
-> `ai/evaluations/runs/real-model-gemini-3.8-flash-2026-11-22.json`.
+> `ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-22.json`.
 
 ### Smoke test (2026-11-22 ~01:58 UTC) — the only live evidence so far
 

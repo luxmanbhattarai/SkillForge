@@ -249,9 +249,9 @@ function readJsonIfExists(path) {
 
 // Find the newest real-model report. The Phase 4 runner writes to
 // evals/reports/model/<run-id>/latest.json by default (run-id like
-// real-model-gemini-3.8-flash-20261122-013000); a run may also be
+// real-model-gemini-3.5-flash-20261122-013000); a run may also be
 // exported as a flat file under ai/evaluations/runs/
-// (real-model-gemini-3.8-flash-*.json). Both layouts are searched,
+// (real-model-gemini-3.5-flash-*.json). Both layouts are searched,
 // plus the single default file, and the newest by the report's own
 // `generated` timestamp wins — never filesystem mtime, which says
 // when a file was copied, not when the run happened. An explicit

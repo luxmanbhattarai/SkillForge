@@ -104,14 +104,19 @@ Notes:
   eval harness's `EVAL_PROVIDER_URL`/`KEY`/`MODEL` path cannot take
   this credential; do not try to route Gemini through it. See
   `~/workspace/custom-connectors/custom.gemini/CONNECTOR.md`.
-- **Gemini model is `gemini-3.8-flash` only.**
+- **Gemini model is `gemini-3.5-flash` only.**
   `gemini-2.5-flash` returns HTTP 404 for this key. A `GEMINI_MODEL`
-  set to anything else is a configuration error.
+  set to anything else is a configuration error. (Switched from
+  `gemini-3.8-flash` on 2026-11-22 per owner instruction — 3.5-flash
+  has the higher per-minute limit on the same 20 req/day free-tier
+  quota; probe verified the same day.)
 - **Gemini timeout defaults to 300s**, not the 60s the other
-  adapters use: `gemini-3.8-flash` reasons internally before
-  replying. The first verification call timed out at 60s; the
-  second took ~164s for a tiny prompt. Budget ~3 minutes per eval
-  case when planning a run (~4–5 hours for the 89-case subset).
+  adapters use: `gemini-3.5-flash` reasons internally before
+  replying (the 3.5-flash probe used 327 total tokens for a
+  1-token visible reply). The first 3.8-flash verification call
+  timed out at 60s; the second took ~164s for a tiny prompt.
+  Budget ~3 minutes per eval case when planning a run (~4–5 hours
+  for the 89-case subset).
 - **Gemini empty-content quirk (verified):** a small `max_tokens`
   budget ends with `finish_reason=length` and empty content. The
   adapter defaults to `max_tokens` 2048 and records an empty reply
@@ -195,14 +200,14 @@ required.
 | --- | --- | --- | --- |
 | `GEMINI_HELPER_PATH` | no | `~/workspace/custom-connectors/custom.gemini/bin/gemini_chat.py` | Path to the connector helper |
 | `GEMINI_PYTHON` | no | `python3` | Python executable for the helper |
-| `GEMINI_MODEL` | no | `gemini-3.8-flash` | Must be unset or `gemini-3.8-flash`; anything else is an error |
+| `GEMINI_MODEL` | no | `gemini-3.5-flash` | Must be unset or `gemini-3.5-flash`; anything else is an error |
 | `GEMINI_TIMEOUT_MS` | no | `300000` | Per-attempt timeout (child killed on fire); 300s for this thinking model |
 | `GEMINI_MAX_TOKENS` | no | `2048` | `max_tokens` per call (eval cases use 2048) |
 | `GEMINI_RETRY_DELAY_MS` | no | `5000` | Pause before the single 429 retry |
 
 "Configured" for Gemini means the helper exists on disk — there is
 no key to check. The adapter spawns
-`python3 <helper> --model gemini-3.8-flash --max-tokens 2048
+`python3 <helper> --model gemini-3.5-flash --max-tokens 2048
 --temperature 0 --timeout <seconds>` and feeds the messages array
 on stdin. The helper prints the raw OpenAI-compatible response
 JSON; the adapter reads `choices[0].message.content`,

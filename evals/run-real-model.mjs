@@ -30,7 +30,7 @@
 // only.
 //
 // Gemini defaults (applied to the env copy passed to the adapter,
-// never to process.env): model gemini-3.8-flash (the verified model
+// never to process.env): model gemini-3.5-flash (the verified model
 // for the connected key; gemini-2.5-flash 404s for it) and
 // max_tokens 2048 (this thinking model returns empty content on
 // small budgets). An operator-set value always wins over a default.
@@ -72,7 +72,7 @@
 //   --out        report directory (default: evals/reports/model/<run-id>/;
 //                on --resume, defaults to the checkpoint's directory)
 //   --archive    also write the JSON report to this file (e.g.
-//                ai/evaluations/runs/real-model-gemini-3.8-flash-2026-11-22.json)
+//                ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-22.json)
 //   --resume     continue an interrupted run from its checkpoint.json
 //   --delay-ms   pause between cases (default: 500)
 //   --retry-backoff-ms  pause before a 429 retry (default: 10000)
@@ -120,10 +120,10 @@ export const DEFAULT_RETRY_BACKOFF_MS = 10_000;
 // to process.env) when the operator has not set the variable. Only
 // non-secret values may appear here — never a key.
 export const PROVIDER_ENV_DEFAULTS = {
-  // gemini-3.8-flash is the verified model for the connected key
+  // gemini-3.5-flash is the verified model for the connected key
   // (gemini-2.5-flash returns 404 for it); 2048 output tokens is
   // the minimum that avoids empty content from this thinking model.
-  gemini: { GEMINI_MODEL: 'gemini-3.8-flash', GEMINI_MAX_TOKENS: '2048' },
+  gemini: { GEMINI_MODEL: 'gemini-3.5-flash', GEMINI_MAX_TOKENS: '2048' },
 };
 
 // Apply a provider's env defaults to a copy of env. Returns

@@ -95,7 +95,7 @@ const helperResponse = (content, extra = {}) => JSON.stringify({
   id: 'chatcmpl-test',
   object: 'chat.completion',
   created: 1795310000,
-  model: 'gemini-3.8-flash',
+  model: 'gemini-3.5-flash',
   choices: [{ index: 0, message: { role: 'assistant', content }, finish_reason: 'stop' }],
   usage: { prompt_tokens: 11, completion_tokens: 7, total_tokens: 18 },
   ...extra,
@@ -373,8 +373,8 @@ test('anthropic: missing credentials fail fast; 529 (overloaded) is retried', as
 // These tests stub the spawn, plus one integration test against a
 // real fake helper script. No paid calls, ever.
 
-test('gemini: config requires the helper on disk and gemini-3.8-flash only', () => {
-  assert.equal(GEMINI_MODEL, 'gemini-3.8-flash');
+test('gemini: config requires the helper on disk and gemini-3.5-flash only', () => {
+  assert.equal(GEMINI_MODEL, 'gemini-3.5-flash');
   assert.equal(isGeminiConfigured(GEMINI_ENV()), true);
   assert.equal(isGeminiConfigured({ GEMINI_HELPER_PATH: '/nonexistent/gemini_chat.py' }), false);
   assert.throws(
@@ -383,11 +383,11 @@ test('gemini: config requires the helper on disk and gemini-3.8-flash only', () 
   );
   assert.throws(
     () => parseGeminiConfig(GEMINI_ENV({ GEMINI_MODEL: 'gemini-2.5-flash' })),
-    /only supports model "gemini-3\.8-flash"/,
+    /only supports model "gemini-3\.5-flash"/,
   );
   // Unset or equal is fine.
-  assert.equal(parseGeminiConfig(GEMINI_ENV()).model, 'gemini-3.8-flash');
-  assert.equal(parseGeminiConfig(GEMINI_ENV({ GEMINI_MODEL: 'gemini-3.8-flash' })).model, 'gemini-3.8-flash');
+  assert.equal(parseGeminiConfig(GEMINI_ENV()).model, 'gemini-3.5-flash');
+  assert.equal(parseGeminiConfig(GEMINI_ENV({ GEMINI_MODEL: 'gemini-3.5-flash' })).model, 'gemini-3.5-flash');
   assert.equal(parseGeminiConfig(GEMINI_ENV()).maxTokens, 2048);
 });
 
@@ -395,19 +395,19 @@ test('gemini: spawns the helper with the eval args, parses the response, records
   const { impl, calls } = fakeSpawn([okResult(JSON.stringify(MODEL_REPLY))]);
   const provider = createGeminiProvider(GEMINI_ENV(), impl);
   const obs = await provider.run(CASE);
-  assert.equal(provider.name, 'gemini:gemini-3.8-flash');
+  assert.equal(provider.name, 'gemini:gemini-3.5-flash');
   assert.deepEqual(obs.selectedSkills, ['alpha-skill']);
   assert.equal(obs.answer, 'Use alpha widgets for this task.');
   assert.equal(obs.refused, false);
   assert.deepEqual(obs.tools, ['load alpha-skill']);
   assert.deepEqual(obs.code, ['const a = 1;\n']);
   assert.deepEqual(obs.usage, { promptTokens: 11, completionTokens: 7, totalTokens: 18 });
-  assert.equal(obs.model, 'gemini-3.8-flash', 'exact model id from the response');
+  assert.equal(obs.model, 'gemini-3.5-flash', 'exact model id from the response');
   assert.equal(obs.finishReason, 'stop');
   assert.equal(calls.length, 1);
   assert.equal(calls[0].command, 'python3');
   assert.deepEqual(calls[0].args, [
-    DUMMY_HELPER, '--model', 'gemini-3.8-flash',
+    DUMMY_HELPER, '--model', 'gemini-3.5-flash',
     '--max-tokens', '2048', '--temperature', '0', '--timeout', '300',
   ]);
   const messages = JSON.parse(calls[0].input);
@@ -418,12 +418,12 @@ test('gemini: spawns the helper with the eval args, parses the response, records
   // No key anywhere in the invocation or the metadata.
   assert.ok(!JSON.stringify(calls[0]).includes('key'));
   assert.ok(!JSON.stringify(provider.meta).includes('key'));
-  assert.equal(provider.meta.model, 'gemini-3.8-flash');
+  assert.equal(provider.meta.model, 'gemini-3.5-flash');
   assert.equal(provider.meta.helper, 'gemini_chat.py');
   const usage = provider.getUsage();
   assert.equal(usage.requests, 1);
   assert.equal(usage.totalTokens, 18);
-  assert.deepEqual(usage.servedModels, { 'gemini-3.8-flash': 1 });
+  assert.deepEqual(usage.servedModels, { 'gemini-3.5-flash': 1 });
   assert.equal(usage.emptyResponses, 0);
 });
 
@@ -431,7 +431,7 @@ test('gemini: empty content with finish_reason=length is an empty response, not 
   const { impl, calls } = fakeSpawn([{
     code: 0,
     stdout: JSON.stringify({
-      model: 'gemini-3.8-flash',
+      model: 'gemini-3.5-flash',
       choices: [{ message: { role: 'assistant', content: '' }, finish_reason: 'length' }],
       usage: { prompt_tokens: 11, completion_tokens: 0, total_tokens: 11 },
     }),
@@ -443,7 +443,7 @@ test('gemini: empty content with finish_reason=length is an empty response, not 
   assert.equal(obs.answer, '');
   assert.equal(obs.refused, false);
   assert.equal(obs.finishReason, 'length');
-  assert.equal(obs.model, 'gemini-3.8-flash');
+  assert.equal(obs.model, 'gemini-3.5-flash');
   assert.equal(calls.length, 1, 'an empty response is recorded, not retried');
   assert.equal(provider.getUsage().emptyResponses, 1);
 });
@@ -524,7 +524,7 @@ test('gemini: real spawn path against a fake helper script (no paid call)', asyn
       'messages = json.load(sys.stdin)',
       'seen = {"argv": sys.argv[1:], "messages": messages}',
       `open(${JSON.stringify(seenFile)}, "w").write(json.dumps(seen))`,
-      'print(json.dumps({"model": "gemini-3.8-flash",',
+      'print(json.dumps({"model": "gemini-3.5-flash",',
       '  "choices": [{"message": {"role": "assistant", "content": json.dumps(',
       '    {"skills": ["alpha-skill"], "answer": "Use alpha widgets.", "refused": False,',
       '     "refusalReason": None, "tools": [], "code": []})}, "finish_reason": "stop"}],',
@@ -537,10 +537,10 @@ test('gemini: real spawn path against a fake helper script (no paid call)', asyn
     });
     const obs = await provider.run(CASE);
     assert.deepEqual(obs.selectedSkills, ['alpha-skill']);
-    assert.equal(obs.model, 'gemini-3.8-flash');
+    assert.equal(obs.model, 'gemini-3.5-flash');
     const seen = JSON.parse(readFileSync(seenFile, 'utf8'));
     assert.deepEqual(seen.argv, [
-      '--model', 'gemini-3.8-flash',
+      '--model', 'gemini-3.5-flash',
       '--max-tokens', '2048', '--temperature', '0', '--timeout', '300',
     ]);
     assert.equal(seen.messages[0].role, 'system');
@@ -640,7 +640,7 @@ test('registry: an unconfigured provider fails loudly and names the missing vari
 
 test('registry: gemini resolves to the helper adapter when the helper exists', async () => {
   const provider = await resolveProvider('gemini', GEMINI_ENV());
-  assert.equal(provider.name, 'gemini:gemini-3.8-flash');
+  assert.equal(provider.name, 'gemini:gemini-3.5-flash');
   assert.equal(provider.meta.provider, 'gemini');
   assert.equal(provider.meta.helper, 'gemini_chat.py');
 });

@@ -12,9 +12,14 @@
 // HARD RULES (from the connector doc — do not weaken them):
 // - NEVER read the raw key into an env var, file, argument, or
 //   log. NEVER pass a key to anything. The helper handles auth.
-// - Model is gemini-3.8-flash ONLY. gemini-2.5-flash returns HTTP
+// - Model is gemini-3.5-flash ONLY. gemini-2.5-flash returns HTTP
 //   404 for this key. A GEMINI_MODEL set to anything else is a
 //   configuration error, not an override.
+//   (Switched from gemini-3.8-flash on 2026-11-22 per owner
+//   instruction: 3.5-flash has the higher per-minute limit
+//   (10-15 RPM vs 5 RPM for 3.8-flash) on the same 20 req/day
+//   free-tier quota. Probe verified 2026-11-22: 3.5-flash
+//   answered with finish stop.)
 // - max_tokens defaults to 2048 for eval cases. Thinking-model
 //   quirk (verified): a small budget ends with finish_reason=length
 //   and EMPTY content. Empty content is recorded as an empty
@@ -31,11 +36,11 @@
 //                              default ~/workspace/custom-connectors/
 //                              custom.gemini/bin/gemini_chat.py
 //   GEMINI_PYTHON              (optional, default python3) python executable
-//   GEMINI_MODEL               (optional) must be unset or gemini-3.8-flash
+//   GEMINI_MODEL               (optional) must be unset or gemini-3.5-flash
 //   GEMINI_TIMEOUT_MS          (optional, default 300000) per-attempt
 //                              timeout; the child is killed (SIGKILL)
 //                              when it fires. 300s, not the 60s the
-//                              other adapters use: gemini-3.8-flash
+//                              other adapters use: gemini-3.5-flash
 //                              reasons internally before replying —
 //                              the first verification call timed out
 //                              at 60s, and the second took ~164s for
@@ -66,7 +71,7 @@ import {
 
 export const PROVIDER_ID = 'gemini';
 export const DISPLAY_NAME = 'Gemini';
-export const GEMINI_MODEL = 'gemini-3.8-flash';
+export const GEMINI_MODEL = 'gemini-3.5-flash';
 export const DEFAULT_HELPER_PATH = join(
   homedir(), 'workspace', 'custom-connectors', 'custom.gemini', 'bin', 'gemini_chat.py',
 );

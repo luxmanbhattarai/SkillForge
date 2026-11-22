@@ -175,12 +175,12 @@ function writeStubHelper(dir, responses, emptyInputs = []) {
     '    msgs = json.load(sys.stdin)',
     '    user = next(m["content"] for m in msgs if m.get("role") == "user")',
     '    if user in EMPTY:',
-    '        out = {"choices": [{"message": {"content": ""}, "finish_reason": "length"}], "model": "gemini-3.8-flash", "usage": {"prompt_tokens": 100, "completion_tokens": 0, "total_tokens": 100}}',
+    '        out = {"choices": [{"message": {"content": ""}, "finish_reason": "length"}], "model": "gemini-3.5-flash", "usage": {"prompt_tokens": 100, "completion_tokens": 0, "total_tokens": 100}}',
     '    else:',
     '        if user not in RESPONSES:',
     '            print(f"stub helper: unknown input: {user[:60]}", file=sys.stderr)',
     '            sys.exit(1)',
-    '        out = {"choices": [{"message": {"content": json.dumps(RESPONSES[user])}, "finish_reason": "stop"}], "model": "gemini-3.8-flash", "usage": {"prompt_tokens": 100, "completion_tokens": 50, "total_tokens": 150}}',
+    '        out = {"choices": [{"message": {"content": json.dumps(RESPONSES[user])}, "finish_reason": "stop"}], "model": "gemini-3.5-flash", "usage": {"prompt_tokens": 100, "completion_tokens": 50, "total_tokens": 150}}',
     '    print(json.dumps(out))',
     'main()',
     '',
@@ -328,7 +328,7 @@ test('CLI --help exits 0 and documents the flags', () => {
 
 test('applyProviderEnvDefaults: gemini model + max tokens, operator values win', () => {
   const { env, applied } = applyProviderEnvDefaults('gemini', { GEMINI_HELPER_PATH: '/x/y.py' });
-  assert.equal(env.GEMINI_MODEL, 'gemini-3.8-flash');
+  assert.equal(env.GEMINI_MODEL, 'gemini-3.5-flash');
   assert.equal(env.GEMINI_MAX_TOKENS, '2048');
   assert.deepEqual(applied.sort(), ['GEMINI_MAX_TOKENS', 'GEMINI_MODEL']);
   // process.env-style input is not mutated.
@@ -336,8 +336,8 @@ test('applyProviderEnvDefaults: gemini model + max tokens, operator values win',
   applyProviderEnvDefaults('gemini', input);
   assert.equal(input.GEMINI_MODEL, undefined);
   // Operator values win.
-  const custom = applyProviderEnvDefaults('gemini', { GEMINI_MODEL: 'gemini-3.8-flash', GEMINI_MAX_TOKENS: '512' });
-  assert.equal(custom.env.GEMINI_MODEL, 'gemini-3.8-flash');
+  const custom = applyProviderEnvDefaults('gemini', { GEMINI_MODEL: 'gemini-3.5-flash', GEMINI_MAX_TOKENS: '512' });
+  assert.equal(custom.env.GEMINI_MODEL, 'gemini-3.5-flash');
   assert.equal(custom.env.GEMINI_MAX_TOKENS, '512');
   assert.deepEqual(custom.applied, []);
   // Unknown providers get no defaults.
@@ -490,7 +490,7 @@ test('end-to-end: gemini adapter path via the registry with a STUB helper', asyn
     const outDir = path.join(dir, 'out');
     const { report, exitCode } = await runRealModelEval({
       providerName: 'gemini',
-      env: { GEMINI_HELPER_PATH: stub, GEMINI_MODEL: 'gemini-3.8-flash', GEMINI_TIMEOUT_MS: '10000' },
+      env: { GEMINI_HELPER_PATH: stub, GEMINI_MODEL: 'gemini-3.5-flash', GEMINI_TIMEOUT_MS: '10000' },
       datasetPath: dataset, outDir, delayMs: 0,
     });
     assert.equal(exitCode, 0);
@@ -499,9 +499,9 @@ test('end-to-end: gemini adapter path via the registry with a STUB helper', asyn
     assert.equal(report.summary.failed, 0);
     // The stub echoes the exact model id per response; the runner
     // aggregates it as the served model.
-    assert.equal(report.model.requested, 'gemini-3.8-flash');
-    assert.equal(report.model.served, 'gemini-3.8-flash');
-    assert.deepEqual(report.model.servedModels, ['gemini-3.8-flash']);
+    assert.equal(report.model.requested, 'gemini-3.5-flash');
+    assert.equal(report.model.served, 'gemini-3.5-flash');
+    assert.deepEqual(report.model.servedModels, ['gemini-3.5-flash']);
     assert.equal(report.model.consistent, true);
     assert.equal(report.providerMeta.provider, 'gemini');
     assert.equal(report.providerMeta.endpoint, 'generativelanguage.googleapis.com');
@@ -511,7 +511,7 @@ test('end-to-end: gemini adapter path via the registry with a STUB helper', asyn
     assert.equal(report.usage.totalTokens, 300);
     assert.equal(report.usage.promptTokens, 200);
     assert.equal(report.usage.completionTokens, 100);
-    assert.deepEqual(report.usage.servedModels, { 'gemini-3.8-flash': 2 });
+    assert.deepEqual(report.usage.servedModels, { 'gemini-3.5-flash': 2 });
     assert.equal(report.usage.emptyResponses, 0);
     for (const r of report.results) {
       assert.deepEqual(r.usage, { promptTokens: 100, completionTokens: 50, totalTokens: 150 });
@@ -522,7 +522,7 @@ test('end-to-end: gemini adapter path via the registry with a STUB helper', asyn
     const argvCalls = readArgvLog(argvLog);
     assert.equal(argvCalls.length, 2);
     for (const argv of argvCalls) {
-      assert.equal(argv[argv.indexOf('--model') + 1], 'gemini-3.8-flash');
+      assert.equal(argv[argv.indexOf('--model') + 1], 'gemini-3.5-flash');
       assert.equal(argv[argv.indexOf('--max-tokens') + 1], '2048');
       assert.equal(argv[argv.indexOf('--temperature') + 1], '0');
       assert.equal(argv[argv.indexOf('--timeout') + 1], '10');
@@ -532,7 +532,7 @@ test('end-to-end: gemini adapter path via the registry with a STUB helper', asyn
   }
 });
 
-test('gemini model defaults to gemini-3.8-flash when GEMINI_MODEL is unset', async () => {
+test('gemini model defaults to gemini-3.5-flash when GEMINI_MODEL is unset', async () => {
   const dir = tmpdir();
   const byInput = loadCasesByInput();
   try {
@@ -545,10 +545,10 @@ test('gemini model defaults to gemini-3.8-flash when GEMINI_MODEL is unset', asy
       datasetPath: dataset, outDir: path.join(dir, 'out'), delayMs: 0,
     });
     assert.equal(exitCode, 0);
-    assert.equal(report.model.requested, 'gemini-3.8-flash');
+    assert.equal(report.model.requested, 'gemini-3.5-flash');
     assert.deepEqual([...report.providerEnvDefaultsApplied].sort(), ['GEMINI_MAX_TOKENS', 'GEMINI_MODEL']);
     const argvCalls = readArgvLog(argvLog);
-    assert.equal(argvCalls[0][argvCalls[0].indexOf('--model') + 1], 'gemini-3.8-flash');
+    assert.equal(argvCalls[0][argvCalls[0].indexOf('--model') + 1], 'gemini-3.5-flash');
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -750,7 +750,7 @@ test('model unavailable: the run aborts immediately with no report written', asy
   const dir = tmpdir();
   try {
     const dataset = writeDataset(dir, ['SEL-nextjs-001', 'SEC-inject-001']);
-    const provider = makeFakeProvider(() => new Error('Gemini provider model unavailable (HTTP 404): gemini-3.8-flash is not available for this key.'));
+    const provider = makeFakeProvider(() => new Error('Gemini provider model unavailable (HTTP 404): gemini-3.5-flash is not available for this key.'));
     const outDir = path.join(dir, 'out');
     await assert.rejects(
       () => runRealModelEval({
@@ -802,7 +802,7 @@ test('archive: --archive writes a copy of the JSON report', async () => {
   const byInput = loadCasesByInput();
   try {
     const dataset = writeDataset(dir, ['SEL-nextjs-001']);
-    const archivePath = path.join(dir, 'runs', 'real-model-gemini-3.8-flash-2026-11-22.json');
+    const archivePath = path.join(dir, 'runs', 'real-model-gemini-3.5-flash-2026-11-22.json');
     const { report, archivePath: returned } = await runRealModelEval({
       providerName: 'model', env: FAKE_ENV, fetchImpl: makeFakeFetch(goodModelHandler(byInput)),
       datasetPath: dataset, outDir: path.join(dir, 'out'), archivePath, delayMs: 0,
@@ -987,16 +987,16 @@ test('computeUsageTotals / buildCheckpoint / validateCheckpoint: unit behavior',
   assert.deepEqual(computeUsageTotals(results), { promptTokens: 30, completionTokens: 5, totalTokens: 35, requests: 3, errors: 1 });
   const dataset = { file: 'evals/datasets/x.json', version: 2, count: 3, sha256: 'a'.repeat(64), ids: ['a', 'b', 'c'] };
   const checkpoint = buildCheckpoint({
-    runId: 'r1', providerName: 'gemini', requestedModel: 'gemini-3.8-flash',
+    runId: 'r1', providerName: 'gemini', requestedModel: 'gemini-3.5-flash',
     dataset, started: '2026-11-22T00:00:00.000Z', results,
-    runnerRetries: 1, servedModels: ['gemini-3.8-flash'],
+    runnerRetries: 1, servedModels: ['gemini-3.5-flash'],
   });
   assert.equal(checkpoint.kind, 'skillforge-real-model-eval-checkpoint');
   assert.equal(checkpoint.completed, 3);
   assert.equal(checkpoint.runnerRetries, 1);
-  validateCheckpoint(checkpoint, { dataset, providerName: 'gemini', requestedModel: 'gemini-3.8-flash' });
-  assert.throws(() => validateCheckpoint(checkpoint, { dataset: { ...dataset, sha256: 'b'.repeat(64) }, providerName: 'gemini', requestedModel: 'gemini-3.8-flash' }), /dataset mismatch/);
-  assert.throws(() => validateCheckpoint(checkpoint, { dataset, providerName: 'openai', requestedModel: 'gemini-3.8-flash' }), /provider mismatch/);
+  validateCheckpoint(checkpoint, { dataset, providerName: 'gemini', requestedModel: 'gemini-3.5-flash' });
+  assert.throws(() => validateCheckpoint(checkpoint, { dataset: { ...dataset, sha256: 'b'.repeat(64) }, providerName: 'gemini', requestedModel: 'gemini-3.5-flash' }), /dataset mismatch/);
+  assert.throws(() => validateCheckpoint(checkpoint, { dataset, providerName: 'openai', requestedModel: 'gemini-3.5-flash' }), /provider mismatch/);
   assert.throws(() => validateCheckpoint(checkpoint, { dataset, providerName: 'gemini', requestedModel: 'gemini-2.5-flash' }), /model mismatch/);
   // loadCheckpoint rejects a non-checkpoint file.
   const dir = tmpdir();
