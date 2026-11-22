@@ -45,6 +45,17 @@ empty folder discloses nothing and counts as no folder in every
 measurement. Subdirectories inside a disclosure folder are fine;
 links resolve relative to the file that carries them.
 
+**Naming rule (hard):** a runnable file (`.js`, `.mjs`, `.cjs`,
+`.ts`, `.mts`, `.cts`) in a disclosure folder must never use a
+name the Node test runner discovers — `*-test.*`, `*.test.*`,
+or `test-*.*`. `npm test` is bare `node --test`, and Node 24
+discovers those patterns anywhere in the tree: the migration
+once shipped `examples/inject-test.ts`, a real test importing a
+module that does not exist, and the full suite failed on it.
+Name the file for what it shows instead (`inject-example.ts`,
+not `inject-test.ts`). Enforced by
+`test/disclosure-filenames.test.mjs`.
+
 ## Line budgets
 
 Measured on total `SKILL.md` lines (frontmatter included), by

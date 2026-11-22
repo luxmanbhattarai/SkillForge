@@ -275,7 +275,7 @@ centralized errors:
 
 Testing the same app without binding a port:
 
-  [examples/inject-test.ts](./examples/inject-test.ts).
+  [examples/inject-example.ts](./examples/inject-example.ts).
 
 ## Validation Checklist
 
