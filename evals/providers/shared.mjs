@@ -247,7 +247,10 @@ export function extractJsonObject(text, label) {
     }
     return parsed;
   } catch {
-    throw new Error(`${label} returned non-JSON output`);
+    // Keep an excerpt of the reply: without it, a format failure is
+    // undiagnosable (Day 1 of the real-model run had 3 such cases
+    // with no record of what the model actually said).
+    throw new Error(`${label} returned non-JSON output: ${String(text || '').trim().slice(0, 200)}`);
   }
 }
 
