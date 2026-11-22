@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SkillForge Benchmark Dashboard</title>
+<style>
+body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; max-width: 960px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; line-height: 1.5; }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.25rem; margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 0.25rem; }
+table { border-collapse: collapse; width: 100%; margin: 0.75rem 0; }
+th, td { border: 1px solid #ccc; padding: 0.4rem 0.6rem; text-align: left; }
+thead th { background: #f0f0f0; }
+tbody th { font-weight: 600; }
+.muted { color: #555; font-size: 0.9em; }
+.unavailable { color: #8a6d00; font-weight: 600; }
+.banner { border: 2px solid #8a6d00; background: #fff8e1; padding: 0.75rem 1rem; margin: 1rem 0; }
+.unavailable-panel { border: 2px solid #8a6d00; background: #fff8e1; padding: 0.75rem 1rem; margin: 1rem 0; }
+code { background: #f0f0f0; padding: 0.1rem 0.3rem; border-radius: 3px; }
+footer { margin-top: 2rem; border-top: 1px solid #ccc; padding-top: 0.75rem; }
+</style>
+</head>
+<body>
+<h1>SkillForge Benchmark Dashboard</h1>
+<p class="muted">Generated 2026-11-22T01:48:11.429Z from evals/reports/latest.json (no real-model report found).</p>
+
+<h2>Datasets</h2>
+<ul>
+<li><strong>Full suite:</strong> Full suite (evals/cases + datasets/discovery-generated.json) — 463 cases.</li>
+<li><strong>Real-model subset:</strong> Real-model subset (evals/datasets/real-model-subset-v2.json) — version 2, 89 cases (generated 2026-11-21).</li>
+</ul>
+
+<h2>Evaluation runs — mock</h2>
+<div class="banner"><strong>MOCK RESULTS.</strong> This run used the deterministic mock agent: it measures the library (discoverability, content, trigger discrimination), not an LLM's reasoning. It says nothing about whether a real model will select the right skills, ground its answers in them, or refuse unsafe requests.</div>
+<p>Provider: mock; generated 2026-11-21T21:13:30.553Z.</p>
+<p>Cases: 463 total, 463 passed, 0 failed (pass rate 100.0%); critical failures: 0. Coverage: 277/277 skills selected (100.0%).</p>
+<p class="muted">No token usage reported for this run.</p>
+
+<table>
+<thead><tr><th>Metric</th><th>Score</th><th>Passed/Total</th><th>Derivation</th></tr></thead>
+<tbody>
+<tr><th scope="row">Skill selection accuracy</th><td>100.0%</td><td>861/861</td><td class="muted">recall / precision / top-N / no-forbidden checks</td></tr>
+<tr><th scope="row">Instruction-following score</th><td>100.0%</td><td>33/33</td><td class="muted">all checks on instruction-following cases</td></tr>
+<tr><th scope="row">Refusal accuracy</th><td>100.0%</td><td>463/463</td><td class="muted">refused / not-refused checks</td></tr>
+<tr><th scope="row">Grounding score</th><td>100.0%</td><td>86/86</td><td class="muted">grounded-in checks</td></tr>
+<tr><th scope="row">Code quality score</th><td>100.0%</td><td>53/53</td><td class="muted">code-* and fixture checks</td></tr>
+</tbody>
+</table>
+
+<h3>By category</h3>
+<table>
+<thead><tr><th>Category</th><th>Total</th><th>Passed</th><th>Failed</th><th>Critical</th><th>Pass rate</th></tr></thead>
+<tbody>
+<tr><td>skill-discovery</td><td>298</td><td>298</td><td>0</td><td>0</td><td>100.0%</td></tr>
+<tr><td>skill-selection</td><td>34</td><td>34</td><td>0</td><td>0</td><td>100.0%</td></tr>
+<tr><td>trigger-accuracy</td><td>11</td><td>11</td><td>0</td><td>0</td><td>100.0%</td></tr>
+<tr><td>instruction-following</td><td>7</td><td>7</td><td>0</td><td>0</td><td>100.0%</td></tr>
+<tr><td>technical-correctness</td><td>37</td><td>37</td><td>0</td><td>0</td><td>100.0%</td></tr>
+<tr><td>code-generation</td><td>12</td><td>12</td><td>0</td><td>0</td><td>100.0%</td></tr>
+<tr><td>security-compliance</td><td>25</td><td>25</td><td>0</td><td>0</td><td>100.0%</td></tr>
+<tr><td>error-handling</td><td>7</td><td>7</td><td>0</td><td>0</td><td>100.0%</td></tr>
+<tr><td>negative-case-handling</td><td>13</td><td>13</td><td>0</td><td>0</td><td>100.0%</td></tr>
+<tr><td>hallucination-resistance</td><td>6</td><td>6</td><td>0</td><td>0</td><td>100.0%</td></tr>
+<tr><td>tool-use-correctness</td><td>9</td><td>9</td><td>0</td><td>0</td><td>100.0%</td></tr>
+<tr><td>output-quality</td><td>4</td><td>4</td><td>0</td><td>0</td><td>100.0%</td></tr>
+</tbody>
+</table>
+
+<h2>Regression indicators</h2>
+<p>Baseline comparison (baseline generated 2026-11-21T00:41:38.522Z): 0 regression(s), 0 fix(es), 0 new case(s), 0 removed case(s).</p>
+<ul>
+<li><strong>Regressions:</strong> <span class="muted">none</span></li>
+<li><strong>Fixes:</strong> <span class="muted">none</span></li>
+<li><strong>New cases:</strong> <span class="muted">none</span></li>
+<li><strong>Removed cases:</strong> <span class="muted">none</span></li>
+</ul>
+<p>Pass rate unchanged vs the previous baseline (100.0% on 2026-11-20 → 100.0%; delta 0.0 percentage points).</p>
+
+<h2>Evaluation history</h2>
+<table>
+<thead><tr><th>Date</th><th>Snapshot</th><th>Total</th><th>Passed</th><th>Critical</th><th>Pass rate</th></tr></thead>
+<tbody>
+<tr><td>2026-11-20</td><td>baseline-2026-11-20.json</td><td>449</td><td>449</td><td>0</td><td>100.0%</td></tr>
+<tr><td>2026-11-21</td><td>baseline-2026-11-21.json</td><td>463</td><td>463</td><td>0</td><td>100.0%</td></tr>
+</tbody>
+</table>
+
+<h2>Real-model results</h2>
+<div class="unavailable-panel">
+<p><strong>UNAVAILABLE — no real-model evaluation has ever run.</strong></p>
+<p>No real-model evaluation has ever run. A Gemini API key was connected and approved for the real-model evaluation (custom.gemini connector, Secure Vault), but no run has been executed yet. See docs/REAL-MODEL-EVALUATION.md.</p>
+<table>
+<thead><tr><th>Metric</th><th>Score</th><th>Passed/Total</th><th>Derivation</th></tr></thead>
+<tbody>
+<tr><th scope="row">Skill selection accuracy</th><td class="unavailable">UNAVAILABLE</td><td class="unavailable">—</td><td class="muted">recall / precision / top-N / no-forbidden checks</td></tr>
+<tr><th scope="row">Instruction-following score</th><td class="unavailable">UNAVAILABLE</td><td class="unavailable">—</td><td class="muted">all checks on instruction-following cases</td></tr>
+<tr><th scope="row">Refusal accuracy</th><td class="unavailable">UNAVAILABLE</td><td class="unavailable">—</td><td class="muted">refused / not-refused checks</td></tr>
+<tr><th scope="row">Grounding score</th><td class="unavailable">UNAVAILABLE</td><td class="unavailable">—</td><td class="muted">grounded-in checks</td></tr>
+<tr><th scope="row">Code quality score</th><td class="unavailable">UNAVAILABLE</td><td class="unavailable">—</td><td class="muted">code-* and fixture checks</td></tr>
+</tbody>
+</table>
+<p class="muted">Unavailable metrics are never shown as zero or estimated. They will appear here once a real-model run exists (see <a href="https://github.com/luxmanbhattarai/SkillForge/blob/main/docs/REAL-MODEL-EVALUATION.md">docs/REAL-MODEL-EVALUATION.md</a>).</p>
+</div>
+
+<h2>Methodology</h2>
+<ul>
+<li>Metrics are computed from the per-check data in the eval reports, not from category rollups. Each metric's derivation is listed in its table row.</li>
+<li>The real-model runner also emits its own aggregate dimensions in its report, derived from case categories. The dashboard does not reuse them: it computes all metrics from per-check data the same way for mock and real-model runs, so the two sections stay comparable. Small differences between the dashboard's numbers and the runner's dimensions are expected — they measure related but different things.</li>
+<li>A metric with no checks of its type in a run is UNAVAILABLE, never zero: zero checks is not a zero score.</li>
+<li>Mock and real-model runs are never compared as regressions: they answer different questions. Baselines are mock-only.</li>
+<li>The model was asked to self-report its skill selection as JSON; content checks are substring matches; grounding checks verify the evaluated skill was among the selected skills. See the eval report's Limitations section for what the scores do and do not prove.</li>
+</ul>
+
+<footer class="muted">
+<p>Regenerate: <code>node scripts/generate-benchmark-report.mjs</code> — see <code>ai/evaluations/BENCHMARK-DASHBOARD.md</code>. Inputs: <code>evals/reports/latest.json</code>, <code>evals/baselines</code>. The exact input data for this report is in <code>input.json</code> next to this file.</p>
+</footer>
+</body>
+</html>

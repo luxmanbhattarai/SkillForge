@@ -1,0 +1,202 @@
+{
+  "generated": "2026-11-22T01:48:11.429Z",
+  "sources": {
+    "mockReport": "evals/reports/latest.json",
+    "modelReport": "evals/reports/model/latest.json",
+    "baselinesDir": "evals/baselines",
+    "subset": "evals/datasets/real-model-subset-v2.json"
+  },
+  "datasets": {
+    "fullSuite": {
+      "label": "Full suite (evals/cases + datasets/discovery-generated.json)",
+      "cases": 463
+    },
+    "realModelSubset": {
+      "label": "Real-model subset (evals/datasets/real-model-subset-v2.json)",
+      "version": 2,
+      "cases": 89,
+      "generated": "2026-11-21"
+    }
+  },
+  "mock": {
+    "provider": "mock",
+    "providerKind": "mock",
+    "providerMeta": {
+      "kind": "mock",
+      "model": null
+    },
+    "model": null,
+    "dataset": null,
+    "generated": "2026-11-21T21:13:30.553Z",
+    "total": 463,
+    "passed": 463,
+    "failed": 0,
+    "passRate": 1,
+    "criticalFailures": 0,
+    "coverage": {
+      "skillsCovered": 277,
+      "skillsTotal": 277,
+      "coverageRate": 1
+    },
+    "usage": null,
+    "comparison": {
+      "regressions": [],
+      "fixes": [],
+      "added": [],
+      "removed": [],
+      "baselineGenerated": "2026-11-21T00:41:38.522Z"
+    },
+    "metrics": {
+      "selection": {
+        "pass": 861,
+        "total": 861,
+        "rate": 1
+      },
+      "instructionFollowing": {
+        "pass": 33,
+        "total": 33,
+        "rate": 1
+      },
+      "refusal": {
+        "pass": 463,
+        "total": 463,
+        "rate": 1
+      },
+      "grounding": {
+        "pass": 86,
+        "total": 86,
+        "rate": 1
+      },
+      "code": {
+        "pass": 53,
+        "total": 53,
+        "rate": 1
+      }
+    },
+    "byCategory": {
+      "skill-discovery": {
+        "total": 298,
+        "passed": 298,
+        "failed": 0,
+        "critical": 0,
+        "rate": 1
+      },
+      "skill-selection": {
+        "total": 34,
+        "passed": 34,
+        "failed": 0,
+        "critical": 0,
+        "rate": 1
+      },
+      "trigger-accuracy": {
+        "total": 11,
+        "passed": 11,
+        "failed": 0,
+        "critical": 0,
+        "rate": 1
+      },
+      "instruction-following": {
+        "total": 7,
+        "passed": 7,
+        "failed": 0,
+        "critical": 0,
+        "rate": 1
+      },
+      "technical-correctness": {
+        "total": 37,
+        "passed": 37,
+        "failed": 0,
+        "critical": 0,
+        "rate": 1
+      },
+      "code-generation": {
+        "total": 12,
+        "passed": 12,
+        "failed": 0,
+        "critical": 0,
+        "rate": 1
+      },
+      "security-compliance": {
+        "total": 25,
+        "passed": 25,
+        "failed": 0,
+        "critical": 0,
+        "rate": 1
+      },
+      "error-handling": {
+        "total": 7,
+        "passed": 7,
+        "failed": 0,
+        "critical": 0,
+        "rate": 1
+      },
+      "negative-case-handling": {
+        "total": 13,
+        "passed": 13,
+        "failed": 0,
+        "critical": 0,
+        "rate": 1
+      },
+      "hallucination-resistance": {
+        "total": 6,
+        "passed": 6,
+        "failed": 0,
+        "critical": 0,
+        "rate": 1
+      },
+      "tool-use-correctness": {
+        "total": 9,
+        "passed": 9,
+        "failed": 0,
+        "critical": 0,
+        "rate": 1
+      },
+      "output-quality": {
+        "total": 4,
+        "passed": 4,
+        "failed": 0,
+        "critical": 0,
+        "rate": 1
+      }
+    }
+  },
+  "realModel": {
+    "status": "unavailable",
+    "blocker": "No real-model evaluation has ever run. A Gemini API key was connected and approved for the real-model evaluation (custom.gemini connector, Secure Vault), but no run has been executed yet. See docs/REAL-MODEL-EVALUATION.md."
+  },
+  "history": [
+    {
+      "source": "baseline-2026-11-20.json",
+      "generated": "2026-11-20T21:51:58.189Z",
+      "date": "2026-11-20",
+      "total": 449,
+      "passed": 449,
+      "passRate": 1,
+      "criticalFailures": 0
+    },
+    {
+      "source": "baseline-2026-11-21.json",
+      "generated": "2026-11-21T00:41:38.522Z",
+      "date": "2026-11-21",
+      "total": 463,
+      "passed": 463,
+      "passRate": 1,
+      "criticalFailures": 0
+    }
+  ],
+  "regressions": {
+    "regressions": [],
+    "fixes": [],
+    "added": [],
+    "removed": [],
+    "baselineGenerated": "2026-11-21T00:41:38.522Z",
+    "trend": {
+      "from": "2026-11-20T21:51:58.189Z",
+      "to": "2026-11-21T21:13:30.553Z",
+      "previousPassRate": 1,
+      "latestPassRate": 1,
+      "delta": 0,
+      "direction": "unchanged"
+    }
+  }
+}
