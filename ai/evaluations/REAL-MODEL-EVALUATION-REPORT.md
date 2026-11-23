@@ -537,13 +537,15 @@ plus the 2–3 case smoke test — no other paid calls.
    prompt); structured-output enforcement (`response_format`); a
    spend cap; per-model result history.
 
-## 9. Run results (IN PROGRESS — multi-day run on `gemini-3.5-flash`; Day 1 of 5 complete)
+## 9. Run results (IN PROGRESS — multi-day run on `gemini-3.5-flash`; Days 1–2 of 5 complete)
 
 > The 89-case run is executing as a multi-day run (free tier,
 > 20 requests/day, checkpointed day slices) on
 > `gemini-3.5-flash`, after the model switch noted at the top
-> of this report. Day 1 (19 cases) completed 2026-11-22; the
-> remaining 70 cases plus 1 retry run on Days 2–5. When the run
+> of this report. Days 1–2 (39 cases) completed 2026-11-22 and
+> 2026-11-23; the remaining 51 cases plus 2 retries run on
+> Days 3–5 (20 + 20 + 13), daily run time fixed to 10:12
+> Phoenix (owner decision 2026-11-23). When the run
 > completes, record here: model/provider info, methodology
 > (as run, including any deviations), dataset details, individual
 > results summary, aggregate metrics (the eight dimensions),
@@ -658,6 +660,49 @@ observability gaps (fixed below).
      so truncation (`length`) is distinguishable from the model
      choosing prose. Day 1's format failures recorded neither.
   All three are covered by tests (99 targeted tests pass).
+
+### Day 2 (2026-11-23) — 20 cases, `gemini-3.5-flash`, WITH retrieval
+
+- **Result: 16/20 passed (80.0%), 4 failed, 0 critical.**
+  Run id `real-model-gemini-3.5-flash-20261123-171305`, ~7 min.
+  Model served: `gemini-3.5-flash` (consistent across all 18
+  answered calls). Coverage: 20/277 skills selected. Every
+  case received 10 retrieved candidates; the expected skill was
+  in the candidate list for all 20 cases (including all 4
+  failures — retrieval was not the cause of any failure).
+- **Dimensions (this slice only):** skill selection 14/17
+  (82.4%) — vs 1/7 (14.3%) on Day 1 without retrieval;
+  code quality 1/1 (100.0%); context preservation (proxy)
+  1/2 (50.0%). The other five dimensions had 0 cases in this
+  slice.
+- **Passes (16):** all 12 `DIS-real-*` discovery cases at 100,
+  `COD-nodejs-001` (the Day 1 HTTP 503 retry — PASSED 100),
+  `ERR-debugging-001`, `GEN-disc-accessibility-testing`,
+  `GEN-disc-advanced-api-architecture`,
+  `GEN-disc-aeo-optimization`.
+- **Failures (4):** 2 model format failures, 2 true provider
+  errors.
+  - *Model format failures (2):* `ERR-cloudflare-queues-001`
+    and `GEN-disc-agent-evaluation` — the model returned a
+    complete response (`finishReason: stop`, 715 and 1,293
+    completion tokens, well under the 2,048 cap) that was not
+    valid JSON. These are legitimate model failures, NOT
+    retried — same rule as Day 1's 3 format failures. (The
+    Day 1 triage fix worked as designed: usage and finish
+    reason are now recorded on these results, so truncation
+    is ruled out.)
+  - *True provider errors (2):* `GEN-disc-accessibility` and
+    `GEN-disc-ai-image-generation` — HTTP 503, model under
+    high demand (transient; the cases were never evaluated).
+    Retried on Day 5 (the Day 5 slice now holds 13 cases: the
+    2 retries + the final 11 subset ids).
+- **Usage:** 20 requests, 0 retries, 37,369 tokens (19,435
+  prompt + 10,646 completion + ~7,288 reasoning). Cost: $0
+  (free tier). Day-2 quota use: 20 cases, no probe — the
+  probe was skipped so the 20th case would not roll to Day 3.
+- **Archive:** `ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-23-day2.json`
+  (dataset: `evals/datasets/real-model-subset-v2-day2.json`,
+  `COD-nodejs-001` retry + ids 20–38 of subset v2).
 
 ### Smoke test (2026-11-22 ~01:58 UTC) — the pre-run quota evidence
 

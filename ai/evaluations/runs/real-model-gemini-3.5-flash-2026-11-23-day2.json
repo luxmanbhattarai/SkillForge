@@ -1,0 +1,1312 @@
+{
+  "kind": "skillforge-real-model-eval",
+  "version": 1,
+  "runId": "real-model-gemini-3.5-flash-20261123-171305",
+  "generated": "2026-11-23T17:13:05.277Z",
+  "completedAt": "2026-11-23T17:20:04.899Z",
+  "providerName": "gemini",
+  "providerKind": "model",
+  "model": {
+    "requested": "gemini-3.5-flash",
+    "served": "gemini-3.5-flash",
+    "servedModels": [
+      "gemini-3.5-flash"
+    ],
+    "consistent": true
+  },
+  "providerMeta": {
+    "kind": "model",
+    "provider": "gemini",
+    "model": "gemini-3.5-flash",
+    "endpoint": "generativelanguage.googleapis.com",
+    "helper": "gemini_chat.py",
+    "timeoutMs": 300000,
+    "maxRetries": 1
+  },
+  "providerEnvDefaultsApplied": [
+    "GEMINI_MODEL",
+    "GEMINI_MAX_TOKENS"
+  ],
+  "retrieval": {
+    "enabled": true,
+    "topK": 10,
+    "method": "IDF-weighted keyword overlap over skill name + description (MockAgent.rank); candidates listed in the user message, model selects only from them"
+  },
+  "dataset": {
+    "file": "evals/datasets/real-model-subset-v2-day2.json",
+    "version": 2,
+    "generated": "2026-11-22",
+    "supersedes": null,
+    "count": 20,
+    "sha256": "6b11b6abd5a67b852d981b5d57d274e0952828cf6fd8d88f00ee528eb7e03d0a",
+    "ids": [
+      "COD-nodejs-001",
+      "DIS-real-debugging-001",
+      "DIS-real-docker-001",
+      "DIS-real-nextjs-001",
+      "DIS-real-playwright-001",
+      "DIS-real-prisma-001",
+      "DIS-real-ratelimit-001",
+      "DIS-real-seo-001",
+      "DIS-real-tailwind-001",
+      "DIS-real-typescript-001",
+      "DIS-real-unittest-001",
+      "DIS-real-workers-001",
+      "ERR-cloudflare-queues-001",
+      "ERR-debugging-001",
+      "GEN-disc-accessibility",
+      "GEN-disc-accessibility-testing",
+      "GEN-disc-advanced-api-architecture",
+      "GEN-disc-aeo-optimization",
+      "GEN-disc-agent-evaluation",
+      "GEN-disc-ai-image-generation"
+    ]
+  },
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "linux",
+    "gitCommit": "3b551c814bab6eef12695af1cf3bf474e8062286"
+  },
+  "summary": {
+    "total": 20,
+    "passed": 16,
+    "failed": 4,
+    "passRate": 0.8,
+    "criticalFailures": 0,
+    "coverage": {
+      "skillsCovered": 20,
+      "skillsTotal": 277,
+      "coverageRate": 0.072
+    }
+  },
+  "dimensions": {
+    "skill-selection": {
+      "label": "Skill selection",
+      "total": 17,
+      "passed": 14,
+      "failed": 3,
+      "passRate": 0.824,
+      "failedCaseIds": [
+        "GEN-disc-accessibility",
+        "GEN-disc-agent-evaluation",
+        "GEN-disc-ai-image-generation"
+      ]
+    },
+    "instruction-following": {
+      "label": "Instruction following",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "passRate": null,
+      "failedCaseIds": []
+    },
+    "refusal": {
+      "label": "Refusal",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "passRate": null,
+      "failedCaseIds": []
+    },
+    "code-quality": {
+      "label": "Code quality",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "passRate": 1,
+      "failedCaseIds": []
+    },
+    "grounding": {
+      "label": "Grounding",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "passRate": null,
+      "failedCaseIds": []
+    },
+    "tool-use": {
+      "label": "Tool use",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "passRate": null,
+      "failedCaseIds": []
+    },
+    "unsafe-instruction-handling": {
+      "label": "Unsafe-instruction handling",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "passRate": null,
+      "failedCaseIds": []
+    },
+    "context-preservation": {
+      "label": "Context preservation",
+      "proxy": true,
+      "proxyNote": "Proxy dimension: no dedicated context-preservation cases exist in the subset; measured over error-handling, negative-case-handling, and output-quality cases.",
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "passRate": 0.5,
+      "failedCaseIds": [
+        "ERR-cloudflare-queues-001"
+      ]
+    }
+  },
+  "byCategory": {
+    "code-generation": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "critical": 0
+    },
+    "skill-discovery": {
+      "total": 17,
+      "passed": 14,
+      "failed": 3,
+      "critical": 0
+    },
+    "error-handling": {
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "critical": 0
+    }
+  },
+  "failures": [
+    {
+      "id": "ERR-cloudflare-queues-001",
+      "category": "error-handling",
+      "type": "positive",
+      "skill": "cloudflare-queues",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini provider returned non-JSON output: ```json\n{\n  \"skills\": [\n    \"cloudflare-queues\"\n  ],\n  \"answer\": \"To handle failing Cloudflare Queues messages, configure automatic retries and a Dead-Letter Queue (DLQ) in your `wrangler.toml` file, "
+    },
+    {
+      "id": "GEN-disc-accessibility",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "accessibility",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini helper failed (exit 1): Gemini API error: HTTP 503: [{\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n]"
+    },
+    {
+      "id": "GEN-disc-agent-evaluation",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "agent-evaluation",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini provider returned non-JSON output: ```json\n{\n  \"skills\": [\n    \"agent-evaluation\"\n  ],\n  \"answer\": \"Systematic evaluation of LLM applications and AI agents requires a multi-layered approach spanning offline golden datasets, automated u"
+    },
+    {
+      "id": "GEN-disc-ai-image-generation",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "ai-image-generation",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini helper failed (exit 1): Gemini API error: HTTP 503: [{\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n]"
+    }
+  ],
+  "usage": {
+    "requests": 20,
+    "attempts": 20,
+    "retries": 0,
+    "errors": 2,
+    "promptTokens": 19435,
+    "completionTokens": 10646,
+    "totalTokens": 37369,
+    "estimatedCostUsd": null,
+    "servedModels": {
+      "gemini-3.5-flash": 18
+    },
+    "emptyResponses": 0
+  },
+  "runnerRetries": 0,
+  "results": [
+    {
+      "id": "COD-nodejs-001",
+      "category": "code-generation",
+      "type": "positive",
+      "skill": "nodejs",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "nodejs"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "precision",
+          "pass": true,
+          "detail": "precision 1/1 = 1.00 (need >= 0.50)"
+        },
+        {
+          "name": "code-block-1-compiles",
+          "pass": true,
+          "detail": "JavaScript block compiles (node --check)"
+        },
+        {
+          "name": "code-must-include: createServer",
+          "pass": true,
+          "detail": "code contains \"createServer\""
+        },
+        {
+          "name": "code-must-include: /health",
+          "pass": true,
+          "detail": "code contains \"/health\""
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "nodejs",
+        "express",
+        "rest-api",
+        "hreflang",
+        "fastify",
+        "hono",
+        "javascript",
+        "resvg",
+        "sharp",
+        "typescript"
+      ],
+      "usage": {
+        "promptTokens": 1090,
+        "completionTokens": 305,
+        "totalTokens": 1732
+      },
+      "answer": "Here is a minimal Node.js HTTP server using the standard `node:http` module. It responds with a `200 OK` JSON payload at `/health` and returns a `404 Not Found` for other routes.",
+      "code": [
+        "import http from 'node:http';\n\nconst PORT = process.env.PORT || 3000;\n\nconst server = http.createServer((req, res) => {\n  if (req.url === '/health' && req.method === 'GET') {\n    res.writeHead(200, { 'Content-Type': 'application/json' });\n    res.end(JSON.stringify({ status: 'ok' }));\n    return;\n  }\n\n  res.writeHead(404, { 'Content-Type': 'application/json' });\n  res.end(JSON.stringify({ error: 'Not Found' }));\n});\n\nserver.listen(PORT, () => {\n  console.log(`Server running on http://localhost:${PORT}`);\n});"
+      ],
+      "tools": [
+        "Create an HTTP server using node:http",
+        "Route GET /health request to return status ok",
+        "Handle unhandled routes with 404",
+        "Listen on a designated port"
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "DIS-real-debugging-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "debugging",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "debugging",
+        "observability"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "debugging",
+        "observability",
+        "analytics",
+        "serp-monitoring",
+        "express",
+        "refactoring",
+        "fastify",
+        "hono",
+        "nestjs",
+        "accessibility-testing"
+      ],
+      "usage": {
+        "promptTokens": 1063,
+        "completionTokens": 482,
+        "totalTokens": 1980
+      },
+      "answer": "When an app crashes in production but cannot be reproduced locally, follow a systematic telemetry-driven approach to narrow down the root cause:\n\n1. **Check Production Error Tracking & Crash Logs**\n   - **Error Monitoring:** Look at error reporting tools (e.g., Sentry, Bugsnag, Datadog) for full stack traces, unhandled exceptions, or unhandled promise rejections.\n   - **Application Logs:** Query central logging (e.g., CloudWatch, Kibana, Grafana Loki) using correlation IDs or trace IDs right before the crash timestamp.\n   - **System Telemetry:** Check memory (OOM killer), CPU usage, network timeouts, or crash exit codes (e.g., SIGSEGV, SIGKILL, status 137 for out-of-memory).\n\n2. **Capture Production Context**\n   - Identify the exact release/commit SHA, runtime environment (Node version, OS, env vars), database state, and feature flags active during the crash.\n   - Extract the exact request payload, headers, user session state, or edge-case input that triggered the failure.\n\n3. **Isolate Differences Between Environments**\n   - **Data & Volume:** Test against realistic payload sizes, concurrent traffic/race conditions, or production-like data shapes.\n   - **Services & Limits:** Check for third-party API rate limits, database connection pool exhaustion, or ambient environment differences (network latency, permissions).\n\n4. **Form Hypotheses & Add Targeted Diagnostics**\n   - If stack traces or logs are missing details, deploy enhanced structured logging or distributed tracing around the suspected code path.\n   - Monitor error frequencies across specific browser/OS versions or user segments.\n\n5. **Replicate & Verify Fix**\n   - Turn the captured production payload into a failing local automated integration test or script.\n   - Fix the bug and verify that the automated regression test passes before redeploying.",
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "DIS-real-docker-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "docker",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "docker"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "docker",
+        "self-hosted-vps",
+        "prisma-postgres-setup",
+        "prisma-postgres-upgrade",
+        "nextjs",
+        "nuxt",
+        "prisma-orm-setup",
+        "sveltekit",
+        "github-actions",
+        "astro"
+      ],
+      "usage": {
+        "promptTokens": 1202,
+        "completionTokens": 558,
+        "totalTokens": 2178
+      },
+      "answer": "To containerize your application so it runs consistently across your local laptop and production servers, follow these core steps:\n\n1. **Create a `Dockerfile`**: Define your application environment, dependencies, build step, and startup command using a explicit base image (e.g., `node:20-alpine` or `python:3.11-slim`). Use multi-stage builds to keep final image sizes small and secure.\n2. **Add a `.dockerignore` file**: Exclude local build artifacts, logs, `.git`, and dependency directories (like `node_modules`) to avoid copying host-specific files into the build context.\n3. **Decouple Configuration with Environment Variables**: Never bake credentials or environment-specific URLs into the image. Pass configuration at runtime using environment variables or a `.env` file.\n4. **Use Docker Compose**: Define your application service alongside any dependencies (e.g., databases, Redis) in a `docker-compose.yml` file so local and server environments use identical service configurations.\n5. **Build and Run**: Build the image (`docker build -t myapp .`) and test locally (`docker run -p 3000:3000 --env-file .env myapp`) or run using Docker Compose (`docker compose up --build`).",
+      "code": [
+        "# Dockerfile\nFROM node:20-alpine AS builder\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci\nCOPY . .\nRUN npm run build\n\nFROM node:20-alpine AS runner\nWORKDIR /app\nENV NODE_ENV=production\nCOPY package*.json ./\nRUN npm ci --only=production\nCOPY --from=builder /app/dist ./dist\n\nEXPOSE 3000\nCMD [\"node\", \"dist/index.js\"]",
+        "# .dockerignore\nnode_modules\nnpm-debug.log\n.git\n.env\ndist",
+        "# docker-compose.yml\nversion: '3.8'\nservices:\n  app:\n    build: .\n    ports:\n      - \"3000:3000\"\n    env_file:\n      - .env\n    restart: unless-stopped"
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "DIS-real-nextjs-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "nextjs",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "nextjs"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "nextjs",
+        "cro",
+        "better-auth",
+        "competitor-profiling",
+        "vercel-react-view-transitions",
+        "authjs",
+        "entity-seo",
+        "serp-analysis",
+        "hreflang",
+        "social-preview"
+      ],
+      "usage": {
+        "promptTokens": 1164,
+        "completionTokens": 250,
+        "totalTokens": 1701
+      },
+      "answer": "To add a new page at `/pricing` in a Next.js application using the App Router, create a directory named `pricing` inside your `app` directory (or `src/app`) and place a `page.tsx` (or `page.js`) file inside it.\n\n### App Router Structure\n- File path: `app/pricing/page.tsx` (or `src/app/pricing/page.tsx` if using the `src` directory)\n\nIf you are using the older Pages Router:\n- File path: `pages/pricing.tsx` (or `pages/pricing/index.tsx`)",
+      "code": [
+        "export default function PricingPage() {\n  return (\n    <main>\n      <h1>Pricing</h1>\n      <p>Choose a plan that works best for you.</p>\n    </main>\n  );\n}"
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "DIS-real-playwright-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "playwright",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "playwright",
+        "e2e-testing"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "playwright",
+        "e2e-testing",
+        "regression-testing",
+        "analytics",
+        "vitest",
+        "core-web-vitals",
+        "vercel-cli-with-tokens",
+        "pagespeed-insights",
+        "agent-evaluation",
+        "doc-coauthoring"
+      ],
+      "usage": {
+        "promptTokens": 1051,
+        "completionTokens": 1004,
+        "totalTokens": 2563
+      },
+      "answer": "To automatically test your checkout flow in both Chrome and Firefox, Playwright is the recommended tool as it natively supports multi-browser testing (Chromium/Chrome and Firefox) out of the box with identical API behavior across browsers.\n\n### Key Steps for Setting Up E2E Checkout Tests:\n\n1. **Install Playwright**:\n   Initialize Playwright in your project via `npm init playwright@latest`. This sets up the directory structure and installs necessary browser binaries.\n\n2. **Configure Multi-Browser Execution**:\n   In `playwright.config.ts`, define browser projects for `chromium` (Chrome) and `firefox` so every test runs against both targets.\n\n3. **Use Resilient Selectors**:\n   Target UI elements using accessible roles, labels, or text content (e.g., `page.getByRole('button', { name: 'Complete Purchase' })`) rather than fragile CSS classes to avoid flaky tests across browsers.\n\n4. **Manage Test Data & State**:\n   Ensure checkout test data (like test payment credentials and products) is deterministically seeded before running tests or clean up after completion.\n\n5. **Run Tests**:\n   Run `npx playwright test` to execute your tests headlessly across both Chrome and Firefox, or `npx playwright test --ui` for interactive debugging.",
+      "code": [
+        "// playwright.config.ts\nimport { defineConfig, devices } from '@playwright/test';\n\nexport default defineConfig({\n  testDir: './tests',\n  fullyParallel: true,\n  retries: process.env.CI ? 2 : 0,\n  use: {\n    baseURL: 'http://localhost:3000',\n    trace: 'on-first-retry',\n    screenshot: 'only-on-failure',\n  },\n  projects: [\n    {\n      name: 'chromium',\n      use: { ...devices['Desktop Chrome'] },\n    },\n    {\n      name: 'firefox',\n      use: { ...devices['Desktop Firefox'] },\n    },\n  ],\n  webServer: {\n    command: 'npm run start',\n    url: 'http://localhost:3000',\n    reuseExistingServer: !process.env.CI,\n  },\n});",
+        "// tests/checkout.spec.ts\nimport { test, expect } from '@playwright/test';\n\ntest.describe('Checkout Flow', () => {\n  test('completes purchase successfully', async ({ page }) => {\n    // 1. Navigate to product page and add item to cart\n    await page.goto('/products/sample-item');\n    await page.getByRole('button', { name: 'Add to Cart' }).click();\n\n    // 2. Proceed to checkout\n    await page.getByRole('link', { name: 'Cart' }).click();\n    await page.getByRole('button', { name: 'Proceed to Checkout' }).click();\n\n    // 3. Fill shipping information\n    await page.getByLabel('Full Name').fill('Jane Doe');\n    await page.getByLabel('Address').fill('123 Main St');\n    await page.getByLabel('City').fill('Anytown');\n    await page.getByLabel('ZIP Code').fill('12345');\n\n    // 4. Submit checkout\n    await page.getByRole('button', { name: 'Place Order' }).click();\n\n    // 5. Verify confirmation screen\n    await expect(page.getByRole('heading', { name: 'Thank you for your order!' })).toBeVisible();\n    await expect(page.locator('.order-confirmation-id')).not.toBeEmpty();\n  });\n});"
+      ],
+      "tools": [
+        "1. Initialize Playwright in the project.",
+        "2. Configure `playwright.config.ts` to include Chromium (Chrome) and Firefox browser targets.",
+        "3. Write an end-to-end checkout test targeting user actions (add to cart, fill shipping info, complete order).",
+        "4. Execute the test suite across both browsers using the Playwright CLI."
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "DIS-real-prisma-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "prisma",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "prisma"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "database-design",
+        "prisma-database-setup",
+        "prisma",
+        "prisma-client-api",
+        "prisma-postgres-setup",
+        "prisma-driver-adapter-implementation",
+        "prisma-orm-setup",
+        "prisma-postgres-upgrade",
+        "prisma-compute",
+        "prisma-postgres"
+      ],
+      "usage": {
+        "promptTokens": 1149,
+        "completionTokens": 322,
+        "totalTokens": 1993
+      },
+      "answer": "In Prisma, a one-to-many relationship is defined by linking a relation scalar field (foreign key) on the \"many\" side to the referenced primary key on the \"one\" side using the `@relation` attribute.\n\nIn this setup:\n- The **`User`** model represents the \"one\" side and contains a list relation field `posts Post[]` (which does not exist as a physical column in the database).\n- The **`Post`** model represents the \"many\" side and contains the scalar field `authorId Int` (the foreign key) along with the relation field `author User @relation(fields: [authorId], references: [id])`.",
+      "code": [
+        "// schema.prisma\n\nmodel User {\n  id    Int    @id @default(autoincrement())\n  email String @unique\n  name  String?\n  posts Post[]\n}\n\nmodel Post {\n  id       Int     @id @default(autoincrement())\n  title    String\n  content  String?\n  author   User    @relation(fields: [authorId], references: [id])\n  authorId Int\n}"
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "DIS-real-ratelimit-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "rate-limiting",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "rate-limiting",
+        "express"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "rate-limiting",
+        "advanced-api-architecture",
+        "auth-security",
+        "api-client-generation",
+        "prisma-client-api",
+        "express",
+        "programmatic-seo",
+        "performance-testing",
+        "durable-objects",
+        "sql-optimization"
+      ],
+      "usage": {
+        "promptTokens": 1054,
+        "completionTokens": 783,
+        "totalTokens": 2356
+      },
+      "answer": "To protect your API from being overloaded by rate-limiting client requests, follow these standard practices:\n\n### 1. Key Design Decisions\n- **Client Identification (Limit Key):** Rate limit by API Key or User ID for authenticated users, and by client IP address (`req.ip` or `X-Forwarded-For`) for unauthenticated endpoints.\n- **Rate Limiting Algorithm:**\n  - **Sliding Window Log / Counter:** Prevents burst spikes right at window boundaries (e.g., allow 100 requests per 60-second sliding window).\n  - **Token Bucket / Leaky Bucket:** Useful when allowing short bursts while enforcing a steady long-term rate.\n  - **Fixed Window:** Simple to implement but susceptible to double-rate bursts at window boundaries.\n- **Storage Store:**\n  - **In-Memory:** Simple for single-instance APIs.\n  - **Redis / Distributed Cache:** Necessary for multi-instance horizontal scaling to ensure limits are enforced globally.\n\n### 2. Standard HTTP Responses & Headers\n- **Status Code:** Return `HTTP 429 Too Many Requests` when limits are exceeded.\n- **Headers to Return:**\n  - `Retry-After`: Time to wait in seconds (or HTTP date) before making a new request.\n  - `X-RateLimit-Limit`: Maximum allowed requests in the period.\n  - `X-RateLimit-Remaining`: Number of remaining allowed requests in the current window.\n  - `X-RateLimit-Reset`: Unix epoch timestamp indicating when the window resets.\n\n### 3. Implementation Example (Express + In-Memory / Redis)\nBelow is a standard Express implementation using `express-rate-limit` to restrict clients to 100 requests per minute.",
+      "code": [
+        "import express from 'express';\nimport rateLimit from 'express-rate-limit';\n\nconst app = express();\n\n// Define rate limiter middleware\nconst apiLimiter = rateLimit({\n  windowMs: 60 * 1000, // 1 minute window\n  max: 100, // Limit each client IP to 100 requests per windowMs\n  standardHeaders: true, // Return standard rate limit info in `RateLimit-*` headers\n  legacyHeaders: false, // Disable `X-RateLimit-*` headers in favor of standard RFC headers\n  statusCode: 429,\n  message: {\n    error: 'Too Many Requests',\n    message: 'You have exceeded the rate limit. Please try again later.'\n  },\n  keyGenerator: (req) => {\n    // Rate limit by authenticated user ID if available, falling back to IP\n    return req.user ? req.user.id : req.ip;\n  }\n});\n\n// Apply rate limiting middleware globally or to specific API routes\napp.use('/api/', apiLimiter);\n\napp.get('/api/resource', (req, res) => {\n  res.json({ message: 'Request successful' });\n});\n\napp.listen(3000, () => {\n  console.log('Server running on port 3000');\n});"
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "DIS-real-seo-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "seo-audit",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "seo-audit"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "seo-audit",
+        "image-seo",
+        "entity-seo",
+        "seo",
+        "llm-seo",
+        "off-page-seo",
+        "seo-migration",
+        "technical-seo",
+        "seo-metadata",
+        "diagnosing-superpowers"
+      ],
+      "usage": {
+        "promptTokens": 1136,
+        "completionTokens": 763,
+        "totalTokens": 2335
+      },
+      "answer": "To diagnose a sudden 50% traffic drop, follow a structured step-by-step SEO audit process:\n\n### 1. Isolate the Data (Analytics & Search Console Verification)\n- **Confirm tracking integrity:** Verify that analytics tags are firing correctly and haven't been removed or duplicated.\n- **Segment the drop:** Check whether the drop is isolated to Organic Search or affects other channels (Direct, Referral, Paid).\n- **Identify affected areas:**\n  - **By Landing Page:** Is the drop site-wide or concentrated on specific high-traffic URLs?\n  - **By Query/Keyword:** Did you lose rankings for specific core terms or long-tail traffic?\n  - **By Device/Geography:** Did traffic drop on mobile vs. desktop or in specific countries?\n\n### 2. Check Search Console for Manual Actions & Algorithm Updates\n- **Manual Actions:** Check Google Search Console > Security & Manual Actions to see if a penalty was issued.\n- **Algorithm Updates:** Cross-reference the timeline of your traffic drop against official Google Search Core Updates or spam/helpfulness updates.\n\n### 3. Audit Technical & Crawl Health\n- **Indexation:** Review the Index Coverage / Pages report in GSC to check for spikes in `Not Indexed`, `404`, `5xx`, or `Excluded` URLs.\n- **Robots.txt & Meta Tags:** Ensure pages weren't accidentally blocked via `robots.txt` or marked with `noindex` tags.\n- **Canonicalization & Redirects:** Check for broken 301 redirects, redirect loops, or incorrect `rel=\"canonical\"` tags pointing away from key pages.\n- **Render & Speed:** Inspect Core Web Vitals and ensure mobile rendering or JavaScript client-side execution isn't failing.\n\n### 4. Evaluate Content Quality & SERP Changes\n- **SERP Feature Shifts:** Check if Google introduced new SERP features (AI Overviews, Featured Snippets, Local Packs) pushing organic results down.\n- **Search Intent & Competitor Shifts:** Check if competitors updated content or gained rankings above yours.\n\n### 5. Review Backlink Profile\n- **Lost Backlinks:** Audit referring domains to confirm whether high-authority backlinks were lost or removed.\n- **Negative SEO / Spam:** Check for unnatural spikes in toxic inbound links or spam attacks.\n\n### Prioritized Action Plan\n1. **Immediate:** Check tracking setup, GSC Manual Actions, and `robots.txt`/`noindex` directives.\n2. **Short-Term:** Fix crawl errors, restore lost canonicals/redirects, and re-submit affected URLs for indexing.\n3. **Medium-Term:** Update content for freshness/relevance and repair or replace lost high-value backlinks.",
+      "tools": [
+        "1. Verify analytics tracking and isolate affected pages, devices, and channels.",
+        "2. Check Google Search Console for manual actions, security issues, and algorithm update alignment.",
+        "3. Inspect technical foundation: crawlability, robots.txt, noindex tags, 404s, and canonical tags.",
+        "4. Review SERP features, competitor changes, and content intent alignment.",
+        "5. Audit backlink profile for lost links or spam attacks."
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "DIS-real-tailwind-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "tailwind-css",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "tailwind-css",
+        "responsive-design"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "tailwind-css",
+        "responsive-design",
+        "css",
+        "pagespeed-insights",
+        "sqlite",
+        "pulumi",
+        "shadcn-ui",
+        "web-artifacts-builder",
+        "technical-seo",
+        "electron"
+      ],
+      "usage": {
+        "promptTokens": 1061,
+        "completionTokens": 385,
+        "totalTokens": 1948
+      },
+      "answer": "Tailwind CSS uses a mobile-first approach for responsive utility classes. To stack elements vertically on mobile and switch to a two-column grid on desktop screens:\n\n1. Use `grid` to turn the container into a CSS Grid container.\n2. Set `grid-cols-1` as the base style so items stack in a single column on small screens.\n3. Add a breakpoint prefix like `md:grid-cols-2` or `lg:grid-cols-2` to switch to 2 columns on medium or large screen sizes.\n4. Add a `gap-*` utility (e.g., `gap-4` or `gap-6`) to add spacing between grid items.",
+      "code": [
+        "<div class=\"grid grid-cols-1 md:grid-cols-2 gap-6\">\n  <div class=\"p-6 bg-white rounded-lg shadow\">\n    <h2 class=\"text-xl font-bold mb-2\">First Column</h2>\n    <p class=\"text-gray-600\">Content for the first column on desktop, stacked on mobile.</p>\n  </div>\n  <div class=\"p-6 bg-white rounded-lg shadow\">\n    <h2 class=\"text-xl font-bold mb-2\">Second Column</h2>\n    <p class=\"text-gray-600\">Content for the second column on desktop, stacked on mobile.</p>\n  </div>\n</div>"
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "DIS-real-typescript-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "typescript",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "typescript"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "typescript",
+        "typescript-sdk",
+        "schema",
+        "clean-code",
+        "llm-integration",
+        "nodejs",
+        "sdk-development",
+        "react",
+        "unit-testing",
+        "keyword-to-content"
+      ],
+      "usage": {
+        "promptTokens": 1000,
+        "completionTokens": 608,
+        "totalTokens": 1897
+      },
+      "answer": "To fix a TypeScript error where a function argument could be `undefined`, you can narrow or handle the `undefined` type before passing it or within the function. Here are the recommended approaches:\n\n1. **Type Guard / Control Flow Narrowing (Recommended)**: Check if the value is defined using an `if` block or early return before invoking the function.\n2. **Default Parameter Value**: Provide a fallback value in the function definition if `undefined` is passed.\n3. **Nullish Coalescing Operator (`??`)**: Provide a fallback value at the call site.\n4. **Non-Null Assertion Operator (`!`)**: Assert to TypeScript that the value is definitely defined (use with caution when you know for certain the value cannot be `undefined` at runtime).\n5. **Updating the Function Signature**: If the function should accept `undefined`, update its parameter type to include `undefined` (e.g., `param: string | undefined`).",
+      "code": [
+        "// 1. Control Flow Narrowing (If Check / Early Return)\nfunction printLength(text: string): void {\n  console.log(text.length);\n}\n\nfunction handleInput(input?: string): void {\n  if (input !== undefined) {\n    // TypeScript narrows 'input' from 'string | undefined' to 'string'\n    printLength(input);\n  }\n}",
+        "// 2. Default Parameter Value\nfunction greet(name: string = \"Guest\"): void {\n  console.log(`Hello, ${name.toUpperCase()}`);\n}\n\nlet username: string | undefined = undefined;\ngreet(username); // Works: defaults to \"Guest\"",
+        "// 3. Nullish Coalescing Operator ( Call Site Fallback )\nfunction processId(id: string): void {\n  console.log(id.trim());\n}\n\nlet maybeId: string | undefined = undefined;\nprocessId(maybeId ?? \"default-id\");",
+        "// 4. Non-Null Assertion Operator (Use when guaranteed at runtime)\nfunction execute(command: string): void {\n  console.log(command);\n}\n\nlet knownCommand: string | undefined = \"start\";\n// Telling TypeScript that 'knownCommand' is not undefined\nexecute(knownCommand!);"
+      ],
+      "tools": [
+        "Identify common patterns for narrowing undefined types in TypeScript.",
+        "Provide idiomatic TypeScript code examples demonstrating type narrowing, default parameters, nullish coalescing, and non-null assertion."
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "DIS-real-unittest-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "unit-testing",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "unit-testing",
+        "regression-testing"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "unit-testing",
+        "debugging",
+        "modular-monolith",
+        "integration-testing",
+        "structured-data",
+        "tdd",
+        "accessibility-testing",
+        "rust",
+        "regression-testing",
+        "sdk-development"
+      ],
+      "usage": {
+        "promptTokens": 966,
+        "completionTokens": 633,
+        "totalTokens": 2206
+      },
+      "answer": "To write an effective unit test for your fixed date-formatting helper and prevent regressions:\n\n1. **Identify the exact input that caused the bug**: Pinpoint the specific input value (e.g., end-of-month dates, single-digit months, leap years, time zone boundary offsets) that triggered the invalid output.\n2. **Follow the Arrange-Act-Assert (AAA) pattern**:\n   - **Arrange**: Set up the exact date input and expected output string.\n   - **Act**: Pass the input into your date-formatting helper function.\n   - **Assert**: Verify that the returned output matches your expected string.\n3. **Use a descriptive test name**: Name the test clearly so developers understand what behavior is being verified (e.g., `formatDate should correctly format leap year dates`).\n4. **Add boundary and edge cases**: Along with the regression test case, test related edge cases (e.g., null/undefined inputs, different locales, or single-digit days/months) to prevent similar bugs.",
+      "code": [
+        "import { describe, it, expect } from 'vitest';\nimport { formatDate } from './dateUtils';\n\ndescribe('formatDate', () => {\n  it('should correctly format single-digit months and days with leading zeros', () => {\n    // Arrange\n    const inputDate = new Date('2026-03-05T00:00:00Z');\n    const expectedOutput = '2026-03-05';\n\n    // Act\n    const result = formatDate(inputDate);\n\n    // Assert\n    expect(result).toBe(expectedOutput);\n  });\n\n  it('should handle leap year dates without shifting days', () => {\n    // Arrange\n    const leapYearDate = new Date('2024-02-29T12:00:00Z');\n    const expectedOutput = '2024-02-29';\n\n    // Act\n    const result = formatDate(leapYearDate);\n\n    // Assert\n    expect(result).toBe(expectedOutput);\n  });\n});"
+      ],
+      "tools": [
+        "Identify the specific date input edge case that triggered the original bug.",
+        "Structure the unit test using the Arrange-Act-Assert (AAA) pattern.",
+        "Give the test a clear, descriptive name specifying the expected behavior.",
+        "Run the test against the helper function to confirm it passes and guards against future regressions."
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "DIS-real-workers-001",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "cloudflare-workers",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "cloudflare-workers"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "cloudflare-workers",
+        "cloudflare-kv",
+        "cloudflare-r2",
+        "vercel",
+        "nodejs",
+        "render",
+        "mcp-development",
+        "hono",
+        "vue",
+        "cloudflare"
+      ],
+      "usage": {
+        "promptTokens": 1143,
+        "completionTokens": 535,
+        "totalTokens": 2095
+      },
+      "answer": "To deploy an edge API using Cloudflare Workers and Wrangler, follow these steps:\n\n1. **Initialize the Project**: Create a new Cloudflare Workers project using C3 (`npm create cloudflare@latest`) or manually initialize a project using `wrangler` CLI.\n2. **Configure `wrangler.toml`**: Define your project name, main entry point (e.g., `src/index.ts`), and set the current `compatibility_date`.\n3. **Write the Worker Fetch Handler**: Create a standard ES module fetch handler that receives an incoming `Request` and returns a `Response` object.\n4. **Test Locally**: Run `npx wrangler dev` to start a local development server and inspect how your Worker handles requests at the edge.\n5. **Deploy**: Run `npx wrangler deploy` to publish your Worker directly to Cloudflare's global edge network.",
+      "code": [
+        "name = \"my-api\"\nmain = \"src/index.ts\"\ncompatibility_date = \"2024-04-01\"",
+        "export default {\n  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {\n    const url = new URL(request.url);\n\n    if (url.pathname === \"/api/hello\") {\n      return new Response(JSON.stringify({ message: \"Hello from the edge!\" }), {\n        headers: { \"Content-Type\": \"application/json\" },\n      });\n    }\n\n    return new Response(\"Not Found\", { status: 404 });\n  },\n};"
+      ],
+      "tools": [
+        "1. Initialize a new Worker project with `npm create cloudflare@latest my-api` or setup a project folder.",
+        "2. Configure `wrangler.toml` with `name`, `main`, and `compatibility_date`.",
+        "3. Implement the fetch handler in `src/index.ts` to process HTTP requests.",
+        "4. Preview and test the Worker locally with `npx wrangler dev`.",
+        "5. Deploy the API to Cloudflare Workers using `npx wrangler deploy`."
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "ERR-cloudflare-queues-001",
+      "category": "error-handling",
+      "type": "positive",
+      "skill": "cloudflare-queues",
+      "source": "hand-written",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini provider returned non-JSON output: ```json\n{\n  \"skills\": [\n    \"cloudflare-queues\"\n  ],\n  \"answer\": \"To handle failing Cloudflare Queues messages, configure automatic retries and a Dead-Letter Queue (DLQ) in your `wrangler.toml` file, ",
+      "selectedSkills": [],
+      "checks": [],
+      "retrievedSkills": [
+        "cloudflare-queues",
+        "queues",
+        "cloudflare",
+        "cloudflare-workers",
+        "engineering-standards",
+        "cloudflare-d1",
+        "cloudflare-kv",
+        "cloudflare-r2",
+        "debugging",
+        "tdd"
+      ],
+      "usage": {
+        "promptTokens": 1075,
+        "completionTokens": 715,
+        "totalTokens": 2373
+      },
+      "finishReason": "stop",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    },
+    {
+      "id": "ERR-debugging-001",
+      "category": "error-handling",
+      "type": "positive",
+      "skill": "debugging",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "debugging"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "precision",
+          "pass": true,
+          "detail": "precision 1/1 = 1.00 (need >= 0.50)"
+        },
+        {
+          "name": "grounded-in: debugging",
+          "pass": true,
+          "detail": "evaluated skill \"debugging\" was selected"
+        },
+        {
+          "name": "must-include: reproduce",
+          "pass": true,
+          "detail": "answer contains \"reproduce\""
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "debugging",
+        "express",
+        "frontend-design",
+        "fastify",
+        "hono",
+        "nestjs",
+        "diagnosing-superpowers",
+        "pagespeed-insights",
+        "technical-decision-records",
+        "metadata-validation"
+      ],
+      "usage": {
+        "promptTokens": 1003,
+        "completionTokens": 474,
+        "totalTokens": 1722
+      },
+      "answer": "To investigate an intermittent production failure systematically, follow a structured debugging approach:\n\n1. **Gather Data & Observability**\n   - **Logs:** Aggregate logs across services around the exact failure timestamps. Look for unhandled rejections, memory warnings, timeouts, or race conditions.\n   - **Metrics & Telemetry:** Check CPU, memory usage, open database pool connections, file descriptors, and network latency spikes preceding failures.\n   - **Context:** Identify common attributes among failed requests (e.g., specific user state, high concurrency, specific payloads, background job interactions).\n\n2. **Isolate and Hypothesize**\n   - Distinguish whether the failure is triggered by **time/load** (resource leaks, connection exhaustion, rate limits), **data** (unhandled edge-case inputs), or **concurrency** (race conditions, shared state mutation).\n   - Formulate clear, testable hypotheses (e.g., \"Database pool runs out of connections under concurrent write spikes\").\n\n3. **Reproduce the Failure**\n   - Create a minimal reproduction environment locally or in staging.\n   - Use load generation tools or concurrency scripts to stress-test suspected components if load/concurrency is suspected.\n\n4. **Apply Targeted Fix & Add Regression Tests**\n   - Fix the root cause (e.g., proper error handling, connection cleanup, locking/atomic operations).\n   - Write regression tests to verify the behavior and ensure the bug does not return.",
+      "tools": [
+        "1. Gather production logs, telemetry, and request metadata during failure windows.",
+        "2. Isolate environment variables, concurrency spikes, memory usage, and input edge cases.",
+        "3. Formulate hypotheses for intermittent triggers (race conditions, connection limits, resource leaks).",
+        "4. Attempt controlled reproduction locally or in staging under simulated load/stress.",
+        "5. Implement root-cause fix and write automated regression tests."
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "GEN-disc-accessibility",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "accessibility",
+      "source": "generated",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini helper failed (exit 1): Gemini API error: HTTP 503: [{\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n]",
+      "selectedSkills": [],
+      "checks": [],
+      "retrievedSkills": [
+        "accessibility",
+        "accessibility-testing",
+        "image-accessibility",
+        "shadcn-ui",
+        "semantic-html",
+        "image-seo",
+        "react",
+        "ui-design",
+        "security-auditing",
+        "responsive-design"
+      ],
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    },
+    {
+      "id": "GEN-disc-accessibility-testing",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "accessibility-testing",
+      "source": "generated",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "accessibility-testing"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "accessibility-testing",
+        "accessibility",
+        "webapp-testing",
+        "integration-testing",
+        "semantic-html",
+        "security-auditing",
+        "metadata-validation",
+        "web-design-guidelines",
+        "package-boundaries",
+        "e2e-testing"
+      ],
+      "usage": {
+        "promptTokens": 921,
+        "completionTokens": 197,
+        "totalTokens": 1313
+      },
+      "answer": "To test web applications for accessibility, combine automated testing (such as axe-core with Playwright, Jest, or Cypress) with manual checks for keyboard navigation, focus management, ARIA usage, and screen reader compatibility following WCAG 2.2 standards.",
+      "tools": [
+        "Run automated accessibility audits using axe-core or Lighthouse to catch common WCAG violations.",
+        "Verify keyboard navigation: ensure all interactive elements receive focus in logical order and have visible focus indicators.",
+        "Inspect ARIA attributes for correct roles, states, and live regions.",
+        "Perform manual screen reader testing (NVDA, VoiceOver, or JAWS) on key user flows."
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "GEN-disc-advanced-api-architecture",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "advanced-api-architecture",
+      "source": "generated",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "advanced-api-architecture"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "advanced-api-architecture",
+        "background-jobs",
+        "api-design",
+        "auth-security",
+        "rate-limiting",
+        "express",
+        "graphql",
+        "rest-api",
+        "api-documentation",
+        "technical-decision-records"
+      ],
+      "usage": {
+        "promptTokens": 1024,
+        "completionTokens": 853,
+        "totalTokens": 2132
+      },
+      "answer": "Designing production-grade APIs requires a cohesive architecture across several key operational and design pillars:\n\n1. **Protocol & Style Selection (REST vs. GraphQL):**\n   - Use **REST** (OpenAPI-driven) for resource-centric CRUD operations, standard caching semantics (HTTP headers), public developer platforms, and clear HTTP-level status codes.\n   - Use **GraphQL** for client-driven data fetching (avoiding over/under-fetching), complex graph domain entities, and multi-platform clients (mobile/web) with disparate field requirements.\n\n2. **API Versioning Strategy:**\n   - Prefer **URL path versioning** (e.g., `/v1/resources`) or **header-based versioning** (`Accept-Version: 2024-01-15` / API date versioning).\n   - Establish explicit deprecation policies with HTTP headers (`Sunsetting: <date>`, `Link: <url>; rel=\"deprecation\"`).\n\n3. **Pagination & Filtering:**\n   - Implement **Cursor-based pagination** (`after`, `first`, `before`, `last`) for real-time or large datasets to prevent offset degradation and skip/insert drift.\n   - Standardize filtering using clear query parameter conventions (e.g., `filter[status]=active&sort=-created_at`).\n\n4. **Rate Limiting & Abuse Prevention:**\n   - Deploy token bucket or sliding window counter algorithms at the API gateway layer using Redis.\n   - Return `429 Too Many Requests` along with standard response headers (`X-RateLimit-Limit`, `X-RateLimit-Remaining`, `Retry-After`).\n\n5. **Idempotency:**\n   - Accept `Idempotency-Key` headers on mutating requests (`POST`/`PATCH`).\n   - Persist idempotency payload states in a centralized cache/database with explicit TTLs to safely handle client retries.\n\n6. **Validation & Error Handling:**\n   - Perform schema-first request validation at the boundary.\n   - Standardize error responses using RFC 7807 (`application/problem+json`), providing machine-readable error codes and structured validation detail arrays.\n\n7. **Authentication & Authorization:**\n   - Secure endpoints using OAuth 2.0 / OIDC with short-lived JWT access tokens and long-lived refresh tokens.\n   - Enforce fine-grained access control using Role-Based Access Control (RBAC) or Attribute-Based Access Control (ABAC).\n\n8. **API Security:**\n   - Implement strict TLS 1.3, CORS configurations, security headers (HSTS, CSP), request payload size caps, and input sanitization.\n\n9. **Caching Strategy:**\n   - Leverage standard HTTP caching (`Cache-Control: private, max-age=...`, `ETag`, `If-None-Match`).\n   - Utilize edge caching (CDN/Reverse Proxy) for static assets and public read responses.\n\n10. **Asynchronous Processing & Webhooks:**\n    - Offload heavy tasks using background job queues (e.g., BullMQ, Kafka, RabbitMQ) and return `202 Accepted` with a status polling endpoint.\n    - For event notifications, dispatch webhooks asynchronously with HMAC-SHA256 request signing and exponential backoff retry schedules.\n\n11. **Observability & Distributed Systems:**\n    - Inject W3C Trace Context (`traceparent`) / correlation IDs across service boundaries.\n    - Emit structured JSON logs, standard RED metrics (Requests, Errors, Duration), and distributed traces (OpenTelemetry).",
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "GEN-disc-aeo-optimization",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "aeo-optimization",
+      "source": "generated",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "aeo-optimization"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "aeo-optimization",
+        "geo-optimization",
+        "ai-seo",
+        "faq-generation",
+        "llm-seo",
+        "local-seo",
+        "blog-featured-images",
+        "hreflang",
+        "schema-jsonld",
+        "image-seo"
+      ],
+      "usage": {
+        "promptTokens": 1197,
+        "completionTokens": 486,
+        "totalTokens": 2097
+      },
+      "answer": "Answer Engine Optimization (AEO) focuses on structuring content so search engines and generative AI systems (such as Google AI Overviews, Perplexity, and ChatGPT Search) can extract and serve direct answers, featured snippets, People Also Ask (PAA) blocks, and voice search results.\n\n### Key Strategies for AEO:\n\n1. **Direct Answer Structuring (Targeting Featured Snippets & PAA):**\n   - **Question Headings:** Use clear `<h2>` or `<h3>` tags that match exact search intent questions (e.g., \"What is Answer Engine Optimization?\").\n   - **Immediate Lead Answer:** Provide a concise, standalone definition or answer in 40–60 words immediately beneath the heading.\n   - **Formatting:** Use ordered lists for step-by-step instructions, unordered lists for itemized features, and tables for comparative data.\n\n2. **AI & LLM Citation Optimization (GEO / AEO):**\n   - Include explicit factual statements, key statistics, and authoritative definitions that generative engines can easily parse and cite.\n   - Structure content into clear logical sections with descriptive headings.\n   - Ensure factual accuracy and source authority to maximize likelihood of being cited as a grounding source.\n\n3. **Structured Data Implementation:**\n   - Add `FAQPage`, `HowTo`, or `QAPage` JSON-LD schema to mark up questions and answers for machine readability.\n\n4. **Voice Search & Conversational Query Alignment:**\n   - Adapt to natural language phrasing and long-tail conversational queries (who, what, where, when, why, how).",
+      "tools": [
+        "Identify target question queries and search intent",
+        "Format question headings using exact-match query patterns",
+        "Write concise 40-60 word direct answers directly below headings",
+        "Use lists and tables for step-by-step process or comparison data",
+        "Implement FAQPage or HowTo JSON-LD structured data"
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "GEN-disc-agent-evaluation",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "agent-evaluation",
+      "source": "generated",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini provider returned non-JSON output: ```json\n{\n  \"skills\": [\n    \"agent-evaluation\"\n  ],\n  \"answer\": \"Systematic evaluation of LLM applications and AI agents requires a multi-layered approach spanning offline golden datasets, automated u",
+      "selectedSkills": [],
+      "checks": [],
+      "retrievedSkills": [
+        "agent-evaluation",
+        "llm-integration",
+        "ai-agents",
+        "regression-testing",
+        "rag",
+        "integration-testing",
+        "llm-seo",
+        "ai-image-generation",
+        "dispatching-parallel-agents",
+        "ci-cd"
+      ],
+      "usage": {
+        "promptTokens": 1136,
+        "completionTokens": 1293,
+        "totalTokens": 2748
+      },
+      "finishReason": "stop",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    },
+    {
+      "id": "GEN-disc-ai-image-generation",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "ai-image-generation",
+      "source": "generated",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini helper failed (exit 1): Gemini API error: HTTP 503: [{\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n]",
+      "selectedSkills": [],
+      "checks": [],
+      "retrievedSkills": [
+        "ai-image-generation",
+        "image-prompt-engineering",
+        "blog-featured-images",
+        "image-format-conversion",
+        "image-optimization",
+        "image-accessibility",
+        "image-compression",
+        "og-image-generation",
+        "twitter-card-images",
+        "ai-agents"
+      ],
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    }
+  ],
+  "archivePath": "ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-23-day2.json",
+  "limitations": [
+    "This run measures one model at one point in time (temperature 0, but providers are not perfectly deterministic). Re-running may give different results.",
+    "The model was asked to self-report its skill selection as JSON; a model can select a skill and fail to report it, or report one it would not actually load.",
+    "The model never sees the skill files — it answers from its own knowledge plus the task prompt. A \"grounded\" answer may come from its weights, not the library; the grounded-in check only verifies the skill was named.",
+    "Content checks are substring matches on the model's answer; they prove the guidance is present in the answer, not that it is complete or correctly applied.",
+    "Code checks prove compilation of the model's code blocks (and fixture behavior where fixtures exist), not general correctness. TypeScript blocks get a structural check only.",
+    "Context preservation is a proxy dimension (no dedicated cases exist in the subset); see the dimension note above.",
+    "Failure categories are a machine first pass. Every failure needs a human read before it is counted as a model gap, a case-design issue, or a library gap."
+  ]
+}
