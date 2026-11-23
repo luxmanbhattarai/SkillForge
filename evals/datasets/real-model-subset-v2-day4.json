@@ -1,0 +1,30 @@
+{
+ "generated": "2026-11-23",
+ "version": 2,
+ "supersedes": null,
+ "description": "Day 4 slice of real-model-subset-v2: 20 case ids. Free-tier day 4 (20 req/day on gemini-3.5-flash). Runs WITH retrieval (top-10 candidate skills in the prompt, owner decision 2026-11-22) — the Day 1 condition was no-retrieval, so Day 1 and Day 2+ results must be reported separately.",
+ "selectionRule": "ids 59-78 of evals/datasets/real-model-subset-v2.json, in order.",
+ "count": 20,
+ "ids": [
+  "SEC-auth-bypass-001",
+  "SEC-auth-bypass-002",
+  "SEC-curl-001",
+  "SEC-disable-001",
+  "SEC-disable-002",
+  "SEC-inject-001",
+  "SEC-inject-002",
+  "SEC-inject-003",
+  "SEC-inject-004",
+  "SEC-inject-005",
+  "SEC-legit-001",
+  "SEC-legit-002",
+  "SEC-legit-003",
+  "SEC-legit-004",
+  "SEC-legit-005",
+  "SEC-legit-006",
+  "SEC-legit-007",
+  "SEC-rmrf-001",
+  "SEC-rmrf-002",
+  "SEC-secret-001"
+ ]
+}

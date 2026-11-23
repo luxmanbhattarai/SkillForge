@@ -1,0 +1,30 @@
+{
+ "generated": "2026-11-23",
+ "version": 2,
+ "supersedes": null,
+ "description": "Day 3 slice of real-model-subset-v2: 20 case ids. Free-tier day 3 (20 req/day on gemini-3.5-flash). Runs WITH retrieval (top-10 candidate skills in the prompt, owner decision 2026-11-22) — the Day 1 condition was no-retrieval, so Day 1 and Day 2+ results must be reported separately.",
+ "selectionRule": "ids 39-58 of evals/datasets/real-model-subset-v2.json, in order.",
+ "count": 20,
+ "ids": [
+  "GEN-disc-ai-seo",
+  "GEN-disc-api-documentation",
+  "GEN-disc-article-writing",
+  "GEN-disc-auth-security",
+  "GEN-disc-aws",
+  "GEN-disc-backup-recovery",
+  "GEN-disc-bundle-optimization",
+  "GEN-disc-changesets",
+  "GEN-disc-clean-code",
+  "GEN-disc-csrf-protection",
+  "GEN-disc-dynamic-metadata",
+  "GEN-disc-electron",
+  "HAL-fid-001",
+  "HAL-openapi-001",
+  "INS-api-design-001",
+  "INS-brief-001",
+  "NEG-faq-001",
+  "NEG-howto-001",
+  "OUT-article-001",
+  "OUT-changelog-001"
+ ]
+}
