@@ -33,4 +33,12 @@ regexes = [
   '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ\.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c''',
   # Example Idempotency-Key UUID in skills/backend/api-design/SKILL.md.
   '''7f3a9c2e-1b4d-4a8e-9c01-2d5f6a7b8c9d''',
+  # Eval case ID in evals/datasets/real-model-subset-v2-day1.json
+  # (line 19). The generic-api-key rule fires because the preceding
+  # line holds "COD-oauth-001" (contains "auth") and this quoted
+  # string follows within the rule's window — but it is just a case
+  # identifier, not a credential. Flagged by the scheduled
+  # full-history scan on 2026-11-23 (run 45229640294); push scans
+  # only check the latest commit, so it passed there.
+  '''COD-pagination-001''',
 ]
