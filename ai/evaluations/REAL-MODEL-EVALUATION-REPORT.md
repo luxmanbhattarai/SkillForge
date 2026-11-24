@@ -537,22 +537,25 @@ plus the 2–3 case smoke test — no other paid calls.
    prompt); structured-output enforcement (`response_format`); a
    spend cap; per-model result history.
 
-## 9. Run results (IN PROGRESS — multi-day run on `gemini-3.5-flash`; Days 1–2 of 5 complete)
+## 9. Run results (IN PROGRESS — multi-day run on `gemini-3.5-flash`; Days 1–3 of 5 complete)
 
 > The 89-case run is executing as a multi-day run (free tier,
 > 20 requests/day, checkpointed day slices) on
 > `gemini-3.5-flash`, after the model switch noted at the top
-> of this report. Days 1–2 (39 cases) completed 2026-11-22 and
-> 2026-11-23; the remaining 51 cases plus 2 retries run on
-> Days 3–5 (20 + 20 + 13), daily run time fixed to 10:12
-> Phoenix (owner decision 2026-11-23). When the run
-> completes, record here: model/provider info, methodology
-> (as run, including any deviations), dataset details, individual
-> results summary, aggregate metrics (the eight dimensions),
-> failure analysis (every failure classified per §5.4),
-> comparison against the mock evaluation (463/463), token usage
-> and cost, and known limitations. The machine-readable records
-> live at
+> of this report. Days 1–3 (59 cases attempted, 36 evaluated)
+> completed 2026-11-22, 2026-11-23, and 2026-11-24; Day 3
+> evaluated 0 cases — all 20 hit HTTP 503 (model under high
+> demand). 53 cases are now unevaluated against 40 remaining
+> slots on Days 4–5 (20 + 20) — a 13-case shortfall; the retry
+> plan is an open owner decision (see Day 3 below). Daily run
+> time fixed to 10:12 Phoenix (owner decision 2026-11-23). When
+> the run completes, record here: model/provider info,
+> methodology (as run, including any deviations), dataset
+> details, individual results summary, aggregate metrics (the
+> eight dimensions), failure analysis (every failure classified
+> per §5.4), comparison against the mock evaluation (463/463),
+> token usage and cost, and known limitations. The
+> machine-readable records live at
 > `ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-22-day<N>.json`.
 >
 > **Methodology change from Day 2 (owner decision, 2026-11-22):**
@@ -703,6 +706,51 @@ observability gaps (fixed below).
 - **Archive:** `ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-23-day2.json`
   (dataset: `evals/datasets/real-model-subset-v2-day2.json`,
   `COD-nodejs-001` retry + ids 20–38 of subset v2).
+
+### Day 3 (2026-11-24) — 20 cases, `gemini-3.5-flash`, WITH retrieval
+
+- **Result: 0/20 passed (0.0%), 20 failed, 0 critical — no case
+  was evaluated.** Run id
+  `real-model-gemini-3.5-flash-20261124-171314`, ~5.5 min
+  (17:13–17:18 UTC). Model served: none — every call failed
+  before any answer. Coverage: 0/277 skills selected. Every
+  case received 10 retrieved candidates (the expected skill was
+  in the candidate list for all 20 — retrieval ran fine; the
+  model never got to choose).
+- **Dimensions (this slice only):** skill selection 0/12
+  (0.0%); instruction following 0/2 (0.0%); grounding 0/2
+  (0.0%); context preservation (proxy) 0/4 (0.0%). The other
+  four dimensions had 0 cases in this slice. All four zeros are
+  provider errors, not model performance — **no dimension was
+  actually measured today**. Do not cite Day 3 as a model
+  result; it is a provider-outage record.
+- **Failures (20):** all 20 are true provider errors — HTTP 503
+  (`UNAVAILABLE`, "This model is currently experiencing high
+  demand"), identical on every case from the first call to the
+  last. This is NOT quota: no 429 appeared, no retry was
+  triggered (adapter or runner level), and 0 tokens were used.
+  Nothing about the library or the harness failed; the model
+  was under sustained high demand for the whole run window.
+  Same failure class as Day 1's `COD-nodejs-001` and Day 2's
+  two 503s — but a full-day sweep, not an isolated spike.
+- **Usage:** 20 requests, 0 retries, 20 errors, 0 tokens (0
+  prompt + 0 completion). Cost: $0 (free tier). Whether the 20
+  errored requests count against the 20/day free-tier request
+  quota is unknown — they were requests made, but none
+  completed. Day 4 runs tomorrow on its own quota either way.
+- **Archive:** `ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-24-day3.json`
+  (dataset: `evals/datasets/real-model-subset-v2-day3.json`,
+  ids 39–58 of subset v2).
+- **Open owner decision — the retries no longer fit the 5-day
+  plan:** 53 cases are now unevaluated (20 Day-3 503s + the
+  20-case Day-4 slice + 11 final ids + 2 Day-2 503 retries
+  already on Day 5), but only Days 4–5 remain (40 slots at
+  20/day) — a 13-case shortfall. Options: extend to a Day 6
+  (2026-11-27), fold the Day-3 retries into Days 4–5 by
+  shrinking those slices, or accept the 20 Day-3 cases as
+  unevaluated. The Day 5 slice was NOT changed today — no
+  re-slicing without the owner's word. Evaluated so far: 36/89
+  (Day 1: 18, Day 2: 18, Day 3: 0).
 
 ### Smoke test (2026-11-22 ~01:58 UTC) — the pre-run quota evidence
 
