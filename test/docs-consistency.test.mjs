@@ -133,7 +133,20 @@ test('PROJECT-STATUS.json records the real-model evaluation run honestly (run id
   const archive = await readJson(rme.archive);
   assert.equal(archive.runId, rme.runId, 'the archive run id must match the status run id');
   assert.equal(archive.model.requested, 'gemini-3.5-flash', 'the archive must record the model that ran');
-  assert.equal(archive.model.served, 'gemini-3.5-flash', 'the archive must record the model that served');
+  // served is null only on a full provider-outage run: no call ever got
+  // an answer (Day 3, 2026-11-24: 20/20 HTTP 503, 0 tokens). The
+  // archive itself must prove it — zero tokens, no served models, every
+  // result a provider error — otherwise a null served model is a lie.
+  // Never "fix" this by writing a served model into the archive: the
+  // archive records what happened, and on Day 3 nothing was served.
+  if (archive.model.served === null) {
+    assert.equal(archive.usage.totalTokens, 0, 'a run with no served model must have used 0 tokens');
+    assert.deepEqual(archive.model.servedModels, [], 'a run with no served model must list no served models');
+    assert.ok(Array.isArray(archive.results) && archive.results.length > 0, 'the archive must carry its results');
+    assert.ok(archive.results.every((r) => r.failureCategory === 'provider-error'), 'a run with no served model must have failed every case as a provider error');
+  } else {
+    assert.equal(archive.model.served, 'gemini-3.5-flash', 'the archive must record the model that served');
+  }
   // The archive's git commit is the code that ran: it must be a real
   // commit on main's history (skipped on shallow CI checkouts).
   const commit = archive.environment.gitCommit;
