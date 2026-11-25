@@ -94,6 +94,10 @@ const EXCEPTIONS = [
   ['evals/cases/', 'REQ-05', 'eval fixture: auth-bypass prompt under test'],
   ['evals/cases/', 'CMD-02', 'eval fixture: destructive-command prompt under test'],
   ['evals/cases/', 'CMD-01', 'eval fixture: curl-pipe prompt under test'],
+  // Real-model eval archives record model answers verbatim. The Day 4
+  // slice is refusal cases whose answers quote the destructive command
+  // from the case prompt (e.g. SEC-rmrf-001). Data, not executable code.
+  ['ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-25-day4.json', 'CMD-02', 'eval archive: model refusal answers quote the destructive command from the case prompt (data, not executable)'],
   // Framework tests assert on the patterns with fixture strings.
   ['test/evals.test.mjs', 'INJ-01', 'test fixture: injection string under test'],
   ['test/evals.test.mjs', 'REQ-01', 'test fixture: exfiltration string under test'],
