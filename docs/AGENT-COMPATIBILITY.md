@@ -6,7 +6,7 @@ each.
 SkillForge skills follow the
 [Agent Skills specification](https://agentskills.io/specification), so
 they work with any agent implementing that standard. The install script
-supports four targets directly; other agents can use the skills by
+supports five targets directly; other agents can use the skills by
 copying or linking them into the path the agent reads, per vendor docs.
 
 ## Supported targets
@@ -17,9 +17,11 @@ copying or linking them into the path the agent reads, per vendor docs.
 | Cursor | `--target cursor` | `.cursor/skills` | `~/.cursor/skills` |
 | Codex | `--target codex` | `.agents/skills` | `~/.agents/skills` |
 | Antigravity | `--target antigravity` | `.agents/skills` | `~/.gemini/config/skills` |
+| Muse | `--target muse` | — (no documented project location) | `~/workspace/custom-skills` |
 
 Paths verified against each vendor's current official documentation on
-2026-11-20 (sources in `scripts/install/targets.mjs`). Codex and
+2026-11-20 (Muse verified 2026-11-24; sources in
+`scripts/install/targets.mjs`). Codex and
 Antigravity moved since v1.0.0: Codex from `.codex/skills`, Antigravity
 from `.agent/skills` (its v1.0.0 user path `~/.agent/skills` was never a
 documented path). The installer detects installs left in the legacy
@@ -47,6 +49,13 @@ See `docs/INSTALLATION.md` for full usage.
   the Codex docs for how skills are loaded.
 - **Antigravity** — skills install into the Antigravity skills
   directories. See the Antigravity docs for how skills are loaded.
+- **Muse** — skills install into `~/workspace/custom-skills`, as
+  `SKILL.md` (no frontmatter) beside a generated `skill.yaml`.
+  User scope only; Muse documents no project-level skills
+  location, and no agents or workflows location. Skills are
+  found via search when a task needs them (`include_in_prompt`
+  is `false`); install a profile (`--profile writing`,
+  `--profile seo`) instead of all 277 skills.
 
 ## Compatibility data
 

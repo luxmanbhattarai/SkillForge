@@ -57,7 +57,7 @@ node scripts/install-skills.mjs --target claude-code --scope project --skills se
 ```
 
 (Other targets: `--target cursor`, `--target codex`,
-`--target antigravity`; see `docs/INSTALLATION.md`.)
+`--target antigravity`, `--target muse`; see `docs/INSTALLATION.md`.)
 
 The vendored copy is pinned to commit
 `67775741ce88e0a474513ac53d6f6e4558ff1a3b`, verified against the

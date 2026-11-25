@@ -18,7 +18,8 @@
 //   update     re-install manifest items from the current library
 //   list       installed items (from the manifest, or a disk scan)
 //   doctor     check paths, manifest integrity, stale installs
-//   validate   validate installed skills (SKILL.md, frontmatter)
+//   validate   validate installed skills (SKILL.md; frontmatter,
+//              or skill.yaml for Muse)
 //   uninstall  remove installed items (--skill/--agent/--workflow/
 //              --category/--all)
 //   restore    list backups (restore --list) or restore one
@@ -30,8 +31,8 @@
 // (no command word + --skills means `install`.)
 //
 // Install paths — verified against each vendor's CURRENT official
-// documentation on 2026-11-20 (see scripts/install/targets.mjs for
-// the full source list):
+// documentation on 2026-11-20 (Muse: 2026-11-24; see
+// scripts/install/targets.mjs for the full source list):
 //   claude-code  skills .claude/skills / ~/.claude/skills
 //                agents .claude/agents / ~/.claude/agents
 //   cursor       skills .cursor/skills / ~/.cursor/skills
@@ -43,6 +44,8 @@
 //                workflows .agents/workflows /
 //                          ~/.gemini/config/global_workflows
 //                          (deprecated by Google)
+//   muse         skills ~/workspace/custom-skills (user scope
+//                         only; converted to SKILL.md + skill.yaml)
 // Codex and Antigravity paths changed since v1.0.0: Codex moved
 // from .codex/skills to .agents/skills, Antigravity from
 // .agent/skills to .agents/skills (and ~/.agent/skills was never a
@@ -90,13 +93,13 @@ Commands:
   update      Re-install installed items from the current library
   list        List installed items (manifest, or a disk scan when there is no manifest)
   doctor      Check install paths, manifest integrity, and stale installs
-  validate    Validate installed skills (SKILL.md present, frontmatter name matches directory)
+  validate    Validate installed skills (SKILL.md present; name/description match — frontmatter, or skill.yaml for Muse)
   uninstall   Remove installed items
   restore     Restore from a backup (restore --list, restore <id>)
   help        Show this help
 
 Options:
-  --target <name>     claude-code (or claude) | cursor | codex | antigravity
+  --target <name>     claude-code (or claude) | cursor | codex | antigravity | muse
   --scope <scope>     project (default) | user
   --dest <path>       Install to a custom directory instead of a target path
                       (skills only; agents/workflows need --target)
@@ -111,7 +114,7 @@ Options:
                       Install skills whose verification status is needs-correction
                       (refused by default when named explicitly, skipped with a
                       warning in bulk installs; see docs/INSTALLATION.md)
-  --link              Symlink skills instead of copying (agents/workflows are always copied)
+  --link              Symlink skills instead of copying (agents/workflows are always copied; Muse skills are converted to Muse format, so they are always copied too)
   --dry-run           Print exactly what would happen; change nothing
   --force             Overwrite conflicts without prompting (a backup is still made first)
   --backup            Back up and overwrite conflicts without prompting
@@ -134,6 +137,7 @@ Examples:
   node scripts/install-skills.mjs --target claude-code --scope project --skills nextjs,astro
   node scripts/install-skills.mjs install --target codex --scope user --category seo
   node scripts/install-skills.mjs install --target claude-code --scope project --profile frontend
+  node scripts/install-skills.mjs install --target muse --scope user --profile writing
   node scripts/install-skills.mjs install --target cursor --scope project --agent frontend-specialist
   node scripts/install-skills.mjs install --target claude-code --scope user --skills all --link
   node scripts/install-skills.mjs update --target claude-code --scope project --dry-run

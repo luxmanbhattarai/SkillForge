@@ -6,11 +6,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { TARGETS, resolveTarget, targetIds, VERIFIED_DATE } from '../scripts/install/targets.mjs';
 
-test('all four targets exist with skills paths', () => {
-  assert.deepEqual(targetIds().sort(), ['antigravity', 'claude-code', 'codex', 'cursor']);
+test('all five targets exist with skills paths', () => {
+  assert.deepEqual(targetIds().sort(), ['antigravity', 'claude-code', 'codex', 'cursor', 'muse']);
   for (const def of Object.values(TARGETS)) {
-    assert.ok(def.skills.project);
+    // Every target has a user path; Muse documents no
+    // project-level location, so its project path is null.
     assert.ok(def.skills.user);
+    if (def.id === 'muse') assert.equal(def.skills.project, null);
+    else assert.ok(def.skills.project);
     assert.ok(def.docs.skills.startsWith('https://'));
   }
 });
@@ -26,6 +29,8 @@ test('resolveTarget handles ids and aliases', () => {
   assert.equal(resolveTarget('cursor').id, 'cursor');
   assert.equal(resolveTarget('codex').id, 'codex');
   assert.equal(resolveTarget('antigravity').id, 'antigravity');
+  assert.equal(resolveTarget('muse').id, 'muse');
+  assert.equal(resolveTarget('MUSE').id, 'muse');
   assert.equal(resolveTarget('nope'), null);
   assert.equal(resolveTarget(null), null);
 });
@@ -56,7 +61,15 @@ test('only Antigravity has a workflows location, and it is deprecated', () => {
   assert.equal(TARGETS['claude-code'].workflows, null);
   assert.equal(TARGETS.cursor.workflows, null);
   assert.equal(TARGETS.codex.workflows, null);
+  assert.equal(TARGETS.muse.workflows, null);
   assert.equal(TARGETS.antigravity.workflows.project, '.agents/workflows');
   assert.equal(TARGETS.antigravity.workflows.user, '.gemini/config/global_workflows');
   assert.equal(TARGETS.antigravity.workflows.deprecated, true);
+});
+
+test('Muse is user-scope only, converts skills, and has no agents location', () => {
+  assert.deepEqual(TARGETS.muse.skills, { project: null, user: 'workspace/custom-skills' });
+  assert.equal(TARGETS.muse.skillFormat, 'muse');
+  assert.equal(TARGETS.muse.agents, null);
+  assert.deepEqual(TARGETS.muse.legacySkills, { project: null, user: null });
 });

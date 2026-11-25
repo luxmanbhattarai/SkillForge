@@ -28,7 +28,7 @@ import { resolveTarget } from './targets.mjs';
 import { hashFile, hashTree, treeFingerprint, sha256Hex, hashPrefix } from './hashing.mjs';
 import { entryKey, entryRoot } from './manifest.mjs';
 import { createBackup, stageBackupItem } from './backups.mjs';
-import { installedFileName, renderInstallable, toMarkdownAgent, toTomlAgent } from './library.mjs';
+import { installedFileName, renderInstallable, toMarkdownAgent, toMuseSkill, toTomlAgent } from './library.mjs';
 import {
   LinkError,
   createLink,
@@ -100,7 +100,7 @@ export function resolveLocations(ctx) {
     targetDef = resolveTarget(ctx.target);
     if (!targetDef) {
       throw new UsageError(
-        `Unknown target '${ctx.target}'. Known: claude-code (claude), cursor, codex, antigravity.`,
+        `Unknown target '${ctx.target}'. Known: claude-code (claude), cursor, codex, antigravity, muse.`,
       );
     }
   }
@@ -108,10 +108,14 @@ export function resolveLocations(ctx) {
   if (ctx.dest) {
     skillsDir = path.resolve(ctx.cwd, ctx.dest);
   } else if (targetDef) {
-    skillsDir =
-      scope === 'user'
-        ? path.join(ctx.home, targetDef.skills.user)
-        : path.resolve(ctx.cwd, targetDef.skills.project);
+    const rel = scope === 'user' ? targetDef.skills.user : targetDef.skills.project;
+    if (!rel) {
+      throw new UsageError(
+        `${targetDef.label} has no documented ${scope}-level skills location. ` +
+          'Use --scope user or --dest <path> instead.',
+      );
+    }
+    skillsDir = scope === 'user' ? path.join(ctx.home, rel) : path.resolve(ctx.cwd, rel);
   } else {
     throw new UsageError('No install location: pass --target <name> or --dest <path>.');
   }
@@ -131,15 +135,56 @@ export function resolveLocations(ctx) {
   };
 }
 
-/** Locations for every target/scope pair (doctor's default sweep). */
-export function allLocations(ctx) {
+/** Locations for one target across its supported scopes. */
+export function targetLocations(ctx, id) {
   const out = [];
-  for (const id of ['claude-code', 'cursor', 'codex', 'antigravity']) {
-    for (const scope of ['project', 'user']) {
+  for (const scope of ['project', 'user']) {
+    try {
       out.push(resolveLocations({ ...ctx, target: id, scope, dest: null }));
+    } catch (err) {
+      // Muse documents no project-level skills location: that
+      // pair is not a location, so the sweep skips it. Any
+      // other error is real and still throws.
+      if (!(err instanceof UsageError)) throw err;
     }
   }
   return out;
+}
+
+/** Locations for every target/scope pair (doctor's default sweep). */
+export function allLocations(ctx) {
+  const out = [];
+  for (const id of ['claude-code', 'cursor', 'codex', 'antigravity', 'muse']) {
+    out.push(...targetLocations(ctx, id));
+  }
+  return out;
+}
+
+/** True when the target converts skills to Muse format (SKILL.md + skill.yaml). */
+export function isMuseTarget(targetDef) {
+  return Boolean(targetDef && targetDef.skillFormat === 'muse');
+}
+
+/**
+ * Fill in the Muse-format plan for a skill: rendered SKILL.md +
+ * skill.yaml, and plannedFiles with the rendered hashes overlaid
+ * on the library tree. `tree` is the hashTree of the source dir.
+ * The install method is forced to 'copy': a conversion cannot
+ * be represented by a symlink.
+ */
+async function planMuseSkill(planned, item, sourceAbs, tree) {
+  planned.method = 'copy';
+  const text = await readFile(path.join(sourceAbs, 'SKILL.md'), 'utf8');
+  const rendered = toMuseSkill(item, text);
+  planned.renderedFiles = new Map([
+    ['SKILL.md', rendered.skillMd],
+    ['skill.yaml', rendered.skillYaml],
+  ]);
+  planned.plannedFiles = new Map(
+    [...tree.entries()].map(([p, h]) => [`${planned.name}/${p}`, h]),
+  );
+  planned.plannedFiles.set(`${planned.name}/SKILL.md`, hashPrefix(sha256Hex(rendered.skillMd)));
+  planned.plannedFiles.set(`${planned.name}/skill.yaml`, hashPrefix(sha256Hex(rendered.skillYaml)));
 }
 
 /**
@@ -212,7 +257,10 @@ export async function computePlanned(library, item, locations, { link }) {
     sourceAbs,
     // Agents/workflows are always copied: their installed bytes are
     // a target-format transform of the library file, so a symlink
-    // cannot represent them. Skills honour --link.
+    // cannot represent them. Skills honour --link — except Muse
+    // skills, whose installed bytes are a target-format conversion
+    // (SKILL.md + skill.yaml), so they are always copied too (see
+    // planMuseSkill).
     method: item.kind === 'skill' && link ? 'link' : 'copy',
     sourceHash: null,
     plannedFiles: null,
@@ -225,7 +273,9 @@ export async function computePlanned(library, item, locations, { link }) {
   if (item.kind === 'skill') {
     const tree = await hashTree(sourceAbs);
     planned.sourceHash = treeFingerprint(tree);
-    if (planned.method === 'copy') {
+    if (isMuseTarget(targetDef)) {
+      await planMuseSkill(planned, item, sourceAbs, tree);
+    } else if (planned.method === 'copy') {
       planned.plannedFiles = new Map(
         [...tree.entries()].map(([p, h]) => [`${item.name}/${p}`, h]),
       );
@@ -244,8 +294,11 @@ export async function computePlanned(library, item, locations, { link }) {
  * the install root and file name come from the entry itself, so
  * update works with --dest alone, without --target. The agent
  * format is inferred from the installed file name (.toml = Codex).
+ * `targetId` (the manifest's recorded target, falling back to the
+ * invocation's target) decides the skill format: a Muse install
+ * re-renders SKILL.md + skill.yaml instead of copying verbatim.
  */
-export async function computePlannedFromEntry(library, item, entry, skillsDir) {
+export async function computePlannedFromEntry(library, item, entry, skillsDir, targetId = null) {
   const rootDir = entryRoot(skillsDir, entry);
   const destName = entry.destName;
   const sourceAbs = path.join(library.root, item.source);
@@ -269,7 +322,10 @@ export async function computePlannedFromEntry(library, item, entry, skillsDir) {
   if (item.kind === 'skill') {
     const tree = await hashTree(sourceAbs);
     planned.sourceHash = treeFingerprint(tree);
-    if (planned.method === 'copy') {
+    const targetDef = targetId ? resolveTarget(targetId) : null;
+    if (isMuseTarget(targetDef)) {
+      await planMuseSkill(planned, item, sourceAbs, tree);
+    } else if (planned.method === 'copy') {
       planned.plannedFiles = new Map(
         [...tree.entries()].map(([p, h]) => [`${item.name}/${p}`, h]),
       );
@@ -611,6 +667,17 @@ export async function stageItem(planned, fsOps = {}) {
       });
     } else if (planned.kind === 'skill') {
       await cp(planned.sourceAbs, staged, { recursive: true });
+      // Muse installs overlay the converted files on the verbatim
+      // copy: SKILL.md without frontmatter, plus skill.yaml.
+      // Any other files in the skill directory (references/,
+      // scripts/, examples/) copy verbatim.
+      if (planned.renderedFiles) {
+        for (const [rel, content] of planned.renderedFiles) {
+          const dest = path.join(staged, rel);
+          await mkdir(path.dirname(dest), { recursive: true });
+          await writeFile(dest, content, 'utf8');
+        }
+      }
     } else {
       await writeFile(staged, planned.rendered, 'utf8');
     }

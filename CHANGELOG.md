@@ -15,6 +15,18 @@ Full record: `ai/audits/PRODUCTION-HARDENING-FINAL-REPORT.md`.
 
 ### Added
 
+- Muse install target (`--target muse`, user scope only):
+  installs skills into `~/workspace/custom-skills` as `SKILL.md`
+  (frontmatter stripped) beside a generated `skill.yaml` (`name`,
+  `title`, `description`, `category`, `include_in_prompt: false`,
+  so skills are found via search instead of listed in every
+  conversation). Muse documents no project-level skills location
+  and no agents/workflows location: project scope is a clear
+  error, explicit `--agent`/`--workflow` fail loudly, and profile
+  members of those kinds are skipped with a warning. `install`,
+  `update`, `list`, `doctor`, `validate`, `uninstall`, and
+  `restore` all work for the target; `docs/INSTALLATION.md` and
+  `docs/AGENT-COMPATIBILITY.md` document it.
 - Install profiles (`docs/PROFILES.md`): 12 named bundles (ai,
   architecture, backend, desktop, devops, frontend, fullstack,
   media, quality, security, seo, writing) installable with

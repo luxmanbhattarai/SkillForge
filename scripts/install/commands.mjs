@@ -55,6 +55,7 @@ import {
   scanSkillDirs,
   stageItem,
   swapIn,
+  targetLocations,
   verifyStaged,
   withLockHint,
 } from './installer.mjs';
@@ -585,9 +586,52 @@ function warnDeprecatedWorkflows(ctx, items, locations) {
   }
 }
 
-function noteLinkScope(ctx, items) {
+// A profile can bundle agents/workflows a target has no location
+// for (Muse documents neither). An explicitly requested --agent /
+// --workflow still fails loudly — computePlanned throws a
+// UsageError for it, aborting the run. But a profile member is
+// not an explicit request: refusing the whole profile install
+// over it would make profiles unusable on that target, so members
+// are skipped with a warning and the rest installs. This applies
+// only when a target IS given: a bare --dest install keeps the
+// old rule — profiles include agents, agents need --target, and
+// the run errors (see test/installer-profiles.test.mjs and
+// docs/PROFILES.md). Returns the items to install.
+function dropUnsupportedProfileMembers(ctx, locations, items) {
+  if (!locations.targetDef) return items;
+  const explicitAgents = new Set(splitList(ctx.agents));
+  const explicitWorkflows = new Set(splitList(ctx.workflows));
+  const label = locations.targetDef.label;
+  const kept = [];
+  for (const item of items) {
+    if (item.kind === 'agent' && !locations.agentsDir && !explicitAgents.has(item.name)) {
+      ctx.err(
+        `warning: skipping agent '${item.name}' (profile member): ${label} has no documented agents location.`,
+      );
+      continue;
+    }
+    if (item.kind === 'workflow' && !locations.workflowsDir && !explicitWorkflows.has(item.name)) {
+      ctx.err(
+        `warning: skipping workflow '${item.name}' (profile member): ${label} has no documented workflow location.`,
+      );
+      continue;
+    }
+    kept.push(item);
+  }
+  return kept;
+}
+
+function noteLinkScope(ctx, items, locations) {
   if (ctx.link && items.some((i) => i.kind !== 'skill')) {
     ctx.out('Note: --link applies to skills; agents and workflows are always copied (their installed form is a target-format conversion of the library file).');
+  }
+  // Muse skills are a format conversion too (SKILL.md without
+  // frontmatter + a generated skill.yaml), so --link cannot apply
+  // to them either: they are always copied. Say so plainly —
+  // silently copying after the user asked for links would be a
+  // surprise, and failing the run would punish a harmless flag.
+  if (ctx.link && locations && locations.targetDef && locations.targetDef.skillFormat === 'muse') {
+    ctx.out('Note: --link does not apply to Muse installs: skills are converted to Muse format (SKILL.md + skill.yaml), so they are always copied.');
   }
 }
 
@@ -610,7 +654,8 @@ async function runInstall(ctx, locations) {
   // 'all' is bulk, never explicit.
   const explicitSkillNames = new Set(splitList(ctx.skills).filter((n) => n !== 'all'));
   const { items: itemsToInstall, refused } = applyStatusFilter(ctx, items, explicitSkillNames);
-  if (!itemsToInstall.length) {
+  const installable = dropUnsupportedProfileMembers(ctx, locations, itemsToInstall);
+  if (!installable.length) {
     if (refused.length) {
       // Everything requested was refused: nothing to install, and
       // the refusal (already on stderr) makes the run fail.
@@ -620,8 +665,8 @@ async function runInstall(ctx, locations) {
     ctx.out('Nothing to install.');
     return 0;
   }
-  warnDeprecatedWorkflows(ctx, itemsToInstall, locations);
-  noteLinkScope(ctx, itemsToInstall);
+  warnDeprecatedWorkflows(ctx, installable, locations);
+  noteLinkScope(ctx, installable, locations);
 
   // A2-03: planning is per-item fault-isolated. computePlanned
   // throws on a missing skill source dir, an unreadable agent
@@ -633,7 +678,7 @@ async function runInstall(ctx, locations) {
   // summary with a non-zero exit code.
   const plannedItems = [];
   const planningFailures = [];
-  for (const item of itemsToInstall) {
+  for (const item of installable) {
     try {
       plannedItems.push(await computePlanned(ctx.library, item, locations, ctx));
     } catch (err) {
@@ -820,6 +865,10 @@ async function runUpdate(ctx, locations) {
   const planningFailures = [];
   const skipped = [];
   skipped.push(...statusSkipped);
+  // The manifest records the target the items were installed
+  // for; a Muse install must re-render SKILL.md + skill.yaml on
+  // update, not copy verbatim (see computePlannedFromEntry).
+  const targetId = manifest.target || locations.targetDef?.id || null;
   for (const entry of entries) {
     const byKind =
       entry.kind === 'skill' ? ctx.library.skills : entry.kind === 'agent' ? ctx.library.agents : ctx.library.workflows;
@@ -834,7 +883,7 @@ async function runUpdate(ctx, locations) {
     // problem, not a data failure) still abort the run, as in
     // runInstall.
     try {
-      plannedItems.push(await computePlannedFromEntry(ctx.library, item, entry, locations.skillsDir));
+      plannedItems.push(await computePlannedFromEntry(ctx.library, item, entry, locations.skillsDir, targetId));
     } catch (err) {
       if (err instanceof UsageError) throw err;
       planningFailures.push({ label: label(entry.kind, entry.name), error: err.message });
@@ -1123,7 +1172,9 @@ export async function cmdDoctor(ctx) {
     if (ctx.scope) {
       locationsList = [resolveLocations(ctx)];
     } else {
-      locationsList = ['project', 'user'].map((scope) => resolveLocations({ ...ctx, scope }));
+      // One target, every scope it supports (Muse has no
+      // project-level location, so only its user location).
+      locationsList = targetLocations(ctx, ctx.target);
     }
   } else {
     locationsList = allLocations(ctx);
@@ -1174,6 +1225,37 @@ async function validateSkillDir(dir, name) {
   } catch (err) {
     if (err.code === 'ENOENT') return ['SKILL.md is missing'];
     return [`SKILL.md is unreadable (${err.message})`];
+  }
+  // Muse installs carry skill.yaml beside a frontmatter-free
+  // SKILL.md: the name and description live in the yaml, not in
+  // frontmatter. A directory with skill.yaml is validated in
+  // that shape (detected by the file's presence, so it works for
+  // manifest entries and disk scans alike).
+  let yamlText = null;
+  try {
+    yamlText = await readFile(path.join(dir, 'skill.yaml'), 'utf8');
+  } catch (err) {
+    if (err.code !== 'ENOENT') return [`skill.yaml is unreadable (${err.message})`];
+  }
+  if (yamlText !== null) {
+    const unquote = (v) => {
+      const t = v.trim();
+      if (t.startsWith("'") && t.endsWith("'")) return t.slice(1, -1).replace(/''/g, "'");
+      if (t.startsWith('"') && t.endsWith('"')) return t.slice(1, -1);
+      return t;
+    };
+    const field = (key) => {
+      for (const line of yamlText.split('\n')) {
+        const m = line.match(new RegExp(`^${key}:\\s*(.*)$`));
+        if (m) return unquote(m[1]);
+      }
+      return null;
+    };
+    const yamlName = field('name');
+    if (!yamlName) problems.push('skill.yaml has no name');
+    else if (yamlName !== name) problems.push(`skill.yaml name '${yamlName}' does not match directory '${name}'`);
+    if (!field('description')) problems.push('skill.yaml has no description');
+    return problems;
   }
   const { raw, error } = splitFrontmatter(text);
   if (error) return [`frontmatter: ${error}`];
@@ -1877,7 +1959,13 @@ async function runRestore(ctx, locations) {
             );
           } else {
             try {
-              const plannedEntry = await computePlannedFromEntry(ctx.library, libItem, p.entry, locations.skillsDir);
+              const plannedEntry = await computePlannedFromEntry(
+                ctx.library,
+                libItem,
+                p.entry,
+                locations.skillsDir,
+                manifest?.target || locations.targetDef?.id || null,
+              );
               if (p.item.isSymlink) plannedEntry.method = 'link';
               const restored = plannedEntry.method === 'link' ? new Map() : await hashInstalled(plannedEntry);
               manifest.items[entryKey(p.item.kind, p.item.name)] = await buildEntry(plannedEntry, {

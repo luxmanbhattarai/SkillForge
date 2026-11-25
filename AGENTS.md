@@ -109,7 +109,7 @@ registry with `npm run registry`.
 See `docs/INSTALLATION.md`. In short:
 
 ```bash
-# Project-local (Claude Code, Cursor, Codex, Antigravity)
+# Project-local (Claude Code, Cursor, Codex, Antigravity, Muse)
 node scripts/install-skills.mjs --target claude-code --scope project --skills nextjs,astro,seo-audit
 
 # Everything, user-level

@@ -106,7 +106,7 @@ manifest, and `uninstall` needs `--all` (or a selector) to act.
 ### Options
 
 - `--target <name>` — one of `claude-code` (or `claude`), `cursor`,
-  `codex`, `antigravity`.
+  `codex`, `antigravity`, `muse`.
 - `--scope <project|user>` — project installs into the current
   directory; user installs into your home directory for all projects.
   Default: `project`.
@@ -118,7 +118,9 @@ manifest, and `uninstall` needs `--all` (or a selector) to act.
 - `--link` — symlink skills instead of copying, so library updates
   are reflected immediately. Agents and workflows are always copied:
   their installed form is a target-format conversion of the library
-  file (see below), which a symlink cannot represent. On Windows,
+  file (see below), which a symlink cannot represent. Muse skills
+  are always copied for the same reason (they are converted to
+  `SKILL.md` + `skill.yaml` on install). On Windows,
   creating a directory symlink needs Developer Mode or administrator
   privileges; if that fails, the installer retries as a directory
   junction instead — junctions need no privilege and behave the same
@@ -154,13 +156,21 @@ path.
 | `cursor` | `.cursor/skills` | `~/.cursor/skills` |
 | `codex` | `.agents/skills` | `~/.agents/skills` |
 | `antigravity` | `.agents/skills` | `~/.gemini/config/skills` |
+| `muse` | — (no documented project location) | `~/workspace/custom-skills` |
 
-Sources (all retrieved 2026-11-20):
+Sources (all retrieved 2026-11-20, except Muse, verified 2026-11-24):
 
 - [Claude Code skills](https://code.claude.com/docs/en/skills)
 - [Cursor skills](https://cursor.com/docs/skills)
 - [Codex skills](https://developers.openai.com/codex/skills)
 - [Antigravity skills](https://antigravity.google/docs/skills/)
+- [Muse](https://muse.ai) — Muse documents no project-level skills
+  location, so `--target muse` only supports `--scope user` (project
+  scope is a clear error; use `--dest` for a custom directory).
+  Muse skills are `SKILL.md` without frontmatter beside a
+  `skill.yaml` (`name`, `title`, `description`, `category`,
+  `include_in_prompt`); the installer converts library skills
+  into that shape on install (see below).
 
 ### Paths that changed since v1.0.0
 
@@ -195,6 +205,7 @@ installed as skill-shaped directories.
 | `cursor` | `.cursor/agents` / `~/.cursor/agents` (Markdown) | — |
 | `codex` | `.codex/agents` / `~/.codex/agents` (TOML) | — |
 | `antigravity` | `.agents/agents` / `~/.gemini/config/agents` (Markdown) | `.agents/workflows` / `~/.gemini/config/global_workflows` (deprecated) |
+| `muse` | — | — |
 
 Sources (all retrieved 2026-11-20):
 
@@ -219,6 +230,24 @@ What the installer does to the files:
   required `name`, `description`, and `developer_instructions`
   fields. The installer renders a `.toml` file embedding the
   Markdown body as `developer_instructions`.
+- **Muse skills**: Muse reads a skill as `SKILL.md` (instructions
+  alone, no frontmatter) beside a `skill.yaml` (`name`, `title`,
+  `description`, `category`, `include_in_prompt`). The installer
+  converts the library skill on install: the frontmatter is
+  stripped from `SKILL.md` (the body is otherwise verbatim), and
+  `skill.yaml` is generated from the frontmatter `name` and
+  `description`, the body's first `#` heading as the `title`, and
+  the registry `category`. `include_in_prompt` is `false`: `true`
+  would list the skill in every conversation, and a 277-skill
+  library would flood the prompt — with `false`, Muse finds the
+  skill via search when a task needs it, which is this library's
+  discovery model. Other files in the skill directory
+  (`references/`, `scripts/`, `examples/`) copy verbatim. The
+  conversion is deterministic, so update detection and
+  idempotency still work, and `update` re-renders from the
+  library. Muse skills are always copied (`--link` does not
+  apply); agents and workflows cannot be installed for Muse at
+  all — it documents no agents or workflows location.
 - **Antigravity workflows are deprecated by Google** (May 2026;
   "Workflows are deprecated, and a new workflows system is on the
   way"). The installer supports them only for Antigravity, with a

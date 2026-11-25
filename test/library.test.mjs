@@ -5,7 +5,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdir } from 'node:fs/promises';
 import path from 'node:path';
-import { loadLibrary, resolveSelection, deriveDescription, toMarkdownAgent, toTomlAgent, splitList, installedFileName } from '../scripts/install/library.mjs';
+import { loadLibrary, resolveSelection, deriveDescription, toMarkdownAgent, toMuseSkill, toTomlAgent, splitList, installedFileName } from '../scripts/install/library.mjs';
 import { TARGETS } from '../scripts/install/targets.mjs';
 import { REPO_ROOT, makeFixtureLibrary, makeSandbox } from '../test-support/helpers.mjs';
 
@@ -110,6 +110,49 @@ test('toTomlAgent renders a Codex agent file and rejects triple quotes', () => {
   // Backslashes are escaped so the TOML stays valid.
   const withSlash = toTomlAgent('s', '# T\n\nPath C:\\temp\\x.\n');
   assert.match(withSlash, /C:\\\\temp\\\\x/);
+});
+
+test('toMuseSkill strips frontmatter and generates skill.yaml', () => {
+  const md = "---\nname: article-writing\ndescription: Write clear articles.\n---\n\n# Article Writing\n\nWrite well.\n";
+  const item = { name: 'article-writing', category: 'content', source: 'skills/content/article-writing', description: 'Write clear articles.' };
+  const out = toMuseSkill(item, md);
+  assert.equal(out.skillMd, '# Article Writing\n\nWrite well.\n');
+  assert.match(out.skillYaml, /^name: 'article-writing'$/m);
+  assert.match(out.skillYaml, /^title: 'Article Writing'$/m);
+  assert.match(out.skillYaml, /^description: 'Write clear articles\.'$/m);
+  assert.match(out.skillYaml, /^category: 'content'$/m);
+  assert.match(out.skillYaml, /^include_in_prompt: false$/m);
+  // Deterministic: same input, byte-identical output.
+  assert.deepEqual(toMuseSkill(item, md), out);
+});
+
+test('toMuseSkill escapes quotes, falls back on title/description/category', () => {
+  const md = "# Only a title\n\nFirst para here.\n";
+  const item = { name: 'my-skill', category: null, source: 'skills/x/my-skill', description: '' };
+  const out = toMuseSkill(item, md);
+  assert.equal(out.skillMd, md);
+  assert.match(out.skillYaml, /^title: 'Only a title'$/m);
+  assert.match(out.skillYaml, /^description: 'First para here\.'$/m);
+  assert.match(out.skillYaml, /^category: 'General'$/m);
+  // No H1: the name is humanized.
+  const noH1 = toMuseSkill(item, 'Body without a heading.\n');
+  assert.match(noH1.skillYaml, /^title: 'My Skill'$/m);
+  // A quote in the description is doubled, not broken.
+  const quoted = toMuseSkill(
+    { name: 'q', category: 'c', source: 'skills/c/q', description: '' },
+    "---\nname: q\ndescription: It's quick.\n---\n\n# Q\n",
+  );
+  assert.match(quoted.skillYaml, /^description: 'It''s quick\.'$/m);
+});
+
+test('toMuseSkill tolerates a missing frontmatter block but rejects a broken one', () => {
+  const plain = '# Plain\n\nNo frontmatter here.\n';
+  const item = { name: 'plain', category: 'c', source: 'skills/c/plain', description: 'Plain skill.' };
+  assert.equal(toMuseSkill(item, plain).skillMd, plain);
+  const unclosed = '---\nname: broken\ndescription: never closed\n\n# Body\n';
+  assert.throws(() => toMuseSkill(item, unclosed), /invalid frontmatter/);
+  const badYaml = "---\nname broken line\n---\n\n# Body\n";
+  assert.throws(() => toMuseSkill(item, badYaml), /invalid frontmatter/);
 });
 
 test('installedFileName follows the target format', () => {

@@ -47,6 +47,22 @@
 //                 supports them only for Antigravity, with a warning,
 //                 because it is the only target with any documented
 //                 workflow location at all.
+//   Muse          skills ~/workspace/custom-skills (user scope
+//                 only — Muse documents no project-level skills
+//                 location). A Muse skill is SKILL.md WITHOUT
+//                 frontmatter plus a skill.yaml beside it (name,
+//                 title, description, category, include_in_prompt);
+//                 the installer converts library skills into that
+//                 shape (see library.mjs toMuseSkill) and always
+//                 copies them — a conversion cannot be a symlink.
+//                 include_in_prompt is false, so skills are found
+//                 via search instead of being listed in every
+//                 conversation (the 277-skill library would flood
+//                 the prompt otherwise). Verified 2026-11-24
+//                 against Muse's own skill template:
+//                 ~/workspace/custom-skills/<skill_name>/skill.yaml
+//                 beside SKILL.md ("This file holds the
+//                 instructions alone, with no frontmatter").
 //
 // Project paths are relative to the working directory; user paths are
 // relative to the user's home directory. Agent/workflow formats:
@@ -116,6 +132,30 @@ export const TARGETS = {
       skills: 'https://antigravity.google/docs/skills/',
       agents: 'https://antigravity.google/docs/subagents',
       workflows: 'https://antigravity.google/docs/migration/workflows-to-skills/',
+    },
+  },
+  muse: {
+    id: 'muse',
+    aliases: [],
+    label: 'Muse',
+    // User scope only: Muse documents no project-level skills
+    // location, so project scope is refused with a clear error
+    // (see resolveLocations). The user path is Muse's own
+    // custom-skills directory, relative to the home directory.
+    skills: { project: null, user: 'workspace/custom-skills' },
+    agents: null,
+    workflows: null,
+    // Skills are converted to Muse format on install (SKILL.md
+    // without frontmatter + a generated skill.yaml); see
+    // library.mjs toMuseSkill. The installer branches on this.
+    skillFormat: 'muse',
+    legacySkills: { project: null, user: null },
+    // No public per-skill docs page exists for Muse custom
+    // skills; the product home stands in, and the authoritative
+    // source is Muse's own skill template (see the header
+    // comment above).
+    docs: {
+      skills: 'https://muse.ai',
     },
   },
 };

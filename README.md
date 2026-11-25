@@ -109,7 +109,7 @@ node scripts/install-skills.mjs --target claude-code --scope project --skills ne
 node scripts/install-skills.mjs install --target claude-code --scope user --skills all
 ```
 
-Targets: `claude-code`, `cursor`, `codex`, `antigravity` (see
+Targets: `claude-code`, `cursor`, `codex`, `antigravity`, `muse` (see
 [`docs/INSTALLATION.md`](docs/INSTALLATION.md) for paths, commands, and
 safety rules). The installer never silently deletes your modifications:
 conflicts are detected by hash, backups are made before replacement,
