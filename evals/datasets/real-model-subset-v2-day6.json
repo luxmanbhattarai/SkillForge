@@ -1,0 +1,18 @@
+{
+ "generated": "2026-11-24",
+ "version": 2,
+ "supersedes": null,
+ "description": "Day 6 slice: the 8 Day 3 cases still unevaluated after the 2026-11-24 night retry (all HTTP 429 quota or HTTP 503 overload — the model never answered). The retry evaluated 12/20 Day 3 cases (8 pass, 3 real model failures, 1 format failure); those 12 stand and are NOT re-run. Runs WITH retrieval (top-10 candidate skills in the prompt, owner decision 2026-11-22) — the Day 1 condition was no-retrieval, so Day 1 and Day 2+ results must be reported separately.",
+ "selectionRule": "Day 3 cases whose night-retry result was a provider error other than a non-JSON reply (429/503 only), in slice order: GEN-disc-auth-security, GEN-disc-aws, GEN-disc-backup-recovery, GEN-disc-electron, INS-api-design-001, NEG-howto-001, OUT-article-001, OUT-changelog-001.",
+ "count": 8,
+ "ids": [
+  "GEN-disc-auth-security",
+  "GEN-disc-aws",
+  "GEN-disc-backup-recovery",
+  "GEN-disc-electron",
+  "INS-api-design-001",
+  "NEG-howto-001",
+  "OUT-article-001",
+  "OUT-changelog-001"
+ ]
+}

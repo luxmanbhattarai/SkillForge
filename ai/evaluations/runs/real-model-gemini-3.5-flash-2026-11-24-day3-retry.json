@@ -1,0 +1,1270 @@
+{
+  "kind": "skillforge-real-model-eval",
+  "version": 1,
+  "runId": "real-model-gemini-3.5-flash-20261125-055133",
+  "generated": "2026-11-25T05:51:33.451Z",
+  "completedAt": "2026-11-25T05:54:51.067Z",
+  "providerName": "gemini",
+  "providerKind": "model",
+  "model": {
+    "requested": "gemini-3.5-flash",
+    "served": "gemini-3.5-flash",
+    "servedModels": [
+      "gemini-3.5-flash"
+    ],
+    "consistent": true
+  },
+  "providerMeta": {
+    "kind": "model",
+    "provider": "gemini",
+    "model": "gemini-3.5-flash",
+    "endpoint": "generativelanguage.googleapis.com",
+    "helper": "gemini_chat.py",
+    "timeoutMs": 300000,
+    "maxRetries": 1
+  },
+  "providerEnvDefaultsApplied": [
+    "GEMINI_MODEL",
+    "GEMINI_MAX_TOKENS"
+  ],
+  "retrieval": {
+    "enabled": true,
+    "topK": 10,
+    "method": "IDF-weighted keyword overlap over skill name + description (MockAgent.rank); candidates listed in the user message, model selects only from them"
+  },
+  "dataset": {
+    "file": "evals/datasets/real-model-subset-v2-day3.json",
+    "version": 2,
+    "generated": "2026-11-23",
+    "supersedes": null,
+    "count": 20,
+    "sha256": "4352a7dcaa7f338b9bddf507ee976f68c43879ef4e9f15b0b9b96b9d8b3c6a97",
+    "ids": [
+      "GEN-disc-ai-seo",
+      "GEN-disc-api-documentation",
+      "GEN-disc-article-writing",
+      "GEN-disc-auth-security",
+      "GEN-disc-aws",
+      "GEN-disc-backup-recovery",
+      "GEN-disc-bundle-optimization",
+      "GEN-disc-changesets",
+      "GEN-disc-clean-code",
+      "GEN-disc-csrf-protection",
+      "GEN-disc-dynamic-metadata",
+      "GEN-disc-electron",
+      "HAL-fid-001",
+      "HAL-openapi-001",
+      "INS-api-design-001",
+      "INS-brief-001",
+      "NEG-faq-001",
+      "NEG-howto-001",
+      "OUT-article-001",
+      "OUT-changelog-001"
+    ]
+  },
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "linux",
+    "gitCommit": "bcb04343f5802a1dfdf78f2483add4638442afcb"
+  },
+  "summary": {
+    "total": 20,
+    "passed": 8,
+    "failed": 12,
+    "passRate": 0.4,
+    "criticalFailures": 0,
+    "coverage": {
+      "skillsCovered": 11,
+      "skillsTotal": 277,
+      "coverageRate": 0.04
+    }
+  },
+  "dimensions": {
+    "skill-selection": {
+      "label": "Skill selection",
+      "total": 12,
+      "passed": 7,
+      "failed": 5,
+      "passRate": 0.583,
+      "failedCaseIds": [
+        "GEN-disc-auth-security",
+        "GEN-disc-aws",
+        "GEN-disc-backup-recovery",
+        "GEN-disc-changesets",
+        "GEN-disc-electron"
+      ]
+    },
+    "instruction-following": {
+      "label": "Instruction following",
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "passRate": 0,
+      "failedCaseIds": [
+        "INS-api-design-001",
+        "INS-brief-001"
+      ]
+    },
+    "refusal": {
+      "label": "Refusal",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "passRate": null,
+      "failedCaseIds": []
+    },
+    "code-quality": {
+      "label": "Code quality",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "passRate": null,
+      "failedCaseIds": []
+    },
+    "grounding": {
+      "label": "Grounding",
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "passRate": 0.5,
+      "failedCaseIds": [
+        "HAL-openapi-001"
+      ]
+    },
+    "tool-use": {
+      "label": "Tool use",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "passRate": null,
+      "failedCaseIds": []
+    },
+    "unsafe-instruction-handling": {
+      "label": "Unsafe-instruction handling",
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "passRate": null,
+      "failedCaseIds": []
+    },
+    "context-preservation": {
+      "label": "Context preservation",
+      "proxy": true,
+      "proxyNote": "Proxy dimension: no dedicated context-preservation cases exist in the subset; measured over error-handling, negative-case-handling, and output-quality cases.",
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "passRate": 0,
+      "failedCaseIds": [
+        "NEG-faq-001",
+        "NEG-howto-001",
+        "OUT-article-001",
+        "OUT-changelog-001"
+      ]
+    }
+  },
+  "byCategory": {
+    "skill-discovery": {
+      "total": 12,
+      "passed": 7,
+      "failed": 5,
+      "critical": 0
+    },
+    "hallucination-resistance": {
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "critical": 0
+    },
+    "instruction-following": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "critical": 0
+    },
+    "negative-case-handling": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "critical": 0
+    },
+    "output-quality": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "critical": 0
+    }
+  },
+  "failures": [
+    {
+      "id": "GEN-disc-auth-security",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "auth-security",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini provider rate-limited (HTTP 429) after 1 retry — back off and re-run later: Gemini API error: HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day lim"
+    },
+    {
+      "id": "GEN-disc-aws",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "aws",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini helper failed (exit 1): Gemini API error: HTTP 503: [{\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n]"
+    },
+    {
+      "id": "GEN-disc-backup-recovery",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "backup-recovery",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini provider rate-limited (HTTP 429) after 1 retry — back off and re-run later: Gemini API error: HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 5, model: gemini-3.6-flash, description: Generate content requests per minute l"
+    },
+    {
+      "id": "GEN-disc-changesets",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "changesets",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini provider returned non-JSON output: ```json\n{\n  \"skills\": [\n    \"changesets\"\n  ],\n  \"answer\": \"Here is a complete guide to managing package versioning, changelogs, and monorepo releases using **Changesets**:\\n\\n### 1. The Core Changeset"
+    },
+    {
+      "id": "GEN-disc-electron",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "electron",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini helper failed (exit 1): Gemini API error: HTTP 503: [{\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n]"
+    },
+    {
+      "id": "HAL-openapi-001",
+      "category": "hallucination-resistance",
+      "type": "negative",
+      "skill": "api-documentation",
+      "critical": false,
+      "failureCategory": "content-gap",
+      "failedChecks": [
+        "must-include: OpenAPI 3.2.1 is the current version",
+        "must-exclude: OpenAPI 4.0"
+      ],
+      "needsHumanReview": true,
+      "failureReason": "must-include: OpenAPI 3.2.1 is the current version: answer does not contain \"OpenAPI 3.2.1 is the current version\" | must-exclude: OpenAPI 4.0: answer contains forbidden \"OpenAPI 4.0\""
+    },
+    {
+      "id": "INS-api-design-001",
+      "category": "instruction-following",
+      "type": "positive",
+      "skill": "api-design",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini provider rate-limited (HTTP 429) after 1 retry — back off and re-run later: Gemini API error: HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day lim"
+    },
+    {
+      "id": "INS-brief-001",
+      "category": "instruction-following",
+      "type": "positive",
+      "skill": "content-brief",
+      "critical": false,
+      "failureCategory": "content-gap",
+      "failedChecks": [
+        "must-include: Never promise rankings or traffic in the brief."
+      ],
+      "needsHumanReview": true,
+      "failureReason": "must-include: Never promise rankings or traffic in the brief.: answer does not contain \"Never promise rankings or traffic in the brief.\""
+    },
+    {
+      "id": "NEG-faq-001",
+      "category": "negative-case-handling",
+      "type": "negative",
+      "skill": "faq-generation",
+      "critical": false,
+      "failureCategory": "selection-gap",
+      "failedChecks": [
+        "grounded-in: faq-generation",
+        "must-include: removed the FAQ rich result"
+      ],
+      "needsHumanReview": true,
+      "failureReason": "grounded-in: faq-generation: evaluated skill \"faq-generation\" was not selected (selected: schema) | must-include: removed the FAQ rich result: answer does not contain \"removed the FAQ rich result\""
+    },
+    {
+      "id": "NEG-howto-001",
+      "category": "negative-case-handling",
+      "type": "negative",
+      "skill": "schema-jsonld",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini provider rate-limited (HTTP 429) after 1 retry — back off and re-run later: Gemini API error: HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day lim"
+    },
+    {
+      "id": "OUT-article-001",
+      "category": "output-quality",
+      "type": "positive",
+      "skill": "article-writing",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini provider rate-limited (HTTP 429) after 1 retry — back off and re-run later: Gemini API error: HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day lim"
+    },
+    {
+      "id": "OUT-changelog-001",
+      "category": "output-quality",
+      "type": "positive",
+      "skill": "changelog-management",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true,
+      "failureReason": "provider error: Gemini provider rate-limited (HTTP 429) after 1 retry — back off and re-run later: Gemini API error: HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day lim"
+    }
+  ],
+  "usage": {
+    "requests": 20,
+    "attempts": 31,
+    "retries": 11,
+    "errors": 8,
+    "promptTokens": 13039,
+    "completionTokens": 7770,
+    "totalTokens": 24798,
+    "estimatedCostUsd": null,
+    "servedModels": {
+      "gemini-3.5-flash": 12
+    },
+    "emptyResponses": 0
+  },
+  "runnerRetries": 0,
+  "results": [
+    {
+      "id": "GEN-disc-ai-seo",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "ai-seo",
+      "source": "generated",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "ai-seo"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "ai-seo",
+        "llm-seo",
+        "geo-optimization",
+        "aeo-optimization",
+        "schema",
+        "seo-audit",
+        "site-architecture",
+        "llms-txt",
+        "competitor-profiling",
+        "seo-content-writing"
+      ],
+      "usage": {
+        "promptTokens": 1162,
+        "completionTokens": 309,
+        "totalTokens": 1865
+      },
+      "answer": "To get cited and recommended in AI answers (ChatGPT, Perplexity, Google AI Overviews), focus on Generative Engine Optimization (GEO) and Answer Engine Optimization (AEO). Key strategies include:\n\n1. **Direct, Machine-Readable Structure:** Present core definitions, facts, summaries, and answers clearly at the top of key pages using standard formatting (tables, bullet lists, concise headers) that language models can parse easily.\n2. **Citation-Worthy Content & Original Data:** AI models prioritize unique statistical insights, expert consensus, primary source data, and clear authoritative conclusions when citing sources.\n3. **LLM Discoverability (`llms.txt`):** Consider implementing an `llms.txt` or `llms-full.txt` file at your site root to offer a clean Markdown index of your high-value pages specifically for AI crawlers.\n4. **Competitor Citation Analysis:** AI search tools cite competitors primarily due to high third-party brand sentiment/mentions across authoritative sites, clear semantic match to prompt intent, and clean structure. Monitoring third-party platform presence (Reddit, Quora, industry directories, news) helps close citation gaps.\n\nFor technical SEO audits, refer to `seo-audit`, and for implementation of structured JSON-LD data, refer to `schema`.",
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "GEN-disc-api-documentation",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "api-documentation",
+      "source": "generated",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "api-documentation"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "api-documentation",
+        "rest-api",
+        "openapi",
+        "technical-writing",
+        "technical-documentation",
+        "advanced-api-architecture",
+        "graphql",
+        "changelog-management",
+        "api-design",
+        "developer-experience"
+      ],
+      "usage": {
+        "promptTokens": 1031,
+        "completionTokens": 722,
+        "totalTokens": 2140
+      },
+      "answer": "To create clear, comprehensive API documentation for REST or GraphQL APIs, structure your documentation around the following key pillars:\n\n### 1. Getting Started & Quickstart Guide\n- **Time-to-first-call focus**: Provide a copy-pasteable example (cURL/SDK) to get developers making a valid request within 5 minutes.\n- **Base URLs**: Document environment endpoints (production, sandbox/staging).\n- **Headers**: Specify default required headers (e.g., `Content-Type: application/json`, `Accept: application/json`).\n\n### 2. Authentication & Authorization\n- Detail the authentication mechanism (e.g., API Keys, Bearer Tokens, OAuth 2.0).\n- Show exact header formats (e.g., `Authorization: Bearer <token>`).\n- Provide guidance on obtaining, rotating, and revoking API keys or managing OAuth access/refresh flows.\n\n### 3. Endpoint Reference Structure\nEach endpoint reference should follow a predictable schema:\n- **Operation Title & Summary**: Concise description of what the endpoint does.\n- **HTTP Method & Path**: e.g., `POST /v1/orders`.\n- **Parameters**: Categorized by path, query, header, and body parameters. For each parameter, state:\n  - Name, type (string, integer, boolean, object, array).\n  - Whether it is required or optional.\n  - Constraints (min/max length, regex patterns, allowed enum values).\n- **Request Body Example**: Full, realistic JSON/GraphQL request payload.\n- **Response Examples**: Complete payloads for success (`200 OK`, `201 Created`) and failure states (`400 Bad Request`, `401 Unauthorized`, `404 Not Found`).\n\n### 4. Standardized Error Handling & Catalog\n- **Consistent Error Format**: Adopt a standard format such as RFC 7807 Problem Details (`type`, `title`, `status`, `detail`, `instance`).\n- **Error Catalog Table**: Document error codes, HTTP status codes, causes, and recommended resolution steps.\n\n### 5. API Versioning & Lifecycle\n- **Versioning Strategy**: Explicitly state how versioning works (e.g., URI path `/v1/`, request header `X-API-Version`).\n- **Deprecation Policy**: Document how breaking changes are announced, sunset timelines, and warning headers (e.g., `Sunset`, `Deprecation`).\n\n### 6. Machine-Readable Specifications (OpenAPI)\n- Maintain an OpenAPI 3.x (Swagger) document alongside human-readable docs to enable interactive testing (Swagger UI/Redoc), client SDK generation, and contract testing.",
+      "tools": [
+        "1. Define API structure using OpenAPI 3.0/3.1 specification.",
+        "2. Document core authentication schemas and base URLs.",
+        "3. Structure standard endpoint parameters, request bodies, and response definitions.",
+        "4. Build error catalog following RFC 7807 Problem Details."
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "GEN-disc-article-writing",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "article-writing",
+      "source": "generated",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "article-writing"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "article-writing",
+        "content-brief",
+        "seo-content-writing",
+        "blog-writing",
+        "technical-writing",
+        "content-repurposing",
+        "keyword-to-content",
+        "doc-coauthoring",
+        "editorial-review",
+        "human-editing"
+      ],
+      "usage": {
+        "promptTokens": 1147,
+        "completionTokens": 193,
+        "totalTokens": 1505
+      },
+      "answer": "I am ready to help you write long-form articles, guides, or explainers. Provide your brief, topic, target audience, or outline, and I will generate an accurate, well-structured, research-backed draft complete with a compelling opening hook and clear heading hierarchy.",
+      "tools": [
+        "Identify key requirements, target audience, and main intent from brief/outline",
+        "Structure article with logical heading hierarchy (H1, H2, H3)",
+        "Craft a strong opening hook and introduction",
+        "Draft body sections supported by clear evidence, reasoning, and examples",
+        "Conclude with key takeaways or summary"
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "GEN-disc-auth-security",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "auth-security",
+      "source": "generated",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini provider rate-limited (HTTP 429) after 1 retry — back off and re-run later: Gemini API error: HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day lim",
+      "selectedSkills": [],
+      "checks": [],
+      "retrievedSkills": [
+        "auth-security",
+        "rate-limiting",
+        "advanced-api-architecture",
+        "secure-headers",
+        "mcp-security",
+        "express",
+        "database-security",
+        "authentication",
+        "security",
+        "secrets-management"
+      ],
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    },
+    {
+      "id": "GEN-disc-aws",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "aws",
+      "source": "generated",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini helper failed (exit 1): Gemini API error: HTTP 503: [{\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n]",
+      "selectedSkills": [],
+      "checks": [],
+      "retrievedSkills": [
+        "aws",
+        "gcp",
+        "kubernetes",
+        "self-hosted-vps",
+        "render",
+        "railway",
+        "backup-recovery",
+        "fly-io",
+        "secrets-management",
+        "cloudflare-workers"
+      ],
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    },
+    {
+      "id": "GEN-disc-backup-recovery",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "backup-recovery",
+      "source": "generated",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini provider rate-limited (HTTP 429) after 1 retry — back off and re-run later: Gemini API error: HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 5, model: gemini-3.6-flash, description: Generate content requests per minute l",
+      "selectedSkills": [],
+      "checks": [],
+      "retrievedSkills": [
+        "backup-recovery",
+        "database-security",
+        "integration-testing",
+        "self-hosted-vps",
+        "sqlite",
+        "caching",
+        "cloudflare-d1",
+        "clickhouse",
+        "deployment",
+        "database-design"
+      ],
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    },
+    {
+      "id": "GEN-disc-bundle-optimization",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "bundle-optimization",
+      "source": "generated",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "bundle-optimization"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "bundle-optimization",
+        "javascript-optimization",
+        "image-optimization",
+        "dependency-management",
+        "frontend-performance",
+        "lighthouse",
+        "indexing",
+        "dependency-security",
+        "javascript",
+        "image-compression"
+      ],
+      "usage": {
+        "promptTokens": 1028,
+        "completionTokens": 452,
+        "totalTokens": 1792
+      },
+      "answer": "To effectively shrink JavaScript and CSS bundles and improve first load performance, follow a structured optimization strategy:\n\n1. **Analyze Bundle Composition**:\n   - Use visualization tools like `webpack-bundle-analyzer`, `rollup-plugin-visualizer`, or Source Map Explorer to identify large dependencies and unexpected code inclusion.\n\n2. **Enable and Improve Tree-Shaking**:\n   - Ensure your build tools target ES Module format (`import`/`export`).\n   - Set `\"sideEffects\": false` in `package.json` (or specify side-effectful files explicitly) so bundlers can safely eliminate unused modules.\n   - Avoid importing entire libraries when named/path imports or subpath exports are available (e.g., import specific utilities instead of full utility packages).\n\n3. **Code Splitting by Route and Feature**:\n   - Use dynamic imports (`import('./module.js')`) and framework-level route lazy loading (e.g., `React.lazy()`, Vue dynamic routes) to load non-critical assets on demand.\n   - Separate heavy components (modal dialogs, rich text editors, chart libraries) into lazy-loaded chunks.\n\n4. **Replace Heavy Dependencies**:\n   - Audit packages using tools like `bundlephobia`.\n   - Swap large legacy libraries for smaller modern alternatives (e.g., `date-fns` or native `Intl` instead of `moment`).\n   - Utilize native browser APIs (such as `fetch`, `URLSearchParams`, or `structuredClone`) rather than polyfills or helper libraries when supported targets allow.\n\n5. **Optimize and Minify Output**:\n   - Use modern minifiers like Terser, ESBuild, or SWC.\n   - Serve assets compressed with Brotli or Gzip, and utilize proper HTTP caching strategies.",
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "GEN-disc-changesets",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "changesets",
+      "source": "generated",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini provider returned non-JSON output: ```json\n{\n  \"skills\": [\n    \"changesets\"\n  ],\n  \"answer\": \"Here is a complete guide to managing package versioning, changelogs, and monorepo releases using **Changesets**:\\n\\n### 1. The Core Changeset",
+      "selectedSkills": [],
+      "checks": [],
+      "retrievedSkills": [
+        "changesets",
+        "release-management",
+        "package-development",
+        "changelog-management",
+        "dependency-management",
+        "package-boundaries",
+        "monorepo",
+        "ci-cd",
+        "pnpm-workspaces",
+        "api-client-generation"
+      ],
+      "usage": {
+        "promptTokens": 1106,
+        "completionTokens": 1011,
+        "totalTokens": 2380
+      },
+      "finishReason": "stop",
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    },
+    {
+      "id": "GEN-disc-clean-code",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "clean-code",
+      "source": "generated",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "clean-code"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "clean-code",
+        "refactoring",
+        "tdd",
+        "rust",
+        "javascript",
+        "blog-writing",
+        "api-design",
+        "youtube-thumbnails",
+        "api-documentation",
+        "eeat-writing"
+      ],
+      "usage": {
+        "promptTokens": 1100,
+        "completionTokens": 545,
+        "totalTokens": 2112
+      },
+      "answer": "Here are the core principles for writing readable, maintainable code:\n\n### 1. Intent-Revealing Naming\n- **Be Specific & Pronounceable**: Choose names that convey purpose without requiring comments (e.g., `daysSinceLastLogin` instead of `d`).\n- **Avoid Mental Mapping**: Readers should not have to mentally translate your variable names to their real-world meanings.\n- **Use Domain Vocabulary**: Match names to the business or standard domain terms (e.g., `fetchUserAccount` vs `getStuff`).\n\n### 2. Small, Focused Functions\n- **Single Responsibility Principle (SRP)**: A function should do one thing, do it well, and do it only.\n- **Keep It Short**: Aim for functions that fit easily on a screen without nested control structures.\n- **Limit Parameters**: Keep function argument counts small (ideally 0–2). Group related arguments into an options/config object when more are needed.\n- **Single Level of Abstraction**: Don't mix high-level business logic with low-level string manipulation or I/O details in the same function.\n\n### 3. Honest Error Handling\n- **Never Swallow Errors**: Avoid empty `catch` blocks or hiding failures silently.\n- **Be Explicit**: Fail fast and make error conditions clear using domain-specific error types or explicit return types (e.g., `Result` or explicit `throw`/`return`).\n- **Separate Happy Path from Error Handling**: Structure code so the main logic reads linearly without deep nested error checks.\n\n### 4. Minimal Duplication (DRY)\n- **Don't Repeat Yourself**: Extract common logic, but beware of false duplication (logic that looks identical today but changes for different business reasons).\n- **Prefer Clear Abstractions over Clever Tricks**: Simple, clear code repeated once is often better than a complex, highly generalized abstraction.\n\n### 5. Comments & Code Smells\n- **Explain *Why*, Not *What***: Code should describe *what* it does; comments explain the business context, architectural decisions, or subtle trade-offs.\n- **Watch for Common Smells**: Long functions, deeply nested conditionals, long parameter lists, feature envy, and dead code.",
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "GEN-disc-csrf-protection",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "csrf-protection",
+      "source": "generated",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "csrf-protection"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "csrf-protection",
+        "xss-prevention",
+        "authorization",
+        "sql-injection-prevention",
+        "api-documentation",
+        "sveltekit",
+        "vercel-cli-with-tokens",
+        "link-building",
+        "hreflang",
+        "github-actions"
+      ],
+      "usage": {
+        "promptTokens": 1050,
+        "completionTokens": 992,
+        "totalTokens": 2236
+      },
+      "answer": "To effectively prevent Cross-Site Request Forgery (CSRF), implement a multi-layered defense strategy focused on request validation and cookie context restrictions:\n\n1. **Anti-CSRF Tokens (Synchronizer Token Pattern / Double-Submit Cookie Pattern)**\n   - Generate a cryptographically strong, unique token per session or per request on the server.\n   - Transmit the token to the client via a secure channel (e.g., embedded in HTML forms or sent via a secure response header/meta tag).\n   - Require the token in state-changing requests (POST, PUT, DELETE, PATCH) submitted as a form field or custom request header (e.g., `X-CSRF-Token`).\n   - Validate the submitted token on the server before executing state-changing logic.\n\n2. **SameSite Cookie Attribute**\n   - Set `SameSite=Lax` or `SameSite=Strict` on session cookies.\n   - `Lax`: Protects against CSRF on state-changing cross-site requests while preserving standard top-level navigation.\n   - `Strict`: Prevents the cookie from being sent on any cross-site request (ideal for highly sensitive applications).\n   - Ensure cookies also use `Secure` and `HttpOnly` flags.\n\n3. **Enforce Safe HTTP Methods**\n   - Ensure `GET`, `HEAD`, and `OPTIONS` endpoints are strictly read-only and idempotent. Never perform state changes via `GET` requests.\n\n4. **Custom Request Headers for APIs**\n   - Single-Page Applications (SPAs) making AJAX/Fetch calls should pass custom headers (e.g., `X-Requested-With` or custom authorization tokens like Bearer tokens in `Authorization` headers). Browsers enforce CORS preflight checks on custom headers across domains.\n\n5. **Re-authentication for Critical Actions**\n   - Require users to re-enter their password or complete MFA before sensitive operations (e.g., changing email, password, or financial settings).",
+      "code": [
+        "// Example Express.js CSRF protection using Anti-CSRF middleware\nimport express from 'express';\nimport cookieParser from 'cookie-parser';\nimport { doubleCsrf } from 'csrf-csrf';\n\nconst app = express();\n\napp.use(express.json());\napp.use(express.urlencoded({ extended: true }));\napp.use(cookieParser('cookie-secret-key'));\n\n// Configure Double Submit Cookie CSRF protection\nconst {\n  doubleCsrfProtection,\n  generateToken\n} = doubleCsrf({\n  getSecret: () => 'super-secret-csrf-key',\n  cookieName: 'x-csrf-token',\n  cookieOptions: {\n    httpOnly: true,\n    sameSite: 'lax',\n    secure: process.env.NODE_ENV === 'production',\n    path: '/'\n  },\n  size: 64,\n  ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],\n  getTokenFromRequest: (req) => req.headers['x-csrf-token'] || req.body._csrf\n});\n\n// Endpoint to provide CSRF token to frontend\napp.get('/api/csrf-token', (req, res) => {\n  const csrfToken = generateToken(req, res);\n  res.json({ csrfToken });\n});\n\n// Apply CSRF protection middleware to state-changing routes\napp.post('/api/update-profile', doubleCsrfProtection, (req, res) => {\n  // Protected state-changing operation\n  res.json({ status: 'success', message: 'Profile updated securely.' });\n});"
+      ],
+      "tools": [
+        "1. Ensure all session cookies have SameSite=Lax or SameSite=Strict, Secure, and HttpOnly attributes.",
+        "2. Implement anti-CSRF token generation and validation middleware for state-changing HTTP methods (POST, PUT, DELETE, PATCH).",
+        "3. Embed anti-CSRF tokens in rendered forms and configure client scripts to attach tokens to API request headers.",
+        "4. Audit backend routes to ensure GET requests do not perform state-changing actions."
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "GEN-disc-dynamic-metadata",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "dynamic-metadata",
+      "source": "generated",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "dynamic-metadata"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "top-3",
+          "pass": true,
+          "detail": "all expected skill(s) rank in the top 3"
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "dynamic-metadata",
+        "metadata-validation",
+        "seo-metadata",
+        "open-graph",
+        "twitter-cards",
+        "twitter-card-images",
+        "canonical-management",
+        "on-page-seo",
+        "structured-data",
+        "migrations"
+      ],
+      "usage": {
+        "promptTokens": 1093,
+        "completionTokens": 1392,
+        "totalTokens": 2728
+      },
+      "answer": "Dynamic metadata generation centralizes the creation of HTML head metadata (`<title>`, `<meta name=\"description\">`, Open Graph, Twitter Cards, canonical `<link>`) for dynamic content sources like CMS entries, databases, or Markdown/MDX files.\n\n### Key Concepts & Best Practices\n\n1. **Fallback Hierarchy**\n   - Provide fallback defaults for all optional fields (e.g., fallback title suffix, generic site description, default social sharing image, base site URL for canonical links).\n   - Cleanly strip or truncate dynamic content summaries when explicit meta descriptions are missing.\n\n2. **Sanitization & Escaping**\n   - HTML-escape all user-supplied content used in meta tags (quotes, `<`/`>`, ampersands) to prevent broken HTML or XSS injection.\n   - Strip HTML tags and markdown formatting from body excerpts before using them as fallback descriptions.\n\n3. **Canonical Base Resolution**\n   - Build canonical URLs consistently by combining a normalized base URL (e.g., `https://example.com`) with the sanitized relative slug/path.",
+      "code": [
+        "interface PageContent {\n  title?: string;\n  description?: string;\n  slug: string;\n  excerpt?: string;\n  coverImage?: string;\n  updatedAt?: string;\n}\n\ninterface SiteConfig {\n  siteName: string;\n  baseUrl: string;\n  defaultDescription: string;\n  defaultOgImage: string;\n  twitterHandle?: string;\n}\n\ninterface GeneratedMetadata {\n  title: string;\n  description: string;\n  canonicalUrl: string;\n  openGraph: {\n    'og:title': string;\n    'og:description': string;\n    'og:url': string;\n    'og:type': string;\n    'og:image': string;\n    'og:site_name': string;\n  };\n  twitter: {\n    'twitter:card': string;\n    'twitter:site'?: string;\n    'twitter:title': string;\n    'twitter:description': string;\n    'twitter:image': string;\n  };\n}\n\n/**\n * Strip HTML tags and escape special characters for attribute inclusion.\n */\nfunction sanitizeText(text: string): string {\n  return text\n    .replace(/<[^>]*>/g, '') // Strip HTML tags\n    .replace(/\"/g, '&quot;') // Escape double quotes\n    .replace(/'/g, '&#39;') // Escape single quotes\n    .replace(/\n+/g, ' ')\n    .trim();\n}\n\n/**\n * Truncate text to target length without cutting words in half.\n */\nfunction truncateText(text: string, maxLength: number = 160): string {\n  const sanitized = sanitizeText(text);\n  if (sanitized.length <= maxLength) return sanitized;\n  return sanitized.slice(0, maxLength).replace(/\\s+\\S*$/, '') + '...';\n}\n\n/**\n * Generate metadata object with complete fallback hierarchy.\n */\nexport function generatePageMetadata(\n  content: PageContent,\n  siteConfig: SiteConfig\n): GeneratedMetadata {\n  const rawTitle = content.title ? content.title.trim() : 'Untitled Page';\n  const title = `${sanitizeText(rawTitle)} | ${siteConfig.siteName}`;\n  \n  const rawDescription = content.description || content.excerpt || siteConfig.defaultDescription;\n  const description = truncateText(rawDescription, 160);\n\n  const canonicalUrl = new URL(content.slug, siteConfig.baseUrl).toString();\n  const imageUrl = content.coverImage\n    ? new URL(content.coverImage, siteConfig.baseUrl).toString()\n    : new URL(siteConfig.defaultOgImage, siteConfig.baseUrl).toString();\n\n  const metadata: GeneratedMetadata = {\n    title,\n    description,\n    canonicalUrl,\n    openGraph: {\n      'og:title': title,\n      'og:description': description,\n      'og:url': canonicalUrl,\n      'og:type': 'article',\n      'og:image': imageUrl,\n      'og:site_name': siteConfig.siteName,\n    },\n    twitter: {\n      'twitter:card': 'summary_large_image',\n      ...(siteConfig.twitterHandle && { 'twitter:site': siteConfig.twitterHandle }),\n      'twitter:title': title,\n      'twitter:description': description,\n      'twitter:image': imageUrl,\n    },\n  };\n\n  return metadata;\n}\n\n/**\n * Helper to render metadata object into HTML head tag strings.\n */\nexport function renderMetaTags(metadata: GeneratedMetadata): string {\n  const tags: string[] = [\n    `<title>${metadata.title}</title>`,\n    `<meta name=\"description\" content=\"${metadata.description}\">`,\n    `<link rel=\"canonical\" href=\"${metadata.canonicalUrl}\">`,\n  ];\n\n  for (const [property, value] of Object.entries(metadata.openGraph)) {\n    tags.push(`<meta property=\"${property}\" content=\"${value}\">`);\n  }\n\n  for (const [name, value] of Object.entries(metadata.twitter)) {\n    tags.push(`<meta name=\"${name}\" content=\"${value}\">`);\n  }\n\n  return tags.join('\\n');\n}"
+      ],
+      "tools": [
+        "Define site-wide metadata defaults and dynamic content data types.",
+        "Implement helper functions to strip HTML/Markdown tags and sanitize strings for HTML attributes.",
+        "Create a dynamic metadata generator function that constructs complete metadata objects with fallback handling.",
+        "Provide a renderer function for HTML tags or integration pattern for frameworks."
+      ],
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "GEN-disc-electron",
+      "category": "skill-discovery",
+      "type": "positive",
+      "skill": "electron",
+      "source": "generated",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini helper failed (exit 1): Gemini API error: HTTP 503: [{\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n]",
+      "selectedSkills": [],
+      "checks": [],
+      "retrievedSkills": [
+        "electron",
+        "tauri",
+        "react-native",
+        "expo",
+        "mcp-security",
+        "secure-headers",
+        "security",
+        "database-security",
+        "graphql",
+        "jwt"
+      ],
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    },
+    {
+      "id": "HAL-fid-001",
+      "category": "hallucination-resistance",
+      "type": "negative",
+      "skill": "core-web-vitals",
+      "source": "hand-written",
+      "pass": true,
+      "score": 100,
+      "failureReason": null,
+      "selectedSkills": [
+        "core-web-vitals"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "precision",
+          "pass": true,
+          "detail": "precision 1/1 = 1.00 (need >= 0.50)"
+        },
+        {
+          "name": "grounded-in: core-web-vitals",
+          "pass": true,
+          "detail": "evaluated skill \"core-web-vitals\" was selected"
+        },
+        {
+          "name": "must-include: INP",
+          "pass": true,
+          "detail": "answer contains \"INP\""
+        },
+        {
+          "name": "must-exclude: FID budget",
+          "pass": true,
+          "detail": "answer avoids \"FID budget\""
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "core-web-vitals",
+        "technical-seo",
+        "performance",
+        "frontend-performance",
+        "performance-testing",
+        "search-console",
+        "seo",
+        "vercel-optimize",
+        "sitemap-robots",
+        "web-design-guidelines"
+      ],
+      "usage": {
+        "promptTokens": 1080,
+        "completionTokens": 265,
+        "totalTokens": 1827
+      },
+      "answer": "FID (First Input Delay) has been officially retired by Google as a Core Web Vital as of March 2024 and replaced by INP (Interaction to Next Paint).\n\n- **Historical FID target:** Historically, a good FID score was **100 ms or less** measured at the 75th percentile of real-user page loads.\n- **Current Core Web Vitals Budget (INP):** Instead of budgeting for FID, you should measure and set a budget for **INP**, where a good user experience requires an INP of **200 ms or less** at the 75th percentile.\n\n### Summary of Core Web Vitals Targets:\n- **LCP (Largest Contentful Paint):** ≤ 2.5 seconds\n- **INP (Interaction to Next Paint):** ≤ 200 milliseconds (replaces FID)\n- **CLS (Cumulative Layout Shift):** ≤ 0.1",
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false
+    },
+    {
+      "id": "HAL-openapi-001",
+      "category": "hallucination-resistance",
+      "type": "negative",
+      "skill": "api-documentation",
+      "source": "hand-written",
+      "pass": false,
+      "score": 50,
+      "failureReason": "must-include: OpenAPI 3.2.1 is the current version: answer does not contain \"OpenAPI 3.2.1 is the current version\" | must-exclude: OpenAPI 4.0: answer contains forbidden \"OpenAPI 4.0\"",
+      "selectedSkills": [
+        "openapi",
+        "api-documentation"
+      ],
+      "checks": [
+        {
+          "name": "grounded-in: api-documentation",
+          "pass": true,
+          "detail": "evaluated skill \"api-documentation\" was selected"
+        },
+        {
+          "name": "must-include: OpenAPI 3.2.1 is the current version",
+          "pass": false,
+          "detail": "answer does not contain \"OpenAPI 3.2.1 is the current version\""
+        },
+        {
+          "name": "must-exclude: OpenAPI 4.0",
+          "pass": false,
+          "detail": "answer contains forbidden \"OpenAPI 4.0\""
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "api-documentation",
+        "openapi",
+        "rest-api",
+        "code-review",
+        "vercel-react-view-transitions",
+        "technical-documentation",
+        "api-client-generation",
+        "engineering-standards",
+        "vercel-composition-patterns",
+        "changelog-management"
+      ],
+      "usage": {
+        "promptTokens": 1034,
+        "completionTokens": 452,
+        "totalTokens": 1867
+      },
+      "answer": "There is currently **no released OpenAPI 4.0 or OpenAPI 3.2 specification**. \n\nHere is the actual status of the OpenAPI Specification versioning roadmap:\n\n1. **Current Stable Releases:**\n   - **OpenAPI 3.0.x** (3.0.0 through 3.0.3)\n   - **OpenAPI 3.1.0 / 3.1.1** (The current major standard, introducing full JSON Schema draft 2020-12 alignment, `webhooks`, and polymorphic schema updates).\n\n2. **OpenAPI 4.0 (\"Moonwalk\"):**\n   - **Status:** OpenAPI 4.0 (code-named **Moonwalk**) is an active, experimental next-generation proposal currently under discussion by the OpenAPI Initiative working group.\n   - **Key Architectural Goals of Moonwalk (4.0 proposal):**\n     - **Decomposed Operations / URI Templates:** Shift from strict path-based hierarchy (`/users/{id}`) to URI templates and explicit operation definitions to better support RPC and flexible routing.\n     - **Improved Polymorphism and Responses:** Cleaner handling of multi-format content types and responses.\n     - **Signature Redesign:** Standardizing component reuse and removing legacy constraints inherited from Swagger 2.0 / OpenAPI 3.0.\n\n3. **Recommendation for Teams:**\n   - Standardize on **OpenAPI 3.1.0** for production APIs today, as tooling support (linting with Spectral/Redocly, documentation generators, mock servers like Prism, and code generators) is mature for 3.1.\n   - Keep track of the OpenAPI Initiative's **Moonwalk** repository for upcoming architectural direction, but do not target 4.0 for immediate production documentation.",
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false,
+      "failureCategory": "content-gap",
+      "failedChecks": [
+        "must-include: OpenAPI 3.2.1 is the current version",
+        "must-exclude: OpenAPI 4.0"
+      ],
+      "needsHumanReview": true
+    },
+    {
+      "id": "INS-api-design-001",
+      "category": "instruction-following",
+      "type": "positive",
+      "skill": "api-design",
+      "source": "hand-written",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini provider rate-limited (HTTP 429) after 1 retry — back off and re-run later: Gemini API error: HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day lim",
+      "selectedSkills": [],
+      "checks": [],
+      "retrievedSkills": [
+        "api-design",
+        "tdd",
+        "api-client-generation",
+        "openapi",
+        "mcp-development",
+        "clean-code",
+        "api-documentation",
+        "authorization",
+        "advanced-api-architecture",
+        "engineering-standards"
+      ],
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    },
+    {
+      "id": "INS-brief-001",
+      "category": "instruction-following",
+      "type": "positive",
+      "skill": "content-brief",
+      "source": "hand-written",
+      "pass": false,
+      "score": 80,
+      "failureReason": "must-include: Never promise rankings or traffic in the brief.: answer does not contain \"Never promise rankings or traffic in the brief.\"",
+      "selectedSkills": [
+        "content-brief"
+      ],
+      "checks": [
+        {
+          "name": "recall",
+          "pass": true,
+          "detail": "all 1 expected skill(s) selected"
+        },
+        {
+          "name": "precision",
+          "pass": true,
+          "detail": "precision 1/1 = 1.00 (need >= 0.50)"
+        },
+        {
+          "name": "grounded-in: content-brief",
+          "pass": true,
+          "detail": "evaluated skill \"content-brief\" was selected"
+        },
+        {
+          "name": "must-include: Never promise rankings or traffic in the brief.",
+          "pass": false,
+          "detail": "answer does not contain \"Never promise rankings or traffic in the brief.\""
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "content-brief",
+        "article-writing",
+        "seo-content-writing",
+        "content-refresh",
+        "content-repurposing",
+        "content-research",
+        "image-prompt-engineering",
+        "editorial-workflow",
+        "youtube-thumbnails",
+        "content-localization"
+      ],
+      "usage": {
+        "promptTokens": 1048,
+        "completionTokens": 1309,
+        "totalTokens": 2595
+      },
+      "answer": "# Content Brief: The Ultimate Beginner's Guide to Home Baking\n\n---\n\n## 1. Overview & Objectives\n- **Working Title:** The Ultimate Beginner's Guide to Home Baking: Essential Tools, Techniques, and First Recipes\n- **Primary Intent:** Informational & Instructional (Search Intent: Users searching for how to start baking at home, basic baking techniques, and beginner-friendly recipes).\n- **Core Goal:** Provide a clear, encouraging, and highly structured starter guide for novice bakers so they can successfully bake their first loaf or batch of cookies without feeling overwhelmed.\n\n---\n\n## 2. Target Audience & Reader Persona\n- **Audience:** Absolute beginners and hobbyists interested in home baking, kitchen enthusiasts seeking foundational skills, and home cooks looking to avoid common baking mistakes.\n- **Skill Level:** Novice / Beginner.\n- **Pain Points:** Fear of failing/wasting ingredients, confusion over baker's math or measuring (volume vs. weight), improper oven temp control, and lack of clarity on essential vs. non-essential equipment.\n\n---\n\n## 3. Key SEO & Topic Targets\n- **Primary Keyword:** home baking guide for beginners\n- **Secondary Keywords:** \n  - essential baking tools for beginners\n  - basic baking techniques\n  - measuring baking ingredients by weight\n  - easy home baking recipes\n  - baking troubleshooting guide\n- **Target Word Count:** 1,800 – 2,200 words\n\n---\n\n## 4. Tone, Voice, & Formatting Guidelines\n- **Tone:** Warm, encouraging, approachable, precise, and authoritative yet friendly.\n- **Formatting:**\n  - Use bullet points and callout boxes for tips/warnings.\n  - Short paragraphs (2–3 sentences max per block).\n  - Descriptive H2 and H3 headings for clear visual hierarchy.\n  - Include key takeaway callouts for quick scanning.\n\n---\n\n## 5. Detailed Article Outline\n\n### H1: The Ultimate Beginner's Guide to Home Baking\n- **Introduction (150–200 words)**\n  - Hook: The joy, aroma, and satisfaction of baking fresh goods at home.\n  - Address the fear of baking being \"too exact\" or precise.\n  - Define what this guide covers and set expectations.\n\n### H2: Why Science Matters in Baking (And Why You Shouldn't Fear It)\n- Explain baking as edible chemistry in plain language.\n- Key contrast: Cooking (flavor to taste) vs. Baking (ratios and reaction).\n- Why measuring by weight (grams) beats volume (cups).\n\n### H2: The Essential Home Baking Starter Kit\n- **H3: Must-Have Tools (Keep It Simple)**\n  - Digital kitchen scale, mixing bowls, silicone spatula, measuring spoons, rimmed baking sheet, parchment paper.\n- **H3: Tools You Can Wait to Buy**\n  - Stand mixer, specialized cake pans, proofing baskets.\n\n### H2: Core Ingredients Demystified\n- Flour types (All-Purpose vs. Bread Flour vs. Cake Flour).\n- Leaveners: Baking soda vs. baking powder vs. active dry yeast.\n- Fats and Sugars: Butter temp (room temp vs. chilled vs. melted) and sugar's role beyond sweetness.\n\n### H2: 4 Foundational Baking Techniques Every Beginner Must Master\n- Creaming butter and sugar.\n- Folding batters without deflating air.\n- Proper dough kneading and gluten development.\n- Testing for doneness (toothpick test, internal temp, visual cues).\n\n### H2: 3 Foolproof Starter Recipes to Build Confidence\n- **H3: 1. Classic Chocolate Chip Cookies** (Teaches creaming and baking time management).\n- **H3: 2. No-Knead Crusty Artisan Bread** (Teaches hydration and fermentation basics).\n- **H3: 3. Simple Vanilla Quick Bread / Muffins** (Teaches mixing without over-working batter).\n\n### H2: Common Baking Mistakes & Quick Fixes (Troubleshooting)\n- *Problem:* Dense or gummy baked goods $\\rightarrow$ *Fix:* Don't over-mix; check leavening expiration.\n- *Problem:* Sunken centers $\\rightarrow$ *Fix:* Avoid opening the oven door early; check oven calibration.\n- *Problem:* Uneven baking $\\rightarrow$ *Fix:* Rotate baking sheets halfway through.\n\n### H2: Conclusion & Next Steps (100–150 words)\n- Encouraging wrap-up emphasizing practice over perfection.\n- Call to Action: Pick one recipe from the starter kit and bake this weekend.\n\n---\n\n## 6. Recommended Sources & Reference Material\n- King Arthur Baking Company (baking guides and ratio charts).\n- Serious Eats (Food Lab articles on baking science and flour protein content).\n- America's Test Kitchen (equipment recommendations and science of leavening agents).\n\n---\n\n## 7. Acceptance Criteria & Editorial Quality Checklist\n- [ ] Covers all sections listed in the outline with clear H2 and H3 tags.\n- [ ] Explains *why* kitchen scales are preferred over measuring cups.\n- [ ] Includes clear step-by-step instructions for the starter recipes.\n- [ ] Avoids jargon without defining terms (e.g., explains terms like *proofing* or *creaming* on first use).\n- [ ] Primary and secondary keywords integrated naturally without keyword stuffing.\n- [ ] Written in active voice with an encouraging, instructive tone.",
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false,
+      "failureCategory": "content-gap",
+      "failedChecks": [
+        "must-include: Never promise rankings or traffic in the brief."
+      ],
+      "needsHumanReview": true
+    },
+    {
+      "id": "NEG-faq-001",
+      "category": "negative-case-handling",
+      "type": "negative",
+      "skill": "faq-generation",
+      "source": "hand-written",
+      "pass": false,
+      "score": 50,
+      "failureReason": "grounded-in: faq-generation: evaluated skill \"faq-generation\" was not selected (selected: schema) | must-include: removed the FAQ rich result: answer does not contain \"removed the FAQ rich result\"",
+      "selectedSkills": [
+        "schema"
+      ],
+      "checks": [
+        {
+          "name": "grounded-in: faq-generation",
+          "pass": false,
+          "detail": "evaluated skill \"faq-generation\" was not selected (selected: schema)"
+        },
+        {
+          "name": "must-include: removed the FAQ rich result",
+          "pass": false,
+          "detail": "answer does not contain \"removed the FAQ rich result\""
+        },
+        {
+          "name": "must-exclude: get the FAQ rich result",
+          "pass": true,
+          "detail": "answer avoids \"get the FAQ rich result\""
+        },
+        {
+          "name": "not-refused",
+          "pass": true,
+          "detail": "answered a legitimate task (no refusal)"
+        }
+      ],
+      "retrievedSkills": [
+        "schema",
+        "schema-jsonld",
+        "faq-generation",
+        "hreflang",
+        "render",
+        "seo-migration",
+        "csrf-protection",
+        "ai-seo",
+        "link-building",
+        "open-graph"
+      ],
+      "usage": {
+        "promptTokens": 1160,
+        "completionTokens": 128,
+        "totalTokens": 1751
+      },
+      "answer": "Google has restricted FAQ rich results so that standard websites no longer earn them. While Google previously limited FAQ rich results primarily to authoritative government and health organizations, FAQ rich results have effectively been deprecated for general commercial and non-government websites. Adding `FAQPage` JSON-LD markup to a typical health site will not trigger FAQ rich snippets in Google search results.",
+      "finishReason": "stop",
+      "emptyResponse": false,
+      "critical": false,
+      "failureCategory": "selection-gap",
+      "failedChecks": [
+        "grounded-in: faq-generation",
+        "must-include: removed the FAQ rich result"
+      ],
+      "needsHumanReview": true
+    },
+    {
+      "id": "NEG-howto-001",
+      "category": "negative-case-handling",
+      "type": "negative",
+      "skill": "schema-jsonld",
+      "source": "hand-written",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini provider rate-limited (HTTP 429) after 1 retry — back off and re-run later: Gemini API error: HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day lim",
+      "selectedSkills": [],
+      "checks": [],
+      "retrievedSkills": [
+        "schema-jsonld",
+        "schema",
+        "blog-featured-images",
+        "aeo-optimization",
+        "technical-writing",
+        "serp-analysis",
+        "hreflang",
+        "open-graph",
+        "twitter-cards",
+        "search-console"
+      ],
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    },
+    {
+      "id": "OUT-article-001",
+      "category": "output-quality",
+      "type": "positive",
+      "skill": "article-writing",
+      "source": "hand-written",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini provider rate-limited (HTTP 429) after 1 retry — back off and re-run later: Gemini API error: HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day lim",
+      "selectedSkills": [],
+      "checks": [],
+      "retrievedSkills": [
+        "article-writing",
+        "content-brief",
+        "verification-before-completion",
+        "prisma-orm-setup",
+        "seo-content-writing",
+        "ai-agents",
+        "competitor-profiling",
+        "e2e-testing",
+        "entity-seo",
+        "finishing-a-development-branch"
+      ],
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    },
+    {
+      "id": "OUT-changelog-001",
+      "category": "output-quality",
+      "type": "positive",
+      "skill": "changelog-management",
+      "source": "hand-written",
+      "pass": false,
+      "score": 0,
+      "failureReason": "provider error: Gemini provider rate-limited (HTTP 429) after 1 retry — back off and re-run later: Gemini API error: HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day lim",
+      "selectedSkills": [],
+      "checks": [],
+      "retrievedSkills": [
+        "changelog-management",
+        "prisma-upgrade-v7",
+        "release-management",
+        "oauth",
+        "regression-testing",
+        "vercel-composition-patterns",
+        "changesets",
+        "code-review",
+        "migrations",
+        "seo-migration"
+      ],
+      "critical": false,
+      "failureCategory": "provider-error",
+      "failedChecks": [],
+      "needsHumanReview": true
+    }
+  ],
+  "archivePath": "ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-24-day3-retry.json",
+  "limitations": [
+    "This run measures one model at one point in time (temperature 0, but providers are not perfectly deterministic). Re-running may give different results.",
+    "The model was asked to self-report its skill selection as JSON; a model can select a skill and fail to report it, or report one it would not actually load.",
+    "The model never sees the skill files — it answers from its own knowledge plus the task prompt. A \"grounded\" answer may come from its weights, not the library; the grounded-in check only verifies the skill was named.",
+    "Content checks are substring matches on the model's answer; they prove the guidance is present in the answer, not that it is complete or correctly applied.",
+    "Code checks prove compilation of the model's code blocks (and fixture behavior where fixtures exist), not general correctness. TypeScript blocks get a structural check only.",
+    "Context preservation is a proxy dimension (no dedicated cases exist in the subset); see the dimension note above.",
+    "Failure categories are a machine first pass. Every failure needs a human read before it is counted as a model gap, a case-design issue, or a library gap."
+  ]
+}

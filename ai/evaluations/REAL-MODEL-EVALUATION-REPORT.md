@@ -537,18 +537,18 @@ plus the 2–3 case smoke test — no other paid calls.
    prompt); structured-output enforcement (`response_format`); a
    spend cap; per-model result history.
 
-## 9. Run results (IN PROGRESS — multi-day run on `gemini-3.5-flash`; Days 1–3 of 5 complete)
+## 9. Run results (IN PROGRESS — multi-day run on `gemini-3.5-flash`; Days 1–3 of 6 complete)
 
 > The 89-case run is executing as a multi-day run (free tier,
 > 20 requests/day, checkpointed day slices) on
 > `gemini-3.5-flash`, after the model switch noted at the top
-> of this report. Days 1–3 (59 cases attempted, 36 evaluated)
-> completed 2026-11-22, 2026-11-23, and 2026-11-24; Day 3
-> evaluated 0 cases — all 20 hit HTTP 503 (model under high
-> demand). 53 cases are now unevaluated against 40 remaining
-> slots on Days 4–5 (20 + 20) — a 13-case shortfall; the retry
-> plan is an open owner decision (see Day 3 below). Daily run
-> time fixed to 10:12 Phoenix (owner decision 2026-11-23). When
+> of this report. Days 1–3 completed 2026-11-22, 2026-11-23,
+> and 2026-11-24 (Day 3's morning run evaluated 0 cases — all
+> 20 hit HTTP 503; a same-night retry evaluated 12 of the 20).
+> 50/89 cases are evaluated so far. Remaining: Day 4 (20) +
+> Day 5 (13) + Day 6 (8) = 41 case-runs, 39 unique cases.
+> Daily run time fixed to 10:12 Phoenix (owner decision
+> 2026-11-23). When
 > the run completes, record here: model/provider info,
 > methodology (as run, including any deviations), dataset
 > details, individual results summary, aggregate metrics (the
@@ -568,7 +568,7 @@ plus the 2–3 case smoke test — no other paid calls.
 > reproduces the Day 1 condition). Measured baseline before
 > Day 2: the expected skill is in the top 10 for 44/44 (100%)
 > of the subset cases with expected skills. **Day 1 and
-> Days 2–5 are different conditions and must be reported
+> Days 2–6 are different conditions and must be reported
 > separately** — do not pool their pass rates into one number
 > without saying so.
 
@@ -734,23 +734,60 @@ observability gaps (fixed below).
   Same failure class as Day 1's `COD-nodejs-001` and Day 2's
   two 503s — but a full-day sweep, not an isolated spike.
 - **Usage:** 20 requests, 0 retries, 20 errors, 0 tokens (0
-  prompt + 0 completion). Cost: $0 (free tier). Whether the 20
-  errored requests count against the 20/day free-tier request
-  quota is unknown — they were requests made, but none
-  completed. Day 4 runs tomorrow on its own quota either way.
+  prompt + 0 completion). Cost: $0 (free tier). The night
+  retry settled the open question: errored requests DO count
+  against the 20/day quota — the retry hit daily-limit 429s
+  after only 12 served calls (see the retry note below). Day 4
+  runs tomorrow on its own fresh quota either way.
 - **Archive:** `ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-24-day3.json`
   (dataset: `evals/datasets/real-model-subset-v2-day3.json`,
   ids 39–58 of subset v2).
-- **Open owner decision — the retries no longer fit the 5-day
-  plan:** 53 cases are now unevaluated (20 Day-3 503s + the
-  20-case Day-4 slice + 11 final ids + 2 Day-2 503 retries
-  already on Day 5), but only Days 4–5 remain (40 slots at
-  20/day) — a 13-case shortfall. Options: extend to a Day 6
-  (2026-11-27), fold the Day-3 retries into Days 4–5 by
-  shrinking those slices, or accept the 20 Day-3 cases as
-  unevaluated. The Day 5 slice was NOT changed today — no
-  re-slicing without the owner's word. Evaluated so far: 36/89
-  (Day 1: 18, Day 2: 18, Day 3: 0).
+- **Night retry (2026-11-24 ~22:51 MST, same day, owner-ordered
+  after questioning the overload — the owner uses the API too
+  and it worked on their side): 8/20 passed (40.0%), 12
+  failed, 0 critical.** Run id
+  `real-model-gemini-3.5-flash-20261125-055133`, ~3.3 min.
+  Model served: `gemini-3.5-flash` (consistent; 12 calls
+  served). The overload had partly cleared — 12 calls got
+  answers — but the run then hit the daily quota and stopped:
+  5× HTTP 429 (daily limit 20) + 1× HTTP 429 (per-minute
+  limit 5) + 2× HTTP 503 + 1 format failure (non-JSON reply)
+  + 3 real model failures (content-gap ×2: `HAL-openapi-001`
+  said OpenAPI 4.0 instead of 3.2.1, `INS-brief-001`;
+  selection-gap ×1: `NEG-faq-001`). Usage: 20 requests, 31
+  attempts, 11 retries, 8 errors, 24,798 tokens. Cost: $0.
+  No further requests were made that night — the run stopped
+  on the 429s per the standing rule (never retry into the next
+  day's quota).
+- **Dimensions (retry slice only):** skill selection 7/12
+  (58.3%); instruction following 0/2 (0.0%); grounding 1/2
+  (50.0%); context preservation (proxy) 0/4 (0.0%). The 0s are
+  mostly provider errors, not model performance.
+- **Quota-error naming oddity (unexplained, recorded as
+  observed):** the 429 messages name the model
+  `gemini-3.6-flash` ("Quota exceeded for metric ...
+  limit: 20, model: gemini-3.6-flash") while the archive
+  records the served model as `gemini-3.5-flash` (consistent,
+  12 served). Possibly the quota bucket was renamed
+  server-side; the served model is what the archive records.
+  Do not "fix" this by editing the archive.
+- **Archive (retry):** `ai/evaluations/runs/real-model-gemini-3.5-flash-2026-11-24-day3-retry.json`
+  (same dataset as Day 3; the original outage archive
+  `...-2026-11-24-day3.json` is preserved untouched).
+- **Day 6 rescoped (owner decision stands — Day 6, 2026-11-27):**
+  only the 8 still-unevaluated cases go to Day 6
+  (`GEN-disc-auth-security`, `GEN-disc-aws`,
+  `GEN-disc-backup-recovery`, `GEN-disc-electron`,
+  `INS-api-design-001`, `NEG-howto-001`, `OUT-article-001`,
+  `OUT-changelog-001`) — slice
+  `evals/datasets/real-model-subset-v2-day6.json`. The retry's
+  12 evaluated cases (8 pass, 3 real failures, 1 format
+  failure) stand and are NOT re-run. Evaluated so far: 50/89
+  unique (Day 1: 19, Day 2: 19 new, Day 3 retry: 12).
+  Remaining: Day 4 (20) + Day 5 (13 incl. 2 retries) + Day 6
+  (8) = 41 case-runs, 39 unique. (Correction: an earlier
+  draft of this section said 36/89 with Day 1: 18, Day 2: 18
+  — wrong counts; the correct counts are 19 and 19 new.)
 
 ### Smoke test (2026-11-22 ~01:58 UTC) — the pre-run quota evidence
 
