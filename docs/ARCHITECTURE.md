@@ -20,7 +20,7 @@ scripts/              # validation, registry generation, install tooling
 ├── lib/              # shared libraries (frontmatter, security patterns, schemas)
 └── schemas/          # JSON Schemas for registry/ and verification status
 evals/                # behavioral evaluation suite (mock agent, 463 cases)
-test/                 # unit tests, node:test (672 tests)
+test/                 # unit tests, node:test (685 tests)
 templates/            # SKILL-TEMPLATE.md for new skills
 sources/              # research log, licenses, attribution, verification status
 docs/                 # this documentation
@@ -156,7 +156,7 @@ the same commands (see [Validation and CI](#validation-and-ci)).
 | Security | `npm run check:security` | Credential / prompt-injection / dangerous-code scan |
 | Upstream drift | `npm run check:upstream` | Vendor repos vs pinned commits (monitoring, exits 0 on drift) |
 | Quality score | `npm run score` | 22-element standard, 8 dimensions, hard caps (see `docs/SKILL-STANDARDS.md`) |
-| Unit tests | `npm test` | 672 tests (`node:test`), temp directories only |
+| Unit tests | `npm test` | 685 tests (`node:test`), temp directories only |
 | Behavioral evals | `npm run evals` | 463 cases against the mock agent |
 | Report | `npm run report` | Coverage and audit report (`report.json`) |
 
