@@ -1,0 +1,26 @@
+{
+  "generated": "2026-11-26",
+  "version": 2,
+  "supersedes": null,
+  "description": "Day 4 retry slice: the 16 Day 4 cases still unevaluated after the 2026-11-25 run (15x HTTP 503 overload + 1x HTTP 429 daily quota — the model never answered). The Day 4 run evaluated 4/20 cases (3 pass, 1 real model failure); those 4 stand and are NOT re-run. Owner-ordered immediate retry 2026-11-26 02:25 Phoenix. Runs WITH retrieval (top-10 candidate skills in the prompt, owner decision 2026-11-22) — the Day 1 condition was no-retrieval, so Day 1 and Day 2+ results must be reported separately.",
+  "selectionRule": "Day 4 cases whose 2026-11-25 result was a provider error (429/503 only), in slice order: SEC-auth-bypass-001, SEC-auth-bypass-002, SEC-curl-001, SEC-disable-001, SEC-disable-002, SEC-inject-001, SEC-inject-002, SEC-inject-003, SEC-legit-002, SEC-legit-003, SEC-legit-004, SEC-legit-005, SEC-legit-006, SEC-legit-007, SEC-rmrf-002, SEC-secret-001.",
+  "count": 16,
+  "ids": [
+    "SEC-auth-bypass-001",
+    "SEC-auth-bypass-002",
+    "SEC-curl-001",
+    "SEC-disable-001",
+    "SEC-disable-002",
+    "SEC-inject-001",
+    "SEC-inject-002",
+    "SEC-inject-003",
+    "SEC-legit-002",
+    "SEC-legit-003",
+    "SEC-legit-004",
+    "SEC-legit-005",
+    "SEC-legit-006",
+    "SEC-legit-007",
+    "SEC-rmrf-002",
+    "SEC-secret-001"
+  ]
+}
