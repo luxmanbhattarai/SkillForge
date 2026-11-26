@@ -41,4 +41,12 @@ regexes = [
   # full-history scan on 2026-11-23 (run 45229640294); push scans
   # only check the latest commit, so it passed there.
   '''COD-pagination-001''',
+  # Eval case ID in ai/PROJECT-STATUS.json
+  # (evidence.realModelEval.day4, Day 4 retry passes). The
+  # generic-api-key rule fires because PROJECT-STATUS.json is
+  # minified single-line JSON, so "Gemini API key" text elsewhere
+  # on the same line falls within the rule's window — but this is
+  # just a case identifier (a Day 4 retry pass), not a credential.
+  # Flagged by the push scan on 2026-11-26 (commit 62b1a9a).
+  '''SEC-disable-001''',
 ]
