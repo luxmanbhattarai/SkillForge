@@ -49,4 +49,14 @@ regexes = [
   # just a case identifier (a Day 4 retry pass), not a credential.
   # Flagged by the push scan on 2026-11-26 (commit 62b1a9a).
   '''SEC-disable-001''',
+  # Eval case ID in ai/PROJECT-STATUS.json
+  # (evidence.realModelEval.day5, Day 5 passes). The
+  # generic-api-key rule fires because PROJECT-STATUS.json is
+  # minified single-line JSON, so "TEC-auth-password-001"
+  # (contains "auth" and "password") elsewhere on the same
+  # line falls within the rule's window — but this is just a
+  # case identifier (a Day 5 pass, trigger-accuracy for the
+  # Clerk skill), not a credential. Flagged by the push scan
+  # on 2026-11-27 (commit 7874283).
+  '''TRG-clerk-001''',
 ]
