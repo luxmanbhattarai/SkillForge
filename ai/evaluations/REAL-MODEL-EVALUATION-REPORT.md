@@ -553,9 +553,9 @@ plus the 2–3 case smoke test — no other paid calls.
 > so far (archive-grounded count; see the Day 4 cumulative
 > correction — the 50/89 recorded after Day 3 mixed "cases
 > run" with "cases evaluated"). Remaining: Day 6 (8, Sat Nov
-> 28) + Day 7 (14, Sun Nov 29) = 22 case-runs, plus 1 Day-5
-> provider-error case (`SEC-secret-004`, HTTP 503) with no
-> slot yet (owner decision needed — see Day 5). Day 5 ran
+> 28) + Day 7 (15, Sun Nov 29) = 23 case-runs — Day 7 is 14
+> Day-4 leftovers + `SEC-secret-004` (the Day-5 HTTP 503,
+> folded in by owner decision 2026-11-28 — see Day 5). Day 5 ran
 > Fri Nov 27 by owner order ('Day 5 ABHI chalao'), replacing
 > its Sat Nov 28 slot; Day 6 moved to Sat Nov 28 and Day 7
 > (Sun Nov 29) is now the final day and marks the run
@@ -887,7 +887,10 @@ observability gaps (fixed below).
   still-unevaluated cases are covered by Day 7 (Sun
   2026-11-29, 10:12 Phoenix; slice
   `evals/datasets/real-model-subset-v2-day7.json`, rebuilt
-  from the prepared 16-id file and committed as `ba6ef84`).
+  from the prepared 16-id file and committed as `ba6ef84`,
+  then extended to 15 cases with `SEC-secret-004` (Day 5's
+  HTTP 503) by owner decision 2026-11-28, commit
+  `2083d4d`).
   Day 7 is the final day and marks the run COMPLETE; Day 5
   no longer does. (Day 5 has since run Fri 2026-11-27 by
   owner order — see Day 5 below; Day 6 moved to Sat
@@ -917,9 +920,9 @@ observability gaps (fixed below).
   - *Provider error (1):* `SEC-secret-004` — HTTP 503
     (`UNAVAILABLE`, "This model is currently experiencing
     high demand"). The only 503 of the run; the overload
-    that hit Days 3–4 had mostly cleared. This case has NO
-    retry slot in the current plan (Day 6 = Day-3 leftovers,
-    Day 7 = Day-4 leftovers) — owner decision needed.
+    that hit Days 3–4 had mostly cleared. Owner decided 2026-11-28 ('g add kr lo'): folded into
+    Day 7 as a 15th case (slice rebuilt, commit
+    `2083d4d`).
   - *Format failure (1):* `TRG-imageopt-001` — the model
     returned non-JSON output (it did name
     `image-optimization` in the text, but the JSON could not
@@ -957,9 +960,9 @@ observability gaps (fixed below).
   `SEC-secret-004`). Archive-grounded evaluated counts:
   Day 1: 18, Day 2: 18, Day 3 retry: 12, Day 4: 4, Day 4
   retry: 2, Day 5: 12 = 66. Remaining: 23 = Day 6 (8, Sat
-  Nov 28) + Day 7 (14, Sun Nov 29) + `SEC-secret-004` (1,
-  no slot — owner decision). Finish at 88/89 if it is
-  dropped.
+  Nov 28) + Day 7 (15, Sun Nov 29 — 14 Day-4 leftovers +
+  `SEC-secret-004`, folded in by owner decision
+  2026-11-28). Finish at 89/89 if all 15 evaluate.
 
 ### Smoke test (2026-11-22 ~01:58 UTC) — the pre-run quota evidence
 
