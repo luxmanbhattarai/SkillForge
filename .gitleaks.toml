@@ -59,4 +59,13 @@ regexes = [
   # Clerk skill), not a credential. Flagged by the push scan
   # on 2026-11-27 (commit 7874283).
   '''TRG-clerk-001''',
+  # Eval case ID in evals/datasets/real-model-subset-v2-day7.json
+  # (line 22, selectionRule). The generic-api-key rule fires
+  # because the id itself contains "secret" and trails the
+  # comma-separated list of case IDs within the rule's window
+  # — but it is just a case identifier (the Day-5 HTTP 503
+  # case, folded into Day 7 by owner decision 2026-11-28),
+  # not a credential. Flagged by the push scan on 2026-11-28
+  # (commit 2083d4d).
+  '''SEC-secret-004''',
 ]
